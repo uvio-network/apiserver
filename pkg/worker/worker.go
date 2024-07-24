@@ -142,7 +142,7 @@ func (w *Worker) lerror(err error) {
 			context.Background(),
 			"level", "error",
 			"message", e.Error(),
-			"post", e.Desc,
+			"description", e.Desc,
 			"docs", e.Docs,
 			"kind", e.Kind,
 			"stack", tracer.Stack(e),
