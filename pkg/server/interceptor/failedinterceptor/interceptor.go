@@ -38,7 +38,7 @@ func (i *Interceptor) Interceptor(nex twirp.Method) twirp.Method {
 					"level", "error",
 					"message", e.Error(),
 					"code", e.Code,
-					"post", e.Desc,
+					"description", e.Desc,
 					"docs", e.Docs,
 					"kind", e.Kind,
 					"stack", tracer.Stack(e),
