@@ -84,7 +84,7 @@ curl -s --request "POST" --header "Content-Type: application/json" --data '{"obj
     {
       "intern": {
         "created": "1721826156",
-        "post": "1721826156886308"
+        "id": "1721826156886308"
       },
       "public": null
     }

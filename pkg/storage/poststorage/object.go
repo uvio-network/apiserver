@@ -11,7 +11,7 @@ import (
 type Object struct {
 	Created time.Time   `json:"created"`
 	Expiry  time.Time   `json:"expiry"` // TODO expiry must be greater than created
-	ID      objectid.ID `json:"post"`
+	ID      objectid.ID `json:"id"`
 	Kind    string      `json:"kind"` // TODO kind is either claim or comment
 	Option  bool        `json:"option"`
 	Owner   objectid.ID `json:"owner"` // TODO verify post creator once auth is setup
