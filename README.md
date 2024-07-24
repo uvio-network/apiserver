@@ -26,7 +26,9 @@ Use "apiserver [command] --help" for more information about a command.
 
 ### development
 
-Running redis stack locally.
+Running redis stack locally. The data explorer of the redis instance is
+available at http://localhost:8001. This frontend is very useful to understand
+and debug the maintained state in redis.
 
 ```
 docker run --rm --name redis-stack-apiserver -p 6379:6379 -p 8001:8001 redis/redis-stack:latest
@@ -66,6 +68,30 @@ curl -s http://127.0.0.1:7777/version | jq .
   "ver": "go1.22.5"
 }
 ```
+
+Creating a post object locally looks something like the following. All server
+handlers follow the same design pattern. If you know the data structure of the
+input object, then you should be able to call any server handler by sending some
+JSON using a POST request.
+
+```
+curl -s --request "POST" --header "Content-Type: application/json" --data '{"object":[{"public":{"text":"foo bar", "token": "WETH"}}]}' http://127.0.0.1:7777/post.API/Create | jq .
+```
+```
+{
+  "filter": null,
+  "object": [
+    {
+      "intern": {
+        "created": "1721826156",
+        "id": "1721826156886308"
+      },
+      "public": null
+    }
+  ]
+}
+```
+
 
 
 [Twirp]: https://github.com/twitchtv/twirp

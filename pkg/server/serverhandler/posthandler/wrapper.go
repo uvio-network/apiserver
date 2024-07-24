@@ -4,6 +4,8 @@ import (
 	"context"
 
 	"github.com/uvio-network/apigocode/pkg/post"
+	"github.com/uvio-network/apiserver/pkg/runtime"
+	"github.com/xh3b4sd/tracer"
 )
 
 type wrapper struct {
@@ -11,29 +13,32 @@ type wrapper struct {
 }
 
 func (w *wrapper) Create(ctx context.Context, req *post.CreateI) (*post.CreateO, error) {
-	// {
-	// 	if len(req.Object) == 0 {
-	// 		return nil, tracer.Mask(runtime.QueryObjectEmptyError)
-	// 	}
+	{
+		if len(req.Object) == 0 {
+			return nil, tracer.Mask(runtime.QueryObjectEmptyError)
+		}
 
-	// 	if len(req.Object) > 100 {
-	// 		return nil, tracer.Mask(runtime.QueryObjectLimitError)
-	// 	}
+		if len(req.Object) > 100 {
+			return nil, tracer.Mask(runtime.QueryObjectLimitError)
+		}
 
-	// 	for _, x := range req.Object {
-	// 		if x == nil {
-	// 			return nil, tracer.Mask(runtime.QueryObjectEmptyError)
-	// 		}
-	// 	}
-	// }
+		for _, x := range req.Object {
+			if !x.ProtoReflect().IsValid() {
+				return nil, tracer.Mask(runtime.QueryObjectEmptyError)
+			}
+		}
+	}
 
-	// {
-	// 	for _, x := range req.Object {
-	// 		if x.Public == nil {
-	// 			return nil, tracer.Mask(runtime.QueryObjectEmptyError)
-	// 		}
-	// 	}
-	// }
+	{
+		for _, x := range req.Object {
+			if x.Intern != nil {
+				return nil, tracer.Maskf(runtime.QueryObjectInvalidError, "intern must be empty")
+			}
+			if !x.Public.ProtoReflect().IsValid() {
+				return nil, tracer.Maskf(runtime.QueryObjectInvalidError, "public must not be empty")
+			}
+		}
+	}
 
 	// {
 	// 	if userid.FromContext(ctx) == "" {
