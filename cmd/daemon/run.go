@@ -13,7 +13,9 @@ import (
 	"github.com/uvio-network/apiserver/pkg/envvar"
 	"github.com/uvio-network/apiserver/pkg/server"
 	"github.com/uvio-network/apiserver/pkg/server/interceptor/failedinterceptor"
+	"github.com/uvio-network/apiserver/pkg/server/middleware/authmiddleware"
 	"github.com/uvio-network/apiserver/pkg/server/middleware/corsmiddleware"
+	"github.com/uvio-network/apiserver/pkg/server/middleware/usermiddleware"
 	"github.com/uvio-network/apiserver/pkg/server/serverhandler"
 	"github.com/uvio-network/apiserver/pkg/storage"
 	"github.com/uvio-network/apiserver/pkg/worker"
@@ -108,6 +110,8 @@ func (r *run) runE(cmd *cobra.Command, args []string) error {
 			Log: log,
 			Mid: []mux.MiddlewareFunc{
 				corsmiddleware.NewMiddleware(corsmiddleware.MiddlewareConfig{Log: log}).Handler,
+				authmiddleware.NewMiddleware(authmiddleware.MiddlewareConfig{Aud: env.AuthJwksAud, Iss: env.AuthJwksIss, Log: log, URL: env.AuthJwksUrl}).Handler,
+				usermiddleware.NewMiddleware(usermiddleware.MiddlewareConfig{Log: log, Use: sto.User()}).Handler,
 			},
 		})
 	}

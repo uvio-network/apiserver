@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
+	"github.com/uvio-network/apiserver/pkg/storage/userstorage"
 	"github.com/xh3b4sd/logger"
 	"github.com/xh3b4sd/redigo"
 	"github.com/xh3b4sd/tracer"
@@ -16,6 +17,7 @@ type Config struct {
 
 type Storage struct {
 	pos poststorage.Interface
+	use userstorage.Interface
 }
 
 func New(c Config) *Storage {
@@ -33,6 +35,10 @@ func New(c Config) *Storage {
 				Log: c.Log,
 				Red: c.Red,
 			}),
+			use: userstorage.NewRedis(userstorage.RedisConfig{
+				Log: c.Log,
+				Red: c.Red,
+			}),
 		}
 	}
 
@@ -41,4 +47,8 @@ func New(c Config) *Storage {
 
 func (s *Storage) Post() poststorage.Interface {
 	return s.pos
+}
+
+func (s *Storage) User() userstorage.Interface {
+	return s.use
 }

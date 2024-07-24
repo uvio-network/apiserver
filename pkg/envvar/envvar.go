@@ -13,8 +13,11 @@ const (
 )
 
 type Env struct {
-	HttpHost string `split_words:"true" default:"127.0.0.1"`
-	HttpPort string `split_words:"true" default:"7777"`
+	AuthJwksAud string `split_words:"true" required:"true"`
+	AuthJwksIss string `split_words:"true" required:"true"`
+	AuthJwksUrl string `split_words:"true" required:"true"`
+	HttpHost    string `split_words:"true" default:"127.0.0.1"`
+	HttpPort    string `split_words:"true" default:"7777"`
 }
 
 func Load() Env {
