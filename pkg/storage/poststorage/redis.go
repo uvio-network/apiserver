@@ -39,6 +39,10 @@ func posObj(oid objectid.ID) string {
 	return fmt.Sprintf(storageformat.PostObject, oid)
 }
 
+func posTre(oid objectid.ID) string {
+	return fmt.Sprintf(storageformat.PostTree, oid)
+}
+
 func musStr(obj *Object) string {
 	byt, err := json.Marshal(obj)
 	if err != nil {
