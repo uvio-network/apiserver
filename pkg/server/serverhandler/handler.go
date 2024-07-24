@@ -3,6 +3,7 @@ package serverhandler
 import (
 	"fmt"
 
+	"github.com/uvio-network/apiserver/pkg/server/serverhandler/posthandler"
 	"github.com/xh3b4sd/locker"
 	"github.com/xh3b4sd/logger"
 	"github.com/xh3b4sd/tracer"
@@ -27,14 +28,11 @@ func New(c Config) *Handler {
 
 	var han []Interface
 
-	// {
-	// 	han = append(han, descriptionhandler.NewHandler(descriptionhandler.HandlerConfig{
-	// 		Eve: c.Sto.Evnt(),
-	// 		Des: c.Sto.Desc(),
-	// 		Log: c.Log,
-	// 		Prm: c.Prm,
-	// 	}))
-	// }
+	{
+		han = append(han, posthandler.NewHandler(posthandler.HandlerConfig{
+			Log: c.Log,
+		}))
+	}
 
 	var h *Handler
 	{
