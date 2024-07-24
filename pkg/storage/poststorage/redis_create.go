@@ -39,6 +39,13 @@ func (r *Redis) Create(inp []*Object) ([]*Object, error) {
 				return nil, tracer.Mask(err)
 			}
 		}
+
+		// TODO maintain internal tree
+		//
+		//     create tree ID if lifecycle is "propose"
+		//     update tree ID with parent otherwise
+		//
+
 	}
 
 	return inp, nil

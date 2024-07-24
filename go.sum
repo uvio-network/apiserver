@@ -73,8 +73,8 @@ github.com/stvp/tempredis v0.0.0-20181119212430-b82af8480203 h1:QVqDTf3h2WHt08Yu
 github.com/stvp/tempredis v0.0.0-20181119212430-b82af8480203/go.mod h1:oqN97ltKNihBbwlX8dLpwxCl3+HnXKV/R0e+sRLd9C8=
 github.com/twitchtv/twirp v8.1.3+incompatible h1:+F4TdErPgSUbMZMwp13Q/KgDVuI7HJXP61mNV3/7iuU=
 github.com/twitchtv/twirp v8.1.3+incompatible/go.mod h1:RRJoFSAmTEh2weEqWtpPE3vFK5YBhA6bqp2l1kfCC5A=
-github.com/uvio-network/apigocode v0.1.0 h1:JijsgAoccGE1XNAa+H/O4TI3dPhDGB7PysAR3NYPPeY=
-github.com/uvio-network/apigocode v0.1.0/go.mod h1:Kz+Xg6Y+caMKXUfvPHF5zcafnVeTOkClQ6ZzsbzarPY=
+github.com/uvio-network/apigocode v0.1.1 h1:6/WvSdCGSQsw/ZZQO97hr2g5A2k5X8h5h0vk7kjc2tw=
+github.com/uvio-network/apigocode v0.1.1/go.mod h1:Kz+Xg6Y+caMKXUfvPHF5zcafnVeTOkClQ6ZzsbzarPY=
 github.com/xh3b4sd/breakr v0.1.0 h1:ZdQPaocCc2ac4ipEdc3eaq1M0zeg54s1kC7QZQn3TLI=
 github.com/xh3b4sd/breakr v0.1.0/go.mod h1:dhU5gRl07UxonMdO6KzoGKLN545cWXPd3viKzw2bPPY=
 github.com/xh3b4sd/locker v0.1.0 h1:EqrhuBjYCsDckkAAH3OPs4QxmQWDvcUXjQRoos8pFYM=
