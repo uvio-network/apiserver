@@ -3,12 +3,14 @@ module github.com/uvio-network/apiserver
 go 1.22.5
 
 require (
+	github.com/google/gofuzz v1.2.0
 	github.com/gorilla/mux v1.8.1
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/rs/cors v1.11.0
 	github.com/spf13/cobra v1.8.1
 	github.com/twitchtv/twirp v8.1.3+incompatible
+	github.com/uvio-network/apigocode v0.1.0
 	github.com/xh3b4sd/breakr v0.1.0
 	github.com/xh3b4sd/locker v0.1.0
 	github.com/xh3b4sd/logger v0.8.1
@@ -28,12 +30,11 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/matttproud/golang_protobuf_extensions/v2 v2.0.0 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
 	github.com/prometheus/client_golang v1.18.0 // indirect
 	github.com/prometheus/client_model v0.5.0 // indirect
 	github.com/prometheus/common v0.45.0 // indirect
 	github.com/prometheus/procfs v0.12.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	golang.org/x/sys v0.15.0 // indirect
-	google.golang.org/protobuf v1.31.0 // indirect
+	google.golang.org/protobuf v1.34.2 // indirect
 )

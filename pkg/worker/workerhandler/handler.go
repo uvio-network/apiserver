@@ -3,6 +3,7 @@ package workerhandler
 import (
 	"fmt"
 
+	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/postdeletehandler"
 	"github.com/xh3b4sd/locker"
 	"github.com/xh3b4sd/logger"
 	"github.com/xh3b4sd/tracer"
@@ -27,12 +28,11 @@ func New(c Config) *Handler {
 
 	var han []Interface
 
-	// {
-	// 	han = append(han, descriptiondeletehandler.NewCustomHandler(descriptiondeletehandler.CustomHandlerConfig{
-	// 		Des: c.Sto.Desc(),
-	// 		Log: c.Log,
-	// 	}))
-	// }
+	{
+		han = append(han, postdeletehandler.NewCustomHandler(postdeletehandler.CustomHandlerConfig{
+			Log: c.Log,
+		}))
+	}
 
 	var h *Handler
 	{
