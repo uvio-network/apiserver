@@ -4,8 +4,6 @@ import (
 	"net"
 	"os"
 	"os/signal"
-	"strconv"
-	"strings"
 	"syscall"
 	"time"
 
@@ -169,27 +167,4 @@ func defLoc(add string) locker.Interface {
 		}),
 		Poo: pool.NewSinglePoolWithAddress(add),
 	})
-}
-
-func splNum(str string) []int64 {
-	var lis []int64
-
-	for _, x := range strings.Split(str, ",") {
-		lis = append(lis, musNum(x))
-	}
-
-	return lis
-}
-
-func splStr(str string) []string {
-	return strings.Split(str, ",")
-}
-
-func musNum(str string) int64 {
-	num, err := strconv.ParseInt(str, 10, 64)
-	if err != nil {
-		tracer.Panic(tracer.Mask(err))
-	}
-
-	return num
 }
