@@ -15,6 +15,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/server/interceptor/failedinterceptor"
 	"github.com/uvio-network/apiserver/pkg/server/middleware/corsmiddleware"
 	"github.com/uvio-network/apiserver/pkg/server/serverhandler"
+	"github.com/uvio-network/apiserver/pkg/storage"
 	"github.com/uvio-network/apiserver/pkg/worker"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler"
 	"github.com/xh3b4sd/breakr"
@@ -75,6 +76,14 @@ func (r *run) runE(cmd *cobra.Command, args []string) error {
 		loc = defLoc(red.Listen())
 	}
 
+	var sto storage.Interface
+	{
+		sto = storage.New(storage.Config{
+			Log: log,
+			Red: red,
+		})
+	}
+
 	// --------------------------------------------------------------------- //
 
 	var shn *serverhandler.Handler
@@ -82,6 +91,7 @@ func (r *run) runE(cmd *cobra.Command, args []string) error {
 		shn = serverhandler.New(serverhandler.Config{
 			Loc: loc,
 			Log: log,
+			Sto: sto,
 		})
 	}
 

@@ -35,3 +35,12 @@ func (i ID) Int() int64 {
 func (i ID) String() string {
 	return string(i)
 }
+
+// Verify returns true if the underlying ID is greater than a random ID that has
+// been generated in the past. This verification check works as long as the
+// underlying ID is derived by the current time of ID generation. Verify ensures
+// that an ID cannot simply be empty, while following our currently implemented
+// format.
+func (i ID) Verify() bool {
+	return i.Int() > 1721826156886308
+}

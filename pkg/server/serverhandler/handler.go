@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/uvio-network/apiserver/pkg/server/serverhandler/posthandler"
+	"github.com/uvio-network/apiserver/pkg/storage"
 	"github.com/xh3b4sd/locker"
 	"github.com/xh3b4sd/logger"
 	"github.com/xh3b4sd/tracer"
@@ -12,6 +13,7 @@ import (
 type Config struct {
 	Loc locker.Interface
 	Log logger.Interface
+	Sto storage.Interface
 }
 
 type Handler struct {
@@ -31,6 +33,7 @@ func New(c Config) *Handler {
 	{
 		han = append(han, posthandler.NewHandler(posthandler.HandlerConfig{
 			Log: c.Log,
+			Pos: c.Sto.Post(),
 		}))
 	}
 
