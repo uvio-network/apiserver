@@ -15,8 +15,8 @@ type Object struct {
 	Kind      string      `json:"kind"`
 	Lifecycle string      `json:"lifecycle"`
 	Option    bool        `json:"option"`
-	Owner     objectid.ID `json:"owner"`  // TODO verify post creator once auth is setup
-	Parent    objectid.ID `json:"parent"` // TODO must exist if given
+	Owner     objectid.ID `json:"owner"` // TODO verify post creator once auth is setup
+	Parent    objectid.ID `json:"parent"`
 	Stake     float64     `json:"stake"`
 	Text      string      `json:"text"`
 	Token     string      `json:"token"`
