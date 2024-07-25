@@ -31,6 +31,7 @@ func (r *Redis) Create(inp *Object) (*Object, error) {
 			{
 				inp.Created = now
 				inp.ID = objectid.Random(objectid.Time(now))
+				inp.Image.Time = now
 				inp.Name.Time = now
 			}
 
@@ -55,13 +56,12 @@ func (r *Redis) Create(inp *Object) (*Object, error) {
 			return inp, nil
 		} else if err != nil {
 			return nil, tracer.Mask(err)
-		} else if out.Image != inp.Image || out.Name.Data != inp.Name.Data {
-
+		} else if out.Image.Data != inp.Image.Data || out.Name.Data != inp.Name.Data {
 			{
 				out.Image.Data = inp.Image.Data
 				out.Image.Time = now
 				out.Name.Data = inp.Name.Data
-				inp.Name.Time = now
+				out.Name.Time = now
 			}
 
 			{
