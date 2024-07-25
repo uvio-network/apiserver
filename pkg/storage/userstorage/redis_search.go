@@ -56,20 +56,22 @@ func (r *Redis) SearchUser(use []objectid.ID) ([]*Object, error) {
 	}
 
 	var out []*Object
-	for _, x := range jsn {
+	for i := range jsn {
 		var obj *Object
 		{
 			obj = &Object{}
 		}
 
-		if x != "" {
-			err = json.Unmarshal([]byte(x), obj)
+		if jsn[i] != "" {
+			err = json.Unmarshal([]byte(jsn[i]), obj)
 			if err != nil {
 				return nil, tracer.Mask(err)
 			}
 		}
 
-		out = append(out, obj)
+		{
+			out = append(out, obj)
+		}
 	}
 
 	return out, nil
