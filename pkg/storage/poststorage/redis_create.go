@@ -40,10 +40,9 @@ func (r *Redis) Create(inp []*Object) ([]*Object, error) {
 		// fetch the post object provided in the parent field of the given claim and
 		// take the existing tree ID from there. Note that we are indirectly
 		// validating here that the given parent ID does in fact exist.
-		var tre objectid.ID
 		if inp[i].Kind == "claim" {
 			if inp[i].Lifecycle == "propose" {
-				tre = objectid.Random(objectid.Time(now))
+				inp[i].Tree = objectid.Random(objectid.Time(now))
 			} else {
 				var jsn []string
 				{
@@ -72,7 +71,7 @@ func (r *Redis) Create(inp []*Object) ([]*Object, error) {
 				}
 
 				{
-					tre = obj.Tree
+					inp[i].Tree = obj.Tree
 				}
 			}
 		}
@@ -89,8 +88,8 @@ func (r *Redis) Create(inp []*Object) ([]*Object, error) {
 		// Associate the given post ID with the given tree ID if the given post kind
 		// is "claim". That means we are only managing trees for claims, and not for
 		// comments.
-		if tre != "" {
-			err = r.red.Sorted().Create().Score(posTre(tre), inp[i].ID.String(), inp[i].ID.Float())
+		if inp[i].Tree != "" {
+			err = r.red.Sorted().Create().Score(posTre(inp[i].Tree), inp[i].ID.String(), inp[i].ID.Float())
 			if err != nil {
 				return nil, tracer.Mask(err)
 			}

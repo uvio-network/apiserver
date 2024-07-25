@@ -16,10 +16,6 @@ import (
 func (h *Handler) Search(ctx context.Context, req *user.SearchI) (*user.SearchO, error) {
 	var out []*userstorage.Object
 
-	//
-	// Search users by ID.
-	//
-
 	var slf bool
 	var use []objectid.ID
 	for _, x := range req.Object {
@@ -31,6 +27,10 @@ func (h *Handler) Search(ctx context.Context, req *user.SearchI) (*user.SearchO,
 			}
 		}
 	}
+
+	//
+	// Search users by ID.
+	//
 
 	if len(use) != 0 {
 		lis, err := h.use.SearchUser(use)
