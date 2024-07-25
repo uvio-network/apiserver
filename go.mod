@@ -3,6 +3,7 @@ module github.com/uvio-network/apiserver
 go 1.22.5
 
 require (
+	github.com/auth0/go-jwt-middleware/v2 v2.2.1
 	github.com/google/gofuzz v1.2.0
 	github.com/gorilla/mux v1.8.1
 	github.com/joho/godotenv v1.5.1
@@ -35,6 +36,9 @@ require (
 	github.com/prometheus/common v0.45.0 // indirect
 	github.com/prometheus/procfs v0.12.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
+	golang.org/x/crypto v0.17.0 // indirect
+	golang.org/x/sync v0.6.0 // indirect
 	golang.org/x/sys v0.15.0 // indirect
 	google.golang.org/protobuf v1.34.2 // indirect
+	gopkg.in/go-jose/go-jose.v2 v2.6.2 // indirect
 )
