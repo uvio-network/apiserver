@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/uvio-network/apiserver/pkg/server/serverhandler/posthandler"
+	"github.com/uvio-network/apiserver/pkg/server/serverhandler/userhandler"
 	"github.com/uvio-network/apiserver/pkg/storage"
 	"github.com/xh3b4sd/locker"
 	"github.com/xh3b4sd/logger"
@@ -34,6 +35,13 @@ func New(c Config) *Handler {
 		han = append(han, posthandler.NewHandler(posthandler.HandlerConfig{
 			Log: c.Log,
 			Pos: c.Sto.Post(),
+		}))
+	}
+
+	{
+		han = append(han, userhandler.NewHandler(userhandler.HandlerConfig{
+			Log: c.Log,
+			Use: c.Sto.User(),
 		}))
 	}
 

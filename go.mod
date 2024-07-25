@@ -11,7 +11,7 @@ require (
 	github.com/rs/cors v1.11.0
 	github.com/spf13/cobra v1.8.1
 	github.com/twitchtv/twirp v8.1.3+incompatible
-	github.com/uvio-network/apigocode v0.1.1
+	github.com/uvio-network/apigocode v0.1.2
 	github.com/xh3b4sd/breakr v0.1.0
 	github.com/xh3b4sd/locker v0.1.0
 	github.com/xh3b4sd/logger v0.8.1

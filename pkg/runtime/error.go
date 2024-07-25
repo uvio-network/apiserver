@@ -9,6 +9,11 @@ var ExecutionFailedError = &tracer.Error{
 	Desc: "This internal error implies a severe malfunction of the system.",
 }
 
+var QueryObjectConflictError = &tracer.Error{
+	Kind: "QueryObjectConflictError",
+	Desc: "The request expects the query object to define a single intent. The query object was found to define multiple intents. Therefore the request failed.",
+}
+
 var QueryObjectEmptyError = &tracer.Error{
 	Kind: "QueryObjectEmptyError",
 	Desc: "The request expects the query object not to be empty. The query object was found to be empty. Therefore the request failed.",
