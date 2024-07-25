@@ -28,3 +28,8 @@ var QueryObjectLimitError = &tracer.Error{
 	Kind: "QueryObjectLimitError",
 	Desc: "The request expects an upper limit of 100 query objects per call. The upper limit of 100 query objects per call was found. Therefore the request failed.",
 }
+
+var UserAuthError = &tracer.Error{
+	Kind: "UserAuthError",
+	Desc: "The request expects a valid access token. No valid access token was found. Therefore the request failed.",
+}

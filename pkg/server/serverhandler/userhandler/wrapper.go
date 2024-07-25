@@ -70,7 +70,7 @@ func (w *wrapper) Search(ctx context.Context, req *user.SearchI) (*user.SearchO,
 			p := x.Public.ProtoReflect().IsValid()
 
 			if i && !p || !i && p {
-				return nil, tracer.Maskf(runtime.QueryObjectInvalidError, "intern and public must not be used together")
+				return nil, tracer.Maskf(runtime.QueryObjectConflictError, "intern and public must not be used together")
 			}
 		}
 	}
