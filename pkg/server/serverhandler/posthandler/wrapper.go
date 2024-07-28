@@ -32,10 +32,7 @@ func (w *wrapper) Create(ctx context.Context, req *post.CreateI) (*post.CreateO,
 
 	{
 		for _, x := range req.Object {
-			if x.Intern != nil {
-				return nil, tracer.Maskf(runtime.QueryObjectInvalidError, "intern must be empty")
-			}
-			if !x.Public.ProtoReflect().IsValid() {
+			if createPublicEmpty(x.Public) {
 				return nil, tracer.Maskf(runtime.QueryObjectInvalidError, "public must not be empty")
 			}
 		}
@@ -73,8 +70,8 @@ func (w *wrapper) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 
 	{
 		for _, x := range req.Object {
-			i := x.Intern.ProtoReflect().IsValid()
-			s := x.Symbol.ProtoReflect().IsValid()
+			i := searchInternEmpty(x.Intern)
+			s := searchSymbolEmpty(x.Symbol)
 
 			if i && !s || !i && s {
 				return nil, tracer.Maskf(runtime.QueryObjectConflictError, "intern and symbol must not be used together")
@@ -87,4 +84,16 @@ func (w *wrapper) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 
 func (w *wrapper) Update(ctx context.Context, req *post.UpdateI) (*post.UpdateO, error) {
 	return w.han.Update(ctx, req)
+}
+
+func createPublicEmpty(x *post.CreateI_Object_Public) bool {
+	return x == nil || (x.Expiry == "" && x.Kind == "" && x.Lifecycle == "" && x.Option == "" && x.Parent == "" && x.Stake == "" && x.Text == "" && x.Token == "")
+}
+
+func searchInternEmpty(x *post.SearchI_Object_Intern) bool {
+	return x == nil || (x.Id == "" && x.Owner == "")
+}
+
+func searchSymbolEmpty(x *post.SearchI_Object_Symbol) bool {
+	return x == nil || (x.List == "" && x.Time == "" && x.Tree == "")
 }

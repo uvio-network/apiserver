@@ -14,14 +14,21 @@ import (
 func (h *Handler) Create(ctx context.Context, req *user.CreateI) (*user.CreateO, error) {
 	var err error
 
+	var img string
+	var nam string
+	if req.Object[0].Public != nil {
+		img = req.Object[0].Public.Image
+		nam = req.Object[0].Public.Name
+	}
+
 	var inp *userstorage.Object
 	{
 		inp = &userstorage.Object{
 			Image: objectfield.String{
-				Data: req.Object[0].Public.Image,
+				Data: img,
 			},
 			Name: objectfield.String{
-				Data: req.Object[0].Public.Name,
+				Data: nam,
 			},
 			Subject: []string{subjectclaim.FromContext(ctx)},
 		}

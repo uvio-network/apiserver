@@ -24,13 +24,10 @@ type Object struct {
 
 func (o *Object) Verify() error {
 	{
-		if o.Name.Data == "" {
-			return tracer.Mask(UserNameEmptyError)
-		}
-		if len(o.Name.Data) < 2 {
+		if o.Name.Data != "" && len(o.Name.Data) < 2 {
 			return tracer.Maskf(UserNameLengthError, "%d", len(o.Name.Data))
 		}
-		if len(o.Name.Data) > 30 {
+		if o.Name.Data != "" && len(o.Name.Data) > 30 {
 			return tracer.Maskf(UserNameLengthError, "%d", len(o.Name.Data))
 		}
 	}

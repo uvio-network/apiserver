@@ -47,7 +47,7 @@ func NewMiddleware(c MiddlewareConfig) *Middleware {
 	var fnc func(ctx context.Context) (interface{}, error)
 	{
 		fnc = jwks.NewCachingProvider(
-			nil, // nil because of our custom JWKS URI
+			musUrl(c.URL),
 			5*time.Minute,
 			jwks.WithCustomJWKSURI(musUrl(c.URL)),
 		).KeyFunc
