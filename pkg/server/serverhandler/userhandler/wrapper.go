@@ -29,17 +29,6 @@ func (w *wrapper) Create(ctx context.Context, req *user.CreateI) (*user.CreateO,
 		}
 	}
 
-	{
-		for _, x := range req.Object {
-			if x.Intern != nil {
-				return nil, tracer.Maskf(runtime.QueryObjectInvalidError, "intern must be empty")
-			}
-			if !x.Public.ProtoReflect().IsValid() {
-				return nil, tracer.Maskf(runtime.QueryObjectInvalidError, "public must not be empty")
-			}
-		}
-	}
-
 	return w.han.Create(ctx, req)
 }
 
@@ -66,8 +55,8 @@ func (w *wrapper) Search(ctx context.Context, req *user.SearchI) (*user.SearchO,
 
 	{
 		for _, x := range req.Object {
-			i := x.Intern.ProtoReflect().IsValid()
-			p := x.Public.ProtoReflect().IsValid()
+			i := searchInternEmpty(x.Intern)
+			p := searchPublicEmpty(x.Public)
 
 			if i && !p || !i && p {
 				return nil, tracer.Maskf(runtime.QueryObjectConflictError, "intern and public must not be used together")
@@ -80,4 +69,12 @@ func (w *wrapper) Search(ctx context.Context, req *user.SearchI) (*user.SearchO,
 
 func (w *wrapper) Update(ctx context.Context, req *user.UpdateI) (*user.UpdateO, error) {
 	return w.han.Update(ctx, req)
+}
+
+func searchInternEmpty(x *user.SearchI_Object_Intern) bool {
+	return x == nil || (x.Id == "")
+}
+
+func searchPublicEmpty(x *user.SearchI_Object_Public) bool {
+	return x == nil || (x.Name == "")
 }

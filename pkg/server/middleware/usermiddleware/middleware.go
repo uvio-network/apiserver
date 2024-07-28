@@ -59,14 +59,14 @@ func (m *Middleware) Handler(h http.Handler) http.Handler {
 			}
 		}
 
-		// Try to find a user object for the given subject claim. If a subject claim
-		// is given and the user storage cannot find an associated user object, then
-		// this means a user object may be requested to be created. And so we simply
-		// forward the request.
+		// Try to find a user object for the given subject claim. If the given
+		// subject claim causes an internal mapping error and the calling user
+		// requested to be created, then simply forward the request to the server
+		// handler responsible for user creation.
 		var obj *userstorage.Object
 		{
 			obj, err = m.use.SearchSubject(sub)
-			if errors.Is(err, userstorage.SubjectClaimMappingError) {
+			if r.URL.String() == "/user.API/Create" && errors.Is(err, userstorage.SubjectClaimMappingError) {
 				h.ServeHTTP(w, r)
 				return
 			} else if err != nil {
