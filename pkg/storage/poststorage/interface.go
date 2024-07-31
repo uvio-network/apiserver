@@ -10,10 +10,12 @@ type Interface interface {
 	//
 	Create([]*Object) ([]*Object, error)
 
-	// SearchLabels returns the post objects matching the given category labels.
+	// SearchLabels returns the post objects grouped under all of the given
+	// category labels. Multiple searches can be done for a set of labels each,
+	// where each set of labels defines the intersection of claims to search for.
 	//
 	//     @inp[0] the calling user
-	//     @inp[1] the category labels to search for
+	//     @inp[1] the list of category labels to search for
 	//     @out[0] the list of post objects matching the given post IDs
 	//
 	SearchLabels(objectid.ID, [][]string) ([]*Object, error)

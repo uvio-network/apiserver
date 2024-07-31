@@ -50,13 +50,16 @@ func (o *Object) Verify() error {
 	}
 
 	{
-		if o.Kind != "claim" && len(o.Labels) == 0 {
+		if o.Kind == "comment" && len(o.Labels) != 0 {
+			return tracer.Mask(CommentLabelsInvalidError)
+		}
+		if o.Kind == "claim" && len(o.Labels) == 0 {
 			return tracer.Mask(ClaimLabelsEmptyError)
 		}
-		if o.Kind != "claim" && len(o.Labels) > 4 {
+		if o.Kind == "claim" && len(o.Labels) > 4 {
 			return tracer.Mask(ClaimLabelsLimitError)
 		}
-		if o.Kind != "claim" && generic.Duplicate(o.Labels) {
+		if o.Kind == "claim" && generic.Duplicate(o.Labels) {
 			return tracer.Mask(ClaimLabelsUniqueError)
 		}
 	}

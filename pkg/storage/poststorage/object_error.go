@@ -34,6 +34,11 @@ var ClaimParentInvalidError = &tracer.Error{
 	Desc: "The request expects the claim parent to be empty. The claim parent was not found to be empty. Therefore the request failed.",
 }
 
+var CommentLabelsInvalidError = &tracer.Error{
+	Kind: "CommentLabelsInvalidError",
+	Desc: "The request expects the comment labels to be empty. The comment labels were not found to be empty. Therefore the request failed.",
+}
+
 var CommentLifecycleInvalidError = &tracer.Error{
 	Kind: "CommentLifecycleInvalidError",
 	Desc: "The request expects the comment lifecycle to be empty. The comment lifecycle was not found to be empty. Therefore the request failed.",
