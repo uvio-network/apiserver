@@ -71,10 +71,17 @@ func (w *wrapper) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 	{
 		for _, x := range req.Object {
 			i := searchInternEmpty(x.Intern)
+			p := searchPublicEmpty(x.Public)
 			s := searchSymbolEmpty(x.Symbol)
 
+			if i && !p || !i && p {
+				return nil, tracer.Maskf(runtime.QueryObjectConflictError, "intern and public must not be used together")
+			}
 			if i && !s || !i && s {
 				return nil, tracer.Maskf(runtime.QueryObjectConflictError, "intern and symbol must not be used together")
+			}
+			if p && !s || !p && s {
+				return nil, tracer.Maskf(runtime.QueryObjectConflictError, "public and symbol must not be used together")
 			}
 		}
 	}
@@ -87,13 +94,17 @@ func (w *wrapper) Update(ctx context.Context, req *post.UpdateI) (*post.UpdateO,
 }
 
 func createPublicEmpty(x *post.CreateI_Object_Public) bool {
-	return x == nil || (x.Expiry == "" && x.Kind == "" && x.Lifecycle == "" && x.Option == "" && x.Parent == "" && x.Stake == "" && x.Text == "" && x.Token == "")
+	return x == nil || (x.Expiry == "" && x.Kind == "" && x.Labels == "" && x.Lifecycle == "" && x.Option == "" && x.Parent == "" && x.Stake == "" && x.Text == "" && x.Token == "")
 }
 
 func searchInternEmpty(x *post.SearchI_Object_Intern) bool {
-	return x == nil || (x.Id == "" && x.Owner == "")
+	return x == nil || (x.Id == "" && x.Owner == "" && x.Tree == "")
+}
+
+func searchPublicEmpty(x *post.SearchI_Object_Public) bool {
+	return x == nil || (x.Labels == "")
 }
 
 func searchSymbolEmpty(x *post.SearchI_Object_Symbol) bool {
-	return x == nil || (x.List == "" && x.Time == "" && x.Tree == "")
+	return x == nil || (x.List == "" && x.Time == "")
 }

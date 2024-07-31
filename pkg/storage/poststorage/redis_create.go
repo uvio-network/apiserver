@@ -85,11 +85,29 @@ func (r *Redis) Create(inp []*Object) ([]*Object, error) {
 			}
 		}
 
+		// Add the given claim object ID to the list of label names, so that we can
+		// search for claims given any label name.
+		for _, x := range inp[i].Labels {
+			err = r.red.Sorted().Create().Score(posLab(x), inp[i].ID.String(), inp[i].ID.Float())
+			if err != nil {
+				return nil, tracer.Mask(err)
+			}
+		}
+
 		// Associate the given post ID with the given tree ID if the given post kind
 		// is "claim". That means we are only managing trees for claims, and not for
 		// comments.
 		if inp[i].Tree != "" {
 			err = r.red.Sorted().Create().Score(posTre(inp[i].Tree), inp[i].ID.String(), inp[i].ID.Float())
+			if err != nil {
+				return nil, tracer.Mask(err)
+			}
+		}
+
+		// Track the user creating this claim as the owner, and make sure that we
+		// can find all claims for any given user ID.
+		{
+			err = r.red.Sorted().Create().Score(posOwn(inp[i].Owner), inp[i].ID.String(), inp[i].ID.Float())
 			if err != nil {
 				return nil, tracer.Mask(err)
 			}

@@ -10,6 +10,14 @@ type Interface interface {
 	//
 	Create([]*Object) ([]*Object, error)
 
+	// SearchLabels returns the post objects matching the given category labels.
+	//
+	//     @inp[0] the calling user
+	//     @inp[1] the category labels to search for
+	//     @out[0] the list of post objects matching the given post IDs
+	//
+	SearchLabels(objectid.ID, [][]string) ([]*Object, error)
+
 	// SearchPost returns the post objects matching the given post IDs.
 	//
 	//     @inp[0] the calling user

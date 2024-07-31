@@ -9,6 +9,40 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
+func (r *Redis) SearchLabels(use objectid.ID, inp [][]string) ([]*Object, error) {
+	var err error
+
+	var out []*Object
+	for _, x := range inp {
+		// val will result in a list of all post IDs grouped under all of the given
+		// label names, if any.
+		var val []string
+		{
+			val, err = r.red.Sorted().Search().Inter(objectid.Fmt(x, storageformat.PostLabel)...)
+			if err != nil {
+				return nil, tracer.Mask(err)
+			}
+		}
+
+		// There might not be any post IDs, so we do not proceed, but instead
+		// continue with the next list of label names, if any.
+		if len(val) == 0 {
+			continue
+		}
+
+		{
+			lis, err := r.SearchPost(use, objectid.IDs(val))
+			if err != nil {
+				return nil, tracer.Mask(err)
+			}
+
+			out = append(out, lis...)
+		}
+	}
+
+	return out, nil
+}
+
 func (r *Redis) SearchPost(use objectid.ID, inp []objectid.ID) ([]*Object, error) {
 	var err error
 
@@ -21,6 +55,10 @@ func (r *Redis) SearchPost(use objectid.ID, inp []objectid.ID) ([]*Object, error
 			return nil, tracer.Mask(err)
 		}
 	}
+
+	// if use != "" {
+	// // TODO annotate option and stake
+	// }
 
 	var out []*Object
 	for i := range jsn {
@@ -66,7 +104,7 @@ func (r *Redis) SearchTree(use objectid.ID, inp []objectid.ID) ([]*Object, error
 		}
 
 		{
-			lis, err := r.SearchPost(x, objectid.IDs(val))
+			lis, err := r.SearchPost(use, objectid.IDs(val))
 			if err != nil {
 				return nil, tracer.Mask(err)
 			}
