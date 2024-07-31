@@ -32,7 +32,9 @@ func (w *wrapper) Create(ctx context.Context, req *post.CreateI) (*post.CreateO,
 
 	{
 		for _, x := range req.Object {
-			if createPublicEmpty(x.Public) {
+			p := createPublicEmpty(x.Public)
+
+			if p {
 				return nil, tracer.Maskf(runtime.QueryObjectInvalidError, "public must not be empty")
 			}
 		}
@@ -74,14 +76,17 @@ func (w *wrapper) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 			p := searchPublicEmpty(x.Public)
 			s := searchSymbolEmpty(x.Symbol)
 
-			if i && !p || !i && p {
+			if !i && !p {
 				return nil, tracer.Maskf(runtime.QueryObjectConflictError, "intern and public must not be used together")
 			}
-			if i && !s || !i && s {
+			if !i && !s {
 				return nil, tracer.Maskf(runtime.QueryObjectConflictError, "intern and symbol must not be used together")
 			}
-			if p && !s || !p && s {
+			if !p && !s {
 				return nil, tracer.Maskf(runtime.QueryObjectConflictError, "public and symbol must not be used together")
+			}
+			if i && p && s {
+				return nil, tracer.Maskf(runtime.QueryObjectEmptyError, "one of [intern public symbol] must be used")
 			}
 		}
 	}
