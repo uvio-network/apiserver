@@ -58,8 +58,11 @@ func (w *wrapper) Search(ctx context.Context, req *user.SearchI) (*user.SearchO,
 			i := searchInternEmpty(x.Intern)
 			p := searchPublicEmpty(x.Public)
 
-			if i && !p || !i && p {
+			if !i && !p {
 				return nil, tracer.Maskf(runtime.QueryObjectConflictError, "intern and public must not be used together")
+			}
+			if i && p {
+				return nil, tracer.Maskf(runtime.QueryObjectEmptyError, "one of [intern public] must be used")
 			}
 		}
 	}

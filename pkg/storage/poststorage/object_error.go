@@ -4,6 +4,21 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
+var ClaimLabelsUniqueError = &tracer.Error{
+	Kind: "ClaimLabelsUniqueError",
+	Desc: "The request expects the claim labels to be unique. The claim labels were not found to be unique. Therefore the request failed.",
+}
+
+var ClaimLabelsEmptyError = &tracer.Error{
+	Kind: "ClaimLabelsEmptyError",
+	Desc: "The request expects the claim labels not to be empty. The claim labels were found to be empty. Therefore the request failed.",
+}
+
+var ClaimLabelsLimitError = &tracer.Error{
+	Kind: "ClaimLabelsLimitError",
+	Desc: "The request expects the claim not to have more than four labels. The claim was found to have more than four labels. Therefore the request failed.",
+}
+
 var ClaimLifecycleInvalidError = &tracer.Error{
 	Kind: "ClaimLifecycleInvalidError",
 	Desc: "The request expects the claim lifecycle to be one of [propose resolve dispute nullify]. The claim lifecycle was not found to be one of those values. Therefore the request failed.",
@@ -17,6 +32,11 @@ var ClaimParentEmptyError = &tracer.Error{
 var ClaimParentInvalidError = &tracer.Error{
 	Kind: "ClaimParentInvalidError",
 	Desc: "The request expects the claim parent to be empty. The claim parent was not found to be empty. Therefore the request failed.",
+}
+
+var CommentLabelsInvalidError = &tracer.Error{
+	Kind: "CommentLabelsInvalidError",
+	Desc: "The request expects the comment labels to be empty. The comment labels were not found to be empty. Therefore the request failed.",
 }
 
 var CommentLifecycleInvalidError = &tracer.Error{
@@ -54,7 +74,17 @@ var PostTextEmptyError = &tracer.Error{
 	Desc: "The request expects the post text not to be empty. The post text was found to be empty. Therefore the request failed.",
 }
 
+var PostTextLengthError = &tracer.Error{
+	Kind: "PostTextLengthError",
+	Desc: "The request expects the post text to have between 100 and 2500 characters. The post text was not found to have between 100 and 2500 characters. Therefore the request failed.",
+}
+
 var PostTokenEmptyError = &tracer.Error{
 	Kind: "PostTokenEmptyError",
 	Desc: "The request expects the post token not to be empty. The post token was found to be empty. Therefore the request failed.",
+}
+
+var PostOwnerEmptyError = &tracer.Error{
+	Kind: "PostOwnerEmptyError",
+	Desc: "The request expects the post owner not to be empty. The post owner was found to be empty. Therefore the request failed.",
 }

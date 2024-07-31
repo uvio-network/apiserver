@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/uvio-network/apiserver/pkg/format/labelname"
 	"github.com/uvio-network/apiserver/pkg/format/storageformat"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/xh3b4sd/logger"
@@ -35,12 +36,20 @@ func NewRedis(c RedisConfig) *Redis {
 	}
 }
 
+func posLab(str string) string {
+	return fmt.Sprintf(storageformat.PostLabel, labelname.Format(str))
+}
+
 func posObj(oid objectid.ID) string {
 	return fmt.Sprintf(storageformat.PostObject, oid)
 }
 
 func posTre(oid objectid.ID) string {
 	return fmt.Sprintf(storageformat.PostTree, oid)
+}
+
+func posOwn(oid objectid.ID) string {
+	return fmt.Sprintf(storageformat.PostOwner, oid)
 }
 
 func musStr(obj *Object) string {

@@ -21,14 +21,25 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 		use = userid.FromContext(ctx)
 	}
 
-	var pos []objectid.ID
+	var ids []objectid.ID
+	var lab [][]string
 	var tre []objectid.ID
 	for _, x := range req.Object {
 		if x.Intern != nil && x.Intern.Id != "" {
-			pos = append(pos, objectid.ID(x.Intern.Id))
+			ids = append(ids, objectid.ID(x.Intern.Id))
 		}
-		if x.Symbol != nil && x.Symbol.Tree != "" {
-			tre = append(tre, objectid.ID(x.Symbol.Tree))
+		if x.Public != nil && x.Public.Labels != "" {
+			var lis []string
+			{
+				lis = converter.StringToSlice(x.Public.Labels)
+			}
+
+			if len(lis) != 0 {
+				lab = append(lab, lis)
+			}
+		}
+		if x.Intern != nil && x.Intern.Tree != "" {
+			tre = append(tre, objectid.ID(x.Intern.Tree))
 		}
 	}
 
@@ -36,8 +47,21 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 	// Search posts by ID.
 	//
 
-	if len(pos) != 0 {
-		lis, err := h.pos.SearchPost(use, pos)
+	if len(ids) != 0 {
+		lis, err := h.pos.SearchPost(use, ids)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+
+		out = append(out, lis...)
+	}
+
+	//
+	// Search posts by labels.
+	//
+
+	if len(lab) != 0 {
+		lis, err := h.pos.SearchLabels(use, lab)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -90,6 +114,7 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 			Public: &post.SearchO_Object_Public{
 				Expiry:    converter.TimeToString(x.Expiry),
 				Kind:      x.Kind,
+				Labels:    converter.SliceToString(x.Labels),
 				Lifecycle: x.Lifecycle,
 				Option:    converter.BoolToString(x.Option),
 				Stake:     converter.FloatToString(x.Stake),

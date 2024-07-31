@@ -19,6 +19,7 @@ func (h *Handler) Create(ctx context.Context, req *post.CreateI) (*post.CreateO,
 		inp = append(inp, &poststorage.Object{
 			Expiry:    converter.StringToTime(x.Public.Expiry),
 			Kind:      x.Public.Kind,
+			Labels:    converter.StringToSlice(x.Public.Labels),
 			Lifecycle: x.Public.Lifecycle,
 			Option:    converter.StringToBool(x.Public.Option),
 			Owner:     userid.FromContext(ctx),

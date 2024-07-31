@@ -1,7 +1,18 @@
 package storageformat
 
 const (
+	// PostLabel is used to store all claim IDs associated to a given label name.
+	// This key allows us to search for all claims that are categorized under any
+	// given label.
+	//
+	//     label name              claim IDs
+	//                       ->
+	//     post/label/mev          3456,5678
+	//
+	PostLabel = "post/label/%s"
+
 	// PostObject is used to store our internal representation of a post object.
+	// This key allows us to search for all claim objects by their own object ID.
 	//
 	//     post ID                   post object
 	//                         ->
@@ -9,13 +20,24 @@ const (
 	//
 	PostObject = "post/object/%s"
 
-	// PostTree is used to store all claim IDs that belong to the same tree.
+	// PostTree is used to store all claim IDs that belong to the same tree. This
+	// key allows us to search for all claims that belong to the same claim tree.
 	//
 	//     tree ID                 claim IDs
 	//                       ->
 	//     post/tree/1234          3456,5678
 	//
 	PostTree = "post/tree/%s"
+
+	// PostOwner is used to store all claim IDs that have been created by a
+	// specific user. This key allows us to search for all claims that have been
+	// created by any given user.
+	//
+	//     user ID                  claim IDs
+	//                        ->
+	//     post/owner/1234          3456,5678
+	//
+	PostOwner = "post/owner/%s"
 
 	// UserSubject is used to store the user specific mappings between external
 	// and internal identity representations. An external representation might be
@@ -31,6 +53,7 @@ const (
 	UserSubject = "user/subject/%s"
 
 	// UserObject is used to store our internal representation of a user object.
+	// This key allows us to search for all user objects by their own object ID.
 	//
 	//     user ID                   user object
 	//                         ->

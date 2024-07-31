@@ -4,6 +4,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/uvio-network/apiserver/pkg/generic"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/xh3b4sd/tracer"
 )
@@ -13,9 +14,10 @@ type Object struct {
 	Expiry    time.Time   `json:"expiry"`
 	ID        objectid.ID `json:"id"`
 	Kind      string      `json:"kind"`
+	Labels    []string    `json:"labels"`
 	Lifecycle string      `json:"lifecycle"`
 	Option    bool        `json:"option"`
-	Owner     objectid.ID `json:"owner"` // TODO verify post creator once auth is setup
+	Owner     objectid.ID `json:"owner"`
 	Parent    objectid.ID `json:"parent"`
 	Stake     float64     `json:"stake"`
 	Text      string      `json:"text"`
@@ -44,6 +46,21 @@ func (o *Object) Verify() error {
 	{
 		if o.Kind != "claim" && o.Kind != "comment" {
 			return tracer.Maskf(PostKindInvalidError, o.Kind)
+		}
+	}
+
+	{
+		if o.Kind == "comment" && len(o.Labels) != 0 {
+			return tracer.Mask(CommentLabelsInvalidError)
+		}
+		if o.Kind == "claim" && len(o.Labels) == 0 {
+			return tracer.Mask(ClaimLabelsEmptyError)
+		}
+		if o.Kind == "claim" && len(o.Labels) > 4 {
+			return tracer.Mask(ClaimLabelsLimitError)
+		}
+		if o.Kind == "claim" && generic.Duplicate(o.Labels) {
+			return tracer.Mask(ClaimLabelsUniqueError)
 		}
 	}
 
@@ -83,6 +100,12 @@ func (o *Object) Verify() error {
 		if txt == "" {
 			return tracer.Mask(PostTextEmptyError)
 		}
+		if len(txt) < 100 {
+			return tracer.Maskf(PostTextLengthError, "%d", len(txt))
+		}
+		if len(txt) > 2500 {
+			return tracer.Maskf(PostTextLengthError, "%d", len(txt))
+		}
 	}
 
 	{
@@ -93,11 +116,11 @@ func (o *Object) Verify() error {
 		}
 	}
 
-	// {
-	// 	if o.User == "" {
-	// 		return tracer.Mask(runtime.UserIDEmptyError)
-	// 	}
-	// }
+	{
+		if o.Owner == "" {
+			return tracer.Mask(PostOwnerEmptyError)
+		}
+	}
 
 	return nil
 }
