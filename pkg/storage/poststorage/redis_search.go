@@ -44,6 +44,38 @@ func (r *Redis) SearchLabels(use objectid.ID, inp [][]string) ([]*Object, error)
 	return out, nil
 }
 
+func (r *Redis) SearchPage(use objectid.ID, beg int, end int) ([]*Object, error) {
+	var err error
+
+	// val will result in a list of all post IDs within the given pagination
+	// range, if any.
+	var val []string
+	{
+		val, err = r.red.Sorted().Search().Order(storageformat.PostCreated, -(end + 1), -(beg + 1))
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	// There might not be any post IDs, so we do not proceed, but instead return
+	// nothing.
+	if len(val) == 0 {
+		return nil, nil
+	}
+
+	var out []*Object
+	{
+		lis, err := r.SearchPost(use, objectid.IDs(val))
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+
+		out = append(out, lis...)
+	}
+
+	return out, nil
+}
+
 func (r *Redis) SearchPost(use objectid.ID, inp []objectid.ID) ([]*Object, error) {
 	var err error
 

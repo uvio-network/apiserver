@@ -20,6 +20,17 @@ type Interface interface {
 	//
 	SearchLabels(objectid.ID, [][]string) ([]*Object, error)
 
+	// SearchPage returns the post objects within the given pagination range in
+	// reversed order of creation time. Given the chronologically persisted posts
+	// [A B C D E], the first page [0 3] returns the last posts [C D E].
+	//
+	//     @inp[0] the calling user
+	//     @inp[1] the start paging pointer defining the beginning of the page
+	//     @inp[2] the stop paging pointer defining the end of the page
+	//     @out[0] the list of post objects within the given pagination range
+	//
+	SearchPage(objectid.ID, int, int) ([]*Object, error)
+
 	// SearchPost returns the post objects matching the given post IDs.
 	//
 	//     @inp[0] the calling user
