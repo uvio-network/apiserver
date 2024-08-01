@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/uvio-network/apiserver/pkg/format/storageformat"
+	"github.com/uvio-network/apiserver/pkg/generic"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/xh3b4sd/redigo/simple"
@@ -47,7 +48,7 @@ func (r *Redis) SearchUser(use []objectid.ID) ([]*Object, error) {
 
 	var jsn []string
 	{
-		jsn, err = r.red.Simple().Search().Multi(objectid.Fmt(use, storageformat.UserObject)...)
+		jsn, err = r.red.Simple().Search().Multi(generic.Fmt(use, storageformat.UserObject)...)
 		if simple.IsNotFound(err) {
 			return nil, tracer.Maskf(UserNotFoundError, "%v", use)
 		} else if err != nil {

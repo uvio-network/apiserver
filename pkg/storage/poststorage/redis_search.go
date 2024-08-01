@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/uvio-network/apiserver/pkg/format/storageformat"
+	"github.com/uvio-network/apiserver/pkg/generic"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/xh3b4sd/redigo/simple"
 	"github.com/xh3b4sd/tracer"
@@ -18,7 +19,7 @@ func (r *Redis) SearchLabels(use objectid.ID, inp [][]string) ([]*Object, error)
 		// label names, if any.
 		var val []string
 		{
-			val, err = r.red.Sorted().Search().Inter(objectid.Fmt(x, storageformat.PostLabel)...)
+			val, err = r.red.Sorted().Search().Inter(generic.Fmt(x, storageformat.PostLabel)...)
 			if err != nil {
 				return nil, tracer.Mask(err)
 			}
@@ -48,7 +49,7 @@ func (r *Redis) SearchPost(use objectid.ID, inp []objectid.ID) ([]*Object, error
 
 	var jsn []string
 	{
-		jsn, err = r.red.Simple().Search().Multi(objectid.Fmt(inp, storageformat.PostObject)...)
+		jsn, err = r.red.Simple().Search().Multi(generic.Fmt(inp, storageformat.PostObject)...)
 		if simple.IsNotFound(err) {
 			return nil, tracer.Maskf(PostObjectNotFoundError, "%v", inp)
 		} else if err != nil {

@@ -5,6 +5,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/uvio-network/apiserver/pkg/format/labelname"
+	"github.com/uvio-network/apiserver/pkg/generic"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/xh3b4sd/redigo/simple"
@@ -30,6 +32,7 @@ func (r *Redis) Create(inp []*Object) ([]*Object, error) {
 		{
 			inp[i].Created = now
 			inp[i].ID = objectid.Random(objectid.Time(now))
+			inp[i].Labels = generic.Func(inp[i].Labels, labelname.Format)
 			inp[i].Text = strings.TrimSpace(inp[i].Text)
 			inp[i].Token = strings.TrimSpace(inp[i].Token)
 		}
