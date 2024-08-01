@@ -1,9 +1,11 @@
-package objectid
+package generic
 
 import (
 	"fmt"
 	"slices"
 	"testing"
+
+	"github.com/uvio-network/apiserver/pkg/object/objectid"
 )
 
 func Test_ObjectID_Fmt_string(t *testing.T) {
@@ -50,13 +52,13 @@ func Test_ObjectID_Fmt_string(t *testing.T) {
 
 func Test_ObjectID_Fmt_ID(t *testing.T) {
 	testCases := []struct {
-		ids []ID
+		ids []objectid.ID
 		str string
 		key []string
 	}{
 		// Case 000
 		{
-			ids: []ID{
+			ids: []objectid.ID{
 				"foo",
 				"bar",
 			},
@@ -68,7 +70,7 @@ func Test_ObjectID_Fmt_ID(t *testing.T) {
 		},
 		// Case 001
 		{
-			ids: []ID{
+			ids: []objectid.ID{
 				"foo",
 				"bar",
 			},
