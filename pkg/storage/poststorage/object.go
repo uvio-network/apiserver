@@ -4,6 +4,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/uvio-network/apiserver/pkg/format/labelname"
 	"github.com/uvio-network/apiserver/pkg/generic"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/xh3b4sd/tracer"
@@ -61,6 +62,9 @@ func (o *Object) Verify() error {
 		}
 		if o.Kind == "claim" && generic.Duplicate(o.Labels) {
 			return tracer.Mask(ClaimLabelsUniqueError)
+		}
+		if o.Kind == "claim" && !labelname.Verify(o.Labels) {
+			return tracer.Mask(ClaimLabelsFormatError)
 		}
 	}
 
