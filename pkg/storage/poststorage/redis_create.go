@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/uvio-network/apiserver/pkg/format/labelname"
+	"github.com/uvio-network/apiserver/pkg/format/storageformat"
 	"github.com/uvio-network/apiserver/pkg/generic"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/runtime"
@@ -83,6 +84,16 @@ func (r *Redis) Create(inp []*Object) ([]*Object, error) {
 		// can search for post objects using their IDs.
 		{
 			err = r.red.Simple().Create().Element(posObj(inp[i].ID), musStr(inp[i]))
+			if err != nil {
+				return nil, tracer.Mask(err)
+			}
+		}
+
+		// Store every claim ID in a global sorted set, based on their time of
+		// creation. This step ensures we can search for claims using pagination in
+		// reverse chronolical order.
+		{
+			err = r.red.Sorted().Create().Score(storageformat.PostCreated, inp[i].ID.String(), float64(inp[i].Created.UnixNano()))
 			if err != nil {
 				return nil, tracer.Mask(err)
 			}

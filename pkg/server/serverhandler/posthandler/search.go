@@ -6,6 +6,7 @@ import (
 
 	"github.com/uvio-network/apigocode/pkg/post"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
+	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/uvio-network/apiserver/pkg/server/context/userid"
 	"github.com/uvio-network/apiserver/pkg/server/converter"
 	"github.com/uvio-network/apiserver/pkg/server/limiter"
@@ -14,6 +15,7 @@ import (
 )
 
 func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO, error) {
+	var err error
 	var out []*poststorage.Object
 
 	var use objectid.ID
@@ -23,11 +25,14 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 
 	var ids []objectid.ID
 	var lab [][]string
+	var pag []int
+	var tim bool
 	var tre []objectid.ID
 	for _, x := range req.Object {
 		if x.Intern != nil && x.Intern.Id != "" {
 			ids = append(ids, objectid.ID(x.Intern.Id))
 		}
+
 		if x.Public != nil && x.Public.Labels != "" {
 			var lis []string
 			{
@@ -38,6 +43,20 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 				lab = append(lab, lis)
 			}
 		}
+
+		if x.Symbol != nil && x.Symbol.Time == "latest" {
+			{
+				tim = true
+			}
+
+			if req.Filter != nil && req.Filter.Paging != nil && req.Filter.Paging.Kind == "page" {
+				pag, err = createPage(req.Filter.Paging)
+				if err != nil {
+					return nil, tracer.Mask(err)
+				}
+			}
+		}
+
 		if x.Intern != nil && x.Intern.Tree != "" {
 			tre = append(tre, objectid.ID(x.Intern.Tree))
 		}
@@ -62,6 +81,19 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 
 	if len(lab) != 0 {
 		lis, err := h.pos.SearchLabels(use, lab)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+
+		out = append(out, lis...)
+	}
+
+	//
+	// Search posts by time.
+	//
+
+	if tim && len(pag) == 2 {
+		lis, err := h.pos.SearchPage(use, pag[0], pag[1])
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -126,4 +158,39 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 	}
 
 	return res, nil
+}
+
+func createPage(pag *post.SearchI_Filter_Paging) ([]int, error) {
+	if pag.Start == "" {
+		return nil, tracer.Maskf(runtime.QueryPagingMissingError, "Paging.Start")
+	}
+
+	if pag.Stop == "" {
+		return nil, tracer.Maskf(runtime.QueryPagingMissingError, "Paging.Stop")
+	}
+
+	beg, err := strconv.Atoi(pag.Start)
+	if err != nil {
+		return nil, tracer.Maskf(runtime.QueryPagingInvalidError, "Paging.Start")
+	}
+
+	end, err := strconv.Atoi(pag.Stop)
+	if err != nil {
+		return nil, tracer.Maskf(runtime.QueryPagingInvalidError, "Paging.Stop")
+	}
+
+	if beg < 0 {
+		return nil, tracer.Maskf(runtime.QueryPagingNegativeError, "Paging.Start")
+	}
+
+	if end < 0 {
+		return nil, tracer.Maskf(runtime.QueryPagingNegativeError, "Paging.Stop")
+	}
+
+	ran := end - beg
+	if ran < 1 || ran > 1000 {
+		return nil, tracer.Mask(runtime.QueryPagingRangeError)
+	}
+
+	return []int{beg, end}, nil
 }

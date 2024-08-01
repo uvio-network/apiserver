@@ -1,6 +1,15 @@
 package storageformat
 
 const (
+	// PostCreated is used to store all claim IDs as they have been created in
+	// chronological order.
+	//
+	//     symbol key            claim IDs
+	//                     ->
+	//     post/created          3456,5678
+	//
+	PostCreated = "post/created"
+
 	// PostLabel is used to store all claim IDs associated to a given label name.
 	// This key allows us to search for all claims that are categorized under any
 	// given label.

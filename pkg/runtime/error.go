@@ -29,6 +29,26 @@ var QueryObjectLimitError = &tracer.Error{
 	Desc: "The request expects an upper limit of 100 query objects per call. The upper limit of 100 query objects per call was found. Therefore the request failed.",
 }
 
+var QueryPagingInvalidError = &tracer.Error{
+	Kind: "QueryPagingInvalidError",
+	Desc: "The request expects the query paging to consist of two positive integers. At least one of the paging pointers was found to not be a number. Therefore the request failed.",
+}
+
+var QueryPagingMissingError = &tracer.Error{
+	Kind: "QueryPagingMissingError",
+	Desc: "The request expects the query paging to consist of two positive integers. At least one of the paging pointers was found to be missing. Therefore the request failed.",
+}
+
+var QueryPagingNegativeError = &tracer.Error{
+	Kind: "QueryPagingNegativeError",
+	Desc: "The request expects the query paging to consist of two positive integers. One of the paging pointers was found to be negative. Therefore the request failed.",
+}
+
+var QueryPagingRangeError = &tracer.Error{
+	Kind: "QueryPagingRangeError",
+	Desc: "The request expects the query paging range to ask for at least one, but for not more than 1000 objects. The query paging range was found to be outside of those boundaries. Therefore the request failed.",
+}
+
 var UserAuthError = &tracer.Error{
 	Kind: "UserAuthError",
 	Desc: "The request expects a valid access token. No valid access token was found. Therefore the request failed.",
