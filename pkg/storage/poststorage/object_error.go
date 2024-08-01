@@ -4,19 +4,24 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-var ClaimLabelsUniqueError = &tracer.Error{
-	Kind: "ClaimLabelsUniqueError",
-	Desc: "The request expects the claim labels to be unique. The claim labels were not found to be unique. Therefore the request failed.",
-}
-
 var ClaimLabelsEmptyError = &tracer.Error{
 	Kind: "ClaimLabelsEmptyError",
 	Desc: "The request expects the claim labels not to be empty. The claim labels were found to be empty. Therefore the request failed.",
 }
 
+var ClaimLabelsFormatError = &tracer.Error{
+	Kind: "ClaimLabelsFormatError",
+	Desc: "The request expects the claim labels to be alpha numerical. The claim labels were not found to be alpha numerical. Therefore the request failed.",
+}
+
 var ClaimLabelsLimitError = &tracer.Error{
 	Kind: "ClaimLabelsLimitError",
 	Desc: "The request expects the claim not to have more than four labels. The claim was found to have more than four labels. Therefore the request failed.",
+}
+
+var ClaimLabelsUniqueError = &tracer.Error{
+	Kind: "ClaimLabelsUniqueError",
+	Desc: "The request expects the claim labels to be unique. The claim labels were not found to be unique. Therefore the request failed.",
 }
 
 var ClaimLifecycleInvalidError = &tracer.Error{

@@ -6,7 +6,8 @@ import (
 )
 
 var (
-	regex = regexp.MustCompile(`\s+`)
+	labels = regexp.MustCompile(`^[A-Za-z0-9\-\s]+$`)
+	spaces = regexp.MustCompile(`\s+`)
 )
 
 // Format cleans strings for their use as part of storage keys. For instance, we
@@ -17,7 +18,7 @@ var (
 // "defi".
 func Format(str string) string {
 	// Replace multiple spaces with a single one.
-	str = regex.ReplaceAllString(str, " ")
+	str = spaces.ReplaceAllString(str, " ")
 	// Remove leading and trailing spaces.
 	str = strings.TrimSpace(str)
 	// Ensure only lower case letters.
@@ -26,4 +27,14 @@ func Format(str string) string {
 	str = strings.ReplaceAll(str, " ", "-")
 
 	return str
+}
+
+func Verify(lis []string) bool {
+	for _, x := range lis {
+		if !labels.MatchString(x) {
+			return false
+		}
+	}
+
+	return true
 }
