@@ -18,6 +18,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/server/middleware/usermiddleware"
 	"github.com/uvio-network/apiserver/pkg/server/serverhandler"
 	"github.com/uvio-network/apiserver/pkg/storage"
+	"github.com/uvio-network/apiserver/pkg/validator"
 	"github.com/uvio-network/apiserver/pkg/worker"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler"
 	"github.com/xh3b4sd/breakr"
@@ -86,6 +87,14 @@ func (r *run) runE(cmd *cobra.Command, args []string) error {
 		})
 	}
 
+	var val validator.Interface
+	{
+		val = validator.New(validator.Config{
+			Log: log,
+			Sto: sto,
+		})
+	}
+
 	// --------------------------------------------------------------------- //
 
 	var shn *serverhandler.Handler
@@ -94,6 +103,7 @@ func (r *run) runE(cmd *cobra.Command, args []string) error {
 			Loc: loc,
 			Log: log,
 			Sto: sto,
+			Val: val,
 		})
 	}
 

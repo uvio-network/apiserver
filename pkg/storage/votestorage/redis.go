@@ -35,6 +35,10 @@ func NewRedis(c RedisConfig) *Redis {
 	}
 }
 
+func votCla(oid objectid.ID) string {
+	return fmt.Sprintf(storageformat.VoteClaim, oid)
+}
+
 func votObj(oid objectid.ID) string {
 	return fmt.Sprintf(storageformat.VoteObject, oid)
 }

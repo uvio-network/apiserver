@@ -24,14 +24,14 @@ func (r *Redis) SearchVote(use objectid.ID, inp []objectid.ID) ([]*Object, error
 	}
 
 	var out []*Object
-	for i := range jsn {
+	for _, x := range jsn {
 		var obj *Object
 		{
 			obj = &Object{}
 		}
 
-		if jsn[i] != "" {
-			err = json.Unmarshal([]byte(jsn[i]), obj)
+		if x != "" {
+			err = json.Unmarshal([]byte(x), obj)
 			if err != nil {
 				return nil, tracer.Mask(err)
 			}

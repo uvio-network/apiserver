@@ -7,6 +7,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/server/serverhandler/userhandler"
 	"github.com/uvio-network/apiserver/pkg/server/serverhandler/votehandler"
 	"github.com/uvio-network/apiserver/pkg/storage"
+	"github.com/uvio-network/apiserver/pkg/validator"
 	"github.com/xh3b4sd/locker"
 	"github.com/xh3b4sd/logger"
 	"github.com/xh3b4sd/tracer"
@@ -16,6 +17,7 @@ type Config struct {
 	Loc locker.Interface
 	Log logger.Interface
 	Sto storage.Interface
+	Val validator.Interface
 }
 
 type Handler struct {
@@ -35,7 +37,8 @@ func New(c Config) *Handler {
 	{
 		han = append(han, posthandler.NewHandler(posthandler.HandlerConfig{
 			Log: c.Log,
-			Pos: c.Sto.Post(),
+			Sto: c.Sto.Post(),
+			Val: c.Val.Post(),
 		}))
 	}
 
@@ -49,7 +52,8 @@ func New(c Config) *Handler {
 	{
 		han = append(han, votehandler.NewHandler(votehandler.HandlerConfig{
 			Log: c.Log,
-			Vot: c.Sto.Vote(),
+			Sto: c.Sto.Vote(),
+			Val: c.Val.Vote(),
 		}))
 	}
 

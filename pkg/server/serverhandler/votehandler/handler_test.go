@@ -8,6 +8,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/server/context/userid"
 	"github.com/uvio-network/apiserver/pkg/storage/votestorage"
+	"github.com/uvio-network/apiserver/pkg/validator/votevalidator"
 	"github.com/xh3b4sd/logger"
 )
 
@@ -21,7 +22,8 @@ func tesHan() vote.API {
 	return &wrapper{
 		han: NewHandler(HandlerConfig{
 			Log: logger.Fake(),
-			Vot: votestorage.Fake(),
+			Sto: votestorage.Fake(),
+			Val: votevalidator.Fake(),
 		}),
 	}
 }

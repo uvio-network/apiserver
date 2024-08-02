@@ -1,9 +1,6 @@
 package votestorage
 
 import (
-	"time"
-
-	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/xh3b4sd/tracer"
 )
 
@@ -11,27 +8,21 @@ func (r *Redis) Create(inp []*Object) ([]*Object, error) {
 	var err error
 
 	for i := range inp {
+		// Create the normalized key-value pair for the vote object. With that we
+		// can search for vote objects using their IDs.
 		{
-			err := inp[i].Verify()
+			err = r.red.Simple().Create().Element(votObj(inp[i].ID), musStr(inp[i]))
 			if err != nil {
 				return nil, tracer.Mask(err)
 			}
 		}
 
-		var now time.Time
+		// Associate the given vote ID with the given claim ID so that we can search
+		// for all votes that have been cast on any given claim. The interesting
+		// implication of this particular index is that we can later analyse how
+		// users behaved on their own and in relation to one another.
 		{
-			now = time.Now().UTC()
-		}
-
-		{
-			inp[i].Created = now
-			inp[i].ID = objectid.Random(objectid.Time(now))
-		}
-
-		// Create the normalized key-value pair for the vote object. With that we
-		// can search for vote objects using their IDs.
-		{
-			err = r.red.Simple().Create().Element(votObj(inp[i].ID), musStr(inp[i]))
+			err = r.red.Sorted().Create().Score(votCla(inp[i].Claim), inp[i].ID.String(), inp[i].ID.Float())
 			if err != nil {
 				return nil, tracer.Mask(err)
 			}

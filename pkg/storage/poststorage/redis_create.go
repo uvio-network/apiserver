@@ -1,16 +1,7 @@
 package poststorage
 
 import (
-	"encoding/json"
-	"strings"
-	"time"
-
-	"github.com/uvio-network/apiserver/pkg/format/labelname"
 	"github.com/uvio-network/apiserver/pkg/format/storageformat"
-	"github.com/uvio-network/apiserver/pkg/generic"
-	"github.com/uvio-network/apiserver/pkg/object/objectid"
-	"github.com/uvio-network/apiserver/pkg/runtime"
-	"github.com/xh3b4sd/redigo/simple"
 	"github.com/xh3b4sd/tracer"
 )
 
@@ -18,68 +9,6 @@ func (r *Redis) Create(inp []*Object) ([]*Object, error) {
 	var err error
 
 	for i := range inp {
-		{
-			err := inp[i].Verify()
-			if err != nil {
-				return nil, tracer.Mask(err)
-			}
-		}
-
-		var now time.Time
-		{
-			now = time.Now().UTC()
-		}
-
-		{
-			inp[i].Created = now
-			inp[i].ID = objectid.Random(objectid.Time(now))
-			inp[i].Labels = generic.Func(inp[i].Labels, labelname.Format)
-			inp[i].Text = strings.TrimSpace(inp[i].Text)
-			inp[i].Token = strings.TrimSpace(inp[i].Token)
-		}
-
-		// Create the existing tree ID, or create a new one. Any proposed claim
-		// effectively starts a new tree. So for every post of kind "claim" that has
-		// lifecycle "propose" we generate a new tree ID. For all other claims we
-		// fetch the post object provided in the parent field of the given claim and
-		// take the existing tree ID from there. Note that we are indirectly
-		// validating here that the given parent ID does in fact exist.
-		if inp[i].Kind == "claim" {
-			if inp[i].Lifecycle == "propose" {
-				inp[i].Tree = objectid.Random(objectid.Time(now))
-			} else {
-				var jsn []string
-				{
-					jsn, err = r.red.Simple().Search().Multi(posObj(inp[i].Parent))
-					if simple.IsNotFound(err) {
-						return nil, tracer.Maskf(PostObjectNotFoundError, "%v", inp[i].Parent)
-					} else if err != nil {
-						return nil, tracer.Mask(err)
-					}
-				}
-
-				if len(jsn) != 1 {
-					return nil, tracer.Mask(runtime.ExecutionFailedError)
-				}
-
-				var obj *Object
-				{
-					obj = &Object{}
-				}
-
-				{
-					err = json.Unmarshal([]byte(jsn[0]), obj)
-					if err != nil {
-						return nil, tracer.Mask(err)
-					}
-				}
-
-				{
-					inp[i].Tree = obj.Tree
-				}
-			}
-		}
-
 		// Create the normalized key-value pair for the post object. With that we
 		// can search for post objects using their IDs.
 		{
