@@ -69,4 +69,23 @@ const (
 	//     user/object/1234          {"key": "val"}
 	//
 	UserObject = "user/object/%s"
+
+	// VoteObject is used to store our internal representation of a vote object.
+	// This key allows us to search for all vote objects by their own object ID.
+	//
+	//     vote ID                   vote object
+	//                         ->
+	//     vote/object/1234          {"key": "val"}
+	//
+	VoteObject = "vote/object/%s"
+
+	// VoteOwner is used to store all vote IDs that have been created by a
+	// specific user. This key allows us to search for all votes that have been
+	// created by any given user.
+	//
+	//     user ID                  vote IDs
+	//                        ->
+	//     vote/owner/1234          3456,5678
+	//
+	VoteOwner = "vote/owner/%s"
 )
