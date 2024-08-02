@@ -33,7 +33,7 @@ func (h *Handler) Search(ctx context.Context, req *vote.SearchI) (*vote.SearchO,
 	//
 
 	if len(ids) != 0 {
-		lis, err := h.vot.SearchVote(use, ids)
+		lis, err := h.sto.SearchVote(use, ids)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}

@@ -29,9 +29,16 @@ func (h *Handler) Create(ctx context.Context, req *vote.CreateI) (*vote.CreateO,
 	// Create the given resources.
 	//
 
+	{
+		inp, err = h.val.Create(inp)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
 	var out []*votestorage.Object
 	{
-		out, err = h.vot.Create(inp)
+		out, err = h.sto.Create(inp)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}

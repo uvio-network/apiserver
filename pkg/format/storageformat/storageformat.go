@@ -70,6 +70,16 @@ const (
 	//
 	UserObject = "user/object/%s"
 
+	// VoteClaim is used to store all vote IDs for votes that have been cast on a
+	// specific claim. This key allows us to search for all votes associated to
+	// any given claim.
+	//
+	//     claim ID                 vote IDs
+	//                        ->
+	//     vote/claim/1234          3456,5678
+	//
+	VoteClaim = "vote/claim/%s"
+
 	// VoteObject is used to store our internal representation of a vote object.
 	// This key allows us to search for all vote objects by their own object ID.
 	//
