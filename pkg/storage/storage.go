@@ -5,6 +5,7 @@ import (
 
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
 	"github.com/uvio-network/apiserver/pkg/storage/userstorage"
+	"github.com/uvio-network/apiserver/pkg/storage/votestorage"
 	"github.com/xh3b4sd/logger"
 	"github.com/xh3b4sd/redigo"
 	"github.com/xh3b4sd/tracer"
@@ -18,6 +19,7 @@ type Config struct {
 type Storage struct {
 	pos poststorage.Interface
 	use userstorage.Interface
+	vot votestorage.Interface
 }
 
 func New(c Config) *Storage {
@@ -39,6 +41,10 @@ func New(c Config) *Storage {
 				Log: c.Log,
 				Red: c.Red,
 			}),
+			vot: votestorage.NewRedis(votestorage.RedisConfig{
+				Log: c.Log,
+				Red: c.Red,
+			}),
 		}
 	}
 
@@ -51,4 +57,8 @@ func (s *Storage) Post() poststorage.Interface {
 
 func (s *Storage) User() userstorage.Interface {
 	return s.use
+}
+
+func (s *Storage) Vote() votestorage.Interface {
+	return s.vot
 }

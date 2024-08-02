@@ -118,8 +118,8 @@ func (r *Redis) Create(inp []*Object) ([]*Object, error) {
 			}
 		}
 
-		// Track the user creating this post as the owner, and make sure that we
-		// can find all posts for any given user ID.
+		// Track the user creating this post as the owner, and make sure that we can
+		// find all posts for any given user ID.
 		{
 			err = r.red.Sorted().Create().Score(posOwn(inp[i].Owner), inp[i].ID.String(), inp[i].ID.Float())
 			if err != nil {
