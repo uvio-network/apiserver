@@ -7,6 +7,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/server/context/userid"
 	"github.com/uvio-network/apiserver/pkg/server/converter"
+	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
 	"github.com/uvio-network/apiserver/pkg/storage/votestorage"
 	"github.com/xh3b4sd/tracer"
 )
@@ -29,22 +30,39 @@ func (h *Handler) Create(ctx context.Context, req *vote.CreateI) (*vote.CreateO,
 	// Create the given resources.
 	//
 
-	{
-		inp, err = h.val.Vote().Create(inp)
-		if err != nil {
-			return nil, tracer.Mask(err)
-		}
-	}
-
 	var out []*votestorage.Object
 	{
-		out, err = h.sto.Vote().Create(inp)
+		out, err = h.val.Vote().CreateVote(inp)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
 	}
 
-	// TODO update vote summary for claims and comments
+	{
+		err = h.sto.Vote().CreateVote(out)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	//
+	// update the vote summary for the referenced post
+	//
+
+	var pos []*poststorage.Object
+	{
+		pos, err = h.val.Post().UpdateVotes(out)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	{
+		err = h.sto.Post().UpdatePost(pos)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
 
 	//
 	// Construct the RPC response.

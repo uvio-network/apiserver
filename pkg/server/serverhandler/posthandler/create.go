@@ -32,16 +32,16 @@ func (h *Handler) Create(ctx context.Context, req *post.CreateI) (*post.CreateO,
 	// Create the given resources.
 	//
 
+	var out []*poststorage.Object
 	{
-		inp, err = h.val.Post().Create(inp)
+		out, err = h.val.Post().CreatePost(inp)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
 	}
 
-	var out []*poststorage.Object
 	{
-		out, err = h.sto.Post().Create(inp)
+		err = h.sto.Post().CreatePost(out)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}

@@ -3,12 +3,11 @@ package poststorage
 import "github.com/uvio-network/apiserver/pkg/object/objectid"
 
 type Interface interface {
-	// Create persists new post objects.
+	// CreatePost persists new post objects in the underlying storage.
 	//
 	//     @inp[0] the post objects to create
-	//     @out[0] the post objects mapped to their internal post IDs
 	//
-	Create([]*Object) ([]*Object, error)
+	CreatePost([]*Object) error
 
 	// SearchLabels returns the post objects grouped under all of the given
 	// category labels. Multiple searches can be done for a set of labels each,
@@ -42,4 +41,10 @@ type Interface interface {
 	//     @out[0] the list of post objects belonging to the given tree IDs
 	//
 	SearchTree([]objectid.ID) ([]*Object, error)
+
+	// UpdatePost modifies the given post objects in the underlying storage.
+	//
+	//     @inp[0] the post objects to update
+	//
+	UpdatePost([]*Object) error
 }
