@@ -17,6 +17,16 @@ func (r *Redis) Create(inp []*poststorage.Object) ([]*poststorage.Object, error)
 
 	for i := range inp {
 		{
+			if inp[i].Kind == "claim" {
+				inp[i].Votes = []float64{0, 0, 0, 0}
+			}
+
+			if inp[i].Kind == "comment" {
+				inp[i].Votes = []float64{0, 0}
+			}
+		}
+
+		{
 			err := inp[i].Verify()
 			if err != nil {
 				return nil, tracer.Mask(err)
