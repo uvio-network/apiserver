@@ -125,7 +125,7 @@ func (o *Object) Verify() error {
 			return tracer.Maskf(runtime.ExecutionFailedError, "vote summary for claims must contain 4 parts")
 		}
 
-		if o.Kind == "comment" && len(o.Votes) != 4 {
+		if o.Kind == "comment" && len(o.Votes) != 2 {
 			return tracer.Maskf(runtime.ExecutionFailedError, "vote summary for comments must contain 2 parts")
 		}
 	}
