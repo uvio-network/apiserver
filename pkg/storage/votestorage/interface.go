@@ -12,9 +12,8 @@ type Interface interface {
 
 	// SearchVote returns the vote objects matching the given vote IDs.
 	//
-	//     @inp[0] the calling user
-	//     @inp[1] the vote IDs to search for
+	//     @inp[0] the vote IDs to search for
 	//     @out[0] the list of vote objects matching the given vote IDs
 	//
-	SearchVote(objectid.ID, []objectid.ID) ([]*Object, error)
+	SearchVote([]objectid.ID) ([]*Object, error)
 }

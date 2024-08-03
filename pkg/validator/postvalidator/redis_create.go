@@ -48,7 +48,7 @@ func (r *Redis) Create(inp []*poststorage.Object) ([]*poststorage.Object, error)
 			} else {
 				var obj []*poststorage.Object
 				{
-					obj, err = r.sto.Post().SearchPost("", []objectid.ID{inp[i].Parent})
+					obj, err = r.sto.Post().SearchPost([]objectid.ID{inp[i].Parent})
 					if err != nil {
 						return nil, tracer.Mask(err)
 					}

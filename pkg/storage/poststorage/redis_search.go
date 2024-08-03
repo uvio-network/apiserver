@@ -10,7 +10,7 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Redis) SearchLabels(use objectid.ID, inp [][]string) ([]*Object, error) {
+func (r *Redis) SearchLabels(inp [][]string) ([]*Object, error) {
 	var err error
 
 	var out []*Object
@@ -32,7 +32,7 @@ func (r *Redis) SearchLabels(use objectid.ID, inp [][]string) ([]*Object, error)
 		}
 
 		{
-			lis, err := r.SearchPost(use, objectid.IDs(val))
+			lis, err := r.SearchPost(objectid.IDs(val))
 			if err != nil {
 				return nil, tracer.Mask(err)
 			}
@@ -44,7 +44,7 @@ func (r *Redis) SearchLabels(use objectid.ID, inp [][]string) ([]*Object, error)
 	return out, nil
 }
 
-func (r *Redis) SearchPage(use objectid.ID, beg int, end int) ([]*Object, error) {
+func (r *Redis) SearchPage(beg int, end int) ([]*Object, error) {
 	var err error
 
 	// val will result in a list of all post IDs within the given pagination
@@ -65,7 +65,7 @@ func (r *Redis) SearchPage(use objectid.ID, beg int, end int) ([]*Object, error)
 
 	var out []*Object
 	{
-		lis, err := r.SearchPost(use, objectid.IDs(val))
+		lis, err := r.SearchPost(objectid.IDs(val))
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -76,7 +76,7 @@ func (r *Redis) SearchPage(use objectid.ID, beg int, end int) ([]*Object, error)
 	return out, nil
 }
 
-func (r *Redis) SearchPost(use objectid.ID, inp []objectid.ID) ([]*Object, error) {
+func (r *Redis) SearchPost(inp []objectid.ID) ([]*Object, error) {
 	var err error
 
 	var jsn []string
@@ -111,7 +111,7 @@ func (r *Redis) SearchPost(use objectid.ID, inp []objectid.ID) ([]*Object, error
 	return out, nil
 }
 
-func (r *Redis) SearchTree(use objectid.ID, inp []objectid.ID) ([]*Object, error) {
+func (r *Redis) SearchTree(inp []objectid.ID) ([]*Object, error) {
 	var err error
 
 	var out []*Object
@@ -133,7 +133,7 @@ func (r *Redis) SearchTree(use objectid.ID, inp []objectid.ID) ([]*Object, error
 		}
 
 		{
-			lis, err := r.SearchPost(use, objectid.IDs(val))
+			lis, err := r.SearchPost(objectid.IDs(val))
 			if err != nil {
 				return nil, tracer.Mask(err)
 			}

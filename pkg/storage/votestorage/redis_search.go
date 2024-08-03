@@ -10,7 +10,7 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Redis) SearchVote(use objectid.ID, inp []objectid.ID) ([]*Object, error) {
+func (r *Redis) SearchVote(inp []objectid.ID) ([]*Object, error) {
 	var err error
 
 	var jsn []string

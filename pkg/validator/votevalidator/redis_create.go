@@ -33,7 +33,7 @@ func (r *Redis) Create(inp []*votestorage.Object) ([]*votestorage.Object, error)
 		{
 			var obj []*poststorage.Object
 			{
-				obj, err = r.sto.Post().SearchPost("", []objectid.ID{inp[i].Claim})
+				obj, err = r.sto.Post().SearchPost([]objectid.ID{inp[i].Claim})
 				if err != nil {
 					return nil, tracer.Mask(err)
 				}
