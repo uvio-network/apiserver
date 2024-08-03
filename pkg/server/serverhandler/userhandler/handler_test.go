@@ -7,7 +7,7 @@ import (
 	"github.com/uvio-network/apigocode/pkg/user"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/server/context/userid"
-	"github.com/uvio-network/apiserver/pkg/storage/userstorage"
+	"github.com/uvio-network/apiserver/pkg/storage"
 	"github.com/xh3b4sd/logger"
 )
 
@@ -21,7 +21,7 @@ func tesHan() user.API {
 	return &wrapper{
 		han: NewHandler(HandlerConfig{
 			Log: logger.Fake(),
-			Use: userstorage.Fake(),
+			Sto: storage.Fake(),
 		}),
 	}
 }

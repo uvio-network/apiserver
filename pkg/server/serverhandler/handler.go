@@ -37,23 +37,23 @@ func New(c Config) *Handler {
 	{
 		han = append(han, posthandler.NewHandler(posthandler.HandlerConfig{
 			Log: c.Log,
-			Sto: c.Sto.Post(),
-			Val: c.Val.Post(),
+			Sto: c.Sto,
+			Val: c.Val,
 		}))
 	}
 
 	{
 		han = append(han, userhandler.NewHandler(userhandler.HandlerConfig{
 			Log: c.Log,
-			Use: c.Sto.User(),
+			Sto: c.Sto,
 		}))
 	}
 
 	{
 		han = append(han, votehandler.NewHandler(votehandler.HandlerConfig{
 			Log: c.Log,
-			Sto: c.Sto.Vote(),
-			Val: c.Val.Vote(),
+			Sto: c.Sto,
+			Val: c.Val,
 		}))
 	}
 

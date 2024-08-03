@@ -3,22 +3,22 @@ package posthandler
 import (
 	"fmt"
 
-	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
-	"github.com/uvio-network/apiserver/pkg/validator/postvalidator"
+	"github.com/uvio-network/apiserver/pkg/storage"
+	"github.com/uvio-network/apiserver/pkg/validator"
 	"github.com/xh3b4sd/logger"
 	"github.com/xh3b4sd/tracer"
 )
 
 type HandlerConfig struct {
 	Log logger.Interface
-	Sto poststorage.Interface
-	Val postvalidator.Interface
+	Sto storage.Interface
+	Val validator.Interface
 }
 
 type Handler struct {
 	log logger.Interface
-	sto poststorage.Interface
-	val postvalidator.Interface
+	sto storage.Interface
+	val validator.Interface
 }
 
 func NewHandler(c HandlerConfig) *Handler {

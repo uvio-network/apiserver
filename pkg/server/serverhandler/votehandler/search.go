@@ -23,11 +23,11 @@ func (h *Handler) Search(ctx context.Context, req *vote.SearchI) (*vote.SearchO,
 	}
 
 	//
-	// Search posts by ID.
+	// Search votes by ID.
 	//
 
 	if len(ids) != 0 {
-		lis, err := h.sto.SearchVote(ids)
+		lis, err := h.sto.Vote().SearchVote(ids)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
