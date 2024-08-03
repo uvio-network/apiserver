@@ -7,6 +7,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/format/labelname"
 	"github.com/uvio-network/apiserver/pkg/generic"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
+	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/xh3b4sd/tracer"
 )
 
@@ -17,13 +18,12 @@ type Object struct {
 	Kind      string      `json:"kind"`
 	Labels    []string    `json:"labels"`
 	Lifecycle string      `json:"lifecycle"`
-	Option    bool        `json:"option"`
 	Owner     objectid.ID `json:"owner"`
 	Parent    objectid.ID `json:"parent"`
-	Stake     float64     `json:"stake"`
 	Text      string      `json:"text"`
 	Token     string      `json:"token"`
 	Tree      objectid.ID `json:"tree"`
+	Votes     []float64   `json:"votes"`
 }
 
 func (o *Object) Verify() error {
@@ -93,8 +93,8 @@ func (o *Object) Verify() error {
 	}
 
 	{
-		if o.Stake <= 0 {
-			return tracer.Mask(PostStakeInvalidError)
+		if o.Owner == "" {
+			return tracer.Mask(PostOwnerEmptyError)
 		}
 	}
 
@@ -121,8 +121,12 @@ func (o *Object) Verify() error {
 	}
 
 	{
-		if o.Owner == "" {
-			return tracer.Mask(PostOwnerEmptyError)
+		if o.Kind == "claim" && len(o.Votes) != 4 {
+			return tracer.Maskf(runtime.ExecutionFailedError, "vote summary for claims must contain 4 parts")
+		}
+
+		if o.Kind == "comment" && len(o.Votes) != 4 {
+			return tracer.Maskf(runtime.ExecutionFailedError, "vote summary for comments must contain 2 parts")
 		}
 	}
 

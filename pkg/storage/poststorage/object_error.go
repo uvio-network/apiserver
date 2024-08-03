@@ -69,11 +69,6 @@ var PostKindInvalidError = &tracer.Error{
 	Desc: "The request expects the post kind to be one of [claim comment]. The post kind was not found to be one of those values. Therefore the request failed.",
 }
 
-var PostStakeInvalidError = &tracer.Error{
-	Kind: "PostStakeInvalidError",
-	Desc: "The request expects the post stake to be a positive number. The post stake was not found to be a positive number. Therefore the request failed.",
-}
-
 var PostTextEmptyError = &tracer.Error{
 	Kind: "PostTextEmptyError",
 	Desc: "The request expects the post text not to be empty. The post text was found to be empty. Therefore the request failed.",
