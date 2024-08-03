@@ -7,7 +7,6 @@ import (
 	"github.com/uvio-network/apigocode/pkg/post"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/runtime"
-	"github.com/uvio-network/apiserver/pkg/server/context/userid"
 	"github.com/uvio-network/apiserver/pkg/server/converter"
 	"github.com/uvio-network/apiserver/pkg/server/limiter"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
@@ -17,11 +16,6 @@ import (
 func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO, error) {
 	var err error
 	var out []*poststorage.Object
-
-	var use objectid.ID
-	{
-		use = userid.FromContext(ctx)
-	}
 
 	var ids []objectid.ID
 	var lab [][]string
@@ -67,7 +61,7 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 	//
 
 	if len(ids) != 0 {
-		lis, err := h.sto.SearchPost(use, ids)
+		lis, err := h.sto.SearchPost(ids)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -80,7 +74,7 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 	//
 
 	if len(lab) != 0 {
-		lis, err := h.sto.SearchLabels(use, lab)
+		lis, err := h.sto.SearchLabels(lab)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -93,7 +87,7 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 	//
 
 	if tim && len(pag) == 2 {
-		lis, err := h.sto.SearchPage(use, pag[0], pag[1])
+		lis, err := h.sto.SearchPage(pag[0], pag[1])
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -106,7 +100,7 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 	//
 
 	if len(tre) != 0 {
-		lis, err := h.sto.SearchTree(use, tre)
+		lis, err := h.sto.SearchTree(tre)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}

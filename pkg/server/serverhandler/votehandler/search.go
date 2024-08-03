@@ -6,7 +6,6 @@ import (
 
 	"github.com/uvio-network/apigocode/pkg/vote"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
-	"github.com/uvio-network/apiserver/pkg/server/context/userid"
 	"github.com/uvio-network/apiserver/pkg/server/converter"
 	"github.com/uvio-network/apiserver/pkg/server/limiter"
 	"github.com/uvio-network/apiserver/pkg/storage/votestorage"
@@ -15,11 +14,6 @@ import (
 
 func (h *Handler) Search(ctx context.Context, req *vote.SearchI) (*vote.SearchO, error) {
 	var out []*votestorage.Object
-
-	var use objectid.ID
-	{
-		use = userid.FromContext(ctx)
-	}
 
 	var ids []objectid.ID
 	for _, x := range req.Object {
@@ -33,7 +27,7 @@ func (h *Handler) Search(ctx context.Context, req *vote.SearchI) (*vote.SearchO,
 	//
 
 	if len(ids) != 0 {
-		lis, err := h.sto.SearchVote(use, ids)
+		lis, err := h.sto.SearchVote(ids)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
