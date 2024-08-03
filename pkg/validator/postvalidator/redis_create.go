@@ -12,7 +12,7 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Redis) Create(inp []*poststorage.Object) ([]*poststorage.Object, error) {
+func (r *Redis) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, error) {
 	var err error
 
 	for i := range inp {

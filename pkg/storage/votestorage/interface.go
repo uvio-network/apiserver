@@ -3,12 +3,11 @@ package votestorage
 import "github.com/uvio-network/apiserver/pkg/object/objectid"
 
 type Interface interface {
-	// Create persists new vote objects.
+	// CreateVote persists new vote objects in the underlying storage.
 	//
 	//     @inp[0] the vote objects to create
-	//     @out[0] the vote objects mapped to their internal vote IDs
 	//
-	Create([]*Object) ([]*Object, error)
+	CreateVote([]*Object) error
 
 	// SearchVote returns the vote objects matching the given vote IDs.
 	//

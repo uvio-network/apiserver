@@ -9,7 +9,7 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Redis) Create(inp []*votestorage.Object) ([]*votestorage.Object, error) {
+func (r *Redis) CreateVote(inp []*votestorage.Object) ([]*votestorage.Object, error) {
 	var err error
 
 	for i := range inp {

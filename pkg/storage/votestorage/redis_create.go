@@ -4,7 +4,7 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Redis) Create(inp []*Object) ([]*Object, error) {
+func (r *Redis) CreateVote(inp []*Object) error {
 	var err error
 
 	for i := range inp {
@@ -13,7 +13,7 @@ func (r *Redis) Create(inp []*Object) ([]*Object, error) {
 		{
 			err = r.red.Simple().Create().Element(votObj(inp[i].ID), musStr(inp[i]))
 			if err != nil {
-				return nil, tracer.Mask(err)
+				return tracer.Mask(err)
 			}
 		}
 
@@ -24,7 +24,7 @@ func (r *Redis) Create(inp []*Object) ([]*Object, error) {
 		{
 			err = r.red.Sorted().Create().Score(votCla(inp[i].Claim), inp[i].ID.String(), inp[i].ID.Float())
 			if err != nil {
-				return nil, tracer.Mask(err)
+				return tracer.Mask(err)
 			}
 		}
 
@@ -33,10 +33,10 @@ func (r *Redis) Create(inp []*Object) ([]*Object, error) {
 		{
 			err = r.red.Sorted().Create().Score(votOwn(inp[i].Owner), inp[i].ID.String(), inp[i].ID.Float())
 			if err != nil {
-				return nil, tracer.Mask(err)
+				return tracer.Mask(err)
 			}
 		}
 	}
 
-	return inp, nil
+	return nil
 }

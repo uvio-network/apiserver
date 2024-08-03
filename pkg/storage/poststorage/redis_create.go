@@ -5,7 +5,7 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Redis) Create(inp []*Object) ([]*Object, error) {
+func (r *Redis) CreatePost(inp []*Object) error {
 	var err error
 
 	for i := range inp {
@@ -14,7 +14,7 @@ func (r *Redis) Create(inp []*Object) ([]*Object, error) {
 		{
 			err = r.red.Simple().Create().Element(posObj(inp[i].ID), musStr(inp[i]))
 			if err != nil {
-				return nil, tracer.Mask(err)
+				return tracer.Mask(err)
 			}
 		}
 
@@ -24,7 +24,7 @@ func (r *Redis) Create(inp []*Object) ([]*Object, error) {
 		{
 			err = r.red.Sorted().Create().Score(storageformat.PostCreated, inp[i].ID.String(), float64(inp[i].Created.UnixNano()))
 			if err != nil {
-				return nil, tracer.Mask(err)
+				return tracer.Mask(err)
 			}
 		}
 
@@ -33,7 +33,7 @@ func (r *Redis) Create(inp []*Object) ([]*Object, error) {
 		for _, x := range inp[i].Labels {
 			err = r.red.Sorted().Create().Score(posLab(x), inp[i].ID.String(), inp[i].ID.Float())
 			if err != nil {
-				return nil, tracer.Mask(err)
+				return tracer.Mask(err)
 			}
 		}
 
@@ -43,7 +43,7 @@ func (r *Redis) Create(inp []*Object) ([]*Object, error) {
 		if inp[i].Tree != "" {
 			err = r.red.Sorted().Create().Score(posTre(inp[i].Tree), inp[i].ID.String(), inp[i].ID.Float())
 			if err != nil {
-				return nil, tracer.Mask(err)
+				return tracer.Mask(err)
 			}
 		}
 
@@ -52,10 +52,10 @@ func (r *Redis) Create(inp []*Object) ([]*Object, error) {
 		{
 			err = r.red.Sorted().Create().Score(posOwn(inp[i].Owner), inp[i].ID.String(), inp[i].ID.Float())
 			if err != nil {
-				return nil, tracer.Mask(err)
+				return tracer.Mask(err)
 			}
 		}
 	}
 
-	return inp, nil
+	return nil
 }

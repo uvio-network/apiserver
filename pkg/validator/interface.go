@@ -1,5 +1,7 @@
 package validator
 
+// TODO rename to reconciler
+
 import (
 	"github.com/uvio-network/apiserver/pkg/validator/postvalidator"
 	"github.com/uvio-network/apiserver/pkg/validator/votevalidator"
