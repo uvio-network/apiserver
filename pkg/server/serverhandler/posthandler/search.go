@@ -61,7 +61,7 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 	//
 
 	if len(ids) != 0 {
-		lis, err := h.sto.SearchPost(ids)
+		lis, err := h.sto.Post().SearchPost(ids)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -74,7 +74,7 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 	//
 
 	if len(lab) != 0 {
-		lis, err := h.sto.SearchLabels(lab)
+		lis, err := h.sto.Post().SearchLabels(lab)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -87,7 +87,7 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 	//
 
 	if tim && len(pag) == 2 {
-		lis, err := h.sto.SearchPage(pag[0], pag[1])
+		lis, err := h.sto.Post().SearchPage(pag[0], pag[1])
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -100,7 +100,7 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 	//
 
 	if len(tre) != 0 {
-		lis, err := h.sto.SearchTree(tre)
+		lis, err := h.sto.Post().SearchTree(tre)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}

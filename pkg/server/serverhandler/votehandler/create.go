@@ -30,7 +30,7 @@ func (h *Handler) Create(ctx context.Context, req *vote.CreateI) (*vote.CreateO,
 	//
 
 	{
-		inp, err = h.val.Create(inp)
+		inp, err = h.val.Vote().Create(inp)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -38,11 +38,13 @@ func (h *Handler) Create(ctx context.Context, req *vote.CreateI) (*vote.CreateO,
 
 	var out []*votestorage.Object
 	{
-		out, err = h.sto.Create(inp)
+		out, err = h.sto.Vote().Create(inp)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
 	}
+
+	// TODO update vote summary for claims and comments
 
 	//
 	// Construct the RPC response.

@@ -33,7 +33,7 @@ func (h *Handler) Create(ctx context.Context, req *post.CreateI) (*post.CreateO,
 	//
 
 	{
-		inp, err = h.val.Create(inp)
+		inp, err = h.val.Post().Create(inp)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -41,7 +41,7 @@ func (h *Handler) Create(ctx context.Context, req *post.CreateI) (*post.CreateO,
 
 	var out []*poststorage.Object
 	{
-		out, err = h.sto.Create(inp)
+		out, err = h.sto.Post().Create(inp)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}

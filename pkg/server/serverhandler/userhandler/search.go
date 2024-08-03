@@ -33,7 +33,7 @@ func (h *Handler) Search(ctx context.Context, req *user.SearchI) (*user.SearchO,
 	//
 
 	if len(use) != 0 {
-		lis, err := h.use.SearchUser(use)
+		lis, err := h.sto.User().SearchUser(use)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -52,7 +52,7 @@ func (h *Handler) Search(ctx context.Context, req *user.SearchI) (*user.SearchO,
 		}
 
 		{
-			obj, err := h.use.SearchSubject(sub)
+			obj, err := h.sto.User().SearchSubject(sub)
 			if err != nil {
 				return nil, tracer.Mask(err)
 			}
