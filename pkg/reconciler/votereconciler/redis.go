@@ -1,4 +1,4 @@
-package votevalidator
+package votereconciler
 
 import (
 	"fmt"

@@ -11,6 +11,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/twitchtv/twirp"
 	"github.com/uvio-network/apiserver/pkg/envvar"
+	"github.com/uvio-network/apiserver/pkg/reconciler"
 	"github.com/uvio-network/apiserver/pkg/server"
 	"github.com/uvio-network/apiserver/pkg/server/interceptor/failedinterceptor"
 	"github.com/uvio-network/apiserver/pkg/server/middleware/authmiddleware"
@@ -18,7 +19,6 @@ import (
 	"github.com/uvio-network/apiserver/pkg/server/middleware/usermiddleware"
 	"github.com/uvio-network/apiserver/pkg/server/serverhandler"
 	"github.com/uvio-network/apiserver/pkg/storage"
-	"github.com/uvio-network/apiserver/pkg/validator"
 	"github.com/uvio-network/apiserver/pkg/worker"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler"
 	"github.com/xh3b4sd/breakr"
@@ -87,9 +87,9 @@ func (r *run) runE(cmd *cobra.Command, args []string) error {
 		})
 	}
 
-	var val validator.Interface
+	var rec reconciler.Interface
 	{
-		val = validator.New(validator.Config{
+		rec = reconciler.New(reconciler.Config{
 			Log: log,
 			Sto: sto,
 		})
@@ -102,8 +102,8 @@ func (r *run) runE(cmd *cobra.Command, args []string) error {
 		shn = serverhandler.New(serverhandler.Config{
 			Loc: loc,
 			Log: log,
+			Rec: rec,
 			Sto: sto,
-			Val: val,
 		})
 	}
 

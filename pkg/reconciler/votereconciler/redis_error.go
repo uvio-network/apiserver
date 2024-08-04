@@ -1,4 +1,4 @@
-package votevalidator
+package votereconciler
 
 import (
 	"github.com/xh3b4sd/tracer"
