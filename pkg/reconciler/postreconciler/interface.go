@@ -1,4 +1,4 @@
-package postvalidator
+package postreconciler
 
 import (
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"

@@ -34,7 +34,7 @@ func (h *Handler) Create(ctx context.Context, req *post.CreateI) (*post.CreateO,
 
 	var out []*poststorage.Object
 	{
-		out, err = h.val.Post().CreatePost(inp)
+		out, err = h.rec.Post().CreatePost(inp)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}

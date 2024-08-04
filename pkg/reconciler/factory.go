@@ -1,4 +1,4 @@
-package postvalidator
+package reconciler
 
 import (
 	"github.com/uvio-network/apiserver/pkg/storage"
@@ -6,7 +6,7 @@ import (
 )
 
 func Fake() Interface {
-	return NewRedis(RedisConfig{
+	return New(Config{
 		Log: logger.Fake(),
 		Sto: storage.Fake(),
 	})

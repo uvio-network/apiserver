@@ -1,4 +1,4 @@
-package votevalidator
+package votereconciler
 
 import (
 	"github.com/uvio-network/apiserver/pkg/storage"

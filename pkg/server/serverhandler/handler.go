@@ -3,11 +3,11 @@ package serverhandler
 import (
 	"fmt"
 
+	"github.com/uvio-network/apiserver/pkg/reconciler"
 	"github.com/uvio-network/apiserver/pkg/server/serverhandler/posthandler"
 	"github.com/uvio-network/apiserver/pkg/server/serverhandler/userhandler"
 	"github.com/uvio-network/apiserver/pkg/server/serverhandler/votehandler"
 	"github.com/uvio-network/apiserver/pkg/storage"
-	"github.com/uvio-network/apiserver/pkg/validator"
 	"github.com/xh3b4sd/locker"
 	"github.com/xh3b4sd/logger"
 	"github.com/xh3b4sd/tracer"
@@ -16,8 +16,8 @@ import (
 type Config struct {
 	Loc locker.Interface
 	Log logger.Interface
+	Rec reconciler.Interface
 	Sto storage.Interface
-	Val validator.Interface
 }
 
 type Handler struct {
@@ -37,8 +37,8 @@ func New(c Config) *Handler {
 	{
 		han = append(han, posthandler.NewHandler(posthandler.HandlerConfig{
 			Log: c.Log,
+			Rec: c.Rec,
 			Sto: c.Sto,
-			Val: c.Val,
 		}))
 	}
 
@@ -52,8 +52,8 @@ func New(c Config) *Handler {
 	{
 		han = append(han, votehandler.NewHandler(votehandler.HandlerConfig{
 			Log: c.Log,
+			Rec: c.Rec,
 			Sto: c.Sto,
-			Val: c.Val,
 		}))
 	}
 

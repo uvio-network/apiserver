@@ -32,7 +32,7 @@ func (h *Handler) Create(ctx context.Context, req *vote.CreateI) (*vote.CreateO,
 
 	var out []*votestorage.Object
 	{
-		out, err = h.val.Vote().CreateVote(inp)
+		out, err = h.rec.Vote().CreateVote(inp)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -51,7 +51,7 @@ func (h *Handler) Create(ctx context.Context, req *vote.CreateI) (*vote.CreateO,
 
 	var pos []*poststorage.Object
 	{
-		pos, err = h.val.Post().UpdateVotes(out)
+		pos, err = h.rec.Post().UpdateVotes(out)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}

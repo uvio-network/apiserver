@@ -6,9 +6,9 @@ import (
 	fuzz "github.com/google/gofuzz"
 	"github.com/uvio-network/apigocode/pkg/vote"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
+	"github.com/uvio-network/apiserver/pkg/reconciler"
 	"github.com/uvio-network/apiserver/pkg/server/context/userid"
 	"github.com/uvio-network/apiserver/pkg/storage"
-	"github.com/uvio-network/apiserver/pkg/validator"
 	"github.com/xh3b4sd/logger"
 )
 
@@ -22,8 +22,8 @@ func tesHan() vote.API {
 	return &wrapper{
 		han: NewHandler(HandlerConfig{
 			Log: logger.Fake(),
+			Rec: reconciler.Fake(),
 			Sto: storage.Fake(),
-			Val: validator.Fake(),
 		}),
 	}
 }
