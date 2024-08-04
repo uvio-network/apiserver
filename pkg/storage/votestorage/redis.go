@@ -47,6 +47,10 @@ func votOwn(oid objectid.ID) string {
 	return fmt.Sprintf(storageformat.VoteOwner, oid)
 }
 
+func votOwnCla(uid objectid.ID, cid objectid.ID) string {
+	return fmt.Sprintf(storageformat.VoteOwnerClaim, uid, cid)
+}
+
 func musStr(obj *Object) string {
 	byt, err := json.Marshal(obj)
 	if err != nil {

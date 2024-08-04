@@ -11,34 +11,34 @@ import (
 )
 
 func (r *Redis) SearchLabels(inp [][]string) ([]*Object, error) {
-	var err error
-
-	var out []*Object
+	// cla will result in a list of all claim IDs grouped under all of the given
+	// label names, if any.
+	var cla []string
 	for _, x := range inp {
-		// val will result in a list of all post IDs grouped under all of the given
-		// label names, if any.
-		var val []string
-		{
-			val, err = r.red.Sorted().Search().Inter(generic.Fmt(x, storageformat.PostLabel)...)
-			if err != nil {
-				return nil, tracer.Mask(err)
-			}
+		val, err := r.red.Sorted().Search().Inter(generic.Fmt(x, storageformat.PostLabel)...)
+		if err != nil {
+			return nil, tracer.Mask(err)
 		}
 
-		// There might not be any post IDs, so we do not proceed, but instead
-		// continue with the next list of label names, if any.
-		if len(val) == 0 {
-			continue
+		cla = append(cla, val...)
+	}
+
+	// There might not be any claim IDs, so we do not proceed, but instead return
+	// nothing.
+	if len(cla) == 0 {
+		return nil, nil
+	}
+
+	// Having collected all claim IDs, we go ahead and search all claim objects at
+	// once.
+	var out []*Object
+	{
+		lis, err := r.SearchPost(objectid.IDs(cla))
+		if err != nil {
+			return nil, tracer.Mask(err)
 		}
 
-		{
-			lis, err := r.SearchPost(objectid.IDs(val))
-			if err != nil {
-				return nil, tracer.Mask(err)
-			}
-
-			out = append(out, lis...)
-		}
+		out = append(out, lis...)
 	}
 
 	return out, nil
@@ -112,34 +112,34 @@ func (r *Redis) SearchPost(inp []objectid.ID) ([]*Object, error) {
 }
 
 func (r *Redis) SearchTree(inp []objectid.ID) ([]*Object, error) {
-	var err error
-
-	var out []*Object
+	// pos will result in a list of all post IDs belonging to the given tree ID,
+	// if any.
+	var pos []string
 	for _, x := range inp {
-		// val will result in a list of all post IDs belonging to the given tree ID,
-		// if any.
-		var val []string
-		{
-			val, err = r.red.Sorted().Search().Order(posTre(x), 0, -1)
-			if err != nil {
-				return nil, tracer.Mask(err)
-			}
+		val, err := r.red.Sorted().Search().Order(posTre(x), 0, -1)
+		if err != nil {
+			return nil, tracer.Mask(err)
 		}
 
-		// There might not be any post IDs, so we do not proceed, but instead
-		// continue with the next tree ID, if any.
-		if len(val) == 0 {
-			continue
+		pos = append(pos, val...)
+	}
+
+	// There might not be any post IDs, so we do not proceed, but instead return
+	// nothing.
+	if len(pos) == 0 {
+		return nil, nil
+	}
+
+	// Having collected all post IDs, we go ahead and search all post objects at
+	// once.
+	var out []*Object
+	{
+		lis, err := r.SearchPost(objectid.IDs(pos))
+		if err != nil {
+			return nil, tracer.Mask(err)
 		}
 
-		{
-			lis, err := r.SearchPost(objectid.IDs(val))
-			if err != nil {
-				return nil, tracer.Mask(err)
-			}
-
-			out = append(out, lis...)
-		}
+		out = append(out, lis...)
 	}
 
 	return out, nil

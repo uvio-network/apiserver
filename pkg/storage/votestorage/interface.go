@@ -9,9 +9,33 @@ type Interface interface {
 	//
 	CreateVote([]*Object) error
 
+	// SearchClaim returns the vote objects matching the given claim IDs.
+	//
+	//     @inp[0] the claim IDs used to search vote objects
+	//     @out[0] the list of vote objects matching the given claim IDs
+	//
+	SearchClaim([]objectid.ID) ([]*Object, error)
+
+	// SearchOwner returns the vote objects matching the given user IDs.
+	//
+	//     @inp[0] the user IDs used to search vote objects
+	//     @out[0] the list of vote objects matching the given user IDs
+	//
+	SearchOwner([]objectid.ID) ([]*Object, error)
+
+	// SearchOwnerClaim returns the vote objects matching the given user and claim
+	// IDs. This search operation returns the votes that have been cast by a
+	// specific user on a specific claim.
+	//
+	//     @inp[0] the user IDs used to search vote objects
+	//     @inp[0] the claim IDs used to search vote objects
+	//     @out[0] the list of vote objects matching the given user and claim IDs
+	//
+	SearchOwnerClaim([]objectid.ID, []objectid.ID) ([]*Object, error)
+
 	// SearchVote returns the vote objects matching the given vote IDs.
 	//
-	//     @inp[0] the vote IDs to search for
+	//     @inp[0] the vote IDs used to search vote objects
 	//     @out[0] the list of vote objects matching the given vote IDs
 	//
 	SearchVote([]objectid.ID) ([]*Object, error)
