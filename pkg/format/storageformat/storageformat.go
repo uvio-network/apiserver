@@ -98,4 +98,14 @@ const (
 	//     vote/owner/1234          3456,5678
 	//
 	VoteOwner = "vote/owner/%s"
+
+	// VoteOwnerClaim is used to store all vote IDs that have been created by a
+	// specific user on a specific claim. This key allows us to search for all
+	// votes any given user made on any given claim.
+	//
+	//     user ID / claim ID                  vote IDs
+	//                                   ->
+	//     vote/owner/1234/claim/1234          3456,5678
+	//
+	VoteOwnerClaim = "vote/owner/%s/claim/%s"
 )

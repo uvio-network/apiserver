@@ -36,6 +36,16 @@ func (r *Redis) CreateVote(inp []*Object) error {
 				return tracer.Mask(err)
 			}
 		}
+
+		// Store the relationship between users and votes specifically related to
+		// the given claim. This relationship allows us to search for all votes any
+		// given user made on any given claim.
+		{
+			err = r.red.Sorted().Create().Score(votOwnCla(inp[i].Owner, inp[i].Claim), inp[i].ID.String(), inp[i].ID.Float())
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
 	}
 
 	return nil

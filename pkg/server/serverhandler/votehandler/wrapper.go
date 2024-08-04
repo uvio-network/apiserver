@@ -73,9 +73,14 @@ func (w *wrapper) Search(ctx context.Context, req *vote.SearchI) (*vote.SearchO,
 	{
 		for _, x := range req.Object {
 			i := searchInternEmpty(x.Intern)
+			p := searchPublicEmpty(x.Public)
 
-			if i {
-				return nil, tracer.Maskf(runtime.QueryObjectEmptyError, "intern must not be empty")
+			if i && p {
+				return nil, tracer.Maskf(runtime.QueryObjectEmptyError, "one of [intern public] must be used")
+			}
+
+			if !i && x.Intern.Owner == "self" && userid.FromContext(ctx) == "" {
+				return nil, tracer.Maskf(runtime.UserAuthError, "intern.owner=self requires valid access token")
 			}
 		}
 	}
@@ -93,4 +98,8 @@ func createPublicEmpty(x *vote.CreateI_Object_Public) bool {
 
 func searchInternEmpty(x *vote.SearchI_Object_Intern) bool {
 	return x == nil || (x.Id == "" && x.Owner == "")
+}
+
+func searchPublicEmpty(x *vote.SearchI_Object_Public) bool {
+	return x == nil || (x.Claim == "")
 }
