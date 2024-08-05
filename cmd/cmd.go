@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"github.com/uvio-network/apiserver/cmd/daemon"
+	"github.com/uvio-network/apiserver/cmd/fakeit"
 	"github.com/uvio-network/apiserver/cmd/version"
 	"github.com/xh3b4sd/tracer"
 )
@@ -18,21 +19,31 @@ func New() (*cobra.Command, error) {
 
 	// --------------------------------------------------------------------- //
 
-	var cmdDae *cobra.Command
+	var dae *cobra.Command
 	{
 		c := daemon.Config{}
 
-		cmdDae, err = daemon.New(c)
+		dae, err = daemon.New(c)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
 	}
 
-	var cmdVer *cobra.Command
+	var fak *cobra.Command
+	{
+		c := fakeit.Config{}
+
+		fak, err = fakeit.New(c)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	var ver *cobra.Command
 	{
 		c := version.Config{}
 
-		cmdVer, err = version.New(c)
+		ver, err = version.New(c)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -64,8 +75,9 @@ func New() (*cobra.Command, error) {
 	}
 
 	{
-		c.AddCommand(cmdDae)
-		c.AddCommand(cmdVer)
+		c.AddCommand(dae)
+		c.AddCommand(fak)
+		c.AddCommand(ver)
 	}
 
 	return c, nil
