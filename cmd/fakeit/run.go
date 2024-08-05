@@ -3,7 +3,8 @@ package fakeit
 import (
 	"fmt"
 
-	"github.com/brianvoe/gofakeit/v6"
+	"github.com/brianvoe/gofakeit/v7"
+	"github.com/brianvoe/gofakeit/v7/source"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/spf13/cobra"
 	"github.com/uvio-network/apigocode/pkg/user"
@@ -64,7 +65,7 @@ func (r *run) runE(cmd *cobra.Command, args []string) error {
 
 	var fak *gofakeit.Faker
 	{
-		fak = gofakeit.NewCrypto()
+		fak = gofakeit.NewFaker(source.NewCrypto(), true)
 	}
 
 	// --------------------------------------------------------------------- //

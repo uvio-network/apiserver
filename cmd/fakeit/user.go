@@ -2,9 +2,9 @@ package fakeit
 
 import (
 	"context"
-	"net/http"
+	"fmt"
 
-	"github.com/brianvoe/gofakeit/v6"
+	"github.com/brianvoe/gofakeit/v7"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/uvio-network/apigocode/pkg/user"
 	"github.com/xh3b4sd/tracer"
@@ -40,28 +40,9 @@ func (r *run) createUser(cli Client, key jwk.Key, fak *gofakeit.Faker) ([]*user.
 }
 
 func (r *run) randomUser(fak *gofakeit.Faker) *user.CreateI {
-	var err error
-
-	// We want to produce a fake profile picture for our fake user. Here we fetch
-	// a random image URL from some image provider. For that to work we use a
-	// custom HTTP client that is not following redirects, because the random
-	// image URL we are looking for will be set in the location header of the HTTP
-	// response below.
-	var cli *http.Client
+	var nam string
 	{
-		cli = &http.Client{
-			CheckRedirect: func(req *http.Request, via []*http.Request) error {
-				return http.ErrUseLastResponse
-			},
-		}
-	}
-
-	var res *http.Response
-	{
-		res, err = cli.Get(fak.ImageURL(48, 48))
-		if err != nil {
-			tracer.Panic(tracer.Mask(err))
-		}
+		nam = fak.Username()
 	}
 
 	var obj *user.CreateI
@@ -70,8 +51,8 @@ func (r *run) randomUser(fak *gofakeit.Faker) *user.CreateI {
 			Object: []*user.CreateI_Object{
 				{
 					Public: &user.CreateI_Object_Public{
-						Image: res.Header.Get("location"),
-						Name:  fak.Username(),
+						Image: fmt.Sprintf("https://picsum.photos/seed/%s/48/48", nam),
+						Name:  nam,
 					},
 				},
 			},

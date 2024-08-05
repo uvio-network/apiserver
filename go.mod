@@ -4,7 +4,7 @@ go 1.22.5
 
 require (
 	github.com/auth0/go-jwt-middleware/v2 v2.2.1
-	github.com/brianvoe/gofakeit/v6 v6.28.0
+	github.com/brianvoe/gofakeit/v7 v7.0.4
 	github.com/google/gofuzz v1.2.0
 	github.com/gorilla/mux v1.8.1
 	github.com/joho/godotenv v1.5.1
