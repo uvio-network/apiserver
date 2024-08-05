@@ -76,7 +76,7 @@ var PostTextEmptyError = &tracer.Error{
 
 var PostTextLengthError = &tracer.Error{
 	Kind: "PostTextLengthError",
-	Desc: "The request expects the post text to have between 100 and 2500 characters. The post text was not found to have between 100 and 2500 characters. Therefore the request failed.",
+	Desc: "The request expects the post text to have between 100 and 5000 characters. The post text was not found to have between 100 and 5000 characters. Therefore the request failed.",
 }
 
 var PostTokenEmptyError = &tracer.Error{

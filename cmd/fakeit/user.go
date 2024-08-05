@@ -10,10 +10,10 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *run) createUser(cli Client, key jwk.Key, fak *gofakeit.Faker) ([]*user.CreateO, error) {
+func (r *run) createUser(cli Client, key jwk.Key, fak *gofakeit.Faker) (*user.SearchO, error) {
 	var err error
-	var lis []*user.CreateO
 
+	var ids []string
 	for i := 0; i < 10; i++ {
 		var inp *user.CreateI
 		{
@@ -33,10 +33,33 @@ func (r *run) createUser(cli Client, key jwk.Key, fak *gofakeit.Faker) ([]*user.
 			}
 		}
 
-		lis = append(lis, out)
+		for _, x := range out.Object {
+			ids = append(ids, x.Intern.Id)
+		}
 	}
 
-	return lis, nil
+	var inp *user.SearchI
+	{
+		inp = &user.SearchI{}
+	}
+
+	for _, x := range ids {
+		inp.Object = append(inp.Object, &user.SearchI_Object{
+			Intern: &user.SearchI_Object_Intern{
+				Id: x,
+			},
+		})
+	}
+
+	var out *user.SearchO
+	{
+		out, err = cli.User.Search(context.Background(), inp)
+		if err != nil {
+			tracer.Panic(tracer.Mask(err))
+		}
+	}
+
+	return out, nil
 }
 
 func (r *run) randomUser(fak *gofakeit.Faker) *user.CreateI {

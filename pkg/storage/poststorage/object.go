@@ -64,7 +64,7 @@ func (o *Object) Verify() error {
 			return tracer.Mask(ClaimLabelsUniqueError)
 		}
 		if o.Kind == "claim" && !labelname.Verify(o.Labels) {
-			return tracer.Mask(ClaimLabelsFormatError)
+			return tracer.Maskf(ClaimLabelsFormatError, "%v", o.Labels)
 		}
 	}
 
@@ -107,7 +107,7 @@ func (o *Object) Verify() error {
 		if len(txt) < 100 {
 			return tracer.Maskf(PostTextLengthError, "%d", len(txt))
 		}
-		if len(txt) > 2500 {
+		if len(txt) > 5000 {
 			return tracer.Maskf(PostTextLengthError, "%d", len(txt))
 		}
 	}

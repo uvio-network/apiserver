@@ -7,6 +7,7 @@ import (
 	"github.com/brianvoe/gofakeit/v7/source"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/spf13/cobra"
+	"github.com/uvio-network/apigocode/pkg/post"
 	"github.com/uvio-network/apigocode/pkg/user"
 	"github.com/uvio-network/apiserver/pkg/daemon"
 	"github.com/uvio-network/apiserver/pkg/envvar"
@@ -70,7 +71,7 @@ func (r *run) runE(cmd *cobra.Command, args []string) error {
 
 	// --------------------------------------------------------------------- //
 
-	var use []*user.CreateO
+	var use *user.SearchO
 	{
 		use, err = r.createUser(cli, key, fak)
 		if err != nil {
@@ -78,10 +79,16 @@ func (r *run) runE(cmd *cobra.Command, args []string) error {
 		}
 	}
 
-	fmt.Printf("%#v\n", use)
+	var pos *post.SearchO
+	{
+		pos, err = r.createPost(cli, key, fak, use)
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
 
-	// TODO select some users
-	// TODO create some posts
+	fmt.Printf("%#v\n", use)
+	fmt.Printf("%#v\n", pos)
 
 	// TODO select some users
 	// TODO create some votes
