@@ -9,7 +9,8 @@ import (
 )
 
 const (
-	pat = ".env.local"
+	Fake  = ".env.fake"
+	Local = ".env.local"
 )
 
 type Env struct {
@@ -20,7 +21,7 @@ type Env struct {
 	HttpPort    string `split_words:"true" default:"7777"`
 }
 
-func Load() Env {
+func Load(pat string) Env {
 	var err error
 
 	var env Env
