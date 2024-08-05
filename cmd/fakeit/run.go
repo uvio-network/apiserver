@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/uvio-network/apigocode/pkg/post"
 	"github.com/uvio-network/apigocode/pkg/user"
+	"github.com/uvio-network/apigocode/pkg/vote"
 	"github.com/uvio-network/apiserver/pkg/daemon"
 	"github.com/uvio-network/apiserver/pkg/envvar"
 	"github.com/uvio-network/apiserver/pkg/server"
@@ -87,11 +88,19 @@ func (r *run) runE(cmd *cobra.Command, args []string) error {
 		}
 	}
 
-	fmt.Printf("%#v\n", use)
-	fmt.Printf("%#v\n", pos)
+	var vot *vote.SearchO
+	{
+		vot, err = r.createVote(cli, key, fak, use, pos)
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
 
-	// TODO select some users
-	// TODO create some votes
+	{
+		fmt.Printf("Generated %d fake users.\n", len(use.Object))
+		fmt.Printf("Generated %d fake posts.\n", len(pos.Object))
+		fmt.Printf("Generated %d fake votes.\n", len(vot.Object))
+	}
 
 	return nil
 }
