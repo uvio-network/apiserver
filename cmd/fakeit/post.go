@@ -20,7 +20,7 @@ func (r *run) createPost(cli Client, key jwk.Key, fak *gofakeit.Faker, use *user
 	var err error
 
 	var ids []string
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 20; i++ {
 		{
 			fak.ShuffleAnySlice(use.Object)
 		}

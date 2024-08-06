@@ -15,7 +15,7 @@ func (r *Redis) SearchLabels(inp [][]string) ([]*Object, error) {
 	// label names, if any.
 	var cla []string
 	for _, x := range inp {
-		val, err := r.red.Sorted().Search().Inter(generic.Fmt(x, storageformat.PostLabel)...)
+		val, err := r.red.Sorted().Search().Inter(generic.Arg1(storageformat.PostLabel, x)...)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -81,7 +81,7 @@ func (r *Redis) SearchPost(inp []objectid.ID) ([]*Object, error) {
 
 	var jsn []string
 	{
-		jsn, err = r.red.Simple().Search().Multi(generic.Fmt(inp, storageformat.PostObject)...)
+		jsn, err = r.red.Simple().Search().Multi(generic.Arg1(storageformat.PostObject, inp)...)
 		if simple.IsNotFound(err) {
 			return nil, tracer.Maskf(PostObjectNotFoundError, "%v", inp)
 		} else if err != nil {

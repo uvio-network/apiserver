@@ -80,6 +80,8 @@ func (r *Redis) SearchOwner(own []objectid.ID) ([]*Object, error) {
 }
 
 func (r *Redis) SearchOwnerClaim(own []objectid.ID, cla []objectid.ID) ([]*Object, error) {
+	var err error
+
 	if len(own) != len(cla) {
 		return nil, tracer.Maskf(runtime.ExecutionFailedError, "%d != %d", len(own), len(cla))
 	}
@@ -87,13 +89,11 @@ func (r *Redis) SearchOwnerClaim(own []objectid.ID, cla []objectid.ID) ([]*Objec
 	// vot will result in a list of all vote IDs belonging to the given user and
 	// claim IDs, if any.
 	var vot []string
-	for i := range own {
-		val, err := r.red.Sorted().Search().Order(votOwnCla(own[i], cla[i]), 0, -1)
+	{
+		vot, err = r.red.Sorted().Search().Union(generic.Arg2(storageformat.VoteOwnerClaim, own, cla)...)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
-
-		vot = append(vot, val...)
 	}
 
 	// There might not be any vote IDs, so we do not proceed, but instead return
@@ -122,7 +122,7 @@ func (r *Redis) SearchVote(inp []objectid.ID) ([]*Object, error) {
 
 	var jsn []string
 	{
-		jsn, err = r.red.Simple().Search().Multi(generic.Fmt(inp, storageformat.VoteObject)...)
+		jsn, err = r.red.Simple().Search().Multi(generic.Arg1(storageformat.VoteObject, inp)...)
 		if simple.IsNotFound(err) {
 			return nil, tracer.Maskf(VoteObjectNotFoundError, "%v", inp)
 		} else if err != nil {
