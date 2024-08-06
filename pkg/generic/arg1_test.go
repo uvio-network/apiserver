@@ -8,15 +8,15 @@ import (
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 )
 
-func Test_ObjectID_Fmt_string(t *testing.T) {
+func Test_ObjectID_Arg1_string(t *testing.T) {
 	testCases := []struct {
-		ids []string
+		one []string
 		str string
 		key []string
 	}{
 		// Case 000
 		{
-			ids: []string{
+			one: []string{
 				"foo",
 				"bar",
 			},
@@ -28,7 +28,7 @@ func Test_ObjectID_Fmt_string(t *testing.T) {
 		},
 		// Case 001
 		{
-			ids: []string{
+			one: []string{
 				"foo",
 				"bar",
 			},
@@ -42,7 +42,7 @@ func Test_ObjectID_Fmt_string(t *testing.T) {
 
 	for i, tc := range testCases {
 		t.Run(fmt.Sprintf("%03d", i), func(t *testing.T) {
-			key := Fmt(tc.ids, tc.str)
+			key := Arg1(tc.str, tc.one)
 			if !slices.Equal(key, tc.key) {
 				t.Fatalf("expected %#v got %#v", tc.key, key)
 			}
@@ -50,15 +50,15 @@ func Test_ObjectID_Fmt_string(t *testing.T) {
 	}
 }
 
-func Test_ObjectID_Fmt_ID(t *testing.T) {
+func Test_ObjectID_Arg1_ID(t *testing.T) {
 	testCases := []struct {
-		ids []objectid.ID
+		one []objectid.ID
 		str string
 		key []string
 	}{
 		// Case 000
 		{
-			ids: []objectid.ID{
+			one: []objectid.ID{
 				"foo",
 				"bar",
 			},
@@ -70,7 +70,7 @@ func Test_ObjectID_Fmt_ID(t *testing.T) {
 		},
 		// Case 001
 		{
-			ids: []objectid.ID{
+			one: []objectid.ID{
 				"foo",
 				"bar",
 			},
@@ -84,7 +84,7 @@ func Test_ObjectID_Fmt_ID(t *testing.T) {
 
 	for i, tc := range testCases {
 		t.Run(fmt.Sprintf("%03d", i), func(t *testing.T) {
-			key := Fmt(tc.ids, tc.str)
+			key := Arg1(tc.str, tc.one)
 			if !slices.Equal(key, tc.key) {
 				t.Fatalf("expected %#v got %#v", tc.key, key)
 			}

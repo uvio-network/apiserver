@@ -48,7 +48,7 @@ func (r *Redis) SearchUser(use []objectid.ID) ([]*Object, error) {
 
 	var jsn []string
 	{
-		jsn, err = r.red.Simple().Search().Multi(generic.Fmt(use, storageformat.UserObject)...)
+		jsn, err = r.red.Simple().Search().Multi(generic.Arg1(storageformat.UserObject, use)...)
 		if simple.IsNotFound(err) {
 			return nil, tracer.Maskf(UserNotFoundError, "%v", use)
 		} else if err != nil {
