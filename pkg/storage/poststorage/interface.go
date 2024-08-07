@@ -9,14 +9,25 @@ type Interface interface {
 	//
 	CreatePost([]*Object) error
 
-	// SearchLabels returns the post objects grouped under all of the given
+	// SearchComment returns the post objects that represent market specific
+	// comments. If a user commented on a claim on which they staked reputation or
+	// verified events, then SearchComment will return all comments made by the
+	// given user on markets in which they participated in.
+	//
+	//     @inp[0] the user IDs to search for
+	//     @inp[0] the claim IDs to search for
+	//     @out[0] the list of post objects representing market specific comments
+	//
+	SearchComment([]objectid.ID, []objectid.ID) ([]*Object, error)
+
+	// SearchLabel returns the post objects grouped under all of the given
 	// category labels. Multiple searches can be done for a set of labels each,
 	// where each set of labels defines the intersection of claims to search for.
 	//
 	//     @inp[0] the list of category labels to search for
 	//     @out[0] the list of post objects matching the given post IDs
 	//
-	SearchLabels([][]string) ([]*Object, error)
+	SearchLabel([][]string) ([]*Object, error)
 
 	// SearchPage returns the post objects within the given pagination range in
 	// reversed order of creation time. Given the chronologically persisted posts

@@ -6,11 +6,50 @@ import (
 	"github.com/uvio-network/apiserver/pkg/format/storageformat"
 	"github.com/uvio-network/apiserver/pkg/generic"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
+	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/xh3b4sd/redigo/simple"
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Redis) SearchLabels(inp [][]string) ([]*Object, error) {
+func (r *Redis) SearchComment(own []objectid.ID, cla []objectid.ID) ([]*Object, error) {
+	var err error
+
+	if len(own) != len(cla) {
+		return nil, tracer.Maskf(runtime.ExecutionFailedError, "%d != %d", len(own), len(cla))
+	}
+
+	// com will result in a list of all comment IDs belonging to the given user
+	// and claim IDs, if any.
+	var com []string
+	{
+		com, err = r.red.Sorted().Search().Union(generic.Arg2(storageformat.PostComment, own, cla)...)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	// There might not be any comment IDs, so we do not proceed, but instead
+	// return nothing.
+	if len(com) == 0 {
+		return nil, nil
+	}
+
+	// Having collected all comment IDs, we go ahead and search all comment
+	// objects at once.
+	var out []*Object
+	{
+		lis, err := r.SearchPost(objectid.IDs(com))
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+
+		out = append(out, lis...)
+	}
+
+	return out, nil
+}
+
+func (r *Redis) SearchLabel(inp [][]string) ([]*Object, error) {
 	// cla will result in a list of all claim IDs grouped under all of the given
 	// label names, if any.
 	var cla []string

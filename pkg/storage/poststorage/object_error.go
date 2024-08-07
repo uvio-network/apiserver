@@ -4,6 +4,16 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
+var ClaimExpiryEmptyError = &tracer.Error{
+	Kind: "ClaimExpiryEmptyError",
+	Desc: "The request expects the claim expiry not to be empty. The claim expiry was found to be empty. Therefore the request failed.",
+}
+
+var ClaimExpiryPastError = &tracer.Error{
+	Kind: "ClaimExpiryPastError",
+	Desc: "The request expects the claim expiry not to be in the past. The claim expiry was found to be in the past. Therefore the request failed.",
+}
+
 var ClaimLabelsEmptyError = &tracer.Error{
 	Kind: "ClaimLabelsEmptyError",
 	Desc: "The request expects the claim labels not to be empty. The claim labels were found to be empty. Therefore the request failed.",
@@ -26,7 +36,7 @@ var ClaimLabelsUniqueError = &tracer.Error{
 
 var ClaimLifecycleInvalidError = &tracer.Error{
 	Kind: "ClaimLifecycleInvalidError",
-	Desc: "The request expects the claim lifecycle to be one of [propose resolve dispute nullify]. The claim lifecycle was not found to be one of those values. Therefore the request failed.",
+	Desc: "The request expects the claim lifecycle to be one of [adjourn dispute nullify propose resolve]. The claim lifecycle was not found to be one of those values. Therefore the request failed.",
 }
 
 var ClaimParentEmptyError = &tracer.Error{
@@ -54,19 +64,14 @@ var CommentParentEmptyError = &tracer.Error{
 	Desc: "The request expects the comment parent not to be empty. The comment parent was found to be empty. Therefore the request failed.",
 }
 
-var PostExpiryEmptyError = &tracer.Error{
-	Kind: "PostExpiryEmptyError",
-	Desc: "The request expects the post expiry not to be empty. The post expiry was found to be empty. Therefore the request failed.",
-}
-
-var PostExpiryPastError = &tracer.Error{
-	Kind: "PostExpiryPastError",
-	Desc: "The request expects the post expiry not to be in the past. The post expiry was found to be in the past. Therefore the request failed.",
-}
-
 var PostKindInvalidError = &tracer.Error{
 	Kind: "PostKindInvalidError",
 	Desc: "The request expects the post kind to be one of [claim comment]. The post kind was not found to be one of those values. Therefore the request failed.",
+}
+
+var PostOwnerEmptyError = &tracer.Error{
+	Kind: "PostOwnerEmptyError",
+	Desc: "The request expects the post owner not to be empty. The post owner was found to be empty. Therefore the request failed.",
 }
 
 var PostTextEmptyError = &tracer.Error{
@@ -84,7 +89,7 @@ var PostTokenEmptyError = &tracer.Error{
 	Desc: "The request expects the post token not to be empty. The post token was found to be empty. Therefore the request failed.",
 }
 
-var PostOwnerEmptyError = &tracer.Error{
-	Kind: "PostOwnerEmptyError",
-	Desc: "The request expects the post owner not to be empty. The post owner was found to be empty. Therefore the request failed.",
+var PostTokenInvalidError = &tracer.Error{
+	Kind: "PostTokenInvalidError",
+	Desc: "The request expects the post token to be empty. The post token was not found to be empty. Therefore the request failed.",
 }

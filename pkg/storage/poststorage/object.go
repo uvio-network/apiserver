@@ -28,8 +28,8 @@ type Object struct {
 
 func (o *Object) Verify() error {
 	{
-		if o.Expiry.IsZero() {
-			return tracer.Mask(PostExpiryEmptyError)
+		if o.Kind == "claim" && o.Expiry.IsZero() {
+			return tracer.Mask(ClaimExpiryEmptyError)
 		}
 
 		// When creating posts of kind "claim", we want to ensure that claims cannot
@@ -40,7 +40,7 @@ func (o *Object) Verify() error {
 		// want to run the check below again, assuming nobody from the outside could
 		// change the initial expiry anymore.
 		if o.ID == "" && o.Kind == "claim" && o.Expiry.Compare(time.Now().UTC()) != +1 {
-			return tracer.Mask(PostExpiryPastError)
+			return tracer.Mask(ClaimExpiryPastError)
 		}
 	}
 
@@ -69,7 +69,7 @@ func (o *Object) Verify() error {
 	}
 
 	{
-		if o.Kind == "claim" && o.Lifecycle != "propose" && o.Lifecycle != "resolve" && o.Lifecycle != "dispute" && o.Lifecycle != "nullify" {
+		if o.Kind == "claim" && o.Lifecycle != "adjourn" && o.Lifecycle != "dispute" && o.Lifecycle != "nullify" && o.Lifecycle != "propose" && o.Lifecycle != "resolve" {
 			return tracer.Maskf(ClaimLifecycleInvalidError, o.Lifecycle)
 		}
 		if o.Kind == "comment" && o.Lifecycle != "" {
@@ -115,8 +115,18 @@ func (o *Object) Verify() error {
 	{
 		tok := strings.TrimSpace(o.Token)
 
-		if tok == "" {
-			return tracer.Mask(PostTextEmptyError)
+		// Any claim on which you can stake reputation must specify a staking token.
+		if o.Kind == "claim" && (o.Lifecycle == "adjourn" || o.Lifecycle == "dispute" || o.Lifecycle == "nullify" || o.Lifecycle == "propose") && tok == "" {
+			return tracer.Mask(PostTokenEmptyError)
+		}
+		// Any claim on which you cannot stake reputation must not specify a staking
+		// token.
+		if o.Kind == "claim" && o.Lifecycle == "resolve" && tok != "" {
+			return tracer.Mask(PostTokenInvalidError)
+		}
+		// Any comment must not specify a staking token.
+		if o.Kind == "comment" && tok != "" {
+			return tracer.Mask(PostTokenInvalidError)
 		}
 	}
 

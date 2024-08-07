@@ -13,3 +13,13 @@ func (s Slicer) Claim() []objectid.ID {
 
 	return lis
 }
+
+func (s Slicer) Owner() []objectid.ID {
+	var lis []objectid.ID
+
+	for _, x := range s {
+		lis = append(lis, x.Owner)
+	}
+
+	return lis
+}

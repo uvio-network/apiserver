@@ -74,7 +74,7 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 	//
 
 	if len(lab) != 0 {
-		lis, err := h.sto.Post().SearchLabels(lab)
+		lis, err := h.sto.Post().SearchLabel(lab)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -107,6 +107,19 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 
 		out = append(out, lis...)
 	}
+
+	var par []objectid.ID
+	var pos []objectid.ID
+	{
+		par = poststorage.Slicer(out).Parent()
+		pos = poststorage.Slicer(out).ID()
+	}
+	var com []objectid.ID
+	{
+
+	}
+	// TODO find the post IDs that comments reference as parents, and also search
+	// for those posts that we do not already have in "out".
 
 	//
 	// Construct the RPC response.

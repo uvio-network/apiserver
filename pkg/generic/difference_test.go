@@ -7,10 +7,11 @@ import (
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 )
 
-func Test_Generic_Duplicate_string(t *testing.T) {
+func Test_Generic_Difference_string(t *testing.T) {
 	testCases := []struct {
+		one []string
+		two []string
 		lis []string
-		dup bool
 	}{
 		// Case 000
 		{
@@ -66,7 +67,7 @@ func Test_Generic_Duplicate_string(t *testing.T) {
 
 	for i, tc := range testCases {
 		t.Run(fmt.Sprintf("%03d", i), func(t *testing.T) {
-			dup := Duplicate(tc.lis)
+			dup := Difference(tc.lis)
 			if dup != tc.dup {
 				t.Fatalf("expected %#v got %#v", tc.dup, dup)
 			}
@@ -74,10 +75,11 @@ func Test_Generic_Duplicate_string(t *testing.T) {
 	}
 }
 
-func Test_Generic_Duplicate_ID(t *testing.T) {
+func Test_Generic_Difference_ID(t *testing.T) {
 	testCases := []struct {
+		one []objectid.ID
+		two []objectid.ID
 		lis []objectid.ID
-		dup bool
 	}{
 		// Case 000
 		{
@@ -133,7 +135,7 @@ func Test_Generic_Duplicate_ID(t *testing.T) {
 
 	for i, tc := range testCases {
 		t.Run(fmt.Sprintf("%03d", i), func(t *testing.T) {
-			dup := Duplicate(tc.lis)
+			dup := Difference(tc.lis)
 			if dup != tc.dup {
 				t.Fatalf("expected %#v got %#v", tc.dup, dup)
 			}
@@ -141,7 +143,7 @@ func Test_Generic_Duplicate_ID(t *testing.T) {
 	}
 }
 
-func Test_Generic_Duplicate_int64(t *testing.T) {
+func Test_Generic_Difference_int64(t *testing.T) {
 	testCases := []struct {
 		lis []int64
 		dup bool
@@ -200,7 +202,7 @@ func Test_Generic_Duplicate_int64(t *testing.T) {
 
 	for i, tc := range testCases {
 		t.Run(fmt.Sprintf("%03d", i), func(t *testing.T) {
-			dup := Duplicate(tc.lis)
+			dup := Difference(tc.lis)
 			if dup != tc.dup {
 				t.Fatalf("expected %#v got %#v", tc.dup, dup)
 			}
