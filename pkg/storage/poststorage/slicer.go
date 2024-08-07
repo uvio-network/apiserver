@@ -14,8 +14,20 @@ func (s Slicer) ID() []objectid.ID {
 	return lis
 }
 
-func (s Slicer) ObjectID(cla objectid.ID) []*Object {
-	var lis []*Object
+func (s Slicer) KindComment() Slicer {
+	var lis Slicer
+
+	for _, x := range s {
+		if x.Kind == "comment" {
+			lis = append(lis, x)
+		}
+	}
+
+	return lis
+}
+
+func (s Slicer) ObjectID(cla objectid.ID) Slicer {
+	var lis Slicer
 
 	for _, x := range s {
 		if cla == x.ID {
