@@ -20,7 +20,7 @@ require (
 	github.com/xh3b4sd/redigo v0.37.1
 	github.com/xh3b4sd/rescue v0.17.16
 	github.com/xh3b4sd/tracer v0.11.1
-	golang.org/x/text v0.16.0
+	golang.org/x/text v0.17.0
 )
 
 require (
