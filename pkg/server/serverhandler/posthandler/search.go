@@ -124,7 +124,7 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 
 	var com []objectid.ID
 	{
-		com = generic.Difference(par, pos)
+		com = generic.Select(pos, par)
 	}
 
 	if len(com) != 0 {
