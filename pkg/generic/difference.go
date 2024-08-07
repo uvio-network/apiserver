@@ -11,8 +11,11 @@ func Difference[T string | objectid.ID | int64](a []T, b []T) []T {
 	}
 
 	for _, x := range b {
-		if m[x] {
-			delete(m, x)
+		// We need to keep all elements in the map and check for key existance in
+		// particular, order to cover potential duplicates.
+		_, e := m[x]
+		if e {
+			m[x] = false
 		} else {
 			m[x] = true
 		}
@@ -21,7 +24,10 @@ func Difference[T string | objectid.ID | int64](a []T, b []T) []T {
 	l := make([]T, 0, len(m))
 
 	for x := range m {
-		l = append(l, x)
+		// Only keep the keys that are part of the difference.
+		if m[x] {
+			l = append(l, x)
+		}
 	}
 
 	return l
