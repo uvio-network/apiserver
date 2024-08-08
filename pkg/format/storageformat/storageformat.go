@@ -1,15 +1,6 @@
 package storageformat
 
 const (
-	// PostCreated is used to store all claim IDs as they have been created in
-	// chronological order.
-	//
-	//     symbol key            claim IDs
-	//                     ->
-	//     post/created          3456,5678
-	//
-	PostCreated = "post/created"
-
 	// PostComment is used to store all comment IDs created by a specific user and
 	// commented on a specific claim. This key allows us to search for all
 	// comments a user has made on any given market that they participated in.
@@ -19,6 +10,15 @@ const (
 	//     post/kind/comment/owner/1234/parent/1234          3456,5678
 	//
 	PostComment = "post/kind/comment/owner/%s/parent/%s"
+
+	// PostCreated is used to store all claim IDs as they have been created in
+	// chronological order.
+	//
+	//     symbol key            claim IDs
+	//                     ->
+	//     post/created          3456,5678
+	//
+	PostCreated = "post/created"
 
 	// PostLabel is used to store all claim IDs associated to a given label name.
 	// This key allows us to search for all claims that are categorized under any
