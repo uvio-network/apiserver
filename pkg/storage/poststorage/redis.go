@@ -39,12 +39,12 @@ func posCom(oid objectid.ID) string {
 	return fmt.Sprintf(storageformat.PostComment, oid)
 }
 
-func posUseCom(uid objectid.ID, pid objectid.ID) string {
-	return fmt.Sprintf(storageformat.PostUserComment, uid, pid)
-}
-
 func posLab(str string) string {
 	return fmt.Sprintf(storageformat.PostLabel, str)
+}
+
+func posLif(str string) string {
+	return fmt.Sprintf(storageformat.PostLifecycle, str)
 }
 
 func posObj(oid objectid.ID) string {
@@ -57,6 +57,10 @@ func posTre(oid objectid.ID) string {
 
 func posOwn(oid objectid.ID) string {
 	return fmt.Sprintf(storageformat.PostOwner, oid)
+}
+
+func posUseCom(uid objectid.ID, pid objectid.ID) string {
+	return fmt.Sprintf(storageformat.PostUserComment, uid, pid)
 }
 
 func musStr(obj *Object) string {

@@ -17,6 +17,26 @@ type Interface interface {
 	//
 	SearchComment([]objectid.ID) ([]*Object, error)
 
+	// SearchCreated returns the post objects within the given pagination range in
+	// reversed order of claim creation time. Given the created posts [A B C D E],
+	// the first page [0 3] returns the last posts [C D E].
+	//
+	//     @inp[0] the start paging pointer defining the beginning of the page
+	//     @inp[1] the stop paging pointer defining the end of the page
+	//     @out[0] the list of post objects within the given pagination range
+	//
+	SearchCreated(int, int) ([]*Object, error)
+
+	// SearchExpiry returns the post objects within the given pagination range in
+	// order of claim expiry time. Given the expiring posts [A B C D E], the first
+	// page [0 3] returns the first posts [A B C].
+	//
+	//     @inp[0] the start paging pointer defining the beginning of the page
+	//     @inp[1] the stop paging pointer defining the end of the page
+	//     @out[0] the list of post objects within the given pagination range
+	//
+	SearchExpiry(int, int) ([]*Object, error)
+
 	// SearchLabel returns the post objects grouped under all of the given
 	// category labels. Multiple searches can be done for a set of labels each,
 	// where each set of labels defines the intersection of claims to search for.
@@ -26,15 +46,13 @@ type Interface interface {
 	//
 	SearchLabel([][]string) ([]*Object, error)
 
-	// SearchPage returns the post objects within the given pagination range in
-	// reversed order of creation time. Given the chronologically persisted posts
-	// [A B C D E], the first page [0 3] returns the last posts [C D E].
+	// SearchLifecycle returns all the claims that have the specified lifecycle
+	// phases defined.
 	//
-	//     @inp[0] the start paging pointer defining the beginning of the page
-	//     @inp[1] the stop paging pointer defining the end of the page
-	//     @out[0] the list of post objects within the given pagination range
+	//     @inp[0] the lifecycle phases to search for
+	//     @out[0] the list of post objects having the specified lifecycle phases defined
 	//
-	SearchPage(int, int) ([]*Object, error)
+	SearchLifecycle([]string) ([]*Object, error)
 
 	// SearchPost returns the post objects matching the given post IDs.
 	//

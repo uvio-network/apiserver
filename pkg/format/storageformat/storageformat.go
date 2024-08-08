@@ -19,6 +19,17 @@ const (
 	//
 	PostCreated = "post/created"
 
+	// PostExpiry is used to store all claim IDs by claim expiry as defined in the
+	// created claim objects. This key helps us to automatically progress in claim
+	// trees, for creating claims of kind "resolve" once a claim of kind "propose"
+	// expires.
+	//
+	//     symbol key           claim IDs
+	//                    ->
+	//     post/expiry          3456,5678
+	//
+	PostExpiry = "post/expiry"
+
 	// PostLabel is used to store all claim IDs associated to a given label name.
 	// This key allows us to search for all claims that are categorized under any
 	// given label.
@@ -28,6 +39,16 @@ const (
 	//     post/label/mev          3456,5678
 	//
 	PostLabel = "post/label/%s"
+
+	// PostLifecycle is used to store all claim IDs by their respective lifecycle
+	// configuration. Using that mapping we can search e.g. for all disputes on
+	// the platform.
+	//
+	//     lifecycle name             claim IDs
+	//                          ->
+	//     post/lifecycle/%s          3456,5678
+	//
+	PostLifecycle = "post/lifecycle/%s"
 
 	// PostObject is used to store our internal representation of a post object.
 	// This key allows us to search for all claim objects by their own object ID.
