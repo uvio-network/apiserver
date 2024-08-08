@@ -12,19 +12,19 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *run) createVote(cli Client, key jwk.Key, fak *gofakeit.Faker, use *user.SearchO, pos *post.SearchO) (*vote.SearchO, error) {
+func (r *run) createVote(cli Client, key jwk.Key, fak *gofakeit.Faker, use *user.SearchO, cla *post.SearchO) (*vote.SearchO, error) {
 	var err error
 
 	var ids []string
 	for i := 0; i < 100; i++ {
 		{
 			fak.ShuffleAnySlice(use.Object)
-			fak.ShuffleAnySlice(pos.Object)
+			fak.ShuffleAnySlice(cla.Object)
 		}
 
 		var inp *vote.CreateI
 		{
-			inp = r.randomVote(fak, pos.Object[0])
+			inp = r.randomVote(fak, cla.Object[0])
 		}
 
 		var ctx context.Context
@@ -69,7 +69,7 @@ func (r *run) createVote(cli Client, key jwk.Key, fak *gofakeit.Faker, use *user
 	return out, nil
 }
 
-func (r *run) randomVote(fak *gofakeit.Faker, pos *post.SearchO_Object) *vote.CreateI {
+func (r *run) randomVote(fak *gofakeit.Faker, cla *post.SearchO_Object) *vote.CreateI {
 	var opt []string
 	{
 		opt = []string{
@@ -88,7 +88,7 @@ func (r *run) randomVote(fak *gofakeit.Faker, pos *post.SearchO_Object) *vote.Cr
 			Object: []*vote.CreateI_Object{
 				{
 					Public: &vote.CreateI_Object_Public{
-						Claim:  pos.Intern.Id,
+						Claim:  cla.Intern.Id,
 						Kind:   "stake",
 						Option: opt[0],
 						Value:  limStr(converter.FloatToString(fak.Float64Range(0.0001, 2.5)), 6),
