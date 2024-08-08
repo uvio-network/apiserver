@@ -88,15 +88,22 @@ func Test_Reconciler_PostReconciler_updateVotes_claim(t *testing.T) {
 
 	for i, tc := range testCases {
 		t.Run(fmt.Sprintf("%03d", i), func(t *testing.T) {
-			out := updateVotes(tc.pos, tc.vot)
+			if len(tc.pos) != len(tc.vot) {
+				t.Fatalf("for every post object there must be one vote object")
+			}
+
+			var out [][]float64
+			for i := range tc.pos {
+				out = append(out, updateVotes(tc.pos[i], tc.vot[i]).Votes)
+			}
 
 			if len(out) != len(tc.out) {
 				t.Fatalf("expected %#v got %#v", len(tc.out), len(out))
 			}
 
 			for i := range out {
-				if !slices.Equal(out[i].Votes, tc.out[i]) {
-					t.Fatalf("[%d] expected %#v got %#v", i, tc.out[i], out[i].Votes)
+				if !slices.Equal(out[i], tc.out[i]) {
+					t.Fatalf("[%d] expected %#v got %#v", i, tc.out[i], out[i])
 				}
 			}
 		})
@@ -182,15 +189,22 @@ func Test_Reconciler_PostReconciler_updateVotes_comment(t *testing.T) {
 
 	for i, tc := range testCases {
 		t.Run(fmt.Sprintf("%03d", i), func(t *testing.T) {
-			out := updateVotes(tc.pos, tc.vot)
+			if len(tc.pos) != len(tc.vot) {
+				t.Fatalf("for every post object there must be one vote object")
+			}
+
+			var out [][]float64
+			for i := range tc.pos {
+				out = append(out, updateVotes(tc.pos[i], tc.vot[i]).Votes)
+			}
 
 			if len(out) != len(tc.out) {
 				t.Fatalf("expected %#v got %#v", len(tc.out), len(out))
 			}
 
 			for i := range out {
-				if !slices.Equal(out[i].Votes, tc.out[i]) {
-					t.Fatalf("[%d] expected %#v got %#v", i, tc.out[i], out[i].Votes)
+				if !slices.Equal(out[i], tc.out[i]) {
+					t.Fatalf("[%d] expected %#v got %#v", i, tc.out[i], out[i])
 				}
 			}
 		})

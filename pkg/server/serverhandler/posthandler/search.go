@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/uvio-network/apigocode/pkg/post"
+	"github.com/uvio-network/apiserver/pkg/generic"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/uvio-network/apiserver/pkg/server/converter"
@@ -74,7 +75,7 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 	//
 
 	if len(lab) != 0 {
-		lis, err := h.sto.Post().SearchLabels(lab)
+		lis, err := h.sto.Post().SearchLabel(lab)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -101,6 +102,33 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 
 	if len(tre) != 0 {
 		lis, err := h.sto.Post().SearchTree(tre)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+
+		out = append(out, lis...)
+	}
+
+	//
+	// Search for all the parent claims referenced by comments that we have not
+	// yet fetched. This last step is done to ensure any comment does also return
+	// its referenced parent claim.
+	//
+
+	var par []objectid.ID
+	var pos []objectid.ID
+	{
+		par = poststorage.Slicer(out).KindComment().Parent()
+		pos = poststorage.Slicer(out).ID()
+	}
+
+	var com []objectid.ID
+	{
+		com = generic.Select(pos, par)
+	}
+
+	if len(com) != 0 {
+		lis, err := h.sto.Post().SearchPost(com)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}

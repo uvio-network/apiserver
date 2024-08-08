@@ -74,7 +74,7 @@ func Test_Generic_Duplicate_string(t *testing.T) {
 	}
 }
 
-func Test_Generic_Dup_ID(t *testing.T) {
+func Test_Generic_Duplicate_ID(t *testing.T) {
 	testCases := []struct {
 		lis []objectid.ID
 		dup bool
@@ -141,7 +141,7 @@ func Test_Generic_Dup_ID(t *testing.T) {
 	}
 }
 
-func Test_Generic_Dup_int64(t *testing.T) {
+func Test_Generic_Duplicate_int64(t *testing.T) {
 	testCases := []struct {
 		lis []int64
 		dup bool
