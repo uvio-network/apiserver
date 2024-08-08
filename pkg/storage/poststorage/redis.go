@@ -35,8 +35,12 @@ func NewRedis(c RedisConfig) *Redis {
 	}
 }
 
-func posCom(uid objectid.ID, pid objectid.ID) string {
-	return fmt.Sprintf(storageformat.PostComment, uid, pid)
+func posCom(oid objectid.ID) string {
+	return fmt.Sprintf(storageformat.PostComment, oid)
+}
+
+func posUseCom(uid objectid.ID, pid objectid.ID) string {
+	return fmt.Sprintf(storageformat.PostUserComment, uid, pid)
 }
 
 func posLab(str string) string {
