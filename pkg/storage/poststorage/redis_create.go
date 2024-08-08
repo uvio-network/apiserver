@@ -37,10 +37,10 @@ func (r *Redis) CreatePost(inp []*Object) error {
 			}
 		}
 
-		// Associate the given post ID with the given tree ID if the given post kind
-		// is "claim". That means we are only managing trees for claims, and not for
-		// comments.
-		if inp[i].Tree != "" {
+		// Associate every given post ID with the given tree ID. That means we are
+		// able to search for all posts of a given tree at once, including claims
+		// and comments.
+		{
 			err = r.red.Sorted().Create().Score(posTre(inp[i].Tree), inp[i].ID.String(), inp[i].ID.Float())
 			if err != nil {
 				return tracer.Mask(err)
@@ -56,12 +56,20 @@ func (r *Redis) CreatePost(inp []*Object) error {
 			}
 		}
 
-		// Store the given post ID under a key that combines the post owner and the
-		// post parent, if the given post is in fact a comment. Storing this
-		// relationship enables us to search for comments that users made on markets
-		// in which they have skin in the game.
-		if inp[i].Kind != "comment" {
-			err = r.red.Sorted().Create().Score(posCom(inp[i].Owner, inp[i].Parent), inp[i].ID.String(), inp[i].ID.Float())
+		if inp[i].Kind == "comment" {
+			// Store the given comment ID under a key that links to its parent claim.
+			// Storing this relationship enables us to search for all comments that
+			// all users made on a specific market.
+			err = r.red.Sorted().Create().Score(posCom(inp[i].Parent), inp[i].ID.String(), inp[i].ID.Float())
+			if err != nil {
+				return tracer.Mask(err)
+			}
+
+			// Store the given post ID under a key that combines the post owner and
+			// the post parent, if the given post is in fact a comment. Storing this
+			// relationship enables us to search for comments that users made on
+			// markets in which they have skin in the game.
+			err = r.red.Sorted().Create().Score(posUseCom(inp[i].Owner, inp[i].Parent), inp[i].ID.String(), inp[i].ID.Float())
 			if err != nil {
 				return tracer.Mask(err)
 			}

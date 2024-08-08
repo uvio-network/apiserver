@@ -14,11 +14,11 @@ func (s Slicer) ID() []objectid.ID {
 	return lis
 }
 
-func (s Slicer) KindComment() Slicer {
+func (s Slicer) ObjectKind(kin string) Slicer {
 	var lis Slicer
 
 	for _, x := range s {
-		if x.Kind == "comment" {
+		if x.Kind == kin {
 			lis = append(lis, x)
 		}
 	}

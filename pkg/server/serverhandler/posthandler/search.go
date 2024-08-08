@@ -23,6 +23,7 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 	var pag []int
 	var tim bool
 	var tre []objectid.ID
+	var own []objectid.ID
 	for _, x := range req.Object {
 		if x.Intern != nil && x.Intern.Id != "" {
 			ids = append(ids, objectid.ID(x.Intern.Id))
@@ -37,6 +38,10 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 			if len(lis) != 0 {
 				lab = append(lab, lis)
 			}
+		}
+
+		if x.Intern != nil && x.Intern.Owner != "" {
+			own = append(own, objectid.ID(x.Intern.Owner))
 		}
 
 		if x.Symbol != nil && x.Symbol.Time == "latest" {
@@ -58,16 +63,34 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 	}
 
 	//
-	// Search posts by ID.
+	// Search posts by ID. If the posts being searched turn out to be of kind
+	// "claim", then do also search for all of their comments, if any.
 	//
 
 	if len(ids) != 0 {
-		lis, err := h.sto.Post().SearchPost(ids)
-		if err != nil {
-			return nil, tracer.Mask(err)
+		var pos poststorage.Slicer
+		{
+			pos, err = h.sto.Post().SearchPost(ids)
+			if err != nil {
+				return nil, tracer.Mask(err)
+			}
+
+			out = append(out, pos...)
 		}
 
-		out = append(out, lis...)
+		var cla []objectid.ID
+		{
+			cla = poststorage.Slicer(pos).ObjectKind("claim").ID()
+		}
+
+		if len(cla) != 0 {
+			com, err := h.sto.Post().SearchComment(cla)
+			if err != nil {
+				return nil, tracer.Mask(err)
+			}
+
+			out = append(out, com...)
+		}
 	}
 
 	//
@@ -76,6 +99,19 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 
 	if len(lab) != 0 {
 		lis, err := h.sto.Post().SearchLabel(lab)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+
+		out = append(out, lis...)
+	}
+
+	//
+	// Search posts by owner.
+	//
+
+	if len(own) != 0 {
+		lis, err := h.sto.Post().SearchUser(own)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -118,7 +154,7 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 	var par []objectid.ID
 	var pos []objectid.ID
 	{
-		par = poststorage.Slicer(out).KindComment().Parent()
+		par = poststorage.Slicer(out).ObjectKind("comment").Parent()
 		pos = poststorage.Slicer(out).ID()
 	}
 

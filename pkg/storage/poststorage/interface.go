@@ -10,15 +10,12 @@ type Interface interface {
 	CreatePost([]*Object) error
 
 	// SearchComment returns the post objects that represent market specific
-	// comments. If a user commented on a claim on which they staked reputation or
-	// verified events, then SearchComment will return all comments made by the
-	// given user on markets in which they participated in.
+	// comments. All of the comments on a claim can be fetched using this method.
 	//
-	//     @inp[0] the user IDs to search for
 	//     @inp[0] the claim IDs to search for
 	//     @out[0] the list of post objects representing market specific comments
 	//
-	SearchComment([]objectid.ID, []objectid.ID) ([]*Object, error)
+	SearchComment([]objectid.ID) ([]*Object, error)
 
 	// SearchLabel returns the post objects grouped under all of the given
 	// category labels. Multiple searches can be done for a set of labels each,
@@ -52,6 +49,25 @@ type Interface interface {
 	//     @out[0] the list of post objects belonging to the given tree IDs
 	//
 	SearchTree([]objectid.ID) ([]*Object, error)
+
+	// SearchUser returns the post objects created by the given user.
+	//
+	//     @inp[0] the user IDs to search for
+	//     @out[0] the list of post objects created by the given user
+	//
+	SearchUser([]objectid.ID) ([]*Object, error)
+
+	// SearchUserComment returns the post objects that represent market specific
+	// comments made by a specific user. If a user commented on a claim on which
+	// they staked reputation or verified events, then SearchComment will return
+	// all comments made by the given user on markets in which they participated
+	// in.
+	//
+	//     @inp[0] the user IDs to search for
+	//     @inp[0] the claim IDs to search for
+	//     @out[0] the list of post objects representing market and user specific comments
+	//
+	SearchUserComment([]objectid.ID, []objectid.ID) ([]*Object, error)
 
 	// UpdatePost modifies the given post objects in the underlying storage.
 	//

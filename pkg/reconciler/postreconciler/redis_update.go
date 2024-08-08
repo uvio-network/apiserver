@@ -50,7 +50,7 @@ func (r *Redis) UpdateVotes(vot []*votestorage.Object) ([]*poststorage.Object, e
 	{
 		var com poststorage.Slicer
 		{
-			com, err = r.sto.Post().SearchComment(sli.Owner(), sli.Claim())
+			com, err = r.sto.Post().SearchUserComment(sli.Owner(), sli.Claim())
 			if err != nil {
 				return nil, tracer.Mask(err)
 			}

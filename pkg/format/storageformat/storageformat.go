@@ -1,15 +1,14 @@
 package storageformat
 
 const (
-	// PostComment is used to store all comment IDs created by a specific user and
-	// commented on a specific claim. This key allows us to search for all
-	// comments a user has made on any given market that they participated in.
+	// PostComment is used to store all comment IDs posted on a specific parent
+	// claim. This key allows us to search for all comments on any given market.
 	//
-	//     user ID / claim ID                                comment IDs
-	//                                                 ->
-	//     post/kind/comment/owner/1234/parent/1234          3456,5678
+	//     claim ID                               comment IDs
+	//                                      ->
+	//     post/kind/comment/parent/1234          3456,5678
 	//
-	PostComment = "post/kind/comment/owner/%s/parent/%s"
+	PostComment = "post/kind/comment/parent/%s"
 
 	// PostCreated is used to store all claim IDs as they have been created in
 	// chronological order.
@@ -39,15 +38,6 @@ const (
 	//
 	PostObject = "post/object/%s"
 
-	// PostTree is used to store all claim IDs that belong to the same tree. This
-	// key allows us to search for all claims that belong to the same claim tree.
-	//
-	//     tree ID                 claim IDs
-	//                       ->
-	//     post/tree/1234          3456,5678
-	//
-	PostTree = "post/tree/%s"
-
 	// PostOwner is used to store all claim IDs that have been created by a
 	// specific user. This key allows us to search for all claims that have been
 	// created by any given user.
@@ -57,6 +47,25 @@ const (
 	//     post/owner/1234          3456,5678
 	//
 	PostOwner = "post/owner/%s"
+
+	// PostTree is used to store all claim IDs that belong to the same tree. This
+	// key allows us to search for all claims that belong to the same claim tree.
+	//
+	//     tree ID                 claim IDs
+	//                       ->
+	//     post/tree/1234          3456,5678
+	//
+	PostTree = "post/tree/%s"
+
+	// PostUserComment is used to store all comment IDs created by a specific user
+	// and commented on a specific claim. This key allows us to search for all
+	// comments a user has made on any given market that they participated in.
+	//
+	//     user ID / claim ID                                comment IDs
+	//                                                 ->
+	//     post/kind/comment/owner/1234/parent/1234          3456,5678
+	//
+	PostUserComment = "post/kind/comment/owner/%s/parent/%s"
 
 	// UserSubject is used to store the user specific mappings between external
 	// and internal identity representations. An external representation might be
