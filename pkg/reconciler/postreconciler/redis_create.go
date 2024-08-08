@@ -113,6 +113,7 @@ func (r *Redis) verifyParent(par objectid.ID) (*poststorage.Object, error) {
 		return nil, tracer.Mask(runtime.ExecutionFailedError)
 	}
 
+	// Here we ensure that comments cannot comment on comments.
 	if obj[0].Kind != "claim" {
 		return nil, tracer.Maskf(PostParentKindError, "kind=%s", obj[0].Kind)
 	}

@@ -80,9 +80,9 @@ func (r *run) runE(cmd *cobra.Command, args []string) error {
 		}
 	}
 
-	var pos *post.SearchO
+	var cla *post.SearchO
 	{
-		pos, err = r.createPost(cli, key, fak, use)
+		cla, err = r.createClaim(cli, key, fak, use)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -90,7 +90,15 @@ func (r *run) runE(cmd *cobra.Command, args []string) error {
 
 	var vot *vote.SearchO
 	{
-		vot, err = r.createVote(cli, key, fak, use, pos)
+		vot, err = r.createVote(cli, key, fak, use, cla)
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
+	var com *post.SearchO
+	{
+		com, err = r.createComment(cli, key, fak, use, cla, vot)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -98,8 +106,9 @@ func (r *run) runE(cmd *cobra.Command, args []string) error {
 
 	{
 		fmt.Printf("Generated %d fake users.\n", len(use.Object))
-		fmt.Printf("Generated %d fake posts.\n", len(pos.Object))
+		fmt.Printf("Generated %d fake claims.\n", len(cla.Object))
 		fmt.Printf("Generated %d fake votes.\n", len(vot.Object))
+		fmt.Printf("Generated %d fake comments.\n", len(com.Object))
 	}
 
 	return nil

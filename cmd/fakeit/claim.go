@@ -16,7 +16,7 @@ import (
 	"golang.org/x/text/language"
 )
 
-func (r *run) createPost(cli Client, key jwk.Key, fak *gofakeit.Faker, use *user.SearchO) (*post.SearchO, error) {
+func (r *run) createClaim(cli Client, key jwk.Key, fak *gofakeit.Faker, use *user.SearchO) (*post.SearchO, error) {
 	var err error
 
 	var ids []string
@@ -27,7 +27,7 @@ func (r *run) createPost(cli Client, key jwk.Key, fak *gofakeit.Faker, use *user
 
 		var inp *post.CreateI
 		{
-			inp = r.randomPost(fak)
+			inp = r.randomClaim(fak)
 		}
 
 		var ctx context.Context
@@ -72,7 +72,7 @@ func (r *run) createPost(cli Client, key jwk.Key, fak *gofakeit.Faker, use *user
 	return out, nil
 }
 
-func (r *run) randomPost(fak *gofakeit.Faker) *post.CreateI {
+func (r *run) randomClaim(fak *gofakeit.Faker) *post.CreateI {
 	var lab []string
 	{
 		lab = []string{
@@ -99,7 +99,7 @@ func (r *run) randomPost(fak *gofakeit.Faker) *post.CreateI {
 
 	var par string
 	{
-		par = fak.Paragraph(fak.Number(1, 3), fak.Number(2, 5), fak.Number(10, 50), "\n\n")
+		par = fak.Paragraph(fak.Number(1, 3), fak.Number(2, 5), fak.Number(10, 40), "\n\n")
 	}
 
 	var lis []string
