@@ -56,6 +56,24 @@ func (r *Redis) CreatePost(inp []*Object) error {
 			}
 		}
 
+		if inp[i].Kind == "claim" {
+			// Regardless the claim lifecycle, we keep track of all claim IDs by their
+			// specified claim expiry. This helps us to automate the progress on claim
+			// trees. For instance we can run background jobs that look for expiring
+			// claims and ensure the creation of claims in their next lifecycle phase.
+			err = r.red.Sorted().Create().Score(storageformat.PostExpiry, inp[i].ID.String(), float64(inp[i].Expiry.UnixNano()))
+			if err != nil {
+				return tracer.Mask(err)
+			}
+
+			// We index all claim IDs per specified lifecycle phase, so that we can
+			// search e.g. for all disputes.
+			err = r.red.Sorted().Create().Score(posLif(inp[i].Lifecycle), inp[i].ID.String(), inp[i].ID.Float())
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
+
 		if inp[i].Kind == "comment" {
 			// Store the given comment ID under a key that links to its parent claim.
 			// Storing this relationship enables us to search for all comments that

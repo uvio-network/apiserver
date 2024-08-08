@@ -45,6 +45,70 @@ func (r *Redis) SearchComment(cla []objectid.ID) ([]*Object, error) {
 	return out, nil
 }
 
+func (r *Redis) SearchCreated(beg int, end int) ([]*Object, error) {
+	var err error
+
+	// val will result in a list of all post IDs within the given pagination
+	// range, if any.
+	var val []string
+	{
+		val, err = r.red.Sorted().Search().Order(storageformat.PostCreated, -(end + 1), -(beg + 1))
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	// There might not be any post IDs, so we do not proceed, but instead return
+	// nothing.
+	if len(val) == 0 {
+		return nil, nil
+	}
+
+	var out []*Object
+	{
+		lis, err := r.SearchPost(objectid.IDs(val))
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+
+		out = append(out, lis...)
+	}
+
+	return out, nil
+}
+
+func (r *Redis) SearchExpiry(beg int, end int) ([]*Object, error) {
+	var err error
+
+	// val will result in a list of all post IDs within the given pagination
+	// range, if any.
+	var val []string
+	{
+		val, err = r.red.Sorted().Search().Order(storageformat.PostExpiry, beg, end)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	// There might not be any post IDs, so we do not proceed, but instead return
+	// nothing.
+	if len(val) == 0 {
+		return nil, nil
+	}
+
+	var out []*Object
+	{
+		lis, err := r.SearchPost(objectid.IDs(val))
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+
+		out = append(out, lis...)
+	}
+
+	return out, nil
+}
+
 func (r *Redis) SearchLabel(inp [][]string) ([]*Object, error) {
 	// cla will result in a list of all claim IDs grouped under all of the given
 	// label names, if any.
@@ -79,28 +143,30 @@ func (r *Redis) SearchLabel(inp [][]string) ([]*Object, error) {
 	return out, nil
 }
 
-func (r *Redis) SearchPage(beg int, end int) ([]*Object, error) {
+func (r *Redis) SearchLifecycle(lif []string) ([]*Object, error) {
 	var err error
 
-	// val will result in a list of all post IDs within the given pagination
-	// range, if any.
-	var val []string
+	// cla will result in a list of all claim IDs defining the given claim
+	// lifecycle, if any.
+	var cla []string
 	{
-		val, err = r.red.Sorted().Search().Order(storageformat.PostCreated, -(end + 1), -(beg + 1))
+		cla, err = r.red.Sorted().Search().Union(generic.Arg1(storageformat.PostLifecycle, lif)...)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
 	}
 
-	// There might not be any post IDs, so we do not proceed, but instead return
+	// There might not be any claim IDs, so we do not proceed, but instead return
 	// nothing.
-	if len(val) == 0 {
+	if len(cla) == 0 {
 		return nil, nil
 	}
 
+	// Having collected all claim IDs, we go ahead and search all claim objects at
+	// once.
 	var out []*Object
 	{
-		lis, err := r.SearchPost(objectid.IDs(val))
+		lis, err := r.SearchPost(objectid.IDs(cla))
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
