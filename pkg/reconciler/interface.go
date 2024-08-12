@@ -3,6 +3,7 @@ package reconciler
 import (
 	"github.com/uvio-network/apiserver/pkg/reconciler/postreconciler"
 	"github.com/uvio-network/apiserver/pkg/reconciler/votereconciler"
+	"github.com/uvio-network/apiserver/pkg/reconciler/walletreconciler"
 )
 
 // Interface provides cross resource reconciliation to bridge between server and
@@ -15,4 +16,5 @@ import (
 type Interface interface {
 	Post() postreconciler.Interface
 	Vote() votereconciler.Interface
+	Wallet() walletreconciler.Interface
 }

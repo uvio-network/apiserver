@@ -148,4 +148,24 @@ const (
 	//     vote/owner/1234/claim/1234          3456,5678
 	//
 	VoteOwnerClaim = "vote/owner/%s/claim/%s"
+
+	// WalletObject is used to store our internal representation of a wallet
+	// object. This key allows us to search for all wallet objects by their own
+	// object ID.
+	//
+	//     wallet ID                   wallet object
+	//                           ->
+	//     wallet/object/1234          {"key": "val"}
+	//
+	WalletObject = "wallet/object/%s"
+
+	// WalletOwner is used to store all wallet IDs that have been created by a
+	// specific user. This key allows us to search for all wallets that have been
+	// created by any given user.
+	//
+	//     user ID                    wallet IDs
+	//                          ->
+	//     wallet/owner/1234          3456,5678
+	//
+	WalletOwner = "wallet/owner/%s"
 )

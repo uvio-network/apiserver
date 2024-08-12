@@ -5,6 +5,7 @@ import (
 
 	"github.com/uvio-network/apiserver/pkg/reconciler/postreconciler"
 	"github.com/uvio-network/apiserver/pkg/reconciler/votereconciler"
+	"github.com/uvio-network/apiserver/pkg/reconciler/walletreconciler"
 	"github.com/uvio-network/apiserver/pkg/storage"
 	"github.com/xh3b4sd/logger"
 	"github.com/xh3b4sd/tracer"
@@ -18,6 +19,7 @@ type Config struct {
 type Reconciler struct {
 	pos postreconciler.Interface
 	vot votereconciler.Interface
+	wal walletreconciler.Interface
 }
 
 func New(c Config) *Reconciler {
@@ -39,6 +41,10 @@ func New(c Config) *Reconciler {
 				Log: c.Log,
 				Sto: c.Sto,
 			}),
+			wal: walletreconciler.NewRedis(walletreconciler.RedisConfig{
+				Log: c.Log,
+				Sto: c.Sto,
+			}),
 		}
 	}
 
@@ -51,4 +57,8 @@ func (r *Reconciler) Post() postreconciler.Interface {
 
 func (r *Reconciler) Vote() votereconciler.Interface {
 	return r.vot
+}
+
+func (r *Reconciler) Wallet() walletreconciler.Interface {
+	return r.wal
 }
