@@ -6,6 +6,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
 	"github.com/uvio-network/apiserver/pkg/storage/userstorage"
 	"github.com/uvio-network/apiserver/pkg/storage/votestorage"
+	"github.com/uvio-network/apiserver/pkg/storage/walletstorage"
 	"github.com/xh3b4sd/logger"
 	"github.com/xh3b4sd/redigo"
 	"github.com/xh3b4sd/tracer"
@@ -20,6 +21,7 @@ type Storage struct {
 	pos poststorage.Interface
 	use userstorage.Interface
 	vot votestorage.Interface
+	wal walletstorage.Interface
 }
 
 func New(c Config) *Storage {
@@ -45,6 +47,10 @@ func New(c Config) *Storage {
 				Log: c.Log,
 				Red: c.Red,
 			}),
+			wal: walletstorage.NewRedis(walletstorage.RedisConfig{
+				Log: c.Log,
+				Red: c.Red,
+			}),
 		}
 	}
 
@@ -61,4 +67,8 @@ func (s *Storage) User() userstorage.Interface {
 
 func (s *Storage) Vote() votestorage.Interface {
 	return s.vot
+}
+
+func (s *Storage) Wallet() walletstorage.Interface {
+	return s.wal
 }
