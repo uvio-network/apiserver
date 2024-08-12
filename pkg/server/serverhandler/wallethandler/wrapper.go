@@ -78,7 +78,7 @@ func (w *wrapper) Search(ctx context.Context, req *wallet.SearchI) (*wallet.Sear
 				return nil, tracer.Maskf(runtime.QueryObjectEmptyError, "intern must not be empty")
 			}
 
-			if !i && x.Intern.Owner != string(userid.FromContext(ctx)) {
+			if !i && x.Intern.Owner != "self" && x.Intern.Owner != string(userid.FromContext(ctx)) {
 				return nil, tracer.Mask(runtime.UserNotOwnerError)
 			}
 		}
