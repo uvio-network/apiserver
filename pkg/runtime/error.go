@@ -53,3 +53,8 @@ var UserAuthError = &tracer.Error{
 	Kind: "UserAuthError",
 	Desc: "The request expects a valid access token. No valid access token was found. Therefore the request failed.",
 }
+
+var UserNotOwnerError = &tracer.Error{
+	Kind: "UserNotOwnerError",
+	Desc: "The request expects the calling user to be the owner of the requested resource. The calling user was not found to be the owner of the requested resource. Therefore the request failed.",
+}
