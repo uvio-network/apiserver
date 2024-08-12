@@ -7,6 +7,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/server/serverhandler/posthandler"
 	"github.com/uvio-network/apiserver/pkg/server/serverhandler/userhandler"
 	"github.com/uvio-network/apiserver/pkg/server/serverhandler/votehandler"
+	"github.com/uvio-network/apiserver/pkg/server/serverhandler/wallethandler"
 	"github.com/uvio-network/apiserver/pkg/storage"
 	"github.com/xh3b4sd/locker"
 	"github.com/xh3b4sd/logger"
@@ -51,6 +52,14 @@ func New(c Config) *Handler {
 
 	{
 		han = append(han, votehandler.NewHandler(votehandler.HandlerConfig{
+			Log: c.Log,
+			Rec: c.Rec,
+			Sto: c.Sto,
+		}))
+	}
+
+	{
+		han = append(han, wallethandler.NewHandler(wallethandler.HandlerConfig{
 			Log: c.Log,
 			Rec: c.Rec,
 			Sto: c.Sto,
