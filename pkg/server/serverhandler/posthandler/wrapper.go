@@ -99,7 +99,7 @@ func (w *wrapper) Update(ctx context.Context, req *post.UpdateI) (*post.UpdateO,
 }
 
 func createPublicEmpty(x *post.CreateI_Object_Public) bool {
-	return x == nil || (x.Expiry == "" && x.Kind == "" && x.Labels == "" && x.Lifecycle == "" && x.Parent == "" && x.Text == "" && x.Token == "")
+	return x == nil || (x.Chain == "" && x.Expiry == "" && x.Kind == "" && x.Labels == "" && x.Lifecycle == "" && x.Meta == "" && x.Parent == "" && x.Text == "" && x.Token == "")
 }
 
 func searchInternEmpty(x *post.SearchI_Object_Intern) bool {

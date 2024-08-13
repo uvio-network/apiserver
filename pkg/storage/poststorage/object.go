@@ -12,12 +12,14 @@ import (
 )
 
 type Object struct {
+	Chain     string      `json:"chain"`
 	Created   time.Time   `json:"created"`
 	Expiry    time.Time   `json:"expiry"`
 	ID        objectid.ID `json:"id"`
 	Kind      string      `json:"kind"`
 	Labels    []string    `json:"labels"`
 	Lifecycle string      `json:"lifecycle"`
+	Meta      string      `json:"meta"`
 	Owner     objectid.ID `json:"owner"`
 	Parent    objectid.ID `json:"parent"`
 	Text      string      `json:"text"`
@@ -27,6 +29,15 @@ type Object struct {
 }
 
 func (o *Object) Verify() error {
+	{
+		if o.Kind == "claim" && o.Chain == "" {
+			return tracer.Mask(ClaimChainEmptyError)
+		}
+		if o.Kind == "comment" && o.Chain != "" {
+			return tracer.Mask(ClaimChainInvalidError)
+		}
+	}
+
 	{
 		if o.Kind == "claim" && o.Expiry.IsZero() {
 			return tracer.Mask(ClaimExpiryEmptyError)
@@ -74,6 +85,15 @@ func (o *Object) Verify() error {
 		}
 		if o.Kind == "comment" && o.Lifecycle != "" {
 			return tracer.Maskf(CommentLifecycleInvalidError, o.Lifecycle)
+		}
+	}
+
+	{
+		if o.Kind == "claim" && o.Meta == "" {
+			return tracer.Mask(ClaimMetaEmptyError)
+		}
+		if o.Kind == "comment" && o.Meta != "" {
+			return tracer.Mask(ClaimMetaInvalidError)
 		}
 	}
 

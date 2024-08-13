@@ -98,6 +98,8 @@ github.com/twitchtv/twirp v8.1.3+incompatible h1:+F4TdErPgSUbMZMwp13Q/KgDVuI7HJX
 github.com/twitchtv/twirp v8.1.3+incompatible/go.mod h1:RRJoFSAmTEh2weEqWtpPE3vFK5YBhA6bqp2l1kfCC5A=
 github.com/uvio-network/apigocode v0.1.8 h1:dZp1CGgUZmoIDjhiM1eLCn0EGaIfUBkbR/xd2aYnFYY=
 github.com/uvio-network/apigocode v0.1.8/go.mod h1:Kz+Xg6Y+caMKXUfvPHF5zcafnVeTOkClQ6ZzsbzarPY=
+github.com/uvio-network/apigocode v0.1.9 h1:tz3zC7gruk6dp/KvEJCQXNfYI8rmbL/ZDINx5zNRYTo=
+github.com/uvio-network/apigocode v0.1.9/go.mod h1:Kz+Xg6Y+caMKXUfvPHF5zcafnVeTOkClQ6ZzsbzarPY=
 github.com/xh3b4sd/breakr v0.1.0 h1:ZdQPaocCc2ac4ipEdc3eaq1M0zeg54s1kC7QZQn3TLI=
 github.com/xh3b4sd/breakr v0.1.0/go.mod h1:dhU5gRl07UxonMdO6KzoGKLN545cWXPd3viKzw2bPPY=
 github.com/xh3b4sd/locker v0.1.0 h1:EqrhuBjYCsDckkAAH3OPs4QxmQWDvcUXjQRoos8pFYM=
