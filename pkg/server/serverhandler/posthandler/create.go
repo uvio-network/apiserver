@@ -17,10 +17,12 @@ func (h *Handler) Create(ctx context.Context, req *post.CreateI) (*post.CreateO,
 	var inp []*poststorage.Object
 	for _, x := range req.Object {
 		inp = append(inp, &poststorage.Object{
+			Chain:     x.Public.Chain,
 			Expiry:    converter.StringToTime(x.Public.Expiry),
 			Kind:      x.Public.Kind,
 			Labels:    converter.StringToSlice(x.Public.Labels),
 			Lifecycle: x.Public.Lifecycle,
+			Meta:      x.Public.Meta,
 			Owner:     userid.FromContext(ctx),
 			Parent:    objectid.ID(x.Public.Parent),
 			Text:      x.Public.Text,

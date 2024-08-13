@@ -4,6 +4,16 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
+var ClaimChainEmptyError = &tracer.Error{
+	Kind: "ClaimChainEmptyError",
+	Desc: "The request expects the claim chain not to be empty. The claim chain was found to be empty. Therefore the request failed.",
+}
+
+var ClaimChainInvalidError = &tracer.Error{
+	Kind: "ClaimChainInvalidError",
+	Desc: "The request expects the claim chain to be empty. The claim chain was not found to be empty. Therefore the request failed.",
+}
+
 var ClaimExpiryEmptyError = &tracer.Error{
 	Kind: "ClaimExpiryEmptyError",
 	Desc: "The request expects the claim expiry not to be empty. The claim expiry was found to be empty. Therefore the request failed.",
@@ -37,6 +47,16 @@ var ClaimLabelsUniqueError = &tracer.Error{
 var ClaimLifecycleInvalidError = &tracer.Error{
 	Kind: "ClaimLifecycleInvalidError",
 	Desc: "The request expects the claim lifecycle to be one of [adjourn dispute nullify propose resolve]. The claim lifecycle was not found to be one of those values. Therefore the request failed.",
+}
+
+var ClaimMetaEmptyError = &tracer.Error{
+	Kind: "ClaimMetaEmptyError",
+	Desc: "The request expects the claim meta not to be empty. The claim meta was found to be empty. Therefore the request failed.",
+}
+
+var ClaimMetaInvalidError = &tracer.Error{
+	Kind: "ClaimMetaInvalidError",
+	Desc: "The request expects the claim meta to be empty. The claim meta was not found to be empty. Therefore the request failed.",
 }
 
 var ClaimParentEmptyError = &tracer.Error{
