@@ -9,10 +9,10 @@ type Interface interface {
 	//
 	CreateWallet([]*Object) error
 
-	// SearchOwner returns the wallet objects matching the given user IDs.
+	// SearchOwner returns the wallet objects created by the given user.
 	//
-	//     @inp[0] the user IDs used to search wallet objects
-	//     @out[0] the list of wallet objects matching the given user IDs
+	//     @inp[0] the user IDs to search for
+	//     @out[0] the list of wallet objects created by the given user
 	//
 	SearchOwner([]objectid.ID) ([]*Object, error)
 

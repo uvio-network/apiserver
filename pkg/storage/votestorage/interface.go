@@ -16,10 +16,10 @@ type Interface interface {
 	//
 	SearchClaim([]objectid.ID) ([]*Object, error)
 
-	// SearchOwner returns the vote objects matching the given user IDs.
+	// SearchOwner returns the vote objects created by the given user.
 	//
-	//     @inp[0] the user IDs used to search vote objects
-	//     @out[0] the list of vote objects matching the given user IDs
+	//     @inp[0] the user IDs to search for
+	//     @out[0] the list of vote objects created by the given user
 	//
 	SearchOwner([]objectid.ID) ([]*Object, error)
 

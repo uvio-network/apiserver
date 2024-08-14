@@ -78,15 +78,15 @@ const (
 	//
 	PostTree = "post/tree/%s"
 
-	// PostUserComment is used to store all comment IDs created by a specific user
-	// and commented on a specific claim. This key allows us to search for all
-	// comments a user has made on any given market that they participated in.
+	// PostOwnerComment is used to store all comment IDs created by a specific
+	// user and commented on a specific claim. This key allows us to search for
+	// all comments a user has made on any given market that they participated in.
 	//
 	//     user ID / claim ID                                comment IDs
 	//                                                 ->
 	//     post/kind/comment/owner/1234/parent/1234          3456,5678
 	//
-	PostUserComment = "post/kind/comment/owner/%s/parent/%s"
+	PostOwnerComment = "post/kind/comment/owner/%s/parent/%s"
 
 	// UserSubject is used to store the user specific mappings between external
 	// and internal identity representations. An external representation might be

@@ -87,7 +87,7 @@ func (r *Redis) CreatePost(inp []*Object) error {
 			// the post parent, if the given post is in fact a comment. Storing this
 			// relationship enables us to search for comments that users made on
 			// markets in which they have skin in the game.
-			err = r.red.Sorted().Create().Score(posUseCom(inp[i].Owner, inp[i].Parent), inp[i].ID.String(), inp[i].ID.Float())
+			err = r.red.Sorted().Create().Score(posOwnCom(inp[i].Owner, inp[i].Parent), inp[i].ID.String(), inp[i].ID.Float())
 			if err != nil {
 				return tracer.Mask(err)
 			}
