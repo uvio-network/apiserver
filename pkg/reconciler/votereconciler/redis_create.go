@@ -13,6 +13,8 @@ func (r *Redis) CreateVote(inp []*votestorage.Object) ([]*votestorage.Object, er
 	var err error
 
 	for i := range inp {
+		// TODO hash / lifecycle
+
 		{
 			err := inp[i].Verify()
 			if err != nil {

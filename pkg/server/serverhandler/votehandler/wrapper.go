@@ -93,7 +93,7 @@ func (w *wrapper) Update(ctx context.Context, req *vote.UpdateI) (*vote.UpdateO,
 }
 
 func createPublicEmpty(x *vote.CreateI_Object_Public) bool {
-	return x == nil || (x.Claim == "" && x.Kind == "" && x.Option == "" && x.Value == "")
+	return x == nil || (x.Chain == "" && x.Claim == "" && x.Hash == "" && x.Kind == "" && x.Lifecycle == "" && x.Meta == "" && x.Option == "" && x.Value == "")
 }
 
 func searchInternEmpty(x *vote.SearchI_Object_Intern) bool {

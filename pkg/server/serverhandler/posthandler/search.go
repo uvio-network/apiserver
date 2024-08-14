@@ -204,6 +204,7 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 			Public: &post.SearchO_Object_Public{
 				Chain:     x.Chain,
 				Expiry:    converter.TimeToString(x.Expiry),
+				Hash:      x.Hash,
 				Kind:      x.Kind,
 				Labels:    converter.SliceToString(x.Labels),
 				Lifecycle: x.Lifecycle,

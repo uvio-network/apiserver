@@ -4,6 +4,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/uvio-network/apiserver/pkg/format/hexencoding"
 	"github.com/uvio-network/apiserver/pkg/format/labelname"
 	"github.com/uvio-network/apiserver/pkg/generic"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
@@ -15,6 +16,7 @@ type Object struct {
 	Chain     string      `json:"chain"`
 	Created   time.Time   `json:"created"`
 	Expiry    time.Time   `json:"expiry"`
+	Hash      string      `json:"hash"`
 	ID        objectid.ID `json:"id"`
 	Kind      string      `json:"kind"`
 	Labels    []string    `json:"labels"`
@@ -56,6 +58,17 @@ func (o *Object) Verify() error {
 	}
 
 	{
+		// Any hash must be hex encoded.
+		if o.Hash != "" && !hexencoding.Verify(o.Hash) {
+			return tracer.Mask(ClaimHashFormatError)
+		}
+		// Any comment must not have a hash.
+		if o.Kind == "comment" && o.Hash != "" {
+			return tracer.Maskf(CommentHashInvalidError, o.Hash)
+		}
+	}
+
+	{
 		if o.Kind != "claim" && o.Kind != "comment" {
 			return tracer.Maskf(PostKindInvalidError, o.Kind)
 		}
@@ -80,7 +93,15 @@ func (o *Object) Verify() error {
 	}
 
 	{
-		if o.Kind == "claim" && o.Lifecycle != "adjourn" && o.Lifecycle != "dispute" && o.Lifecycle != "nullify" && o.Lifecycle != "propose" && o.Lifecycle != "resolve" {
+		// Any claim without hash must be in lifecycle phase "pending".
+		if o.Kind == "claim" && o.Hash == "" && o.Lifecycle != "pending" {
+			return tracer.Maskf(ClaimHashPendingError, o.Lifecycle)
+		}
+		// Any claim with hash must be in any valid lifecycle phase but "pending".
+		if o.Kind == "claim" && o.Hash != "" && o.Lifecycle != "adjourn" && o.Lifecycle != "dispute" && o.Lifecycle != "nullify" && o.Lifecycle != "propose" && o.Lifecycle != "resolve" {
+			return tracer.Maskf(ClaimHashLifecycleError, o.Lifecycle)
+		}
+		if o.Kind == "claim" && o.Lifecycle != "adjourn" && o.Lifecycle != "dispute" && o.Lifecycle != "nullify" && o.Lifecycle != "pending" && o.Lifecycle != "propose" && o.Lifecycle != "resolve" {
 			return tracer.Maskf(ClaimLifecycleInvalidError, o.Lifecycle)
 		}
 		if o.Kind == "comment" && o.Lifecycle != "" {
@@ -98,12 +119,14 @@ func (o *Object) Verify() error {
 	}
 
 	{
-		// Any claim with lifecycle other than "propose" must reference a parent.
-		if o.Kind == "claim" && o.Lifecycle != "propose" && o.Parent == "" {
+		// Any claim with lifecycle other than "pending" or "propose" must reference
+		// a parent.
+		if o.Kind == "claim" && (o.Lifecycle != "pending" && o.Lifecycle != "propose") && o.Parent == "" {
 			return tracer.Maskf(ClaimParentEmptyError, o.Lifecycle)
 		}
-		// Any claim with lifecycle "propose" must not reference a parent.
-		if o.Kind == "claim" && o.Lifecycle == "propose" && o.Parent != "" {
+		// Any claim with lifecycle "pending" or "propose" must not reference a
+		// parent.
+		if o.Kind == "claim" && (o.Lifecycle == "pending" || o.Lifecycle == "propose") && o.Parent != "" {
 			return tracer.Maskf(ClaimParentInvalidError, o.Lifecycle)
 		}
 		// Any comment must reference its parent claim.

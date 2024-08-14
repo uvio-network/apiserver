@@ -27,6 +27,8 @@ func (r *Redis) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, er
 			}
 		}
 
+		// TODO hash / lifecycle
+
 		{
 			err := inp[i].Verify()
 			if err != nil {
