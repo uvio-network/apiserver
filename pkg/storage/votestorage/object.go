@@ -30,8 +30,8 @@ func (o *Object) Verify() error {
 	}
 
 	{
-		if !hexencoding.Verify(o.Hash) {
-			return tracer.Mask(VoteHashFormatError)
+		if o.Hash != "" && !hexencoding.Verify(o.Hash) {
+			return tracer.Maskf(VoteHashFormatError, o.Hash)
 		}
 	}
 

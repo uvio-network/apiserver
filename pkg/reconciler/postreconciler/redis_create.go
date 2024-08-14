@@ -18,6 +18,15 @@ func (r *Redis) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, er
 
 	for i := range inp {
 		{
+			if inp[i].Kind == "claim" && inp[i].Hash == "" {
+				inp[i].Lifecycle = "pending"
+			}
+			if inp[i].Kind == "claim" && inp[i].Hash != "" {
+				inp[i].Lifecycle = "propose"
+			}
+		}
+
+		{
 			if inp[i].Kind == "claim" {
 				inp[i].Votes = []float64{0, 0, 0, 0}
 			}
@@ -26,8 +35,6 @@ func (r *Redis) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, er
 				inp[i].Votes = []float64{0, 0}
 			}
 		}
-
-		// TODO hash / lifecycle
 
 		{
 			err := inp[i].Verify()
@@ -56,7 +63,7 @@ func (r *Redis) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, er
 		// object provided in the parent field, and take the existing tree ID from
 		// there. Note that we are indirectly validating here that the given parent
 		// ID does in fact exist.
-		if inp[i].Kind == "claim" && inp[i].Lifecycle == "propose" {
+		if inp[i].Kind == "claim" && (inp[i].Lifecycle == "pending" || inp[i].Lifecycle == "propose") {
 			inp[i].Tree = objectid.Random(objectid.Time(now))
 		} else {
 			var par *poststorage.Object

@@ -36,7 +36,7 @@ func (o *Object) Verify() error {
 			return tracer.Mask(ClaimChainEmptyError)
 		}
 		if o.Kind == "comment" && o.Chain != "" {
-			return tracer.Mask(ClaimChainInvalidError)
+			return tracer.Maskf(ClaimChainInvalidError, o.Chain)
 		}
 	}
 
@@ -53,14 +53,14 @@ func (o *Object) Verify() error {
 		// want to run the check below again, assuming nobody from the outside could
 		// change the initial expiry anymore.
 		if o.ID == "" && o.Kind == "claim" && o.Expiry.Compare(time.Now().UTC()) != +1 {
-			return tracer.Mask(ClaimExpiryPastError)
+			return tracer.Maskf(ClaimExpiryPastError, "%d", o.Expiry.Unix())
 		}
 	}
 
 	{
 		// Any hash must be hex encoded.
 		if o.Hash != "" && !hexencoding.Verify(o.Hash) {
-			return tracer.Mask(ClaimHashFormatError)
+			return tracer.Maskf(ClaimHashFormatError, o.Hash)
 		}
 		// Any comment must not have a hash.
 		if o.Kind == "comment" && o.Hash != "" {

@@ -2,6 +2,7 @@ package fakeit
 
 import (
 	"context"
+	"encoding/hex"
 	"fmt"
 	"strings"
 	"time"
@@ -73,6 +74,11 @@ func (r *run) createClaim(cli Client, key jwk.Key, fak *gofakeit.Faker, use *use
 }
 
 func (r *run) randomClaim(fak *gofakeit.Faker) *post.CreateI {
+	var has string
+	if fak.Float64() > 0.3 {
+		has = fmt.Sprintf("0x%s", hex.EncodeToString([]byte(fak.StreetName())))
+	}
+
 	var lab []string
 	{
 		lab = []string{
@@ -127,14 +133,14 @@ func (r *run) randomClaim(fak *gofakeit.Faker) *post.CreateI {
 			Object: []*post.CreateI_Object{
 				{
 					Public: &post.CreateI_Object_Public{
-						Chain:     "421614",
-						Expiry:    converter.TimeToString(time.Now().AddDate(0, fak.Number(1, 9), fak.Number(10, 30))),
-						Kind:      "claim",
-						Labels:    strings.Join(lab[:fak.Number(1, 4)], ","),
-						Lifecycle: "propose",
-						Meta:      "9,0",
-						Text:      fmt.Sprintf("# %s\n\n%s\n\n%s", tit, par, strings.Join(lis[:fak.Number(2, 5)], "\n")),
-						Token:     "USDC",
+						Chain:  "421614",
+						Expiry: converter.TimeToString(time.Now().AddDate(0, fak.Number(1, 9), fak.Number(10, 30))),
+						Hash:   has,
+						Kind:   "claim",
+						Labels: strings.Join(lab[:fak.Number(1, 4)], ","),
+						Meta:   "9,0",
+						Text:   fmt.Sprintf("# %s\n\n%s\n\n%s", tit, par, strings.Join(lis[:fak.Number(2, 5)], "\n")),
+						Token:  "USDC",
 					},
 				},
 			},

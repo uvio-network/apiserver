@@ -29,7 +29,7 @@ func (r *run) createComment(cli Client, key jwk.Key, fak *gofakeit.Faker, use *u
 
 		var ctx context.Context
 		{
-			ctx = newCtx(key, useVot(use, vot.Object[0].Intern.Owner).Public.Name)
+			ctx = newCtx(key, useObj(use, vot.Object[0].Intern.Owner).Public.Name)
 		}
 
 		var out *post.CreateO
@@ -109,13 +109,9 @@ func (r *run) randomComment(fak *gofakeit.Faker, cla *post.SearchO_Object) *post
 			Object: []*post.CreateI_Object{
 				{
 					Public: &post.CreateI_Object_Public{
-						Expiry:    "",
-						Kind:      "comment",
-						Labels:    "",
-						Lifecycle: "",
-						Parent:    cla.Intern.Id,
-						Text:      fmt.Sprintf("# %s\n\n%s\n\n%s", tit, par, strings.Join(lis[:fak.Number(2, 5)], "\n")),
-						Token:     "",
+						Kind:   "comment",
+						Parent: cla.Intern.Id,
+						Text:   fmt.Sprintf("# %s\n\n%s\n\n%s", tit, par, strings.Join(lis[:fak.Number(2, 5)], "\n")),
 					},
 				},
 			},
@@ -149,14 +145,4 @@ func remPar(pos *post.SearchO) *post.SearchO {
 	}
 
 	return lis
-}
-
-func useVot(use *user.SearchO, uid string) *user.SearchO_Object {
-	for _, x := range use.Object {
-		if x.Intern.Id == uid {
-			return x
-		}
-	}
-
-	return nil
 }

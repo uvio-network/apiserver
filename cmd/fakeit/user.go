@@ -84,3 +84,13 @@ func (r *run) randomUser(fak *gofakeit.Faker) *user.CreateI {
 
 	return obj
 }
+
+func useObj(use *user.SearchO, uid string) *user.SearchO_Object {
+	for _, x := range use.Object {
+		if x.Intern.Id == uid {
+			return x
+		}
+	}
+
+	return nil
+}
