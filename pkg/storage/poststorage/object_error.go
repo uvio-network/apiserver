@@ -24,6 +24,21 @@ var ClaimExpiryPastError = &tracer.Error{
 	Desc: "The request expects the claim expiry not to be in the past. The claim expiry was found to be in the past. Therefore the request failed.",
 }
 
+var ClaimHashFormatError = &tracer.Error{
+	Kind: "ClaimHashFormatError",
+	Desc: "The request expects the claim hash to be in hex format including 0x prefix. The claim hash was not found to comply with that format. Therefore the request failed.",
+}
+
+var ClaimHashLifecycleError = &tracer.Error{
+	Kind: "ClaimHashLifecycleError",
+	Desc: "The request expects the claim lifecycle to be one of [adjourn dispute nullify propose resolve] when hash is provided. The claim lifecycle was not found to be one of those values. Therefore the request failed.",
+}
+
+var ClaimHashPendingError = &tracer.Error{
+	Kind: "ClaimHashPendingError",
+	Desc: "The request expects the claim lifecycle to be one of [pending] when hash is empty. The claim lifecycle was not found to be one of those values. Therefore the request failed.",
+}
+
 var ClaimLabelsEmptyError = &tracer.Error{
 	Kind: "ClaimLabelsEmptyError",
 	Desc: "The request expects the claim labels not to be empty. The claim labels were found to be empty. Therefore the request failed.",
@@ -46,7 +61,7 @@ var ClaimLabelsUniqueError = &tracer.Error{
 
 var ClaimLifecycleInvalidError = &tracer.Error{
 	Kind: "ClaimLifecycleInvalidError",
-	Desc: "The request expects the claim lifecycle to be one of [adjourn dispute nullify propose resolve]. The claim lifecycle was not found to be one of those values. Therefore the request failed.",
+	Desc: "The request expects the claim lifecycle to be one of [adjourn dispute nullify pending propose resolve]. The claim lifecycle was not found to be one of those values. Therefore the request failed.",
 }
 
 var ClaimMetaEmptyError = &tracer.Error{
@@ -67,6 +82,11 @@ var ClaimParentEmptyError = &tracer.Error{
 var ClaimParentInvalidError = &tracer.Error{
 	Kind: "ClaimParentInvalidError",
 	Desc: "The request expects the claim parent to be empty. The claim parent was not found to be empty. Therefore the request failed.",
+}
+
+var CommentHashInvalidError = &tracer.Error{
+	Kind: "CommentHashInvalidError",
+	Desc: "The request expects the comment hash to be empty. The comment hash was not found to be empty. Therefore the request failed.",
 }
 
 var CommentLabelsInvalidError = &tracer.Error{

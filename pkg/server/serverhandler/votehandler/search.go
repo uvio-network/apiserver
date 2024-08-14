@@ -116,10 +116,14 @@ func (h *Handler) Search(ctx context.Context, req *vote.SearchI) (*vote.SearchO,
 				Owner:   x.Owner.String(),
 			},
 			Public: &vote.SearchO_Object_Public{
-				Claim:  x.Claim.String(),
-				Kind:   x.Kind,
-				Option: converter.BoolToString(x.Option),
-				Value:  converter.FloatToString(x.Value),
+				Chain:     x.Chain,
+				Claim:     x.Claim.String(),
+				Hash:      x.Hash,
+				Kind:      x.Kind,
+				Lifecycle: x.Lifecycle,
+				Meta:      x.Meta,
+				Option:    converter.BoolToString(x.Option),
+				Value:     converter.FloatToString(x.Value),
 			},
 		})
 	}

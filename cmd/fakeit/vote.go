@@ -2,6 +2,8 @@ package fakeit
 
 import (
 	"context"
+	"encoding/hex"
+	"fmt"
 
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/lestrrat-go/jwx/jwk"
@@ -22,6 +24,16 @@ func (r *run) createVote(cli Client, key jwk.Key, fak *gofakeit.Faker, use *user
 			fak.ShuffleAnySlice(cla.Object)
 		}
 
+		var nam string
+		{
+			nam = use.Object[0].Public.Name
+		}
+
+		// As long as the claim is still "pending", only the owner can vote on it.
+		if cla.Object[0].Public.Lifecycle == "pending" {
+			nam = useObj(use, cla.Object[0].Intern.Owner).Public.Name
+		}
+
 		var inp *vote.CreateI
 		{
 			inp = r.randomVote(fak, cla.Object[0])
@@ -29,7 +41,7 @@ func (r *run) createVote(cli Client, key jwk.Key, fak *gofakeit.Faker, use *user
 
 		var ctx context.Context
 		{
-			ctx = newCtx(key, use.Object[0].Public.Name)
+			ctx = newCtx(key, nam)
 		}
 
 		var out *vote.CreateO
@@ -70,6 +82,11 @@ func (r *run) createVote(cli Client, key jwk.Key, fak *gofakeit.Faker, use *user
 }
 
 func (r *run) randomVote(fak *gofakeit.Faker, cla *post.SearchO_Object) *vote.CreateI {
+	var has string
+	if fak.Float64() > 0.3 {
+		has = fmt.Sprintf("0x%s", hex.EncodeToString([]byte(fak.StreetName())))
+	}
+
 	var opt []string
 	{
 		opt = []string{
@@ -78,19 +95,17 @@ func (r *run) randomVote(fak *gofakeit.Faker, cla *post.SearchO_Object) *vote.Cr
 		}
 	}
 
-	{
-		fak.ShuffleAnySlice(opt)
-	}
-
 	var obj *vote.CreateI
 	{
 		obj = &vote.CreateI{
 			Object: []*vote.CreateI_Object{
 				{
 					Public: &vote.CreateI_Object_Public{
+						Chain:  "421614",
 						Claim:  cla.Intern.Id,
+						Hash:   has,
 						Kind:   "stake",
-						Option: opt[0],
+						Option: fak.RandomString(opt),
 						Value:  limStr(converter.FloatToString(fak.Float64Range(0.0001, 2.5)), 6),
 					},
 				},
