@@ -169,8 +169,13 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 			}
 		}
 
+		var cla []objectid.ID
 		{
-			lis, err := h.sto.Post().SearchPost(generic.Unique(sli.Claim()))
+			cla = generic.Unique(sli.Claim())
+		}
+
+		if len(cla) != 0 {
+			lis, err := h.sto.Post().SearchPost(cla)
 			if err != nil {
 				return nil, tracer.Mask(err)
 			}
