@@ -8,9 +8,11 @@ import (
 	"github.com/uvio-network/apiserver/pkg/generic"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/runtime"
+	"github.com/uvio-network/apiserver/pkg/server/context/userid"
 	"github.com/uvio-network/apiserver/pkg/server/converter"
 	"github.com/uvio-network/apiserver/pkg/server/limiter"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
+	"github.com/uvio-network/apiserver/pkg/storage/votestorage"
 	"github.com/xh3b4sd/tracer"
 )
 
@@ -20,10 +22,11 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 
 	var ids []objectid.ID
 	var lab [][]string
+	var own []objectid.ID
 	var pag []int
 	var tim bool
 	var tre []objectid.ID
-	var own []objectid.ID
+	var vot []objectid.ID
 	for _, x := range req.Object {
 		if x.Intern != nil && x.Intern.Id != "" {
 			ids = append(ids, objectid.ID(x.Intern.Id))
@@ -54,6 +57,14 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 				if err != nil {
 					return nil, tracer.Mask(err)
 				}
+			}
+		}
+
+		if x.Symbol != nil && x.Symbol.Vote != "" {
+			if x.Symbol.Vote == "self" {
+				vot = append(vot, userid.FromContext(ctx))
+			} else {
+				vot = append(vot, objectid.ID(x.Symbol.Vote))
 			}
 		}
 
@@ -111,7 +122,7 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 	//
 
 	if len(own) != 0 {
-		lis, err := h.sto.Post().SearchUser(own)
+		lis, err := h.sto.Post().SearchOwner(own)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -143,6 +154,29 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 		}
 
 		out = append(out, lis...)
+	}
+
+	//
+	// Search posts by the voting users.
+	//
+
+	if len(vot) != 0 {
+		var sli votestorage.Slicer
+		{
+			sli, err = h.sto.Vote().SearchOwner(vot)
+			if err != nil {
+				return nil, tracer.Mask(err)
+			}
+		}
+
+		{
+			lis, err := h.sto.Post().SearchPost(generic.Unique(sli.Claim()))
+			if err != nil {
+				return nil, tracer.Mask(err)
+			}
+
+			out = append(out, lis...)
+		}
 	}
 
 	//

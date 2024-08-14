@@ -88,6 +88,10 @@ func (w *wrapper) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 			if i && p && s {
 				return nil, tracer.Maskf(runtime.QueryObjectEmptyError, "one of [intern public symbol] must be used")
 			}
+
+			if !s && x.Symbol.Vote == "self" && userid.FromContext(ctx) == "" {
+				return nil, tracer.Maskf(runtime.UserAuthError, "symbol.vote=self requires valid access token")
+			}
 		}
 	}
 

@@ -59,8 +59,8 @@ func posOwn(oid objectid.ID) string {
 	return fmt.Sprintf(storageformat.PostOwner, oid)
 }
 
-func posUseCom(uid objectid.ID, pid objectid.ID) string {
-	return fmt.Sprintf(storageformat.PostUserComment, uid, pid)
+func posOwnCom(uid objectid.ID, pid objectid.ID) string {
+	return fmt.Sprintf(storageformat.PostOwnerComment, uid, pid)
 }
 
 func musStr(obj *Object) string {

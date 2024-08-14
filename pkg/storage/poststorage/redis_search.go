@@ -246,7 +246,7 @@ func (r *Redis) SearchTree(tre []objectid.ID) ([]*Object, error) {
 	return out, nil
 }
 
-func (r *Redis) SearchUser(use []objectid.ID) ([]*Object, error) {
+func (r *Redis) SearchOwner(use []objectid.ID) ([]*Object, error) {
 	var err error
 
 	// pos will result in a list of all post IDs created by the given user IDs, if
@@ -280,7 +280,7 @@ func (r *Redis) SearchUser(use []objectid.ID) ([]*Object, error) {
 	return out, nil
 }
 
-func (r *Redis) SearchUserComment(own []objectid.ID, cla []objectid.ID) ([]*Object, error) {
+func (r *Redis) SearchOwnerComment(own []objectid.ID, cla []objectid.ID) ([]*Object, error) {
 	var err error
 
 	if len(own) != len(cla) {
@@ -291,7 +291,7 @@ func (r *Redis) SearchUserComment(own []objectid.ID, cla []objectid.ID) ([]*Obje
 	// and claim IDs, if any.
 	var com []string
 	{
-		com, err = r.red.Sorted().Search().Union(generic.Arg2(storageformat.PostUserComment, own, cla)...)
+		com, err = r.red.Sorted().Search().Union(generic.Arg2(storageformat.PostOwnerComment, own, cla)...)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
