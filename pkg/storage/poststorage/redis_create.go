@@ -68,7 +68,7 @@ func (r *Redis) CreatePost(inp []*Object) error {
 
 			// We index all claim IDs per specified lifecycle phase, so that we can
 			// search e.g. for all disputes.
-			err = r.red.Sorted().Create().Score(posLif(inp[i].Lifecycle), inp[i].ID.String(), inp[i].ID.Float())
+			err = r.red.Sorted().Create().Score(posLif(inp[i].Lifecycle.Data), inp[i].ID.String(), inp[i].ID.Float())
 			if err != nil {
 				return tracer.Mask(err)
 			}

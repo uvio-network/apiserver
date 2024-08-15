@@ -18,7 +18,7 @@ require (
 	github.com/xh3b4sd/locker v0.1.0
 	github.com/xh3b4sd/logger v0.8.1
 	github.com/xh3b4sd/redigo v0.37.1
-	github.com/xh3b4sd/rescue v0.17.16
+	github.com/xh3b4sd/rescue v0.17.17
 	github.com/xh3b4sd/tracer v0.11.1
 	golang.org/x/text v0.17.0
 )
@@ -42,7 +42,7 @@ require (
 	github.com/lestrrat-go/option v1.0.1 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/prometheus/client_golang v1.19.1 // indirect
+	github.com/prometheus/client_golang v1.20.0 // indirect
 	github.com/prometheus/client_model v0.6.1 // indirect
 	github.com/prometheus/common v0.55.0 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect

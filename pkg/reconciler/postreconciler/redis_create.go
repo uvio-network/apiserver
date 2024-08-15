@@ -7,6 +7,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/format/labelname"
 	"github.com/uvio-network/apiserver/pkg/generic"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
+	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
 	"github.com/uvio-network/apiserver/pkg/storage/votestorage"
@@ -17,15 +18,6 @@ func (r *Redis) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, er
 	var err error
 
 	for i := range inp {
-		{
-			if inp[i].Kind == "claim" && inp[i].Hash == "" {
-				inp[i].Lifecycle = "pending"
-			}
-			if inp[i].Kind == "claim" && inp[i].Hash != "" {
-				inp[i].Lifecycle = "propose"
-			}
-		}
-
 		{
 			if inp[i].Kind == "claim" {
 				inp[i].Votes = []float64{0, 0, 0, 0}
@@ -52,6 +44,7 @@ func (r *Redis) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, er
 			inp[i].Created = now
 			inp[i].ID = objectid.Random(objectid.Time(now))
 			inp[i].Labels = generic.Func(inp[i].Labels, labelname.Format)
+			inp[i].Lifecycle.Time = now
 			inp[i].Text = strings.TrimSpace(inp[i].Text)
 			inp[i].Token = strings.TrimSpace(inp[i].Token)
 		}
@@ -63,7 +56,7 @@ func (r *Redis) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, er
 		// object provided in the parent field, and take the existing tree ID from
 		// there. Note that we are indirectly validating here that the given parent
 		// ID does in fact exist.
-		if inp[i].Kind == "claim" && (inp[i].Lifecycle == "pending" || inp[i].Lifecycle == "propose") {
+		if inp[i].Kind == "claim" && inp[i].Lifecycle.Is(objectlabel.LifecyclePending, objectlabel.LifecyclePropose) {
 			inp[i].Tree = objectid.Random(objectid.Time(now))
 		} else {
 			var par *poststorage.Object

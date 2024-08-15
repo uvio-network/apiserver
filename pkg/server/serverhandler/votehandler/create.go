@@ -5,6 +5,7 @@ import (
 
 	"github.com/uvio-network/apigocode/pkg/vote"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
+	"github.com/uvio-network/apiserver/pkg/object/objectlifecycle"
 	"github.com/uvio-network/apiserver/pkg/server/context/userid"
 	"github.com/uvio-network/apiserver/pkg/server/converter"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
@@ -18,15 +19,17 @@ func (h *Handler) Create(ctx context.Context, req *vote.CreateI) (*vote.CreateO,
 	var inp []*votestorage.Object
 	for _, x := range req.Object {
 		inp = append(inp, &votestorage.Object{
-			Chain:     x.Public.Chain,
-			Claim:     objectid.ID(x.Public.Claim),
-			Hash:      x.Public.Hash,
-			Kind:      x.Public.Kind,
-			Lifecycle: x.Public.Lifecycle,
-			Meta:      x.Public.Meta,
-			Option:    converter.StringToBool(x.Public.Option),
-			Owner:     userid.FromContext(ctx),
-			Value:     converter.StringToFloat(x.Public.Value),
+			Chain: x.Public.Chain,
+			Claim: objectid.ID(x.Public.Claim),
+			Kind:  x.Public.Kind,
+			Lifecycle: objectlifecycle.Lifecycle{
+				Data: x.Public.Lifecycle,
+				Hash: x.Public.Hash,
+			},
+			Meta:   x.Public.Meta,
+			Option: converter.StringToBool(x.Public.Option),
+			Owner:  userid.FromContext(ctx),
+			Value:  converter.StringToFloat(x.Public.Value),
 		})
 	}
 

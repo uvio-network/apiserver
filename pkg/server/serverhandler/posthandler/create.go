@@ -5,6 +5,7 @@ import (
 
 	"github.com/uvio-network/apigocode/pkg/post"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
+	"github.com/uvio-network/apiserver/pkg/object/objectlifecycle"
 	"github.com/uvio-network/apiserver/pkg/server/context/userid"
 	"github.com/uvio-network/apiserver/pkg/server/converter"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
@@ -17,17 +18,19 @@ func (h *Handler) Create(ctx context.Context, req *post.CreateI) (*post.CreateO,
 	var inp []*poststorage.Object
 	for _, x := range req.Object {
 		inp = append(inp, &poststorage.Object{
-			Chain:     x.Public.Chain,
-			Expiry:    converter.StringToTime(x.Public.Expiry),
-			Hash:      x.Public.Hash,
-			Kind:      x.Public.Kind,
-			Labels:    converter.StringToSlice(x.Public.Labels),
-			Lifecycle: x.Public.Lifecycle,
-			Meta:      x.Public.Meta,
-			Owner:     userid.FromContext(ctx),
-			Parent:    objectid.ID(x.Public.Parent),
-			Text:      x.Public.Text,
-			Token:     x.Public.Token,
+			Chain:  x.Public.Chain,
+			Expiry: converter.StringToTime(x.Public.Expiry),
+			Kind:   x.Public.Kind,
+			Labels: converter.StringToSlice(x.Public.Labels),
+			Lifecycle: objectlifecycle.Lifecycle{
+				Data: x.Public.Lifecycle,
+				Hash: x.Public.Hash,
+			},
+			Meta:   x.Public.Meta,
+			Owner:  userid.FromContext(ctx),
+			Parent: objectid.ID(x.Public.Parent),
+			Text:   x.Public.Text,
+			Token:  x.Public.Token,
 		})
 	}
 

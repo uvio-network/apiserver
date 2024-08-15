@@ -8,26 +8,27 @@ import (
 	"github.com/uvio-network/apiserver/pkg/format/labelname"
 	"github.com/uvio-network/apiserver/pkg/generic"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
+	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
+	"github.com/uvio-network/apiserver/pkg/object/objectlifecycle"
 	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/xh3b4sd/tracer"
 )
 
 type Object struct {
-	Chain     string      `json:"chain"`
-	Created   time.Time   `json:"created"`
-	Expiry    time.Time   `json:"expiry"`
-	Hash      string      `json:"hash"`
-	ID        objectid.ID `json:"id"`
-	Kind      string      `json:"kind"`
-	Labels    []string    `json:"labels"`
-	Lifecycle string      `json:"lifecycle"`
-	Meta      string      `json:"meta"`
-	Owner     objectid.ID `json:"owner"`
-	Parent    objectid.ID `json:"parent"`
-	Text      string      `json:"text"`
-	Token     string      `json:"token"`
-	Tree      objectid.ID `json:"tree"`
-	Votes     []float64   `json:"votes"`
+	Chain     string                    `json:"chain"`
+	Created   time.Time                 `json:"created"`
+	Expiry    time.Time                 `json:"expiry"`
+	ID        objectid.ID               `json:"id"`
+	Kind      string                    `json:"kind"`
+	Labels    []string                  `json:"labels"`
+	Lifecycle objectlifecycle.Lifecycle `json:"lifecycle"`
+	Meta      string                    `json:"meta"`
+	Owner     objectid.ID               `json:"owner"`
+	Parent    objectid.ID               `json:"parent"`
+	Text      string                    `json:"text"`
+	Token     string                    `json:"token"`
+	Tree      objectid.ID               `json:"tree"`
+	Votes     []float64                 `json:"votes"`
 }
 
 func (o *Object) Verify() error {
@@ -58,17 +59,6 @@ func (o *Object) Verify() error {
 	}
 
 	{
-		// Any hash must be hex encoded.
-		if o.Hash != "" && !hexencoding.Verify(o.Hash) {
-			return tracer.Maskf(ClaimHashFormatError, o.Hash)
-		}
-		// Any comment must not have a hash.
-		if o.Kind == "comment" && o.Hash != "" {
-			return tracer.Maskf(CommentHashInvalidError, o.Hash)
-		}
-	}
-
-	{
 		if o.Kind != "claim" && o.Kind != "comment" {
 			return tracer.Maskf(PostKindInvalidError, o.Kind)
 		}
@@ -93,19 +83,14 @@ func (o *Object) Verify() error {
 	}
 
 	{
-		// Any claim without hash must be in lifecycle phase "pending".
-		if o.Kind == "claim" && o.Hash == "" && o.Lifecycle != "pending" {
-			return tracer.Maskf(ClaimHashPendingError, o.Lifecycle)
+		if o.Kind == "claim" && !o.Lifecycle.Is(objectlabel.LifecycleAdjourn, objectlabel.LifecycleDispute, objectlabel.LifecycleNullify, objectlabel.LifecyclePending, objectlabel.LifecyclePropose, objectlabel.LifecycleResolve) {
+			return tracer.Maskf(ClaimLifecycleInvalidError, o.Lifecycle.String())
 		}
-		// Any claim with hash must be in any valid lifecycle phase but "pending".
-		if o.Kind == "claim" && o.Hash != "" && o.Lifecycle != "adjourn" && o.Lifecycle != "dispute" && o.Lifecycle != "nullify" && o.Lifecycle != "propose" && o.Lifecycle != "resolve" {
-			return tracer.Maskf(ClaimHashLifecycleError, o.Lifecycle)
+		if o.Kind == "comment" && !o.Lifecycle.Empty() {
+			return tracer.Maskf(CommentLifecycleInvalidError, o.Lifecycle.String())
 		}
-		if o.Kind == "claim" && o.Lifecycle != "adjourn" && o.Lifecycle != "dispute" && o.Lifecycle != "nullify" && o.Lifecycle != "pending" && o.Lifecycle != "propose" && o.Lifecycle != "resolve" {
-			return tracer.Maskf(ClaimLifecycleInvalidError, o.Lifecycle)
-		}
-		if o.Kind == "comment" && o.Lifecycle != "" {
-			return tracer.Maskf(CommentLifecycleInvalidError, o.Lifecycle)
+		if o.Lifecycle.Hash != "" && !hexencoding.Verify(o.Lifecycle.Hash) {
+			return tracer.Maskf(ClaimHashFormatError, o.Lifecycle.Hash)
 		}
 	}
 
@@ -121,17 +106,17 @@ func (o *Object) Verify() error {
 	{
 		// Any claim with lifecycle other than "pending" or "propose" must reference
 		// a parent.
-		if o.Kind == "claim" && (o.Lifecycle != "pending" && o.Lifecycle != "propose") && o.Parent == "" {
-			return tracer.Maskf(ClaimParentEmptyError, o.Lifecycle)
+		if o.Kind == "claim" && !o.Lifecycle.Is(objectlabel.LifecyclePending, objectlabel.LifecyclePropose) && o.Parent == "" {
+			return tracer.Maskf(ClaimParentEmptyError, o.Lifecycle.String())
 		}
 		// Any claim with lifecycle "pending" or "propose" must not reference a
 		// parent.
-		if o.Kind == "claim" && (o.Lifecycle == "pending" || o.Lifecycle == "propose") && o.Parent != "" {
-			return tracer.Maskf(ClaimParentInvalidError, o.Lifecycle)
+		if o.Kind == "claim" && o.Lifecycle.Is(objectlabel.LifecyclePending, objectlabel.LifecyclePropose) && o.Parent != "" {
+			return tracer.Maskf(ClaimParentInvalidError, o.Lifecycle.String())
 		}
 		// Any comment must reference its parent claim.
 		if o.Kind == "comment" && o.Parent == "" {
-			return tracer.Maskf(CommentParentEmptyError, o.Lifecycle)
+			return tracer.Maskf(CommentParentEmptyError, o.Lifecycle.String())
 		}
 	}
 
@@ -159,12 +144,12 @@ func (o *Object) Verify() error {
 		tok := strings.TrimSpace(o.Token)
 
 		// Any claim on which you can stake reputation must specify a staking token.
-		if o.Kind == "claim" && (o.Lifecycle == "adjourn" || o.Lifecycle == "dispute" || o.Lifecycle == "nullify" || o.Lifecycle == "propose") && tok == "" {
+		if o.Kind == "claim" && o.Lifecycle.Is(objectlabel.LifecycleAdjourn, objectlabel.LifecycleDispute, objectlabel.LifecycleNullify, objectlabel.LifecyclePending, objectlabel.LifecyclePropose) && tok == "" {
 			return tracer.Mask(PostTokenEmptyError)
 		}
 		// Any claim on which you cannot stake reputation must not specify a staking
 		// token.
-		if o.Kind == "claim" && o.Lifecycle == "resolve" && tok != "" {
+		if o.Kind == "claim" && o.Lifecycle.Is(objectlabel.LifecycleResolve) && tok != "" {
 			return tracer.Mask(PostTokenInvalidError)
 		}
 		// Any comment must not specify a staking token.
