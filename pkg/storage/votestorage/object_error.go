@@ -31,7 +31,7 @@ var VoteKindInvalidError = &tracer.Error{
 
 var VoteLifecycleInvalidError = &tracer.Error{
 	Kind: "VoteLifecycleInvalidError",
-	Desc: "The request expects the vote lifecycle to be one of [onchain pending]. The vote lifecycle was not found to be one of those values. Therefore the request failed.",
+	Desc: "The request expects the vote lifecycle to be one of [onchain]. The vote lifecycle was not found to be one of those values. Therefore the request failed.",
 }
 
 var VoteOwnerEmptyError = &tracer.Error{

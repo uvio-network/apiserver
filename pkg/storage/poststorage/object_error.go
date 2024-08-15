@@ -51,7 +51,7 @@ var ClaimLabelsUniqueError = &tracer.Error{
 
 var ClaimLifecycleInvalidError = &tracer.Error{
 	Kind: "ClaimLifecycleInvalidError",
-	Desc: "The request expects the claim lifecycle to be one of [adjourn dispute nullify pending propose resolve]. The claim lifecycle was not found to be one of those values. Therefore the request failed.",
+	Desc: "The request expects the claim lifecycle to be one of [adjourn dispute nullify propose resolve]. The claim lifecycle was not found to be one of those values. Therefore the request failed.",
 }
 
 var ClaimMetaEmptyError = &tracer.Error{

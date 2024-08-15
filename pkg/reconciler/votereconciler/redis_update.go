@@ -28,7 +28,7 @@ func (r *Redis) UpdateHash(use objectid.ID, ids []objectid.ID, has []string) ([]
 		}
 
 		if pos[i].Owner != use {
-			return nil, tracer.Maskf(runtime.UserNotOwnerError, "%s=%s", pos[i].Owner, use)
+			return nil, tracer.Maskf(runtime.UserNotOwnerError, "%s != %s", pos[i].Owner, use)
 		}
 
 		{
