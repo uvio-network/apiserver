@@ -47,7 +47,7 @@ func (r *Redis) CreateVote(inp []*votestorage.Object) ([]*votestorage.Object, er
 			// only user who can vote on the proposed claim is the proposer itself.
 			// Here we make sure that users can propose claims on the platform without
 			// having the onchain confirmation right away.
-			if inp[i].Kind == "stake" && cla.Lifecycle.Is(objectlabel.LifecyclePending) && inp[i].Owner != cla.Owner {
+			if inp[i].Kind == "stake" && cla.Lifecycle.Pending() && inp[i].Owner != cla.Owner {
 				return nil, tracer.Maskf(StakeLifecyclePendingError, "%s", inp[i].Owner)
 			}
 

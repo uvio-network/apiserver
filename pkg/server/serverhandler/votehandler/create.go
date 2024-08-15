@@ -5,6 +5,7 @@ import (
 
 	"github.com/uvio-network/apigocode/pkg/vote"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
+	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/object/objectlifecycle"
 	"github.com/uvio-network/apiserver/pkg/server/context/userid"
 	"github.com/uvio-network/apiserver/pkg/server/converter"
@@ -23,7 +24,7 @@ func (h *Handler) Create(ctx context.Context, req *vote.CreateI) (*vote.CreateO,
 			Claim: objectid.ID(x.Public.Claim),
 			Kind:  x.Public.Kind,
 			Lifecycle: objectlifecycle.Lifecycle{
-				Data: x.Public.Lifecycle,
+				Data: objectlabel.DesiredLifecycle(x.Public.Lifecycle),
 				Hash: x.Public.Hash,
 			},
 			Meta:   x.Public.Meta,

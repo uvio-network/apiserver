@@ -106,7 +106,7 @@ func (r *run) randomVote(fak *gofakeit.Faker, cla *post.SearchO_Object) *vote.Cr
 						Claim:     cla.Intern.Id,
 						Hash:      has,
 						Kind:      "stake",
-						Lifecycle: objectlabel.LifecycleOnchain,
+						Lifecycle: string(objectlabel.LifecycleOnchain),
 						Option:    fak.RandomString(opt),
 						Value:     limStr(converter.FloatToString(fak.Float64Range(0.0001, 2.5)), 6),
 					},

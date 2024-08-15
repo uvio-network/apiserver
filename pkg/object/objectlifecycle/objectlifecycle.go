@@ -8,7 +8,7 @@ import (
 
 type Lifecycle struct {
 	// Data is the string data of this object field.
-	Data string `json:"data"`
+	Data objectlabel.DesiredLifecycle `json:"data"`
 	// Hash is the lifecycle confirmation of this object field.
 	Hash string `json:"hash"`
 	// Time is the most recent time at which this object field got updated.
@@ -19,7 +19,7 @@ func (l Lifecycle) Empty() bool {
 	return l.Data == "" && l.Hash == ""
 }
 
-func (l Lifecycle) Is(lis ...string) bool {
+func (l Lifecycle) Is(lis ...objectlabel.DesiredLifecycle) bool {
 	for _, x := range lis {
 		if l.Data == x {
 			return true
@@ -29,10 +29,14 @@ func (l Lifecycle) Is(lis ...string) bool {
 	return false
 }
 
+func (l Lifecycle) Pending() bool {
+	return l.Hash == ""
+}
+
 func (l Lifecycle) String() string {
 	if l.Hash == "" {
-		return objectlabel.LifecyclePending
+		return string(objectlabel.LifecyclePending)
 	}
 
-	return l.Data
+	return string(l.Data)
 }
