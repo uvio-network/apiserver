@@ -39,4 +39,10 @@ type Interface interface {
 	//     @out[0] the list of vote objects matching the given vote IDs
 	//
 	SearchVote([]objectid.ID) ([]*Object, error)
+
+	// UpdateVote modifies the given vote objects in the underlying storage.
+	//
+	//     @inp[0] the vote objects to update
+	//
+	UpdateVote([]*Object) error
 }
