@@ -56,7 +56,7 @@ func (r *Redis) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, er
 		// object provided in the parent field, and take the existing tree ID from
 		// there. Note that we are indirectly validating here that the given parent
 		// ID does in fact exist.
-		if inp[i].Kind == "claim" && inp[i].Lifecycle.Is(objectlabel.LifecyclePending, objectlabel.LifecyclePropose) {
+		if inp[i].Kind == "claim" && inp[i].Lifecycle.Is(objectlabel.LifecyclePropose) {
 			inp[i].Tree = objectid.Random(objectid.Time(now))
 		} else {
 			var par *poststorage.Object

@@ -83,7 +83,7 @@ func (o *Object) Verify() error {
 	}
 
 	{
-		if o.Kind == "claim" && !o.Lifecycle.Is(objectlabel.LifecycleAdjourn, objectlabel.LifecycleDispute, objectlabel.LifecycleNullify, objectlabel.LifecyclePending, objectlabel.LifecyclePropose, objectlabel.LifecycleResolve) {
+		if o.Kind == "claim" && !o.Lifecycle.Is(objectlabel.LifecycleAdjourn, objectlabel.LifecycleDispute, objectlabel.LifecycleNullify, objectlabel.LifecyclePropose, objectlabel.LifecycleResolve) {
 			return tracer.Maskf(ClaimLifecycleInvalidError, o.Lifecycle.String())
 		}
 		if o.Kind == "comment" && !o.Lifecycle.Empty() {
@@ -104,14 +104,12 @@ func (o *Object) Verify() error {
 	}
 
 	{
-		// Any claim with lifecycle other than "pending" or "propose" must reference
-		// a parent.
-		if o.Kind == "claim" && !o.Lifecycle.Is(objectlabel.LifecyclePending, objectlabel.LifecyclePropose) && o.Parent == "" {
+		// Any claim with lifecycle other than "propose" must reference a parent.
+		if o.Kind == "claim" && !o.Lifecycle.Is(objectlabel.LifecyclePropose) && o.Parent == "" {
 			return tracer.Maskf(ClaimParentEmptyError, o.Lifecycle.String())
 		}
-		// Any claim with lifecycle "pending" or "propose" must not reference a
-		// parent.
-		if o.Kind == "claim" && o.Lifecycle.Is(objectlabel.LifecyclePending, objectlabel.LifecyclePropose) && o.Parent != "" {
+		// Any claim with lifecycle "propose" must not reference a parent.
+		if o.Kind == "claim" && o.Lifecycle.Is(objectlabel.LifecyclePropose) && o.Parent != "" {
 			return tracer.Maskf(ClaimParentInvalidError, o.Lifecycle.String())
 		}
 		// Any comment must reference its parent claim.
@@ -144,7 +142,7 @@ func (o *Object) Verify() error {
 		tok := strings.TrimSpace(o.Token)
 
 		// Any claim on which you can stake reputation must specify a staking token.
-		if o.Kind == "claim" && o.Lifecycle.Is(objectlabel.LifecycleAdjourn, objectlabel.LifecycleDispute, objectlabel.LifecycleNullify, objectlabel.LifecyclePending, objectlabel.LifecyclePropose) && tok == "" {
+		if o.Kind == "claim" && o.Lifecycle.Is(objectlabel.LifecycleAdjourn, objectlabel.LifecycleDispute, objectlabel.LifecycleNullify, objectlabel.LifecyclePropose) && tok == "" {
 			return tracer.Mask(PostTokenEmptyError)
 		}
 		// Any claim on which you cannot stake reputation must not specify a staking

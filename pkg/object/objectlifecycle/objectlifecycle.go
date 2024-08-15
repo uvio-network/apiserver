@@ -21,7 +21,7 @@ func (l Lifecycle) Empty() bool {
 
 func (l Lifecycle) Is(lis ...string) bool {
 	for _, x := range lis {
-		if l.String() == x {
+		if l.Data == x {
 			return true
 		}
 	}
