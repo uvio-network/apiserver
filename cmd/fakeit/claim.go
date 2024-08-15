@@ -142,7 +142,7 @@ func (r *run) randomClaim(fak *gofakeit.Faker) *post.CreateI {
 						Lifecycle: string(objectlabel.LifecyclePropose),
 						Meta:      "9,0",
 						Text:      fmt.Sprintf("# %s\n\n%s\n\n%s", tit, par, strings.Join(lis[:fak.Number(2, 5)], "\n")),
-						Token:     "USDC",
+						Token:     fak.RandomString([]string{"USDC", "UVX", "WETH"}),
 					},
 				},
 			},
