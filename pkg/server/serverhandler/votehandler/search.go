@@ -109,7 +109,6 @@ func (h *Handler) Search(ctx context.Context, req *vote.SearchI) (*vote.SearchO,
 
 	for _, x := range out[:limiter.Len(len(out))] {
 		res.Object = append(res.Object, &vote.SearchO_Object{
-			Extern: []*vote.SearchO_Object_Extern{},
 			Intern: &vote.SearchO_Object_Intern{
 				Created: converter.TimeToString(x.Created),
 				Id:      x.ID.String(),

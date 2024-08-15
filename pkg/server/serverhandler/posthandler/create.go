@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/uvio-network/apigocode/pkg/post"
+	"github.com/uvio-network/apiserver/pkg/object/objectfield"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
-	"github.com/uvio-network/apiserver/pkg/object/objectlifecycle"
 	"github.com/uvio-network/apiserver/pkg/server/context/userid"
 	"github.com/uvio-network/apiserver/pkg/server/converter"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
@@ -23,7 +23,7 @@ func (h *Handler) Create(ctx context.Context, req *post.CreateI) (*post.CreateO,
 			Expiry: converter.StringToTime(x.Public.Expiry),
 			Kind:   x.Public.Kind,
 			Labels: converter.StringToSlice(x.Public.Labels),
-			Lifecycle: objectlifecycle.Lifecycle{
+			Lifecycle: objectfield.Lifecycle{
 				Data: objectlabel.DesiredLifecycle(x.Public.Lifecycle),
 				Hash: x.Public.Hash,
 			},

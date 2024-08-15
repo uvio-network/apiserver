@@ -4,23 +4,23 @@ import (
 	"time"
 
 	"github.com/uvio-network/apiserver/pkg/format/hexencoding"
+	"github.com/uvio-network/apiserver/pkg/object/objectfield"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
-	"github.com/uvio-network/apiserver/pkg/object/objectlifecycle"
 	"github.com/xh3b4sd/tracer"
 )
 
 type Object struct {
-	Chain     string                    `json:"chain"`
-	Claim     objectid.ID               `json:"claim"`
-	Created   time.Time                 `json:"created"`
-	ID        objectid.ID               `json:"id"`
-	Kind      string                    `json:"kind"`
-	Lifecycle objectlifecycle.Lifecycle `json:"lifecycle"`
-	Meta      string                    `json:"meta"`
-	Option    bool                      `json:"option"`
-	Owner     objectid.ID               `json:"owner"`
-	Value     float64                   `json:"value"`
+	Chain     string                `json:"chain"`
+	Claim     objectid.ID           `json:"claim"`
+	Created   time.Time             `json:"created"`
+	ID        objectid.ID           `json:"id"`
+	Kind      string                `json:"kind"`
+	Lifecycle objectfield.Lifecycle `json:"lifecycle"`
+	Meta      string                `json:"meta"`
+	Option    bool                  `json:"option"`
+	Owner     objectid.ID           `json:"owner"`
+	Value     float64               `json:"value"`
 }
 
 func (o *Object) Verify() error {

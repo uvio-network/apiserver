@@ -233,7 +233,6 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 
 	for _, x := range out[:limiter.Len(len(out))] {
 		res.Object = append(res.Object, &post.SearchO_Object{
-			Extern: []*post.SearchO_Object_Extern{},
 			Intern: &post.SearchO_Object_Intern{
 				Created: converter.TimeToString(x.Created),
 				Id:      x.ID.String(),
