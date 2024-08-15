@@ -6,7 +6,7 @@ import (
 
 var StakeLifecycleInvalidError = &tracer.Error{
 	Kind: "StakeLifecycleInvalidError",
-	Desc: "The request expects the lifecycle of the referenced claim to be one of [adjourn dispute nullify pending propose]. The lifecycle of the referenced claim was not found to be one of those values. Therefore the request failed.",
+	Desc: "The request expects the lifecycle of the referenced claim to be one of [adjourn dispute nullify propose]. The lifecycle of the referenced claim was not found to be one of those values. Therefore the request failed.",
 }
 
 var StakeLifecyclePendingError = &tracer.Error{
@@ -22,4 +22,9 @@ var TruthLifecycleInvalidError = &tracer.Error{
 var VoteClaimNotFoundError = &tracer.Error{
 	Kind: "VoteClaimNotFoundError",
 	Desc: "The request expects the vote claim to exist. The vote claim was not found to exist. Therefore the request failed.",
+}
+
+var VoteUpdateHashError = &tracer.Error{
+	Kind: "VoteUpdateHashError",
+	Desc: "The request expects the vote hash to be updated only once. The vote hash was found to be updated already. Therefore the request failed.",
 }

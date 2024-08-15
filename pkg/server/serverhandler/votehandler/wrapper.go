@@ -89,6 +89,38 @@ func (w *wrapper) Search(ctx context.Context, req *vote.SearchI) (*vote.SearchO,
 }
 
 func (w *wrapper) Update(ctx context.Context, req *vote.UpdateI) (*vote.UpdateO, error) {
+	{
+		if len(req.Object) == 0 {
+			return nil, tracer.Mask(runtime.QueryObjectEmptyError)
+		}
+
+		if len(req.Object) > 100 {
+			return nil, tracer.Mask(runtime.QueryObjectLimitError)
+		}
+
+		for _, x := range req.Object {
+			if !x.ProtoReflect().IsValid() {
+				return nil, tracer.Mask(runtime.QueryObjectEmptyError)
+			}
+		}
+	}
+
+	{
+		for _, x := range req.Object {
+			p := updatePublicEmpty(x.Public)
+
+			if p {
+				return nil, tracer.Maskf(runtime.QueryObjectInvalidError, "public must not be empty")
+			}
+		}
+	}
+
+	{
+		if userid.FromContext(ctx) == "" {
+			return nil, tracer.Mask(runtime.UserAuthError)
+		}
+	}
+
 	return w.han.Update(ctx, req)
 }
 
@@ -102,4 +134,8 @@ func searchInternEmpty(x *vote.SearchI_Object_Intern) bool {
 
 func searchPublicEmpty(x *vote.SearchI_Object_Public) bool {
 	return x == nil || (x.Claim == "")
+}
+
+func updatePublicEmpty(x *vote.UpdateI_Object_Public) bool {
+	return x == nil || (x.Hash == "")
 }
