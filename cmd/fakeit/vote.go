@@ -10,6 +10,7 @@ import (
 	"github.com/uvio-network/apigocode/pkg/post"
 	"github.com/uvio-network/apigocode/pkg/user"
 	"github.com/uvio-network/apigocode/pkg/vote"
+	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/server/converter"
 	"github.com/xh3b4sd/tracer"
 )
@@ -101,12 +102,13 @@ func (r *run) randomVote(fak *gofakeit.Faker, cla *post.SearchO_Object) *vote.Cr
 			Object: []*vote.CreateI_Object{
 				{
 					Public: &vote.CreateI_Object_Public{
-						Chain:  "421614",
-						Claim:  cla.Intern.Id,
-						Hash:   has,
-						Kind:   "stake",
-						Option: fak.RandomString(opt),
-						Value:  limStr(converter.FloatToString(fak.Float64Range(0.0001, 2.5)), 6),
+						Chain:     "421614",
+						Claim:     cla.Intern.Id,
+						Hash:      has,
+						Kind:      "stake",
+						Lifecycle: string(objectlabel.LifecycleOnchain),
+						Option:    fak.RandomString(opt),
+						Value:     limStr(converter.FloatToString(fak.Float64Range(0.0001, 2.5)), 6),
 					},
 				},
 			},

@@ -11,6 +11,7 @@ import (
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/uvio-network/apigocode/pkg/post"
 	"github.com/uvio-network/apigocode/pkg/user"
+	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/server/converter"
 	"github.com/xh3b4sd/tracer"
 	"golang.org/x/text/cases"
@@ -133,14 +134,15 @@ func (r *run) randomClaim(fak *gofakeit.Faker) *post.CreateI {
 			Object: []*post.CreateI_Object{
 				{
 					Public: &post.CreateI_Object_Public{
-						Chain:  "421614",
-						Expiry: converter.TimeToString(time.Now().AddDate(0, fak.Number(1, 9), fak.Number(10, 30))),
-						Hash:   has,
-						Kind:   "claim",
-						Labels: strings.Join(lab[:fak.Number(1, 4)], ","),
-						Meta:   "9,0",
-						Text:   fmt.Sprintf("# %s\n\n%s\n\n%s", tit, par, strings.Join(lis[:fak.Number(2, 5)], "\n")),
-						Token:  "USDC",
+						Chain:     "421614",
+						Expiry:    converter.TimeToString(time.Now().AddDate(0, fak.Number(1, 9), fak.Number(10, 30))),
+						Hash:      has,
+						Kind:      "claim",
+						Labels:    strings.Join(lab[:fak.Number(1, 4)], ","),
+						Lifecycle: string(objectlabel.LifecyclePropose),
+						Meta:      "9,0",
+						Text:      fmt.Sprintf("# %s\n\n%s\n\n%s", tit, par, strings.Join(lis[:fak.Number(2, 5)], "\n")),
+						Token:     "USDC",
 					},
 				},
 			},

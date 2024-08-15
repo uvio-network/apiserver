@@ -24,16 +24,6 @@ var VoteHashFormatError = &tracer.Error{
 	Desc: "The request expects the vote hash to be in hex format including 0x prefix. The vote hash was not found to comply with that format. Therefore the request failed.",
 }
 
-var VoteHashLifecycleError = &tracer.Error{
-	Kind: "VoteHashLifecycleError",
-	Desc: "The request expects the vote lifecycle to be one of [onchain] when hash is provided. The vote lifecycle was not found to be one of those values. Therefore the request failed.",
-}
-
-var VoteHashPendingError = &tracer.Error{
-	Kind: "VoteHashPendingError",
-	Desc: "The request expects the vote lifecycle to be one of [pending] when hash is empty. The vote lifecycle was not found to be one of those values. Therefore the request failed.",
-}
-
 var VoteKindInvalidError = &tracer.Error{
 	Kind: "VoteKindInvalidError",
 	Desc: "The request expects the vote kind to be one of [stake truth]. The vote kind was not found to be one of those values. Therefore the request failed.",

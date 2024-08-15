@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
+	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
 	"github.com/uvio-network/apiserver/pkg/storage/votestorage"
 	"github.com/xh3b4sd/tracer"
@@ -13,15 +14,6 @@ func (r *Redis) CreateVote(inp []*votestorage.Object) ([]*votestorage.Object, er
 	var err error
 
 	for i := range inp {
-		{
-			if inp[i].Hash == "" {
-				inp[i].Lifecycle = "pending"
-			}
-			if inp[i].Hash != "" {
-				inp[i].Lifecycle = "onchain"
-			}
-		}
-
 		{
 			err := inp[i].Verify()
 			if err != nil {
@@ -37,6 +29,7 @@ func (r *Redis) CreateVote(inp []*votestorage.Object) ([]*votestorage.Object, er
 		{
 			inp[i].Created = now
 			inp[i].ID = objectid.Random(objectid.Time(now))
+			inp[i].Lifecycle.Time = now
 		}
 
 		{
@@ -54,22 +47,20 @@ func (r *Redis) CreateVote(inp []*votestorage.Object) ([]*votestorage.Object, er
 			// only user who can vote on the proposed claim is the proposer itself.
 			// Here we make sure that users can propose claims on the platform without
 			// having the onchain confirmation right away.
-			if inp[i].Kind == "stake" && cla.Lifecycle == "pending" && inp[i].Owner != cla.Owner {
+			if inp[i].Kind == "stake" && cla.Lifecycle.Pending() && inp[i].Owner != cla.Owner {
 				return nil, tracer.Maskf(StakeLifecyclePendingError, "%s", inp[i].Owner)
 			}
 
 			// Votes of kind "stake" must comply with the lifecycle of their
 			// referenced claim object.
-			if inp[i].Kind == "stake" && cla.Lifecycle != "adjourn" && cla.Lifecycle != "dispute" && cla.Lifecycle != "nullify" && cla.Lifecycle != "pending" && cla.Lifecycle != "propose" {
-				return nil, tracer.Maskf(StakeLifecycleInvalidError, cla.Lifecycle)
+			if inp[i].Kind == "stake" && !cla.Lifecycle.Is(objectlabel.LifecycleAdjourn, objectlabel.LifecycleDispute, objectlabel.LifecycleNullify, objectlabel.LifecyclePropose) {
+				return nil, tracer.Maskf(StakeLifecycleInvalidError, cla.Lifecycle.String())
 			}
 
 			// Votes of kind "truth" must comply with the lifecycle of their
 			// referenced claim object.
-			if inp[i].Kind == "truth" {
-				if cla.Lifecycle != "resolve" {
-					return nil, tracer.Mask(TruthLifecycleInvalidError)
-				}
+			if inp[i].Kind == "truth" && !cla.Lifecycle.Is(objectlabel.LifecycleResolve) {
+				return nil, tracer.Mask(TruthLifecycleInvalidError)
 			}
 		}
 	}

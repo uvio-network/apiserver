@@ -5,21 +5,22 @@ import (
 
 	"github.com/uvio-network/apiserver/pkg/format/hexencoding"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
+	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
+	"github.com/uvio-network/apiserver/pkg/object/objectlifecycle"
 	"github.com/xh3b4sd/tracer"
 )
 
 type Object struct {
-	Chain     string      `json:"chain"`
-	Claim     objectid.ID `json:"claim"`
-	Created   time.Time   `json:"created"`
-	Hash      string      `json:"hash"`
-	ID        objectid.ID `json:"id"`
-	Kind      string      `json:"kind"`
-	Lifecycle string      `json:"lifecycle"`
-	Meta      string      `json:"meta"`
-	Option    bool        `json:"option"`
-	Owner     objectid.ID `json:"owner"`
-	Value     float64     `json:"value"`
+	Chain     string                    `json:"chain"`
+	Claim     objectid.ID               `json:"claim"`
+	Created   time.Time                 `json:"created"`
+	ID        objectid.ID               `json:"id"`
+	Kind      string                    `json:"kind"`
+	Lifecycle objectlifecycle.Lifecycle `json:"lifecycle"`
+	Meta      string                    `json:"meta"`
+	Option    bool                      `json:"option"`
+	Owner     objectid.ID               `json:"owner"`
+	Value     float64                   `json:"value"`
 }
 
 func (o *Object) Verify() error {
@@ -30,28 +31,17 @@ func (o *Object) Verify() error {
 	}
 
 	{
-		if o.Hash != "" && !hexencoding.Verify(o.Hash) {
-			return tracer.Maskf(VoteHashFormatError, o.Hash)
-		}
-	}
-
-	{
 		if o.Kind != "stake" && o.Kind != "truth" {
 			return tracer.Maskf(VoteKindInvalidError, o.Kind)
 		}
 	}
 
 	{
-		// Any vote without hash must be in lifecycle phase "pending".
-		if o.Hash == "" && o.Lifecycle != "pending" {
-			return tracer.Maskf(VoteHashPendingError, o.Lifecycle)
+		if !o.Lifecycle.Is(objectlabel.LifecycleOnchain) {
+			return tracer.Maskf(VoteLifecycleInvalidError, o.Lifecycle.String())
 		}
-		// Any vote with hash must be in lifecycle phase "onchain".
-		if o.Hash != "" && o.Lifecycle != "onchain" {
-			return tracer.Maskf(VoteHashLifecycleError, o.Lifecycle)
-		}
-		if o.Lifecycle != "onchain" && o.Lifecycle != "pending" {
-			return tracer.Maskf(VoteLifecycleInvalidError, o.Lifecycle)
+		if o.Lifecycle.Hash != "" && !hexencoding.Verify(o.Lifecycle.Hash) {
+			return tracer.Maskf(VoteHashFormatError, o.Lifecycle.Hash)
 		}
 	}
 
