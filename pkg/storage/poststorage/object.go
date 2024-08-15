@@ -7,28 +7,28 @@ import (
 	"github.com/uvio-network/apiserver/pkg/format/hexencoding"
 	"github.com/uvio-network/apiserver/pkg/format/labelname"
 	"github.com/uvio-network/apiserver/pkg/generic"
+	"github.com/uvio-network/apiserver/pkg/object/objectfield"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
-	"github.com/uvio-network/apiserver/pkg/object/objectlifecycle"
 	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/xh3b4sd/tracer"
 )
 
 type Object struct {
-	Chain     string                    `json:"chain"`
-	Created   time.Time                 `json:"created"`
-	Expiry    time.Time                 `json:"expiry"`
-	ID        objectid.ID               `json:"id"`
-	Kind      string                    `json:"kind"`
-	Labels    []string                  `json:"labels"`
-	Lifecycle objectlifecycle.Lifecycle `json:"lifecycle"`
-	Meta      string                    `json:"meta"`
-	Owner     objectid.ID               `json:"owner"`
-	Parent    objectid.ID               `json:"parent"`
-	Text      string                    `json:"text"`
-	Token     string                    `json:"token"`
-	Tree      objectid.ID               `json:"tree"`
-	Votes     []float64                 `json:"votes"`
+	Chain     string                `json:"chain"`
+	Created   time.Time             `json:"created"`
+	Expiry    time.Time             `json:"expiry"`
+	ID        objectid.ID           `json:"id"`
+	Kind      string                `json:"kind"`
+	Labels    []string              `json:"labels"`
+	Lifecycle objectfield.Lifecycle `json:"lifecycle"`
+	Meta      string                `json:"meta"`
+	Owner     objectid.ID           `json:"owner"`
+	Parent    objectid.ID           `json:"parent"`
+	Text      string                `json:"text"`
+	Token     string                `json:"token"`
+	Tree      objectid.ID           `json:"tree"`
+	Votes     []float64             `json:"votes"`
 }
 
 func (o *Object) Verify() error {

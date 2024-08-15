@@ -79,7 +79,6 @@ func (h *Handler) Search(ctx context.Context, req *wallet.SearchI) (*wallet.Sear
 
 	for _, x := range out[:limiter.Len(len(out))] {
 		res.Object = append(res.Object, &wallet.SearchO_Object{
-			Extern: []*wallet.SearchO_Object_Extern{},
 			Intern: &wallet.SearchO_Object_Intern{
 				Created: converter.TimeToString(x.Created),
 				Id:      x.ID.String(),

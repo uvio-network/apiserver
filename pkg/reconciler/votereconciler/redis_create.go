@@ -6,6 +6,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
+	"github.com/uvio-network/apiserver/pkg/storage/userstorage"
 	"github.com/uvio-network/apiserver/pkg/storage/votestorage"
 	"github.com/xh3b4sd/tracer"
 )
@@ -32,15 +33,15 @@ func (r *Redis) CreateVote(inp []*votestorage.Object) ([]*votestorage.Object, er
 			inp[i].Lifecycle.Time = now
 		}
 
+		var cla *poststorage.Object
 		{
-			var cla *poststorage.Object
-			{
-				cla, err = r.verifyClaim(inp[i].Claim)
-				if err != nil {
-					return nil, tracer.Mask(err)
-				}
+			cla, err = r.verifyClaim(inp[i].Claim)
+			if err != nil {
+				return nil, tracer.Mask(err)
 			}
+		}
 
+		{
 			// Votes can generally not be cast on claims that are still stuck in
 			// lifecycle phase "pending". The exception is the proposer of the
 			// referenced claim itself. As long as a new claim is still "pending", the
@@ -61,6 +62,31 @@ func (r *Redis) CreateVote(inp []*votestorage.Object) ([]*votestorage.Object, er
 			// referenced claim object.
 			if inp[i].Kind == "truth" && !cla.Lifecycle.Is(objectlabel.LifecycleResolve) {
 				return nil, tracer.Mask(TruthLifecycleInvalidError)
+			}
+		}
+
+		// Once all cross validation is done we can proceed with cross mutation. One
+		// important thing we need to do for all users is to update their staked
+		// token balances in their respective user objects.
+		{
+			var use []*userstorage.Object
+			{
+				use, err = r.sto.User().SearchUser([]objectid.ID{inp[i].Owner})
+				if err != nil {
+					return nil, tracer.Mask(err)
+				}
+			}
+
+			for j := range use {
+				use[j].Staked.Data[cla.Token] += inp[i].Value
+				use[j].Staked.Time = now
+			}
+
+			{
+				err = r.sto.User().UpdateUser(use)
+				if err != nil {
+					return nil, tracer.Mask(err)
+				}
 			}
 		}
 	}

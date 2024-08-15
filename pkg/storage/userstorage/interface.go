@@ -28,4 +28,10 @@ type Interface interface {
 	//     @out[0] the list of user objects matching the given user IDs
 	//
 	SearchUser([]objectid.ID) ([]*Object, error)
+
+	// UpdateUser modifies the given user objects in the underlying storage.
+	//
+	//     @inp[0] the user objects to update
+	//
+	UpdateUser([]*Object) error
 }
