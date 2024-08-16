@@ -116,6 +116,7 @@ func Create(env envvar.Env) (*server.Server, *worker.Worker, error) {
 		whn = workerhandler.New(workerhandler.Config{
 			Loc: loc,
 			Log: log,
+			Sto: sto,
 		})
 	}
 
