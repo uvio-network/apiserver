@@ -2,6 +2,7 @@ package poststorage
 
 import (
 	"encoding/json"
+	"time"
 
 	"github.com/uvio-network/apiserver/pkg/format/storageformat"
 	"github.com/uvio-network/apiserver/pkg/generic"
@@ -77,14 +78,19 @@ func (r *Redis) SearchCreated(beg int, end int) ([]*Object, error) {
 	return out, nil
 }
 
-func (r *Redis) SearchExpiry(beg int, end int) ([]*Object, error) {
+func (r *Redis) SearchExpiry() ([]*Object, error) {
 	var err error
+
+	var now time.Time
+	{
+		now = time.Now()
+	}
 
 	// val will result in a list of all post IDs within the given pagination
 	// range, if any.
 	var val []string
 	{
-		val, err = r.red.Sorted().Search().Order(storageformat.PostExpiry, beg, end)
+		val, err = r.red.Sorted().Search().Score(storageformat.PostExpiry, 0, float64(now.UnixNano()))
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
