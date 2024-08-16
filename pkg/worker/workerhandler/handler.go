@@ -3,6 +3,7 @@ package workerhandler
 import (
 	"fmt"
 
+	"github.com/uvio-network/apiserver/pkg/envvar"
 	"github.com/uvio-network/apiserver/pkg/storage"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/claimresolvehandler"
 	"github.com/xh3b4sd/locker"
@@ -11,6 +12,7 @@ import (
 )
 
 type Config struct {
+	Env envvar.Env
 	Loc locker.Interface
 	Log logger.Interface
 	Sto storage.Interface
@@ -35,7 +37,10 @@ func New(c Config) *Handler {
 
 	{
 		han = append(han, claimresolvehandler.NewSystemHandler(claimresolvehandler.SystemHandlerConfig{
+			Add: c.Env.MarketsAddress,
+			Cid: c.Env.ChainId,
 			Log: c.Log,
+			Rpc: c.Env.ChainRpcEndpoint,
 			Sto: c.Sto,
 		}))
 	}

@@ -27,15 +27,12 @@ type Interface interface {
 	//
 	SearchCreated(int, int) ([]*Object, error)
 
-	// SearchExpiry returns the post objects within the given pagination range in
-	// order of claim expiry time. Given the expiring posts [A B C D E], the first
-	// page [0 3] returns the first posts [A B C].
+	// SearchExpiry returns the post objects recorded to have expired already at
+	// the time of execution.
 	//
-	//     @inp[0] the start paging pointer defining the beginning of the page
-	//     @inp[1] the stop paging pointer defining the end of the page
-	//     @out[0] the list of post objects within the given pagination range
+	//     @out[0] the list of post objects already expired
 	//
-	SearchExpiry(int, int) ([]*Object, error)
+	SearchExpiry() ([]*Object, error)
 
 	// SearchLabel returns the post objects grouped under all of the given
 	// category labels. Multiple searches can be done for a set of labels each,

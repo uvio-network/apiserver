@@ -92,6 +92,12 @@ curl -s --request "POST" --header "Content-Type: application/json" --data '{"obj
 }
 ```
 
+Generating smart contract bindings using [abigen].
+
+```
+abigen --abi pkg/contract/marketscontract/Markets.ABI.json --pkg marketscontract --type Markets --out pkg/contract/marketscontract/marketscontract.go
+```
+
 
 
 ### testing
@@ -113,4 +119,5 @@ APISERVER_AUTH_JWKS_URL=http://localhost:7171/jwk
 
 
 
+[abigen]: https://geth.ethereum.org/docs/tools/abigen
 [Twirp]: https://github.com/twitchtv/twirp
