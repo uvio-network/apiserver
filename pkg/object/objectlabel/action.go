@@ -1,5 +1,6 @@
 package objectlabel
 
 const (
-	ActionDelete string = "delete"
+	ActionDelete  string = "delete"
+	ActionResolve string = "resolve"
 )
