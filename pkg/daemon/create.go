@@ -28,7 +28,18 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func Create(env envvar.Env) (*server.Server, *worker.Worker, error) {
+type Daemon struct {
+	env envvar.Env
+	lis net.Listener
+	loc locker.Interface
+	log logger.Interface
+	rec reconciler.Interface
+	red redigo.Interface
+	res rescue.Interface
+	sto storage.Interface
+}
+
+func Create(env envvar.Env) *Daemon {
 	var err error
 
 	var log logger.Interface
@@ -40,7 +51,7 @@ func Create(env envvar.Env) (*server.Server, *worker.Worker, error) {
 	{
 		lis, err = net.Listen("tcp", net.JoinHostPort(env.HttpHost, env.HttpPort))
 		if err != nil {
-			return nil, nil, tracer.Mask(err)
+			tracer.Panic(tracer.Mask(err))
 		}
 	}
 
@@ -82,13 +93,31 @@ func Create(env envvar.Env) (*server.Server, *worker.Worker, error) {
 
 	// --------------------------------------------------------------------- //
 
+	var dae *Daemon
+	{
+		dae = &Daemon{
+			env: env,
+			lis: lis,
+			loc: loc,
+			log: log,
+			rec: rec,
+			red: red,
+			res: res,
+			sto: sto,
+		}
+	}
+
+	return dae
+}
+
+func (d *Daemon) Server() *server.Server {
 	var shn *serverhandler.Handler
 	{
 		shn = serverhandler.New(serverhandler.Config{
-			Loc: loc,
-			Log: log,
-			Rec: rec,
-			Sto: sto,
+			Loc: d.loc,
+			Log: d.log,
+			Rec: d.rec,
+			Sto: d.sto,
 		})
 	}
 
@@ -97,27 +126,29 @@ func Create(env envvar.Env) (*server.Server, *worker.Worker, error) {
 		srv = server.New(server.Config{
 			Han: shn.Hand(),
 			Int: []twirp.Interceptor{
-				failedinterceptor.NewInterceptor(failedinterceptor.InterceptorConfig{Log: log}).Interceptor,
+				failedinterceptor.NewInterceptor(failedinterceptor.InterceptorConfig{Log: d.log}).Interceptor,
 			},
-			Lis: lis,
-			Log: log,
+			Lis: d.lis,
+			Log: d.log,
 			Mid: []mux.MiddlewareFunc{
-				corsmiddleware.NewMiddleware(corsmiddleware.MiddlewareConfig{Log: log}).Handler,
-				authmiddleware.NewMiddleware(authmiddleware.MiddlewareConfig{Aud: env.AuthJwksAud, Iss: env.AuthJwksIss, Log: log, URL: env.AuthJwksUrl}).Handler,
-				usermiddleware.NewMiddleware(usermiddleware.MiddlewareConfig{Log: log, Use: sto.User()}).Handler,
+				corsmiddleware.NewMiddleware(corsmiddleware.MiddlewareConfig{Log: d.log}).Handler,
+				authmiddleware.NewMiddleware(authmiddleware.MiddlewareConfig{Aud: d.env.AuthJwksAud, Iss: d.env.AuthJwksIss, Log: d.log, URL: d.env.AuthJwksUrl}).Handler,
+				usermiddleware.NewMiddleware(usermiddleware.MiddlewareConfig{Log: d.log, Use: d.sto.User()}).Handler,
 			},
 		})
 	}
 
-	// --------------------------------------------------------------------- //
+	return srv
+}
 
+func (d *Daemon) Worker() *worker.Worker {
 	var whn *workerhandler.Handler
 	{
 		whn = workerhandler.New(workerhandler.Config{
-			Env: env,
-			Loc: loc,
-			Log: log,
-			Sto: sto,
+			Env: d.env,
+			Loc: d.loc,
+			Log: d.log,
+			Sto: d.sto,
 		})
 	}
 
@@ -125,12 +156,12 @@ func Create(env envvar.Env) (*server.Server, *worker.Worker, error) {
 	{
 		wrk = worker.New(worker.Config{
 			Han: whn.Hand(),
-			Log: log,
-			Res: res,
+			Log: d.log,
+			Res: d.res,
 		})
 	}
 
-	return srv, wrk, nil
+	return wrk
 }
 
 func defLoc(add string) locker.Interface {
