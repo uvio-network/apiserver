@@ -9,16 +9,11 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/uvio-network/apiserver/pkg/daemon"
 	"github.com/uvio-network/apiserver/pkg/envvar"
-	"github.com/uvio-network/apiserver/pkg/server"
-	"github.com/uvio-network/apiserver/pkg/worker"
-	"github.com/xh3b4sd/tracer"
 )
 
 type run struct{}
 
 func (r *run) runE(cmd *cobra.Command, args []string) error {
-	var err error
-
 	var env envvar.Env
 	{
 		env = envvar.Load(envvar.Local)
@@ -26,18 +21,14 @@ func (r *run) runE(cmd *cobra.Command, args []string) error {
 
 	// --------------------------------------------------------------------- //
 
-	var srv *server.Server
-	var wrk *worker.Worker
+	var dae *daemon.Daemon
 	{
-		srv, wrk, err = daemon.Create(env)
-		if err != nil {
-			return tracer.Mask(err)
-		}
+		dae = daemon.Create(env)
 	}
 
 	{
-		go srv.Daemon()
-		go wrk.Daemon()
+		go dae.Server().Daemon()
+		go dae.Worker().Daemon()
 	}
 
 	// --------------------------------------------------------------------- //
