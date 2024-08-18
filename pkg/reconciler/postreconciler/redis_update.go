@@ -1,7 +1,6 @@
 package postreconciler
 
 import (
-	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
 	"github.com/uvio-network/apiserver/pkg/storage/votestorage"
@@ -15,21 +14,7 @@ const (
 	Creator      = 3
 )
 
-func (r *Redis) UpdateHash(use objectid.ID, ids []objectid.ID, has []string) ([]*poststorage.Object, error) {
-	var err error
-	var pos []*poststorage.Object
-
-	if len(ids) != len(has) {
-		return nil, tracer.Maskf(runtime.ExecutionFailedError, "%d != %d", len(ids), len(has))
-	}
-
-	{
-		pos, err = r.sto.Post().SearchPost(ids)
-		if err != nil {
-			return nil, tracer.Mask(err)
-		}
-	}
-
+func (r *Redis) UpdateHash(pos []*poststorage.Object, has []string) ([]*poststorage.Object, error) {
 	for i := range pos {
 		if pos[i].Kind != "claim" {
 			return nil, tracer.Maskf(ClaimUpdateKindError, "%s=%s", pos[i].ID, pos[i].Kind)
@@ -39,13 +24,17 @@ func (r *Redis) UpdateHash(use objectid.ID, ids []objectid.ID, has []string) ([]
 			return nil, tracer.Maskf(ClaimUpdateHashError, "%s=%s", pos[i].ID, pos[i].Lifecycle.Hash)
 		}
 
-		if pos[i].Owner != use {
-			return nil, tracer.Maskf(runtime.UserNotOwnerError, "%s != %s", pos[i].Owner, use)
-		}
-
 		{
 			pos[i].Lifecycle.Hash = has[i]
 		}
+	}
+
+	return pos, nil
+}
+
+func (r *Redis) UpdateMeta(pos []*poststorage.Object, met []string) ([]*poststorage.Object, error) {
+	for i := range pos {
+		pos[i].Meta = met[i]
 	}
 
 	return pos, nil
