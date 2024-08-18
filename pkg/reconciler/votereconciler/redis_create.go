@@ -65,6 +65,13 @@ func (r *Redis) CreateVote(inp []*votestorage.Object) ([]*votestorage.Object, er
 			}
 		}
 
+		// Ensure no votes can be cast anymore on claims that have already expired.
+		{
+			if now.After(cla.Expiry) {
+				return nil, tracer.Maskf(ClaimAlreadyExpiredError, "%d", cla.Expiry.Unix())
+			}
+		}
+
 		// Once all cross validation is done we can proceed with cross mutation. One
 		// important thing we need to do for all users is to update their staked
 		// token balances in their respective user objects.
