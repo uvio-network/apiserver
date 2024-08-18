@@ -91,7 +91,6 @@ func (r *Redis) SearchExpiry() ([]*Object, error) {
 	var val []string
 	{
 		val, err = r.red.Sorted().Search().Score(storageformat.PostExpiry, 0, float64(now.UnixNano()))
-
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
