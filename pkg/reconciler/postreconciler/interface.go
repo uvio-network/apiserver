@@ -1,7 +1,6 @@
 package postreconciler
 
 import (
-	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
 	"github.com/uvio-network/apiserver/pkg/storage/votestorage"
 )
@@ -16,15 +15,22 @@ type Interface interface {
 	CreatePost([]*poststorage.Object) ([]*poststorage.Object, error)
 
 	// UpdateHash modifies the transaction hash of the claims as provided by the
-	// given object IDs. Note that transaction hashes can only be updated once, if
-	// their prior value was empty.
+	// given post objects. Note that transaction hashes can only be updated once,
+	// if their prior value was empty.
 	//
-	//     inp[0] the calling user ID for ownership verification
-	//     inp[1] the object IDs of the claims to modify
-	//     inp[2] the transaction hashes to set as the new values
-	//     out[0] the post objects reflecting their updated transaction hashes
+	//     inp[0] the post objects of the claims to modify
+	//     inp[1] the transaction hashes to set as the new values
+	//     out[0] the post objects reflecting their updated state
 	//
-	UpdateHash(objectid.ID, []objectid.ID, []string) ([]*poststorage.Object, error)
+	UpdateHash([]*poststorage.Object, []string) ([]*poststorage.Object, error)
+
+	// UpdateMeta modifies the post meta of the provided post objects.
+	//
+	//     inp[0] the post objects of the claims to modify
+	//     inp[1] the meta data to set as the new values
+	//     out[0] the post objects reflecting their updated state
+	//
+	UpdateMeta([]*poststorage.Object, []string) ([]*poststorage.Object, error)
 
 	// UpdateVotes modifies the vote summary of the existing post objects that are
 	// linked to the provided vote objects, so that said vote summary properly
