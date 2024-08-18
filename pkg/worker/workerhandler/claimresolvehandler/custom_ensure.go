@@ -17,38 +17,57 @@ import (
 func (h *SystemHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	var err error
 
-	//     find claims with lifecycle "propose" that are expired
-	var cla []*poststorage.Object
+	// find trees with lifecycle "propose" that are expired
+	var trees []*poststorage.Object
 	{
-		cla, err = h.sto.Post().SearchExpiry()
+		trees, err = h.sto.Post().SearchExpiry()
 		if err != nil {
 			return tracer.Mask(err)
 		}
 	}
 
-	for _, x := range cla {
-		var tre *big.Int
+	for _, x := range trees {
+		var treeId *big.Int
 		{
-			tre, err = metToTre(x.Meta)
+			treeId, err = metaToTreeId(x.Meta)
 			if err != nil {
 				return tracer.Mask(err)
 			}
 		}
 
-		var det [4]marketscontract.IMarketsClaim
+		var claims [4]marketscontract.IMarketsClaim
 		{
-			det, err = h.mar.Claims(nil, tre)
+			claims, err = h.mar.Claims(nil, treeId)
 			if err != nil {
 				return tracer.Mask(err)
 			}
 		}
 
-		fmt.Printf("det %#v\n", det)
+		var claimsLength *big.Int
+		{
+			claimsLength, err = h.mar.ClaimsLength(nil, treeId)
+			if err != nil {
+				return tracer.Mask(err)
+			}
 
-		// read from chain if claim has to be resolved, just double checking
+			// sanity check - we cap the number of claims to 4 in the contract
+			if claimsLength.Cmp(big.NewInt(4)) == 1 {
+				return tracer.Maskf(runtime.ExecutionFailedError, "claims length is greater than 4")
+			}
+		}
 
-		// 1. claim is not yet resolvable, this is a bug, we just log an error,
-		// maybe send an email
+		var claim marketscontract.IMarketsClaim
+		{
+			claim = claims[claimsLength.Int64() - 1]
+		}
+
+		if claim.Status == 1 { // claim.Status == Active
+			fmt.Println("claim has to be resolved")
+		} else if claim.Status == 2 { // claim.Status == PendingVote
+			fmt.Println("claim has already been resolved")
+		} else { // this should never happen
+			fmt.Println("ERROR")
+		}
 
 		// 2. claim was already resolved, only remove claim from Redis
 
@@ -59,7 +78,7 @@ func (h *SystemHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	return nil
 }
 
-func metToTre(met string) (*big.Int, error) {
+func metaToTreeId(met string) (*big.Int, error) {
 	var err error
 
 	var spl []string
