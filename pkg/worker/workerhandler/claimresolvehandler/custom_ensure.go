@@ -6,7 +6,6 @@ import (
 	"math/big"
 	"math/rand"
 	"strconv"
-	"time"
 
 	"github.com/uvio-network/apiserver/pkg/contract/marketscontract"
 	"github.com/uvio-network/apiserver/pkg/runtime"
@@ -71,7 +70,6 @@ func (h *SystemHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 			yeaStakersLength := len(claim.Stake.YeaStakers)
 			nayStakersLength := len(claim.Stake.NayStakers)
 			if yeaStakersLength > 0 && nayStakersLength > 0 {
-				rand.Seed(time.Now().UnixNano())
 				votersLength := int(math.Min(float64(yeaStakersLength), float64(nayStakersLength)))
 				for i := 0; i < votersLength; i++ {
 					randomIndex := rand.Intn(yeaStakersLength)
