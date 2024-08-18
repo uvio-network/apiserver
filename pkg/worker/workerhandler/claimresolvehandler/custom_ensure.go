@@ -6,7 +6,7 @@ import (
 	"math/big"
 	"math/rand"
 	"strconv"
-    "time"
+	"time"
 
 	"github.com/uvio-network/apiserver/pkg/contract/marketscontract"
 	"github.com/uvio-network/apiserver/pkg/runtime"
@@ -61,7 +61,7 @@ func (h *SystemHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 
 		var claim marketscontract.IMarketsClaim
 		{
-			claim = claims[claimsLength.Int64() - 1]
+			claim = claims[claimsLength.Int64()-1]
 		}
 
 		if claim.Status == 1 { // claim.Status == Active

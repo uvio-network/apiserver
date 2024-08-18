@@ -42,7 +42,7 @@ func New(c Config) *Handler {
 			Rpc: c.Env.ChainRpcEndpoint,
 			Sto: c.Sto,
 			Cas: claimresolvehandler.ContractAddresses{
-				Markets: c.Env.MarketsAddress,
+				Markets:    c.Env.MarketsAddress,
 				Randomizer: c.Env.RandomizerAddress,
 			},
 		}))

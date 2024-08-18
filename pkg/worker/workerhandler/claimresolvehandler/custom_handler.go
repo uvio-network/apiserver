@@ -21,15 +21,15 @@ type SystemHandlerConfig struct {
 }
 
 type ContractAddresses struct {
-	Markets string
+	Markets    string
 	Randomizer string
 }
 
 type SystemHandler struct {
-	log logger.Interface
-	markets *marketscontract.Markets
+	log        logger.Interface
+	markets    *marketscontract.Markets
 	randomizer *randomizercontract.Randomizer
-	sto storage.Interface
+	sto        storage.Interface
 }
 
 func NewSystemHandler(c SystemHandlerConfig) *SystemHandler {
@@ -67,9 +67,9 @@ func NewSystemHandler(c SystemHandlerConfig) *SystemHandler {
 	}
 
 	return &SystemHandler{
-		log: c.Log,
-		markets: mar,
+		log:        c.Log,
+		markets:    mar,
 		randomizer: ran,
-		sto: c.Sto,
+		sto:        c.Sto,
 	}
 }
