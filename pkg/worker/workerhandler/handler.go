@@ -37,11 +37,14 @@ func New(c Config) *Handler {
 
 	{
 		han = append(han, claimresolvehandler.NewSystemHandler(claimresolvehandler.SystemHandlerConfig{
-			Add: c.Env.MarketsAddress,
 			Cid: c.Env.ChainId,
 			Log: c.Log,
 			Rpc: c.Env.ChainRpcEndpoint,
 			Sto: c.Sto,
+			Cas: claimresolvehandler.ContractAddresses{
+				Markets: c.Env.MarketsAddress,
+				Randomizer: c.Env.RandomizerAddress,
+			},
 		}))
 	}
 

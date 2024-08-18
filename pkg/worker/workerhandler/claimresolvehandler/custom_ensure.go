@@ -2,8 +2,11 @@ package claimresolvehandler
 
 import (
 	"fmt"
+	"math"
 	"math/big"
+	"math/rand"
 	"strconv"
+    "time"
 
 	"github.com/uvio-network/apiserver/pkg/contract/marketscontract"
 	"github.com/uvio-network/apiserver/pkg/runtime"
@@ -37,7 +40,7 @@ func (h *SystemHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 
 		var claims [4]marketscontract.IMarketsClaim
 		{
-			claims, err = h.mar.Claims(nil, treeId)
+			claims, err = h.markets.Claims(nil, treeId)
 			if err != nil {
 				return tracer.Mask(err)
 			}
@@ -45,14 +48,14 @@ func (h *SystemHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 
 		var claimsLength *big.Int
 		{
-			claimsLength, err = h.mar.ClaimsLength(nil, treeId)
+			claimsLength, err = h.markets.ClaimsLength(nil, treeId)
 			if err != nil {
 				return tracer.Mask(err)
 			}
 
 			// sanity check - we cap the number of claims to 4 in the contract
 			if claimsLength.Cmp(big.NewInt(4)) == 1 {
-				return tracer.Maskf(runtime.ExecutionFailedError, "claims length is greater than 4")
+				return tracer.Maskf(runtime.ExecutionFailedError, "claimresolverhandler: invalid state: too many claims")
 			}
 		}
 
@@ -62,11 +65,38 @@ func (h *SystemHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 
 		if claim.Status == 1 { // claim.Status == Active
-			fmt.Println("claim has to be resolved")
+
+			var yeaVoters []string
+			var nayVoters []string
+			yeaStakersLength := len(claim.Stake.YeaStakers)
+			nayStakersLength := len(claim.Stake.NayStakers)
+			if yeaStakersLength > 0 && nayStakersLength > 0 {
+				rand.Seed(time.Now().UnixNano())
+				votersLength := int(math.Min(float64(yeaStakersLength), float64(nayStakersLength)))
+				for i := 0; i < votersLength; i++ {
+					randomIndex := rand.Intn(yeaStakersLength)
+					yeaVoters = append(yeaVoters, claim.Stake.YeaStakers[randomIndex].Hex())
+
+					randomIndex = rand.Intn(nayStakersLength)
+					nayVoters = append(nayVoters, claim.Stake.NayStakers[randomIndex].Hex())
+				}
+			} else if yeaStakersLength > 0 && nayStakersLength == 0 {
+				randomIndex := rand.Intn(yeaStakersLength)
+				yeaVoters = append(yeaVoters, claim.Stake.YeaStakers[randomIndex].Hex())
+			} else if nayStakersLength > 0 && yeaStakersLength == 0 {
+				randomIndex := rand.Intn(nayStakersLength)
+				nayVoters = append(nayVoters, claim.Stake.NayStakers[randomIndex].Hex())
+			} else {
+				return tracer.Maskf(runtime.ExecutionFailedError, "claimresolverhandler: invalid state: invalid stakers")
+			}
+
+			fmt.Println("yeaVoters: ", yeaVoters)
+			fmt.Println("nayVoters: ", nayVoters)
+
 		} else if claim.Status == 2 { // claim.Status == PendingVote
-			fmt.Println("claim has already been resolved")
+			fmt.Println("claimresolverhandler: claim has already been resolved")
 		} else { // this should never happen
-			fmt.Println("ERROR")
+			return tracer.Maskf(runtime.ExecutionFailedError, "claimresolverhandler: invalid state: invalid claim status")
 		}
 
 		// 2. claim was already resolved, only remove claim from Redis

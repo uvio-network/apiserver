@@ -6,22 +6,29 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/uvio-network/apiserver/pkg/contract/marketscontract"
+	"github.com/uvio-network/apiserver/pkg/contract/randomizercontract"
 	"github.com/uvio-network/apiserver/pkg/storage"
 	"github.com/xh3b4sd/logger"
 	"github.com/xh3b4sd/tracer"
 )
 
 type SystemHandlerConfig struct {
-	Add string
 	Cid string
 	Log logger.Interface
 	Rpc string
 	Sto storage.Interface
+	Cas ContractAddresses
+}
+
+type ContractAddresses struct {
+	Markets string
+	Randomizer string
 }
 
 type SystemHandler struct {
 	log logger.Interface
-	mar *marketscontract.Markets
+	markets *marketscontract.Markets
+	randomizer *randomizercontract.Randomizer
 	sto storage.Interface
 }
 
@@ -45,7 +52,15 @@ func NewSystemHandler(c SystemHandlerConfig) *SystemHandler {
 
 	var mar *marketscontract.Markets
 	{
-		mar, err = marketscontract.NewMarkets(common.HexToAddress(c.Add), eth)
+		mar, err = marketscontract.NewMarkets(common.HexToAddress(c.Cas.Markets), eth)
+		if err != nil {
+			tracer.Panic(tracer.Mask(err))
+		}
+	}
+
+	var ran *randomizercontract.Randomizer
+	{
+		ran, err = randomizercontract.NewRandomizer(common.HexToAddress(c.Cas.Randomizer), eth)
 		if err != nil {
 			tracer.Panic(tracer.Mask(err))
 		}
@@ -53,7 +68,8 @@ func NewSystemHandler(c SystemHandlerConfig) *SystemHandler {
 
 	return &SystemHandler{
 		log: c.Log,
-		mar: mar,
+		markets: mar,
+		randomizer: ran,
 		sto: c.Sto,
 	}
 }
