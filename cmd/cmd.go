@@ -5,6 +5,7 @@ import (
 	"github.com/uvio-network/apiserver/cmd/daemon"
 	"github.com/uvio-network/apiserver/cmd/fakeit"
 	"github.com/uvio-network/apiserver/cmd/version"
+	"github.com/uvio-network/apiserver/cmd/signer"
 	"github.com/xh3b4sd/tracer"
 )
 
@@ -49,6 +50,16 @@ func New() (*cobra.Command, error) {
 		}
 	}
 
+	var sig *cobra.Command
+	{
+		c := signer.Config{}
+
+		sig, err = signer.New(c)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
 	// --------------------------------------------------------------------- //
 
 	var c *cobra.Command
@@ -78,6 +89,7 @@ func New() (*cobra.Command, error) {
 		c.AddCommand(dae)
 		c.AddCommand(fak)
 		c.AddCommand(ver)
+		c.AddCommand(sig)
 	}
 
 	return c, nil
