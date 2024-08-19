@@ -4,8 +4,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/uvio-network/apiserver/cmd/daemon"
 	"github.com/uvio-network/apiserver/cmd/fakeit"
-	"github.com/uvio-network/apiserver/cmd/version"
 	"github.com/uvio-network/apiserver/cmd/signer"
+	"github.com/uvio-network/apiserver/cmd/version"
 	"github.com/xh3b4sd/tracer"
 )
 
