@@ -9,6 +9,13 @@ type Interface interface {
 	//
 	CreatePost([]*Object) error
 
+	// DeleteExpiry removes the referenced IDs of the given post objects from the
+	// PostExpiry index.
+	//
+	//     @inp[0] the post objects to remove from the PostExpiry index
+	//
+	DeleteExpiry(inp []*Object) error
+
 	// SearchComment returns the post objects that represent market specific
 	// comments. All of the comments on a claim can be fetched using this method.
 	//
