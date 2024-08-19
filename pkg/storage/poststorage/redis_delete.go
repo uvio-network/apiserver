@@ -9,7 +9,7 @@ func (r *Redis) DeleteExpiry(inp []*Object) error {
 	var err error
 
 	for i := range inp {
-		err = r.red.Sorted().Delete().Score(storageformat.PostExpiry, float64(inp[i].Expiry.UnixNano()))
+		err = r.red.Sorted().Delete().Value(storageformat.PostExpiry, inp[i].ID.String())
 		if err != nil {
 			return tracer.Mask(err)
 		}
