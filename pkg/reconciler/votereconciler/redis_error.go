@@ -4,6 +4,11 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
+var ClaimAlreadyExpiredError = &tracer.Error{
+	Kind: "ClaimAlreadyExpiredError",
+	Desc: "The request expects the referenced claim expiry not to have passed already. The referenced claim expiry was found to have passed already. Therefore the request failed.",
+}
+
 var StakeLifecycleInvalidError = &tracer.Error{
 	Kind: "StakeLifecycleInvalidError",
 	Desc: "The request expects the lifecycle of the referenced claim to be one of [adjourn dispute nullify propose]. The lifecycle of the referenced claim was not found to be one of those values. Therefore the request failed.",

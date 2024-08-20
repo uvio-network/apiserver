@@ -135,7 +135,7 @@ func (r *run) randomClaim(fak *gofakeit.Faker) *post.CreateI {
 				{
 					Public: &post.CreateI_Object_Public{
 						Chain:     "421614",
-						Expiry:    converter.TimeToString(time.Now().AddDate(0, fak.Number(1, 9), fak.Number(10, 30))),
+						Expiry:    converter.TimeToString(time.Now().UTC().AddDate(0, fak.Number(1, 9), fak.Number(10, 30))),
 						Hash:      has,
 						Kind:      "claim",
 						Labels:    strings.Join(lab[:fak.Number(1, 4)], ","),
