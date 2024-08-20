@@ -1,6 +1,7 @@
 package claimresolvehandler
 
 import (
+	"context"
 	"fmt"
 	"math"
 	"math/big"
@@ -82,7 +83,11 @@ func (h *SystemHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 				randomIndex := rand.Intn(nayStakersLength)
 				nayVoters = append(nayVoters, claim.Stake.NayStakers[randomIndex].Hex())
 			} else {
-				return tracer.Maskf(runtime.ExecutionFailedError, "claimresolverhandler: invalid state: invalid stakers")
+				h.log.Log(
+					context.Background(),
+					"level", "info",
+					"message", "claimresolverhandler: invalid state: invalid stakers",
+				)
 			}
 
 			fmt.Println("yeaVoters: ", yeaVoters)
@@ -91,7 +96,11 @@ func (h *SystemHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		} else if claim.Status == 2 { // claim.Status == PendingVote
 			fmt.Println("claimresolverhandler: claim has already been resolved")
 		} else { // this should never happen
-			return tracer.Maskf(runtime.ExecutionFailedError, "claimresolverhandler: invalid state: invalid claim status")
+			h.log.Log(
+				context.Background(),
+				"level", "info",
+				"message", "claimresolverhandler: invalid state: invalid claim status",
+			)
 		}
 
 		// 2. claim was already resolved, only remove claim from Redis
