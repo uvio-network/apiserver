@@ -14,6 +14,7 @@ import (
 
 type SystemHandlerConfig struct {
 	Cid string
+	Pk  string
 	Log logger.Interface
 	Rpc string
 	Sto storage.Interface
@@ -27,9 +28,12 @@ type ContractAddresses struct {
 
 type SystemHandler struct {
 	log        logger.Interface
+	pk         string
 	markets    *marketscontract.Markets
 	randomizer *randomizercontract.Randomizer
+	client     *ethclient.Client
 	sto        storage.Interface
+	Cas        ContractAddresses
 }
 
 func NewSystemHandler(c SystemHandlerConfig) *SystemHandler {
@@ -68,8 +72,11 @@ func NewSystemHandler(c SystemHandlerConfig) *SystemHandler {
 
 	return &SystemHandler{
 		log:        c.Log,
+		pk:         c.Pk,
 		markets:    mar,
 		randomizer: ran,
+		client:     eth,
 		sto:        c.Sto,
+		Cas:        c.Cas,
 	}
 }

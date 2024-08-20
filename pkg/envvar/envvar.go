@@ -18,6 +18,7 @@ type Env struct {
 	AuthJwksIss       string `split_words:"true" required:"true"`
 	AuthJwksUrl       string `split_words:"true" required:"true"`
 	ChainId           string `split_words:"true" required:"true"`
+	PrivateKey        string `split_words:"true" required:"true"`
 	ChainRpcEndpoint  string `split_words:"true" required:"true"`
 	HttpHost          string `split_words:"true" default:"127.0.0.1"`
 	HttpPort          string `split_words:"true" default:"7777"`

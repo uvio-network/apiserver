@@ -38,6 +38,7 @@ func New(c Config) *Handler {
 	{
 		han = append(han, claimresolvehandler.NewSystemHandler(claimresolvehandler.SystemHandlerConfig{
 			Cid: c.Env.ChainId,
+			Pk:  c.Env.PrivateKey,
 			Log: c.Log,
 			Rpc: c.Env.ChainRpcEndpoint,
 			Sto: c.Sto,

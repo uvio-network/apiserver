@@ -2,13 +2,20 @@ package claimresolvehandler
 
 import (
 	"context"
+	"crypto/ecdsa"
 	"fmt"
 	"math"
 	"math/big"
 	"math/rand"
 	"strconv"
 
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/ethereum/go-ethereum/ethclient"
+
 	"github.com/uvio-network/apiserver/pkg/contract/marketscontract"
+	randomizer "github.com/uvio-network/apiserver/pkg/contract/randomizercontract"
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/uvio-network/apiserver/pkg/server/converter"
@@ -91,9 +98,10 @@ func (h *SystemHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 				)
 			}
 
-			fmt.Println("yeaVoters: ", yeaVoters)
-			fmt.Println("nayVoters: ", nayVoters)
-
+			err = callPrepareVote(h.Cas.Markets, h.client, claim, h.pk, treeId, yeaVoters, nayVoters)
+			if err != nil {
+				return tracer.Mask(err)
+			}
 		} else if claim.Status == 2 { // claim.Status == PendingVote
 			h.log.Log(
 				context.Background(),
@@ -109,7 +117,6 @@ func (h *SystemHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 
 		// 2. claim was already resolved, only remove claim from Redis
-
 		// last step when everything is nice and clean, remove the claim ID from
 		// Redis post/expiry
 	}
@@ -144,4 +151,74 @@ func metaToTreeId(met string) (*big.Int, error) {
 	}
 
 	return big.NewInt(tre), nil
+}
+
+func callPrepareVote(
+	marketsAddress string,
+	client *ethclient.Client,
+	claim marketscontract.IMarketsClaim,
+	pk string,
+	treeId *big.Int,
+	yeaVoters []string,
+	nayVoters []string,
+) error {
+
+	var err error
+
+	var yeaVotersAddrs []common.Address
+	{
+		for _, addr := range yeaVoters {
+			yeaVotersAddrs = append(yeaVotersAddrs, common.HexToAddress(addr))
+		}
+	}
+
+	var nayVotersAddrs []common.Address
+	{
+		for _, addr := range nayVoters {
+			nayVotersAddrs = append(nayVotersAddrs, common.HexToAddress(addr))
+		}
+	}
+
+	privateKey, err := crypto.HexToECDSA(pk)
+	if err != nil {
+		fmt.Println("error: ", err)
+	}
+
+	publicKey := privateKey.Public()
+	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
+	if !ok {
+		fmt.Println("error casting public key to ECDSA")
+	}
+
+	fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
+	nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
+	if err != nil {
+		fmt.Println("error: ", err)
+	}
+
+	gasPrice, err := client.SuggestGasPrice(context.Background())
+	if err != nil {
+		fmt.Println("error: ", err)
+	}
+
+	auth := bind.NewKeyedTransactor(privateKey)
+	auth.Nonce = big.NewInt(int64(nonce))
+	auth.Value = big.NewInt(0)      // in wei
+	auth.GasLimit = uint64(3000000) // in units
+	auth.GasPrice = gasPrice
+
+	address := common.HexToAddress(marketsAddress)
+	instance, err := randomizer.NewRandomizer(address, client)
+	if err != nil {
+		fmt.Println("error: ", err)
+	}
+
+	tx, err := instance.PrepareVote(auth, yeaVotersAddrs, nayVotersAddrs, treeId)
+	if err != nil {
+		fmt.Println("error: ", err)
+	}
+
+	fmt.Printf("tx sent: %s", tx.Hash().Hex())
+
+	return nil
 }
