@@ -57,7 +57,7 @@ func (h *SystemHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 
 		var claim marketscontract.IMarketsClaim
 		{
-			claim = treeClaims[lastClaimIndex - 1]
+			claim = treeClaims[lastClaimIndex-1]
 		}
 
 		if claim.Status == 1 { // claim.Status == Active
