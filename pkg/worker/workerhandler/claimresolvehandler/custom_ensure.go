@@ -94,7 +94,11 @@ func (h *SystemHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 			fmt.Println("nayVoters: ", nayVoters)
 
 		} else if claim.Status == 2 { // claim.Status == PendingVote
-			fmt.Println("claimresolverhandler: claim has already been resolved")
+			h.log.Log(
+				context.Background(),
+				"level", "info",
+				"message", "claimresolverhandler: claim has already been resolved",
+			)
 		} else { // this should never happen
 			h.log.Log(
 				context.Background(),
