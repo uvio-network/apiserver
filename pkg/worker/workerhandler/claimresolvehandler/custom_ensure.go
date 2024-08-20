@@ -118,6 +118,11 @@ func (h *SystemHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		// 2. claim was already resolved, only remove claim from Redis
 		// last step when everything is nice and clean, remove the claim ID from
 		// Redis post/expiry
+		// also need to update the claim status (?)
+		err = h.sto.Post().DeleteExpiry([]*poststorage.Object{x})
+		if err != nil {
+			return tracer.Mask(err)
+		}
 	}
 
 	return nil
