@@ -54,16 +54,6 @@ var ClaimLifecycleInvalidError = &tracer.Error{
 	Desc: "The request expects the claim lifecycle to be one of [adjourn dispute nullify propose resolve]. The claim lifecycle was not found to be one of those values. Therefore the request failed.",
 }
 
-var ClaimMetaEmptyError = &tracer.Error{
-	Kind: "ClaimMetaEmptyError",
-	Desc: "The request expects the claim meta not to be empty. The claim meta was found to be empty. Therefore the request failed.",
-}
-
-var ClaimMetaInvalidError = &tracer.Error{
-	Kind: "ClaimMetaInvalidError",
-	Desc: "The request expects the claim meta to be empty. The claim meta was not found to be empty. Therefore the request failed.",
-}
-
 var ClaimParentEmptyError = &tracer.Error{
 	Kind: "ClaimParentEmptyError",
 	Desc: "The request expects the claim parent not to be empty. The claim parent was found to be empty. Therefore the request failed.",

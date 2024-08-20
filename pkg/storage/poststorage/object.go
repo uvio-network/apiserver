@@ -95,15 +95,6 @@ func (o *Object) Verify() error {
 	}
 
 	{
-		if o.Kind == "claim" && o.Meta == "" {
-			return tracer.Mask(ClaimMetaEmptyError)
-		}
-		if o.Kind == "comment" && o.Meta != "" {
-			return tracer.Mask(ClaimMetaInvalidError)
-		}
-	}
-
-	{
 		// Any claim with lifecycle other than "propose" must reference a parent.
 		if o.Kind == "claim" && !o.Lifecycle.Is(objectlabel.LifecyclePropose) && o.Parent == "" {
 			return tracer.Maskf(ClaimParentEmptyError, o.Lifecycle.String())
