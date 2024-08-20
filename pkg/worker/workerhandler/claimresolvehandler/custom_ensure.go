@@ -45,22 +45,19 @@ func (h *SystemHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 			}
 		}
 
-		var claimsLength *big.Int
+		var lastClaimIndex int
 		{
-			claimsLength, err = h.markets.ClaimsLength(nil, treeId)
-			if err != nil {
-				return tracer.Mask(err)
-			}
-
-			// sanity check - we cap the number of claims to 4 in the contract
-			if claimsLength.Cmp(big.NewInt(4)) == 1 {
-				return tracer.Maskf(runtime.ExecutionFailedError, "claimresolverhandler: invalid state: too many claims")
+			for i, claim := range treeClaims {
+				if claim.Expiration.Cmp(big.NewInt(0)) == 0 {
+					lastClaimIndex = i
+					break
+				}
 			}
 		}
 
 		var claim marketscontract.IMarketsClaim
 		{
-			claim = treeClaims[claimsLength.Int64()-1]
+			claim = treeClaims[lastClaimIndex - 1]
 		}
 
 		if claim.Status == 1 { // claim.Status == Active
