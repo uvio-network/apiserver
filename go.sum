@@ -221,8 +221,8 @@ github.com/tyler-smith/go-bip39 v1.1.0 h1:5eUemwrMargf3BSLRRCalXT93Ns6pQJIjYQN2n
 github.com/tyler-smith/go-bip39 v1.1.0/go.mod h1:gUYDtqQw1JS3ZJ8UWVcGTGqqr6YIN3CWg+kkNaLt55U=
 github.com/urfave/cli/v2 v2.25.7 h1:VAzn5oq403l5pHjc4OhD54+XGO9cdKVL/7lDjF+iKUs=
 github.com/urfave/cli/v2 v2.25.7/go.mod h1:8qnjx1vcq5s2/wpsqoZFndg2CE5tNFyrTvS6SinrnYQ=
-github.com/uvio-network/apigocode v0.1.13 h1:sSAdrLsL++/SoV4q/04A6T6viHFx1ltZeGPWSbI/jAw=
-github.com/uvio-network/apigocode v0.1.13/go.mod h1:Kz+Xg6Y+caMKXUfvPHF5zcafnVeTOkClQ6ZzsbzarPY=
+github.com/uvio-network/apigocode v0.1.14 h1:cwYVX7Hfn/zcdoUCWnpqs+ONnOrdqj+QnJoYB+QvKng=
+github.com/uvio-network/apigocode v0.1.14/go.mod h1:Kz+Xg6Y+caMKXUfvPHF5zcafnVeTOkClQ6ZzsbzarPY=
 github.com/xh3b4sd/breakr v0.1.0 h1:ZdQPaocCc2ac4ipEdc3eaq1M0zeg54s1kC7QZQn3TLI=
 github.com/xh3b4sd/breakr v0.1.0/go.mod h1:dhU5gRl07UxonMdO6KzoGKLN545cWXPd3viKzw2bPPY=
 github.com/xh3b4sd/locker v0.1.0 h1:EqrhuBjYCsDckkAAH3OPs4QxmQWDvcUXjQRoos8pFYM=

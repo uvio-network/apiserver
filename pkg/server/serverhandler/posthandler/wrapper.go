@@ -143,7 +143,7 @@ func searchInternEmpty(x *post.SearchI_Object_Intern) bool {
 }
 
 func searchPublicEmpty(x *post.SearchI_Object_Public) bool {
-	return x == nil || (x.Labels == "")
+	return x == nil || (x.Labels == "" && x.Lifecycle == "")
 }
 
 func searchSymbolEmpty(x *post.SearchI_Object_Symbol) bool {
