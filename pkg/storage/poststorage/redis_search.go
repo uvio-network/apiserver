@@ -83,7 +83,7 @@ func (r *Redis) SearchExpiry() ([]*Object, error) {
 
 	var now time.Time
 	{
-		now = time.Now()
+		now = time.Now().UTC()
 	}
 
 	// val will result in a list of all post IDs within the given pagination
