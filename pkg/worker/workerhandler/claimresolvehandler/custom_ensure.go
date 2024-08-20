@@ -9,6 +9,7 @@ import (
 	"strconv"
 
 	"github.com/uvio-network/apiserver/pkg/contract/marketscontract"
+	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/uvio-network/apiserver/pkg/server/converter"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
@@ -23,7 +24,7 @@ func (h *SystemHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	// find claims with lifecycle "propose" that are expired
 	var claims []*poststorage.Object
 	{
-		claims, err = h.sto.Post().SearchExpiry()
+		claims, err = h.sto.Post().SearchExpiry(objectlabel.LifecyclePropose)
 		if err != nil {
 			return tracer.Mask(err)
 		}

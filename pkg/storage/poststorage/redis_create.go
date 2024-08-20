@@ -61,7 +61,7 @@ func (r *Redis) CreatePost(inp []*Object) error {
 			// specified claim expiry. This helps us to automate the progress on claim
 			// trees. For instance we can run background jobs that look for expiring
 			// claims and ensure the creation of claims in their next lifecycle phase.
-			err = r.red.Sorted().Create().Score(storageformat.PostExpiry, inp[i].ID.String(), float64(inp[i].Expiry.UnixNano()))
+			err = r.red.Sorted().Create().Score(posExp(inp[i].Lifecycle.Data), inp[i].ID.String(), float64(inp[i].Expiry.UnixNano()))
 			if err != nil {
 				return tracer.Mask(err)
 			}
