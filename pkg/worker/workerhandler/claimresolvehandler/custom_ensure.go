@@ -19,16 +19,16 @@ import (
 func (h *SystemHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	var err error
 
-	// find trees with lifecycle "propose" that are expired
-	var trees []*poststorage.Object
+	// find claims with lifecycle "propose" that are expired
+	var claims []*poststorage.Object
 	{
-		trees, err = h.sto.Post().SearchExpiry()
+		claims, err = h.sto.Post().SearchExpiry()
 		if err != nil {
 			return tracer.Mask(err)
 		}
 	}
 
-	for _, x := range trees {
+	for _, x := range claims {
 		var treeId *big.Int
 		{
 			treeId, err = metaToTreeId(x.Meta)
@@ -37,9 +37,9 @@ func (h *SystemHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 			}
 		}
 
-		var claims [4]marketscontract.IMarketsClaim
+		var treeClaims [4]marketscontract.IMarketsClaim
 		{
-			claims, err = h.markets.Claims(nil, treeId)
+			treeClaims, err = h.markets.Claims(nil, treeId)
 			if err != nil {
 				return tracer.Mask(err)
 			}
@@ -60,7 +60,7 @@ func (h *SystemHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 
 		var claim marketscontract.IMarketsClaim
 		{
-			claim = claims[claimsLength.Int64()-1]
+			claim = treeClaims[claimsLength.Int64()-1]
 		}
 
 		if claim.Status == 1 { // claim.Status == Active
