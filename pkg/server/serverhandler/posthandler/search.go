@@ -22,6 +22,7 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 
 	var ids []objectid.ID
 	var lab [][]string
+	var lif []string
 	var own []objectid.ID
 	var pag []int
 	var tim bool
@@ -41,6 +42,10 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 			if len(lis) != 0 {
 				lab = append(lab, lis)
 			}
+		}
+
+		if x.Public != nil && x.Public.Lifecycle != "" {
+			lif = append(lif, x.Public.Lifecycle)
 		}
 
 		if x.Intern != nil && x.Intern.Owner != "" {
@@ -110,6 +115,19 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 
 	if len(lab) != 0 {
 		lis, err := h.sto.Post().SearchLabel(lab)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+
+		out = append(out, lis...)
+	}
+
+	//
+	// Search posts by lifecycle.
+	//
+
+	if len(lif) != 0 {
+		lis, err := h.sto.Post().SearchLifecycle(lif)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
