@@ -24,11 +24,11 @@ const (
 	// trees, for creating claims of kind "resolve" once a claim of kind "propose"
 	// expires.
 	//
-	//     symbol key           claim IDs
-	//                    ->
-	//     post/expiry          3456,5678
+	//     symbol key                             claim IDs
+	//                                      ->
+	//     post/lifecycle/propose/expiry          3456,5678
 	//
-	PostExpiry = "post/expiry"
+	PostExpiry = "post/lifecycle/%s/expiry"
 
 	// PostLabel is used to store all claim IDs associated to a given label name.
 	// This key allows us to search for all claims that are categorized under any
@@ -44,9 +44,9 @@ const (
 	// configuration. Using that mapping we can search e.g. for all disputes on
 	// the platform.
 	//
-	//     lifecycle name             claim IDs
-	//                          ->
-	//     post/lifecycle/%s          3456,5678
+	//     lifecycle name                  claim IDs
+	//                               ->
+	//     post/lifecycle/propose          3456,5678
 	//
 	PostLifecycle = "post/lifecycle/%s"
 

@@ -40,6 +40,10 @@ func posCom(oid objectid.ID) string {
 	return fmt.Sprintf(storageformat.PostComment, oid)
 }
 
+func posExp(str objectlabel.DesiredLifecycle) string {
+	return fmt.Sprintf(storageformat.PostExpiry, str)
+}
+
 func posLab(str string) string {
 	return fmt.Sprintf(storageformat.PostLabel, str)
 }

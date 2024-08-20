@@ -7,6 +7,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/format/storageformat"
 	"github.com/uvio-network/apiserver/pkg/generic"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
+	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/xh3b4sd/redigo/simple"
 	"github.com/xh3b4sd/tracer"
@@ -78,7 +79,7 @@ func (r *Redis) SearchCreated(beg int, end int) ([]*Object, error) {
 	return out, nil
 }
 
-func (r *Redis) SearchExpiry() ([]*Object, error) {
+func (r *Redis) SearchExpiry(lif objectlabel.DesiredLifecycle) ([]*Object, error) {
 	var err error
 
 	var now time.Time
@@ -90,7 +91,7 @@ func (r *Redis) SearchExpiry() ([]*Object, error) {
 	// range, if any.
 	var val []string
 	{
-		val, err = r.red.Sorted().Search().Score(storageformat.PostExpiry, 0, float64(now.UnixNano()))
+		val, err = r.red.Sorted().Search().Score(posExp(lif), 0, float64(now.UnixNano()))
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}

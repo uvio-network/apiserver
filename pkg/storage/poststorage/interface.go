@@ -1,6 +1,9 @@
 package poststorage
 
-import "github.com/uvio-network/apiserver/pkg/object/objectid"
+import (
+	"github.com/uvio-network/apiserver/pkg/object/objectid"
+	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
+)
 
 type Interface interface {
 	// CreatePost persists new post objects in the underlying storage.
@@ -10,7 +13,7 @@ type Interface interface {
 	CreatePost([]*Object) error
 
 	// DeleteExpiry removes the referenced IDs of the given post objects from the
-	// PostExpiry index.
+	// lifecycle specific PostExpiry index.
 	//
 	//     @inp[0] the post objects to remove from the PostExpiry index
 	//
@@ -34,12 +37,12 @@ type Interface interface {
 	//
 	SearchCreated(int, int) ([]*Object, error)
 
-	// SearchExpiry returns the post objects recorded to have expired already at
-	// the time of execution.
+	// SearchExpiry returns the lifecycle specific post objects recorded to have
+	// expired already at the time of execution.
 	//
 	//     @out[0] the list of post objects already expired
 	//
-	SearchExpiry() ([]*Object, error)
+	SearchExpiry(objectlabel.DesiredLifecycle) ([]*Object, error)
 
 	// SearchLabel returns the post objects grouped under all of the given
 	// category labels. Multiple searches can be done for a set of labels each,
