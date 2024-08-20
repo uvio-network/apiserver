@@ -12,7 +12,6 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/ethclient"
 
 	"github.com/uvio-network/apiserver/pkg/contract/marketscontract"
 	randomizer "github.com/uvio-network/apiserver/pkg/contract/randomizercontract"
@@ -98,7 +97,7 @@ func (h *SystemHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 				)
 			}
 
-			err = callPrepareVote(h.Cas.Markets, h.client, claim, h.pk, treeId, yeaVoters, nayVoters)
+			err = h.callPrepareVote(claim, treeId, yeaVoters, nayVoters)
 			if err != nil {
 				return tracer.Mask(err)
 			}
@@ -153,11 +152,8 @@ func metaToTreeId(met string) (*big.Int, error) {
 	return big.NewInt(tre), nil
 }
 
-func callPrepareVote(
-	marketsAddress string,
-	client *ethclient.Client,
+func (h *SystemHandler) callPrepareVote(
 	claim marketscontract.IMarketsClaim,
-	pk string,
 	treeId *big.Int,
 	yeaVoters []string,
 	nayVoters []string,
@@ -179,26 +175,26 @@ func callPrepareVote(
 		}
 	}
 
-	privateKey, err := crypto.HexToECDSA(pk)
+	privateKey, err := crypto.HexToECDSA(h.pk)
 	if err != nil {
-		fmt.Println("error: ", err)
+		return tracer.Mask(err)
 	}
 
 	publicKey := privateKey.Public()
 	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
 	if !ok {
-		fmt.Println("error casting public key to ECDSA")
+		// return tracer.Mask(ok) // what should i put here? `ok` fails
 	}
 
 	fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
-	nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
+	nonce, err := h.client.PendingNonceAt(context.Background(), fromAddress)
 	if err != nil {
-		fmt.Println("error: ", err)
+		return tracer.Mask(err)
 	}
 
-	gasPrice, err := client.SuggestGasPrice(context.Background())
+	gasPrice, err := h.client.SuggestGasPrice(context.Background())
 	if err != nil {
-		fmt.Println("error: ", err)
+		return tracer.Mask(err)
 	}
 
 	auth := bind.NewKeyedTransactor(privateKey)
@@ -207,15 +203,15 @@ func callPrepareVote(
 	auth.GasLimit = uint64(3000000) // in units
 	auth.GasPrice = gasPrice
 
-	address := common.HexToAddress(marketsAddress)
-	instance, err := randomizer.NewRandomizer(address, client)
+	address := common.HexToAddress(h.Cas.Markets)
+	instance, err := randomizer.NewRandomizer(address, h.client)
 	if err != nil {
-		fmt.Println("error: ", err)
+		return tracer.Mask(err)
 	}
 
 	tx, err := instance.PrepareVote(auth, yeaVotersAddrs, nayVotersAddrs, treeId)
 	if err != nil {
-		fmt.Println("error: ", err)
+		return tracer.Mask(err)
 	}
 
 	fmt.Printf("tx sent: %s", tx.Hash().Hex())
