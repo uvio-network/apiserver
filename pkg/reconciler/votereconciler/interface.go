@@ -1,7 +1,6 @@
 package votereconciler
 
 import (
-	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/storage/votestorage"
 )
 
@@ -15,13 +14,12 @@ type Interface interface {
 	CreateVote([]*votestorage.Object) ([]*votestorage.Object, error)
 
 	// UpdateHash modifies the transaction hash of the votes as provided by the
-	// given object IDs. Note that transaction hashes can only be updated once, if
-	// their prior value was empty.
+	// given vote objects. Note that transaction hashes can only be updated once,
+	// if their prior value was empty.
 	//
-	//     inp[0] the calling user ID for ownership verification
-	//     inp[1] the object IDs of the votes to modify
-	//     inp[2] the transaction hashes to set as the new values
-	//     out[0] the vote objects reflecting their updated transaction hashes
+	//     inp[0] the vote objects of the votes to modify
+	//     inp[1] the transaction hashes to set as the new values
+	//     out[0] the vote objects reflecting their updated state
 	//
-	UpdateHash(objectid.ID, []objectid.ID, []string) ([]*votestorage.Object, error)
+	UpdateHash([]*votestorage.Object, []string) ([]*votestorage.Object, error)
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/uvio-network/apigocode/pkg/vote"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/object/objectstatus"
+	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/uvio-network/apiserver/pkg/server/context/userid"
 	"github.com/uvio-network/apiserver/pkg/storage/votestorage"
 	"github.com/xh3b4sd/tracer"
@@ -13,7 +14,6 @@ import (
 
 func (h *Handler) Update(ctx context.Context, req *vote.UpdateI) (*vote.UpdateO, error) {
 	var err error
-	var out []string
 
 	var use objectid.ID
 	{
@@ -30,27 +30,52 @@ func (h *Handler) Update(ctx context.Context, req *vote.UpdateI) (*vote.UpdateO,
 	}
 
 	//
+	// Search for all relevant vote objects.
+	//
+
+	var vot []*votestorage.Object
+	{
+		vot, err = h.sto.Vote().SearchVote(ids)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	//
+	// Verify the ownership of the given resources.
+	//
+
+	for i := range vot {
+		if vot[i].Owner != use {
+			return nil, tracer.Maskf(runtime.UserNotOwnerError, "%s != %s", vot[i].Owner, use)
+		}
+	}
+
+	//
 	// Update the vote hash.
 	//
 
 	if len(has) != 0 {
-		var upd []*votestorage.Object
+		if len(ids) != len(has) {
+			return nil, tracer.Maskf(runtime.ExecutionFailedError, "%d != %d", len(ids), len(has))
+		}
+
 		{
-			upd, err = h.rec.Vote().UpdateHash(use, ids, has)
+			vot, err = h.rec.Vote().UpdateHash(vot, has)
 			if err != nil {
 				return nil, tracer.Mask(err)
 			}
 		}
+	}
 
-		{
-			err = h.sto.Vote().UpdateVote(upd)
-			if err != nil {
-				return nil, tracer.Mask(err)
-			}
-		}
+	//
+	// Update the given resources.
+	//
 
-		{
-			out = append(out, objectstatus.Updated)
+	{
+		err = h.sto.Vote().UpdateVote(vot)
+		if err != nil {
+			return nil, tracer.Mask(err)
 		}
 	}
 
@@ -63,10 +88,10 @@ func (h *Handler) Update(ctx context.Context, req *vote.UpdateI) (*vote.UpdateO,
 		res = &vote.UpdateO{}
 	}
 
-	for _, x := range out {
+	for range vot {
 		res.Object = append(res.Object, &vote.UpdateO_Object{
 			Intern: &vote.UpdateO_Object_Intern{
-				Status: x,
+				Status: objectstatus.Updated,
 			},
 		})
 	}

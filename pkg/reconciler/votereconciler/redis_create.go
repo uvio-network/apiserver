@@ -6,7 +6,6 @@ import (
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
-	"github.com/uvio-network/apiserver/pkg/storage/userstorage"
 	"github.com/uvio-network/apiserver/pkg/storage/votestorage"
 	"github.com/xh3b4sd/tracer"
 )
@@ -35,7 +34,7 @@ func (r *Redis) CreateVote(inp []*votestorage.Object) ([]*votestorage.Object, er
 
 		var cla *poststorage.Object
 		{
-			cla, err = r.verifyClaim(inp[i].Claim)
+			cla, err = r.searchClaim(inp[i].Claim)
 			if err != nil {
 				return nil, tracer.Mask(err)
 			}
@@ -66,56 +65,22 @@ func (r *Redis) CreateVote(inp []*votestorage.Object) ([]*votestorage.Object, er
 		}
 
 		// Ensure no votes can be cast anymore on claims that have already expired.
-		{
-			if now.After(cla.Expiry) {
-				return nil, tracer.Maskf(ClaimAlreadyExpiredError, "%d", cla.Expiry.Unix())
-			}
+		if now.After(cla.Expiry) {
+			return nil, tracer.Maskf(ClaimAlreadyExpiredError, "%d", cla.Expiry.Unix())
 		}
 
 		// Once all cross validation is done we can proceed with cross mutation. One
 		// important thing we need to do for all users is to update their staked
-		// token balances in their respective user objects.
-		{
-			var use []*userstorage.Object
-			{
-				use, err = r.sto.User().SearchUser([]objectid.ID{inp[i].Owner})
-				if err != nil {
-					return nil, tracer.Mask(err)
-				}
-			}
-
-			for j := range use {
-				use[j].Staked.Data[cla.Token] += inp[i].Value
-				use[j].Staked.Time = now
-			}
-
-			{
-				err = r.sto.User().UpdateUser(use)
-				if err != nil {
-					return nil, tracer.Mask(err)
-				}
+		// token balances within their respective user objects, but only if the
+		// given vote is of kind "stake", and only if the given vote is already
+		// confirmed onchain.
+		if inp[i].Kind == "stake" && !inp[i].Lifecycle.Pending() {
+			err = r.updateStaked(inp[i], cla.Token, now)
+			if err != nil {
+				return nil, tracer.Mask(err)
 			}
 		}
 	}
 
 	return inp, nil
-}
-
-func (r *Redis) verifyClaim(cla objectid.ID) (*poststorage.Object, error) {
-	var err error
-
-	var obj []*poststorage.Object
-	{
-		obj, err = r.sto.Post().SearchPost([]objectid.ID{cla})
-		if err != nil {
-			return nil, tracer.Mask(err)
-		}
-	}
-
-	// Every vote object must reference an existing claim object.
-	if len(obj) != 1 {
-		return nil, tracer.Maskf(VoteClaimNotFoundError, cla.String())
-	}
-
-	return obj[0], nil
 }
