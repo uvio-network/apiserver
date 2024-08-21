@@ -24,80 +24,26 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (h *SystemHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
-	var err error
-
+func (h *SystemHandler) Ensure(tas *task.Task, bud *budget.Budget) (err error) {
 	// find claims with lifecycle "propose" that are expired
-	var claims []*poststorage.Object
-	{
-		claims, err = h.sto.Post().SearchExpiry(objectlabel.LifecyclePropose)
-		if err != nil {
-			return tracer.Mask(err)
-		}
+	claims, err := h.sto.Post().SearchExpiry(objectlabel.LifecyclePropose)
+	if err != nil {
+		return tracer.Mask(err)
 	}
 
 	for _, x := range claims {
-		var treeId *big.Int
-		{
-			treeId, err = metaToTreeId(x.Meta)
-			if err != nil {
-				return tracer.Mask(err)
-			}
+		// @todo - fix typo
+		// get the corrisponding claim object from chain
+		claim, treeId, err := h.getClaim(x)
+		if err != nil {
+			return tracer.Mask(err)
 		}
 
-		var treeClaims [4]marketscontract.IMarketsClaim
-		{
-			treeClaims, err = h.markets.Claims(nil, treeId)
-			if err != nil {
-				return tracer.Mask(err)
-			}
-		}
-
-		var lastClaimIndex int
-		{
-			for i, claim := range treeClaims {
-				if claim.Expiration.Cmp(big.NewInt(0)) == 0 {
-					lastClaimIndex = i
-					break
-				}
-			}
-		}
-
-		var claim marketscontract.IMarketsClaim
-		{
-			claim = treeClaims[lastClaimIndex-1]
-		}
-
+		// @todo - fix typo
+		// handle claim according to its onchain Status
 		if claim.Status == 1 { // claim.Status == Active
-
-			var yeaVoters []string
-			var nayVoters []string
-			yeaStakersLength := len(claim.Stake.YeaStakers)
-			nayStakersLength := len(claim.Stake.NayStakers)
-			if yeaStakersLength > 0 && nayStakersLength > 0 {
-				votersLength := int(math.Min(float64(yeaStakersLength), float64(nayStakersLength)))
-				for i := 0; i < votersLength; i++ {
-					randomIndex := rand.Intn(yeaStakersLength)
-					yeaVoters = append(yeaVoters, claim.Stake.YeaStakers[randomIndex].Hex())
-
-					randomIndex = rand.Intn(nayStakersLength)
-					nayVoters = append(nayVoters, claim.Stake.NayStakers[randomIndex].Hex())
-				}
-			} else if yeaStakersLength > 0 && nayStakersLength == 0 {
-				randomIndex := rand.Intn(yeaStakersLength)
-				yeaVoters = append(yeaVoters, claim.Stake.YeaStakers[randomIndex].Hex())
-			} else if nayStakersLength > 0 && yeaStakersLength == 0 {
-				randomIndex := rand.Intn(nayStakersLength)
-				nayVoters = append(nayVoters, claim.Stake.NayStakers[randomIndex].Hex())
-			} else {
-				h.log.Log(
-					context.Background(),
-					"level", "info",
-					"message", "claimresolverhandler: invalid state: invalid stakers",
-				)
-			}
-
-			err = h.callPrepareVote(claim, treeId, yeaVoters, nayVoters)
+			// choose random voters and write to chain
+			err = h.prepareVote(claim, treeId)
 			if err != nil {
 				return tracer.Mask(err)
 			}
@@ -115,57 +61,131 @@ func (h *SystemHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 			)
 		}
 
-		// 2. claim was already resolved, only remove claim from Redis
-		// last step when everything is nice and clean, remove the claim ID from
-		// Redis post/expiry
-		// also need to update the claim status (?)
+		// remove the claim ID from Redis post/expiry
 		err = h.sto.Post().DeleteExpiry([]*poststorage.Object{x})
 		if err != nil {
 			return tracer.Mask(err)
 		}
+
+		// @todo - here
+		// create a new post object with Lifecycle resolve and the same tree id
+		// inp = append(inp, &poststorage.Object{
+		// 	Chain:  x.Public.Chain,
+		// 	Expiry: converter.StringToTime(x.Public.Expiry),
+		// 	Kind:   x.Public.Kind,
+		// 	Labels: converter.StringToSlice(x.Public.Labels),
+		// 	Lifecycle: objectfield.Lifecycle{
+		// 		Data: objectlabel.DesiredLifecycle(x.Public.Lifecycle),
+		// 		Hash: x.Public.Hash,
+		// 	},
+		// 	Meta:   x.Public.Meta,
+		// 	Owner:  userid.FromContext(ctx),
+		// 	Parent: objectid.ID(x.Public.Parent),
+		// 	Text:   x.Public.Text,
+		// 	Token:  x.Public.Token,
+		// })
+
+		// Chain     string                `json:"chain"`
+		// Created   time.Time             `json:"created"`
+		// Expiry    time.Time             `json:"expiry"`
+		// ID        objectid.ID           `json:"id"`
+		// Kind      string                `json:"kind"`
+		// Labels    []string              `json:"labels"`
+		// Lifecycle objectfield.Lifecycle `json:"lifecycle"`
+		// Meta      string                `json:"meta"`
+		// Owner     objectid.ID           `json:"owner"`
+		// Parent    objectid.ID           `json:"parent"`
+		// Text      string                `json:"text"`
+		// Token     string                `json:"token"`
+		// Tree      objectid.ID           `json:"tree"`
+		// Votes     []float64             `json:"votes"`
+		// newPost :=
+		// err = h.sto.Post().CreatePost([]*poststorage.Object{x})
+		// if err != nil {
+		// 	return tracer.Mask(err)
+		// }
 	}
 
 	return nil
 }
 
-func metaToTreeId(met string) (*big.Int, error) {
-	var err error
-
-	var spl []string
-	{
-		spl = converter.StringToSlice(met)
+func (h *SystemHandler) getClaim(x *poststorage.Object) (claim marketscontract.IMarketsClaim, treeId *big.Int, err error) {
+	treeId, err = metaToTreeId(x.Meta)
+	if err != nil {
+		return claim, treeId, tracer.Mask(err)
 	}
 
-	if len(spl) == 0 {
-		return nil, tracer.Maskf(runtime.ExecutionFailedError, "tree ID not found in meta data")
+	treeClaims, err := h.markets.Claims(nil, treeId)
+	if err != nil {
+		return claim, treeId, tracer.Mask(err)
 	}
 
-	// We take the first item here because the first item is the onchain tree ID
-	// that clients put in the meta data when creating post objects of kind
-	// "claim".
-	//
-	//     "meta": "9,0"
-	//
-	var tre int64
+	var lastClaimIndex int
 	{
-		tre, err = strconv.ParseInt(spl[0], 10, 64)
-		if err != nil {
-			return nil, tracer.Mask(err)
+		for i, c := range treeClaims {
+			if c.Expiration.Cmp(big.NewInt(0)) == 0 {
+				lastClaimIndex = i
+				break
+			}
 		}
 	}
 
-	return big.NewInt(tre), nil
+	return treeClaims[lastClaimIndex-1], treeId, nil
 }
 
-func (h *SystemHandler) callPrepareVote(
+func (h *SystemHandler) prepareVote(claim marketscontract.IMarketsClaim, treeId *big.Int) (err error) {
+	// pick random voters from the available stakers
+	yeaVoters, nayVoters, err := h.pickRandomVoters(claim)
+	if err != nil {
+		return tracer.Mask(err)
+	}
+
+	// make the actual write call to randomizer.PrepareVote()
+	err = h.write(claim, treeId, yeaVoters, nayVoters)
+	if err != nil {
+		return tracer.Mask(err)
+	}
+
+	return nil
+}
+
+// @todo - make sure there's no duplicates
+func (h *SystemHandler) pickRandomVoters(claim marketscontract.IMarketsClaim) (yeaVoters []string, nayVoters []string, err error) {
+	yeaStakersLength := len(claim.Stake.YeaStakers)
+	nayStakersLength := len(claim.Stake.NayStakers)
+	if yeaStakersLength > 0 && nayStakersLength > 0 {
+		votersLength := int(math.Min(float64(yeaStakersLength), float64(nayStakersLength)))
+		for i := 0; i < votersLength; i++ {
+			randomIndex := rand.Intn(yeaStakersLength)
+			yeaVoters = append(yeaVoters, claim.Stake.YeaStakers[randomIndex].Hex())
+
+			randomIndex = rand.Intn(nayStakersLength)
+			nayVoters = append(nayVoters, claim.Stake.NayStakers[randomIndex].Hex())
+		}
+	} else if yeaStakersLength > 0 && nayStakersLength == 0 {
+		randomIndex := rand.Intn(yeaStakersLength)
+		yeaVoters = append(yeaVoters, claim.Stake.YeaStakers[randomIndex].Hex())
+	} else if nayStakersLength > 0 && yeaStakersLength == 0 {
+		randomIndex := rand.Intn(nayStakersLength)
+		nayVoters = append(nayVoters, claim.Stake.NayStakers[randomIndex].Hex())
+	} else {
+		h.log.Log(
+			context.Background(),
+			"level", "info",
+			"message", "claimresolverhandler: invalid state: invalid stakers",
+		)
+		return yeaVoters, nayVoters, tracer.Mask(err)
+	}
+
+	return yeaVoters, nayVoters, nil
+}
+
+func (h *SystemHandler) write(
 	claim marketscontract.IMarketsClaim,
 	treeId *big.Int,
 	yeaVoters []string,
 	nayVoters []string,
-) error {
-
-	var err error
-
+) (err error) {
 	var yeaVotersAddrs []common.Address
 	{
 		for _, addr := range yeaVoters {
@@ -222,4 +242,33 @@ func (h *SystemHandler) callPrepareVote(
 	fmt.Printf("tx sent: %s", tx.Hash().Hex())
 
 	return nil
+}
+
+func metaToTreeId(met string) (*big.Int, error) {
+	var err error
+
+	var spl []string
+	{
+		spl = converter.StringToSlice(met)
+	}
+
+	if len(spl) == 0 {
+		return nil, tracer.Maskf(runtime.ExecutionFailedError, "tree ID not found in meta data")
+	}
+
+	// We take the first item here because the first item is the onchain tree ID
+	// that clients put in the meta data when creating post objects of kind
+	// "claim".
+	//
+	//     "meta": "9,0"
+	//
+	var tre int64
+	{
+		tre, err = strconv.ParseInt(spl[0], 10, 64)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	return big.NewInt(tre), nil
 }
