@@ -32,14 +32,12 @@ func (h *SystemHandler) Ensure(tas *task.Task, bud *budget.Budget) (err error) {
 	}
 
 	for _, x := range claims {
-		// @todo - fix typo
-		// get the corrisponding claim object from chain
+		// get the corresponding claim object from chain
 		claim, treeId, err := h.getClaim(x)
 		if err != nil {
 			return tracer.Mask(err)
 		}
 
-		// @todo - fix typo
 		// handle claim according to its onchain Status
 		if claim.Status == 1 { // claim.Status == Active
 			// choose random voters and write to chain
@@ -208,7 +206,7 @@ func (h *SystemHandler) write(
 	publicKey := privateKey.Public()
 	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
 	if !ok {
-		// return tracer.Mask(ok) // what should i put here? `ok` fails
+		return tracer.Maskf(runtime.ExecutionFailedError, "failed to cast public key to ECDSA")
 	}
 
 	fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
@@ -222,13 +220,22 @@ func (h *SystemHandler) write(
 		return tracer.Mask(err)
 	}
 
-	auth := bind.NewKeyedTransactor(privateKey)
+	chainID, ok := new(big.Int).SetString(h.cid, 10)
+	if !ok {
+		return tracer.Maskf(runtime.ExecutionFailedError, "failed to cast chain ID to big.Int")
+	}
+
+	auth, err := bind.NewKeyedTransactorWithChainID(privateKey, chainID)
+	if err != nil {
+		return tracer.Mask(err)
+	}
+
 	auth.Nonce = big.NewInt(int64(nonce))
 	auth.Value = big.NewInt(0)      // in wei
 	auth.GasLimit = uint64(3000000) // in units
 	auth.GasPrice = gasPrice
 
-	address := common.HexToAddress(h.Cas.Markets)
+	address := common.HexToAddress(h.cas.Markets)
 	instance, err := randomizer.NewRandomizer(address, h.client)
 	if err != nil {
 		return tracer.Mask(err)

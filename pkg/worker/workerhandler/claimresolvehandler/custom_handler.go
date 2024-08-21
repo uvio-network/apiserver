@@ -27,13 +27,14 @@ type ContractAddresses struct {
 }
 
 type SystemHandler struct {
+	cid        string
 	log        logger.Interface
 	pk         string
 	markets    *marketscontract.Markets
 	randomizer *randomizercontract.Randomizer
 	client     *ethclient.Client
 	sto        storage.Interface
-	Cas        ContractAddresses
+	cas        ContractAddresses
 }
 
 func NewSystemHandler(c SystemHandlerConfig) *SystemHandler {
@@ -71,12 +72,13 @@ func NewSystemHandler(c SystemHandlerConfig) *SystemHandler {
 	}
 
 	return &SystemHandler{
+		cid:        c.Cid,
 		log:        c.Log,
 		pk:         c.Pk,
 		markets:    mar,
 		randomizer: ran,
 		client:     eth,
 		sto:        c.Sto,
-		Cas:        c.Cas,
+		cas:        c.Cas,
 	}
 }
