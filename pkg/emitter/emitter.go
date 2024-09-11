@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/uvio-network/apiserver/pkg/emitter/useremitter"
+	"github.com/uvio-network/apiserver/pkg/emitter/uvxemitter"
 	"github.com/xh3b4sd/logger"
 	"github.com/xh3b4sd/rescue"
 	"github.com/xh3b4sd/tracer"
@@ -16,6 +17,7 @@ type Config struct {
 
 type Emitter struct {
 	use useremitter.Interface
+	uvx uvxemitter.Interface
 }
 
 func New(c Config) *Emitter {
@@ -30,6 +32,7 @@ func New(c Config) *Emitter {
 	{
 		e = &Emitter{
 			use: useremitter.NewRescue(useremitter.RescueConfig{Log: c.Log, Res: c.Res}),
+			uvx: uvxemitter.NewRescue(uvxemitter.RescueConfig{Log: c.Log, Res: c.Res}),
 		}
 	}
 
@@ -38,4 +41,8 @@ func New(c Config) *Emitter {
 
 func (e *Emitter) User() useremitter.Interface {
 	return e.use
+}
+
+func (e *Emitter) UVX() uvxemitter.Interface {
+	return e.uvx
 }

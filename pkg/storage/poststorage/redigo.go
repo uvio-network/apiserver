@@ -12,17 +12,17 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-type RedisConfig struct {
+type RedigoConfig struct {
 	Log logger.Interface
 	Red redigo.Interface
 }
 
-type Redis struct {
+type Redigo struct {
 	log logger.Interface
 	red redigo.Interface
 }
 
-func NewRedis(c RedisConfig) *Redis {
+func NewRedigo(c RedigoConfig) *Redigo {
 	if c.Log == nil {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Log must not be empty", c)))
 	}
@@ -30,7 +30,7 @@ func NewRedis(c RedisConfig) *Redis {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Red must not be empty", c)))
 	}
 
-	return &Redis{
+	return &Redigo{
 		log: c.Log,
 		red: c.Red,
 	}

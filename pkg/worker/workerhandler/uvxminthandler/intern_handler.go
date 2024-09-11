@@ -1,30 +1,24 @@
-package usercreatehandler
+package uvxminthandler
 
 import (
 	"fmt"
 
-	"github.com/uvio-network/apiserver/pkg/emitter"
 	"github.com/uvio-network/apiserver/pkg/storage"
 	"github.com/xh3b4sd/logger"
 	"github.com/xh3b4sd/tracer"
 )
 
 type ExternHandlerConfig struct {
-	Emi emitter.Interface
 	Log logger.Interface
 	Sto storage.Interface
 }
 
-type ExternHandler struct {
-	emi emitter.Interface
+type InternHandler struct {
 	log logger.Interface
 	sto storage.Interface
 }
 
-func NewExternHandler(c ExternHandlerConfig) *ExternHandler {
-	if c.Emi == nil {
-		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Emi must not be empty", c)))
-	}
+func NewExternHandler(c ExternHandlerConfig) *InternHandler {
 	if c.Log == nil {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Log must not be empty", c)))
 	}
@@ -32,8 +26,7 @@ func NewExternHandler(c ExternHandlerConfig) *ExternHandler {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Sto must not be empty", c)))
 	}
 
-	return &ExternHandler{
-		emi: c.Emi,
+	return &InternHandler{
 		log: c.Log,
 		sto: c.Sto,
 	}

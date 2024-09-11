@@ -5,7 +5,7 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Redis) CreatePost(inp []*Object) error {
+func (r *Redigo) CreatePost(inp []*Object) error {
 	var err error
 
 	for i := range inp {
