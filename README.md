@@ -98,7 +98,8 @@ curl -s --request "POST" --header "Content-Type: application/json" --data '{"obj
 Generating smart contract bindings using [abigen].
 
 ```
-abigen --abi pkg/contract/marketscontract/Markets.ABI.json --pkg marketscontract --type Markets --out pkg/contract/marketscontract/marketscontract.go
+abigen --abi pkg/contract/generated/claimscontract/Claims.ABI.json --pkg claimscontract --type Claims --out pkg/contract/generated/claimscontract/claimscontract.go
+abigen --abi pkg/contract/generated/uvxcontract/UVX.ABI.json --pkg uvxcontract --type UVX --out pkg/contract/generated/uvxcontract/uvxcontract.go
 ```
 
 

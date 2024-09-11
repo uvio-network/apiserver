@@ -66,14 +66,9 @@ func New(c Config) *Handler {
 		}))
 	}
 
-	var h *Handler
-	{
-		h = &Handler{
-			han: han,
-		}
+	return &Handler{
+		han: han,
 	}
-
-	return h
 }
 
 func (h *Handler) Hand() []Interface {

@@ -28,15 +28,10 @@ func New(c Config) *Emitter {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Res must not be empty", c)))
 	}
 
-	var e *Emitter
-	{
-		e = &Emitter{
-			use: useremitter.NewRescue(useremitter.RescueConfig{Log: c.Log, Res: c.Res}),
-			uvx: uvxemitter.NewRescue(uvxemitter.RescueConfig{Log: c.Log, Res: c.Res}),
-		}
+	return &Emitter{
+		use: useremitter.NewRescue(useremitter.RescueConfig{Log: c.Log, Res: c.Res}),
+		uvx: uvxemitter.NewRescue(uvxemitter.RescueConfig{Log: c.Log, Res: c.Res}),
 	}
-
-	return e
 }
 
 func (e *Emitter) User() useremitter.Interface {
