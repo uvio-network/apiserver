@@ -15,7 +15,9 @@ func New(bud ...int) *Budget {
 		return &Budget{bud: bud[0]}
 	}
 
-	return &Budget{bud: Default}
+	return &Budget{
+		bud: Default,
+	}
 }
 
 func (b *Budget) Break() bool {

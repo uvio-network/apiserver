@@ -32,29 +32,24 @@ func New(c Config) *Storage {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Red must not be empty", c)))
 	}
 
-	var s *Storage
-	{
-		s = &Storage{
-			pos: poststorage.NewRedigo(poststorage.RedigoConfig{
-				Log: c.Log,
-				Red: c.Red,
-			}),
-			use: userstorage.NewRedis(userstorage.RedisConfig{
-				Log: c.Log,
-				Red: c.Red,
-			}),
-			vot: votestorage.NewRedis(votestorage.RedisConfig{
-				Log: c.Log,
-				Red: c.Red,
-			}),
-			wal: walletstorage.NewRedis(walletstorage.RedisConfig{
-				Log: c.Log,
-				Red: c.Red,
-			}),
-		}
+	return &Storage{
+		pos: poststorage.NewRedigo(poststorage.RedigoConfig{
+			Log: c.Log,
+			Red: c.Red,
+		}),
+		use: userstorage.NewRedis(userstorage.RedisConfig{
+			Log: c.Log,
+			Red: c.Red,
+		}),
+		vot: votestorage.NewRedis(votestorage.RedisConfig{
+			Log: c.Log,
+			Red: c.Red,
+		}),
+		wal: walletstorage.NewRedis(walletstorage.RedisConfig{
+			Log: c.Log,
+			Red: c.Red,
+		}),
 	}
-
-	return s
 }
 
 func (s *Storage) Post() poststorage.Interface {

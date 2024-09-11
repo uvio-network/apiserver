@@ -25,7 +25,7 @@ type MiddlewareConfig struct {
 
 type Middleware struct {
 	log logger.Interface
-	jwt *jwtmiddleware.JWTMiddleware
+	mid *jwtmiddleware.JWTMiddleware
 }
 
 func NewMiddleware(c MiddlewareConfig) *Middleware {
@@ -61,30 +61,27 @@ func NewMiddleware(c MiddlewareConfig) *Middleware {
 		}
 	}
 
-	var m *Middleware
+	var mid *jwtmiddleware.JWTMiddleware
 	{
-		m = &Middleware{
-			log: c.Log,
-		}
-	}
-
-	{
-		m.jwt = jwtmiddleware.New(
+		mid = jwtmiddleware.New(
 			val.ValidateToken,
 			jwtmiddleware.WithCredentialsOptional(true),
 			jwtmiddleware.WithValidateOnOptions(false),
-			jwtmiddleware.WithErrorHandler(m.errHan),
+			jwtmiddleware.WithErrorHandler(errHan(c.Log)),
 		)
 	}
 
-	return m
+	return &Middleware{
+		log: c.Log,
+		mid: mid,
+	}
 }
 
 func (m *Middleware) Handler(h http.Handler) http.Handler {
 	// CheckJWT extracts and validates the bearer access token provided with the
 	// request's authorization header, if any. Any valid claims are put into the
 	// request's context and can be accessed like shown below.
-	return m.jwt.CheckJWT(http.HandlerFunc(func(wri http.ResponseWriter, req *http.Request) {
+	return m.mid.CheckJWT(http.HandlerFunc(func(wri http.ResponseWriter, req *http.Request) {
 		var ctx context.Context
 		{
 			ctx = req.Context()
@@ -103,21 +100,23 @@ func (m *Middleware) Handler(h http.Handler) http.Handler {
 	}))
 }
 
-func (m *Middleware) errHan(wri http.ResponseWriter, req *http.Request, err error) {
-	{
-		m.log.Log(
-			context.Background(),
-			"level", "error",
-			"message", err.Error(),
-			"path", req.URL.String(),
-			"stack", tracer.Stack(err),
-		)
-	}
+func errHan(log logger.Interface) func(wri http.ResponseWriter, req *http.Request, err error) {
+	return func(wri http.ResponseWriter, req *http.Request, err error) {
+		{
+			log.Log(
+				context.Background(),
+				"level", "error",
+				"message", err.Error(),
+				"path", req.URL.String(),
+				"stack", tracer.Stack(err),
+			)
+		}
 
-	{
-		err = twirp.WriteError(wri, err)
-		if err != nil {
-			tracer.Panic(tracer.Mask(err))
+		{
+			err = twirp.WriteError(wri, err)
+			if err != nil {
+				tracer.Panic(tracer.Mask(err))
+			}
 		}
 	}
 }

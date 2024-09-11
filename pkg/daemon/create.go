@@ -103,22 +103,17 @@ func New(env envvar.Env) *Daemon {
 
 	// --------------------------------------------------------------------- //
 
-	var dae *Daemon
-	{
-		dae = &Daemon{
-			emi: emi,
-			env: env,
-			lis: lis,
-			loc: loc,
-			log: log,
-			rec: rec,
-			red: red,
-			res: res,
-			sto: sto,
-		}
+	return &Daemon{
+		emi: emi,
+		env: env,
+		lis: lis,
+		loc: loc,
+		log: log,
+		rec: rec,
+		red: red,
+		res: res,
+		sto: sto,
 	}
-
-	return dae
 }
 
 func (d *Daemon) Server() *server.Server {
@@ -133,24 +128,19 @@ func (d *Daemon) Server() *server.Server {
 		})
 	}
 
-	var srv *server.Server
-	{
-		srv = server.New(server.Config{
-			Han: shn.Hand(),
-			Int: []twirp.Interceptor{
-				failedinterceptor.NewInterceptor(failedinterceptor.InterceptorConfig{Log: d.log}).Interceptor,
-			},
-			Lis: d.lis,
-			Log: d.log,
-			Mid: []mux.MiddlewareFunc{
-				corsmiddleware.NewMiddleware(corsmiddleware.MiddlewareConfig{Log: d.log}).Handler,
-				authmiddleware.NewMiddleware(authmiddleware.MiddlewareConfig{Aud: d.env.AuthJwksAud, Iss: d.env.AuthJwksIss, Log: d.log, URL: d.env.AuthJwksUrl}).Handler,
-				usermiddleware.NewMiddleware(usermiddleware.MiddlewareConfig{Log: d.log, Use: d.sto.User()}).Handler,
-			},
-		})
-	}
-
-	return srv
+	return server.New(server.Config{
+		Han: shn.Hand(),
+		Int: []twirp.Interceptor{
+			failedinterceptor.NewInterceptor(failedinterceptor.InterceptorConfig{Log: d.log}).Interceptor,
+		},
+		Lis: d.lis,
+		Log: d.log,
+		Mid: []mux.MiddlewareFunc{
+			corsmiddleware.NewMiddleware(corsmiddleware.MiddlewareConfig{Log: d.log}).Handler,
+			authmiddleware.NewMiddleware(authmiddleware.MiddlewareConfig{Aud: d.env.AuthJwksAud, Iss: d.env.AuthJwksIss, Log: d.log, URL: d.env.AuthJwksUrl}).Handler,
+			usermiddleware.NewMiddleware(usermiddleware.MiddlewareConfig{Log: d.log, Use: d.sto.User()}).Handler,
+		},
+	})
 }
 
 func (d *Daemon) Worker() *worker.Worker {
@@ -164,16 +154,11 @@ func (d *Daemon) Worker() *worker.Worker {
 		})
 	}
 
-	var wrk *worker.Worker
-	{
-		wrk = worker.New(worker.Config{
-			Han: whn.Hand(),
-			Log: d.log,
-			Res: d.res,
-		})
-	}
-
-	return wrk
+	return worker.New(worker.Config{
+		Han: whn.Hand(),
+		Log: d.log,
+		Res: d.res,
+	})
 }
 
 func defLoc(add string) locker.Interface {
