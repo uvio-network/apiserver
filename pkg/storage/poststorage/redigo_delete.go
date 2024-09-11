@@ -4,7 +4,7 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Redis) DeleteExpiry(inp []*Object) error {
+func (r *Redigo) DeleteExpiry(inp []*Object) error {
 	var err error
 
 	for i := range inp {

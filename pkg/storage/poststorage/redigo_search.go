@@ -13,7 +13,7 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Redis) SearchComment(cla []objectid.ID) ([]*Object, error) {
+func (r *Redigo) SearchComment(cla []objectid.ID) ([]*Object, error) {
 	var err error
 
 	// com will result in a list of all comment IDs belonging to the given claim
@@ -47,7 +47,7 @@ func (r *Redis) SearchComment(cla []objectid.ID) ([]*Object, error) {
 	return out, nil
 }
 
-func (r *Redis) SearchCreated(beg int, end int) ([]*Object, error) {
+func (r *Redigo) SearchCreated(beg int, end int) ([]*Object, error) {
 	var err error
 
 	// val will result in a list of all post IDs within the given pagination
@@ -79,7 +79,7 @@ func (r *Redis) SearchCreated(beg int, end int) ([]*Object, error) {
 	return out, nil
 }
 
-func (r *Redis) SearchExpiry(lif objectlabel.DesiredLifecycle) ([]*Object, error) {
+func (r *Redigo) SearchExpiry(lif objectlabel.DesiredLifecycle) ([]*Object, error) {
 	var err error
 
 	var now time.Time
@@ -116,7 +116,7 @@ func (r *Redis) SearchExpiry(lif objectlabel.DesiredLifecycle) ([]*Object, error
 	return out, nil
 }
 
-func (r *Redis) SearchLabel(inp [][]string) ([]*Object, error) {
+func (r *Redigo) SearchLabel(inp [][]string) ([]*Object, error) {
 	// cla will result in a list of all claim IDs grouped under all of the given
 	// label names, if any.
 	var cla []string
@@ -150,7 +150,7 @@ func (r *Redis) SearchLabel(inp [][]string) ([]*Object, error) {
 	return out, nil
 }
 
-func (r *Redis) SearchLifecycle(lif []string) ([]*Object, error) {
+func (r *Redigo) SearchLifecycle(lif []string) ([]*Object, error) {
 	var err error
 
 	// cla will result in a list of all claim IDs defining the given claim
@@ -184,7 +184,7 @@ func (r *Redis) SearchLifecycle(lif []string) ([]*Object, error) {
 	return out, nil
 }
 
-func (r *Redis) SearchPost(inp []objectid.ID) ([]*Object, error) {
+func (r *Redigo) SearchPost(inp []objectid.ID) ([]*Object, error) {
 	var err error
 
 	var jsn []string
@@ -219,7 +219,7 @@ func (r *Redis) SearchPost(inp []objectid.ID) ([]*Object, error) {
 	return out, nil
 }
 
-func (r *Redis) SearchTree(tre []objectid.ID) ([]*Object, error) {
+func (r *Redigo) SearchTree(tre []objectid.ID) ([]*Object, error) {
 	var err error
 
 	// pos will result in a list of all post IDs belonging to the given tree IDs,
@@ -253,7 +253,7 @@ func (r *Redis) SearchTree(tre []objectid.ID) ([]*Object, error) {
 	return out, nil
 }
 
-func (r *Redis) SearchOwner(use []objectid.ID) ([]*Object, error) {
+func (r *Redigo) SearchOwner(use []objectid.ID) ([]*Object, error) {
 	var err error
 
 	// pos will result in a list of all post IDs created by the given user IDs, if
@@ -287,7 +287,7 @@ func (r *Redis) SearchOwner(use []objectid.ID) ([]*Object, error) {
 	return out, nil
 }
 
-func (r *Redis) SearchOwnerComment(own []objectid.ID, cla []objectid.ID) ([]*Object, error) {
+func (r *Redigo) SearchOwnerComment(own []objectid.ID, cla []objectid.ID) ([]*Object, error) {
 	var err error
 
 	if len(own) != len(cla) {

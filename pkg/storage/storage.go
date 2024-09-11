@@ -35,7 +35,7 @@ func New(c Config) *Storage {
 	var s *Storage
 	{
 		s = &Storage{
-			pos: poststorage.NewRedis(poststorage.RedisConfig{
+			pos: poststorage.NewRedigo(poststorage.RedigoConfig{
 				Log: c.Log,
 				Red: c.Red,
 			}),
