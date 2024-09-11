@@ -6,6 +6,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/twitchtv/twirp"
+	"github.com/uvio-network/apiserver/pkg/emitter"
 	"github.com/uvio-network/apiserver/pkg/envvar"
 	"github.com/uvio-network/apiserver/pkg/reconciler"
 	"github.com/uvio-network/apiserver/pkg/server"
@@ -29,6 +30,7 @@ import (
 )
 
 type Daemon struct {
+	emi emitter.Interface
 	env envvar.Env
 	lis net.Listener
 	loc locker.Interface
@@ -39,7 +41,7 @@ type Daemon struct {
 	sto storage.Interface
 }
 
-func Create(env envvar.Env) *Daemon {
+func New(env envvar.Env) *Daemon {
 	var err error
 
 	var log logger.Interface
@@ -70,6 +72,14 @@ func Create(env envvar.Env) *Daemon {
 		})
 	}
 
+	var emi emitter.Interface
+	{
+		emi = emitter.New(emitter.Config{
+			Log: log,
+			Res: res,
+		})
+	}
+
 	var loc locker.Interface
 	{
 		loc = defLoc(red.Listen())
@@ -96,6 +106,7 @@ func Create(env envvar.Env) *Daemon {
 	var dae *Daemon
 	{
 		dae = &Daemon{
+			emi: emi,
 			env: env,
 			lis: lis,
 			loc: loc,
@@ -114,6 +125,7 @@ func (d *Daemon) Server() *server.Server {
 	var shn *serverhandler.Handler
 	{
 		shn = serverhandler.New(serverhandler.Config{
+			Emi: d.emi,
 			Loc: d.loc,
 			Log: d.log,
 			Rec: d.rec,

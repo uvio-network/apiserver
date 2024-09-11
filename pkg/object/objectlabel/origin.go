@@ -1,6 +1,6 @@
 package objectlabel
 
 const (
-	OriginCustom string = "custom"
-	OriginSystem string = "system"
+	OriginExtern string = "extern"
+	OriginIntern string = "intern"
 )

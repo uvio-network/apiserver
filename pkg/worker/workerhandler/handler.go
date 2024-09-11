@@ -6,6 +6,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/envvar"
 	"github.com/uvio-network/apiserver/pkg/storage"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/claimresolvehandler"
+	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/usercreatehandler"
 	"github.com/xh3b4sd/locker"
 	"github.com/xh3b4sd/logger"
 	"github.com/xh3b4sd/tracer"
@@ -36,11 +37,13 @@ func New(c Config) *Handler {
 	var han []Interface
 
 	{
-		han = append(han, claimresolvehandler.NewSystemHandler(claimresolvehandler.SystemHandlerConfig{
-			Add: c.Env.MarketsAddress,
-			Cid: c.Env.ChainId,
+		han = append(han, claimresolvehandler.NewInternHandler(claimresolvehandler.InternHandlerConfig{
 			Log: c.Log,
-			Rpc: c.Env.ChainRpcEndpoint,
+			Sto: c.Sto,
+		}))
+
+		han = append(han, usercreatehandler.NewExternHandler(usercreatehandler.ExternHandlerConfig{
+			Log: c.Log,
 			Sto: c.Sto,
 		}))
 	}
