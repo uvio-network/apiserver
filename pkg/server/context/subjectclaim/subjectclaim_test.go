@@ -5,17 +5,17 @@ import (
 	"testing"
 )
 
-func Test_Context_UserID(t *testing.T) {
+func Test_Context_SubjectClaim(t *testing.T) {
 	{
-		s := FromContext(context.Background())
-		if s != "" {
+		v := FromContext(context.Background())
+		if v != "" {
 			t.Fatal("user must be empty")
 		}
 	}
 
 	{
-		s := FromContext(NewContext(context.Background(), "test"))
-		if s != "test" {
+		v := FromContext(NewContext(context.Background(), "test"))
+		if v != "test" {
 			t.Fatal("user must be test")
 		}
 	}

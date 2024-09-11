@@ -6,6 +6,7 @@ import (
 	"github.com/uvio-network/apigocode/pkg/user"
 	"github.com/uvio-network/apiserver/pkg/object/objectfield"
 	"github.com/uvio-network/apiserver/pkg/server/context/subjectclaim"
+	"github.com/uvio-network/apiserver/pkg/server/context/usercreated"
 	"github.com/uvio-network/apiserver/pkg/server/converter"
 	"github.com/uvio-network/apiserver/pkg/storage/userstorage"
 	"github.com/xh3b4sd/tracer"
@@ -44,6 +45,17 @@ func (h *Handler) Create(ctx context.Context, req *user.CreateI) (*user.CreateO,
 	var out *userstorage.Object
 	{
 		out, err = h.sto.User().Create(inp)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	//
+	// Emit an event for new users being created.
+	//
+
+	if usercreated.FromContext(ctx) {
+		err = h.emi.User().Create(out.ID)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}

@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/uvio-network/apiserver/pkg/server/context/subjectclaim"
+	"github.com/uvio-network/apiserver/pkg/server/context/usercreated"
 	"github.com/uvio-network/apiserver/pkg/server/context/userid"
 	"github.com/uvio-network/apiserver/pkg/storage/userstorage"
 	"github.com/xh3b4sd/logger"
@@ -67,25 +68,36 @@ func (m *Middleware) Handler(h http.Handler) http.Handler {
 		{
 			obj, err = m.use.SearchSubject(sub)
 			if r.URL.String() == "/user.API/Create" && errors.Is(err, userstorage.SubjectClaimMappingError) {
-				h.ServeHTTP(w, r)
-				return
+				// At this point we have a new user, which we flag in the requests
+				// context, so that further components down the stack can act
+				// accordingly.
+				{
+					ctx = usercreated.NewContext(ctx, true)
+				}
+
+				// Continue processing the request using the wrapped context.
+				{
+					h.ServeHTTP(w, r.Clone(ctx))
+				}
 			} else if err != nil {
-				m.werror(ctx, w, tracer.Mask(err))
-				return
+				{
+					m.werror(ctx, w, tracer.Mask(err))
+				}
+			} else {
+				// At this point we have an authenticated user for which we set the
+				// relevant user ID to the request context for further use down the
+				// stack.
+				{
+					ctx = userid.NewContext(ctx, obj.ID)
+				}
+
+				// Continue processing the request using the wrapped context. The next
+				// handler may execute another middleware or the RPC handler for the
+				// actual business logic.
+				{
+					h.ServeHTTP(w, r.Clone(ctx))
+				}
 			}
-		}
-
-		// At this point we have an authenticated user for which we set the relevant
-		// user ID to the request context for further use down the stack.
-		{
-			ctx = userid.NewContext(ctx, obj.ID)
-		}
-
-		// Continue processing the request using the wrapped context. The next
-		// handler may execute another middleware or the RPC handler for the actual
-		// business logic.
-		{
-			h.ServeHTTP(w, r.Clone(ctx))
 		}
 	})
 }

@@ -3,6 +3,7 @@ package serverhandler
 import (
 	"fmt"
 
+	"github.com/uvio-network/apiserver/pkg/emitter"
 	"github.com/uvio-network/apiserver/pkg/reconciler"
 	"github.com/uvio-network/apiserver/pkg/server/serverhandler/posthandler"
 	"github.com/uvio-network/apiserver/pkg/server/serverhandler/userhandler"
@@ -15,6 +16,7 @@ import (
 )
 
 type Config struct {
+	Emi emitter.Interface
 	Loc locker.Interface
 	Log logger.Interface
 	Rec reconciler.Interface
@@ -26,6 +28,9 @@ type Handler struct {
 }
 
 func New(c Config) *Handler {
+	if c.Emi == nil {
+		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Emi must not be empty", c)))
+	}
 	if c.Loc == nil {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Loc must not be empty", c)))
 	}
@@ -41,24 +46,19 @@ func New(c Config) *Handler {
 			Rec: c.Rec,
 			Sto: c.Sto,
 		}))
-	}
 
-	{
 		han = append(han, userhandler.NewHandler(userhandler.HandlerConfig{
+			Emi: c.Emi,
 			Log: c.Log,
 			Sto: c.Sto,
 		}))
-	}
 
-	{
 		han = append(han, votehandler.NewHandler(votehandler.HandlerConfig{
 			Log: c.Log,
 			Rec: c.Rec,
 			Sto: c.Sto,
 		}))
-	}
 
-	{
 		han = append(han, wallethandler.NewHandler(wallethandler.HandlerConfig{
 			Log: c.Log,
 			Rec: c.Rec,

@@ -5,6 +5,7 @@ import (
 
 	fuzz "github.com/google/gofuzz"
 	"github.com/uvio-network/apigocode/pkg/user"
+	"github.com/uvio-network/apiserver/pkg/emitter"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/server/context/userid"
 	"github.com/uvio-network/apiserver/pkg/storage"
@@ -20,6 +21,7 @@ func tesCtx() context.Context {
 func tesHan() user.API {
 	return &wrapper{
 		han: NewHandler(HandlerConfig{
+			Emi: emitter.Fake(),
 			Log: logger.Fake(),
 			Sto: storage.Fake(),
 		}),

@@ -29,7 +29,7 @@ func (r *run) runE(cmd *cobra.Command, args []string) error {
 
 	var dae *daemon.Daemon
 	{
-		dae = daemon.Create(env)
+		dae = daemon.New(env)
 	}
 
 	{

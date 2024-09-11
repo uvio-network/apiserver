@@ -16,6 +16,7 @@ type RedisConfig struct {
 	Red redigo.Interface
 }
 
+// TODO rename to Redigo
 type Redis struct {
 	log logger.Interface
 	red redigo.Interface
