@@ -12,9 +12,9 @@ func (r *Rescue) Mint(use objectid.ID) error {
 	{
 		tas = &task.Task{
 			Meta: &task.Meta{
-				objectlabel.UVXAction: objectlabel.ActionMint,
-				objectlabel.UVXObject: use.String(),
-				objectlabel.UVXOrigin: objectlabel.OriginIntern,
+				objectlabel.UserObject: use.String(),
+				objectlabel.UVXAction:  objectlabel.ActionMint,
+				objectlabel.UVXOrigin:  objectlabel.OriginIntern,
 			},
 		}
 	}
