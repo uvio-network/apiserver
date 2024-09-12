@@ -80,7 +80,7 @@ func (u *UVX) Mint(dst string, bal int64) (*types.Transaction, error) {
 			// Here we are trying to set some reasonable gas limits, specifically for
 			// the EIP-1559 enabled minting transaction.
 			//
-			//     GasFeeCap is the total amount of gas we are willing to pay
+			//     GasFeeCap is the max gas fee we are willing to pay
 			//     GasTipCap is the max priority fee we are willing to pay
 			//
 			// Below is a testnet transaction providing some real world insight into
@@ -93,8 +93,8 @@ func (u *UVX) Mint(dst string, bal int64) (*types.Transaction, error) {
 			//
 			//     https://dune.com/payton/base-l2-gas-price-tracker
 			//
-			GasFeeCap: big.NewInt(8_000_000), // 0.008 gwei
-			GasTipCap: big.NewInt(2_000_000), // 0.002 gwei
+			GasFeeCap: big.NewInt(30_000_000), // 0.030 gwei
+			GasTipCap: big.NewInt(3_000_000),  // 0.003 gwei
 
 			Signer: u.opt.Signer,
 		}
