@@ -96,7 +96,7 @@ func (u *UVX) Mint(dst string, bal int64) (*types.Transaction, error) {
 	return txn, nil
 }
 
-// addDec returns a given balance with 18 additional decimals. 18 decimals are
+// addDec returns the given balance with 18 additional decimals. 18 decimals are
 // what the UVX contract uses. And so what is being returned by addDec is ready
 // to be used for onchain transactions.
 func addDec(bal int64) *big.Int {

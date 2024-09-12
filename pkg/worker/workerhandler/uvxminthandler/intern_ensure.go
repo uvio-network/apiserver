@@ -48,7 +48,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	// returning an error here in case no wallet can be found, because that would
 	// produce a deadlock scenario in which tasks would be repeatedly called
 	// forever, only to end up in the same situation. Instead we are using the the
-	// task's sync paging pointer as a delayed retry signal
+	// task's sync paging pointer as a delayed retry signal.
 	if len(con) == 0 {
 		var cur string
 		{
