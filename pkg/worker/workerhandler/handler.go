@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/uvio-network/apiserver/pkg/contract"
+	"github.com/uvio-network/apiserver/pkg/emitter"
 	"github.com/uvio-network/apiserver/pkg/envvar"
 	"github.com/uvio-network/apiserver/pkg/storage"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/claimresolvehandler"
@@ -15,6 +16,8 @@ import (
 )
 
 type Config struct {
+	Con contract.Interface
+	Emi emitter.Interface
 	Env envvar.Env
 	Loc locker.Interface
 	Log logger.Interface
@@ -26,6 +29,12 @@ type Handler struct {
 }
 
 func New(c Config) *Handler {
+	if c.Con == nil {
+		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Con must not be empty", c)))
+	}
+	if c.Emi == nil {
+		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Emi must not be empty", c)))
+	}
 	if c.Loc == nil {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Loc must not be empty", c)))
 	}
@@ -34,16 +43,6 @@ func New(c Config) *Handler {
 	}
 	if c.Sto == nil {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Sto must not be empty", c)))
-	}
-
-	var con *contract.Contract
-	{
-		con = contract.New(contract.Config{
-			Key: c.Env.SignerPrivateKey,
-			Log: c.Log,
-			RPC: c.Env.ChainRpcEndpoint,
-			UVX: c.Env.ChainUvxContract,
-		})
 	}
 
 	var han []Interface
@@ -55,12 +54,13 @@ func New(c Config) *Handler {
 		}))
 
 		han = append(han, usercreatehandler.NewExternHandler(usercreatehandler.ExternHandlerConfig{
+			Emi: c.Emi,
 			Log: c.Log,
 			Sto: c.Sto,
 		}))
 
 		han = append(han, uvxminthandler.NewInternHandler(uvxminthandler.InternHandlerConfig{
-			Con: con,
+			Con: c.Con,
 			Log: c.Log,
 			Sto: c.Sto,
 		}))

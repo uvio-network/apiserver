@@ -93,14 +93,29 @@ func (c *Contract) UVX() uvxcontract.Interface {
 	return c.uvx
 }
 
-func (c *Contract) Wait(txn *types.Transaction) error {
+func (c *Contract) Wait(txn *types.Transaction, max time.Duration) error {
 	var err error
+
+	// Create an outer scope timer for the maximum amount of time to wait during
+	// this call.
+	var don <-chan time.Time
+	{
+		don = time.After(max)
+	}
 
 	for {
 		// In today's world we can confidently wait for 1 second at first, since
 		// most blocks may not be mined much earlier than that 1 second.
+		var sec <-chan time.Time
 		{
-			time.Sleep(1 * time.Second)
+			sec = time.After(1 * time.Second)
+		}
+
+		select {
+		case <-don:
+			return tracer.Mask(MaxWaitError)
+		case <-sec:
+			// fall through
 		}
 
 		var rec *types.Receipt

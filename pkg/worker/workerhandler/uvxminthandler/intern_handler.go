@@ -10,13 +10,13 @@ import (
 )
 
 type InternHandlerConfig struct {
-	Con *contract.Contract
+	Con contract.Interface
 	Log logger.Interface
 	Sto storage.Interface
 }
 
 type InternHandler struct {
-	con *contract.Contract
+	con contract.Interface
 	log logger.Interface
 	sto storage.Interface
 }
