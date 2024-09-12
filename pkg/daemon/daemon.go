@@ -36,7 +36,9 @@ func New(env envvar.Env) *Daemon {
 
 	var log logger.Interface
 	{
-		log = logger.Default()
+		log = logger.New(logger.Config{
+			Filter: logger.NewLevelFilter(env.LogLevel),
+		})
 	}
 
 	var lis net.Listener

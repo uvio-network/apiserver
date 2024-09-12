@@ -241,6 +241,7 @@ func (w *Worker) search() {
 						logctx(tas),
 						"level", "info",
 						"message", "task being requeued",
+						"paging", tas.Sync.Get(task.Paging),
 					)
 				}
 			}

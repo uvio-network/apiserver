@@ -21,6 +21,7 @@ type Env struct {
 	ChainUvxContract string `split_words:"true" required:"true"`
 	HttpHost         string `split_words:"true" default:"127.0.0.1"`
 	HttpPort         string `split_words:"true" default:"7777"`
+	LogLevel         string `split_words:"true" default:"debug"`
 	SignerPrivateKey string `split_words:"true" required:"true"`
 }
 

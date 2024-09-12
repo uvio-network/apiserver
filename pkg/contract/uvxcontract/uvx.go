@@ -1,8 +1,10 @@
 package uvxcontract
 
 import (
+	"context"
 	"fmt"
 	"math/big"
+	"strconv"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -92,6 +94,17 @@ func (u *UVX) Mint(dst string, bal int64) (*types.Transaction, error) {
 			return nil, tracer.Mask(err)
 		}
 	}
+
+	u.log.Log(
+		context.Background(),
+		"level", "debug",
+		"message", "submitted UVX minting transaction onchain",
+		"signer", u.opt.From.Hex(),
+		"address", dst,
+		"amount", strconv.FormatInt(bal, 10),
+		"transaction", txn.Hash().Hex(),
+		"stack", tracer.Stack(err),
+	)
 
 	return txn, nil
 }

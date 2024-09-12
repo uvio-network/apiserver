@@ -120,6 +120,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 				"description", "Waiting for the mint transaction failed. The root cause for this failure needs to be investigated. The given address may not have received UVX tokens as requested.",
 				"address", add,
 				"amount", "100",
+				"transaction", txn.Hash().Hex(),
 				"stack", tracer.Stack(err),
 			)
 		}
