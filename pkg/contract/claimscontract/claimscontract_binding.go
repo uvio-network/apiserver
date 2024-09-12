@@ -29,113 +29,113 @@ var (
 	_ = abi.ConvertType
 )
 
-// ClaimsMetaData contains all meta data concerning the Claims contract.
-var ClaimsMetaData = &bind.MetaData{
+// ClaimsContractBindingMetaData contains all meta data concerning the ClaimsContractBinding contract.
+var ClaimsContractBindingMetaData = &bind.MetaData{
 	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"own\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"tok\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"AccessControlBadConfirmation\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"neededRole\",\"type\":\"bytes32\"}],\"name\":\"AccessControlUnauthorizedAccount\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"why\",\"type\":\"string\"}],\"name\":\"Address\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"why\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"bal\",\"type\":\"uint256\"}],\"name\":\"Balance\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"why\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"unx\",\"type\":\"uint256\"}],\"name\":\"Expired\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"why\",\"type\":\"string\"}],\"name\":\"Mapping\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"why\",\"type\":\"string\"}],\"name\":\"Process\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"use\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"bal\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"exp\",\"type\":\"uint64\"}],\"name\":\"DisputeCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"all\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"yay\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"nah\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tot\",\"type\":\"uint256\"}],\"name\":\"DisputeSettled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"use\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"bal\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"exp\",\"type\":\"uint64\"}],\"name\":\"ProposeCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"all\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"yay\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"nah\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tot\",\"type\":\"uint256\"}],\"name\":\"ProposeSettled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"use\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"len\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"exp\",\"type\":\"uint64\"}],\"name\":\"ResolveCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"ADDRESS_STAKE_N\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ADDRESS_STAKE_Y\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"BASIS_TOTAL\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"BOT_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_ADDRESS_N\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_ADDRESS_Y\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_BALANCE_P\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_BALANCE_R\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_BALANCE_U\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_EXPIRY_P\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_EXPIRY_R\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_EXPIRY_T\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_STAKE_A\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_STAKE_B\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_STAKE_C\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_STAKE_D\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_STAKE_N\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_STAKE_Y\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_TRUTH_N\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_TRUTH_Y\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MAX_UINT256\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MID_UINT256\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VERSION\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VOTE_STAKE_N\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VOTE_STAKE_Y\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VOTE_TRUTH_N\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VOTE_TRUTH_S\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VOTE_TRUTH_V\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VOTE_TRUTH_Y\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"basisFee\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"basisProposer\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"basisProtocol\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"dis\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"bal\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"vot\",\"type\":\"bool\"},{\"internalType\":\"uint64\",\"name\":\"exp\",\"type\":\"uint64\"},{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"}],\"name\":\"createDispute\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"bal\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"vot\",\"type\":\"bool\"},{\"internalType\":\"uint64\",\"name\":\"exp\",\"type\":\"uint64\"},{\"internalType\":\"address[]\",\"name\":\"tok\",\"type\":\"address[]\"}],\"name\":\"createPropose\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"},{\"internalType\":\"uint256[]\",\"name\":\"ind\",\"type\":\"uint256[]\"},{\"internalType\":\"uint64\",\"name\":\"exp\",\"type\":\"uint64\"}],\"name\":\"createResolve\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"durationBasis\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"durationMax\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"durationMin\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getRoleMember\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleMemberCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"callerConfirmation\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"use\",\"type\":\"address\"}],\"name\":\"searchBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"}],\"name\":\"searchExpired\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"}],\"name\":\"searchIndices\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"}],\"name\":\"searchPropose\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"},{\"internalType\":\"uint8\",\"name\":\"ind\",\"type\":\"uint8\"}],\"name\":\"searchResolve\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lef\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rig\",\"type\":\"uint256\"}],\"name\":\"searchSamples\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lef\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rig\",\"type\":\"uint256\"}],\"name\":\"searchStakers\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"}],\"name\":\"searchToken\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"}],\"name\":\"searchVotes\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"token\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"cla\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"max\",\"type\":\"uint256\"}],\"name\":\"updateBalance\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint64\",\"name\":\"bas\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"max\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"min\",\"type\":\"uint64\"}],\"name\":\"updateDuration\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint16\",\"name\":\"fee\",\"type\":\"uint16\"},{\"internalType\":\"uint16\",\"name\":\"psr\",\"type\":\"uint16\"},{\"internalType\":\"uint16\",\"name\":\"ptc\",\"type\":\"uint16\"}],\"name\":\"updateFees\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"own\",\"type\":\"address\"}],\"name\":\"updateOwner\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"cla\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"bal\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"vot\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"tok\",\"type\":\"uint256\"}],\"name\":\"updatePropose\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"vot\",\"type\":\"bool\"}],\"name\":\"updateResolve\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"bal\",\"type\":\"uint256\"}],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}]",
 }
 
-// ClaimsABI is the input ABI used to generate the binding from.
-// Deprecated: Use ClaimsMetaData.ABI instead.
-var ClaimsABI = ClaimsMetaData.ABI
+// ClaimsContractBindingABI is the input ABI used to generate the binding from.
+// Deprecated: Use ClaimsContractBindingMetaData.ABI instead.
+var ClaimsContractBindingABI = ClaimsContractBindingMetaData.ABI
 
-// Claims is an auto generated Go binding around an Ethereum contract.
-type Claims struct {
-	ClaimsCaller     // Read-only binding to the contract
-	ClaimsTransactor // Write-only binding to the contract
-	ClaimsFilterer   // Log filterer for contract events
+// ClaimsContractBinding is an auto generated Go binding around an Ethereum contract.
+type ClaimsContractBinding struct {
+	ClaimsContractBindingCaller     // Read-only binding to the contract
+	ClaimsContractBindingTransactor // Write-only binding to the contract
+	ClaimsContractBindingFilterer   // Log filterer for contract events
 }
 
-// ClaimsCaller is an auto generated read-only Go binding around an Ethereum contract.
-type ClaimsCaller struct {
+// ClaimsContractBindingCaller is an auto generated read-only Go binding around an Ethereum contract.
+type ClaimsContractBindingCaller struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// ClaimsTransactor is an auto generated write-only Go binding around an Ethereum contract.
-type ClaimsTransactor struct {
+// ClaimsContractBindingTransactor is an auto generated write-only Go binding around an Ethereum contract.
+type ClaimsContractBindingTransactor struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// ClaimsFilterer is an auto generated log filtering Go binding around an Ethereum contract events.
-type ClaimsFilterer struct {
+// ClaimsContractBindingFilterer is an auto generated log filtering Go binding around an Ethereum contract events.
+type ClaimsContractBindingFilterer struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// ClaimsSession is an auto generated Go binding around an Ethereum contract,
+// ClaimsContractBindingSession is an auto generated Go binding around an Ethereum contract,
 // with pre-set call and transact options.
-type ClaimsSession struct {
-	Contract     *Claims           // Generic contract binding to set the session for
-	CallOpts     bind.CallOpts     // Call options to use throughout this session
-	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
+type ClaimsContractBindingSession struct {
+	Contract     *ClaimsContractBinding // Generic contract binding to set the session for
+	CallOpts     bind.CallOpts          // Call options to use throughout this session
+	TransactOpts bind.TransactOpts      // Transaction auth options to use throughout this session
 }
 
-// ClaimsCallerSession is an auto generated read-only Go binding around an Ethereum contract,
+// ClaimsContractBindingCallerSession is an auto generated read-only Go binding around an Ethereum contract,
 // with pre-set call options.
-type ClaimsCallerSession struct {
-	Contract *ClaimsCaller // Generic contract caller binding to set the session for
-	CallOpts bind.CallOpts // Call options to use throughout this session
+type ClaimsContractBindingCallerSession struct {
+	Contract *ClaimsContractBindingCaller // Generic contract caller binding to set the session for
+	CallOpts bind.CallOpts                // Call options to use throughout this session
 }
 
-// ClaimsTransactorSession is an auto generated write-only Go binding around an Ethereum contract,
+// ClaimsContractBindingTransactorSession is an auto generated write-only Go binding around an Ethereum contract,
 // with pre-set transact options.
-type ClaimsTransactorSession struct {
-	Contract     *ClaimsTransactor // Generic contract transactor binding to set the session for
-	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
+type ClaimsContractBindingTransactorSession struct {
+	Contract     *ClaimsContractBindingTransactor // Generic contract transactor binding to set the session for
+	TransactOpts bind.TransactOpts                // Transaction auth options to use throughout this session
 }
 
-// ClaimsRaw is an auto generated low-level Go binding around an Ethereum contract.
-type ClaimsRaw struct {
-	Contract *Claims // Generic contract binding to access the raw methods on
+// ClaimsContractBindingRaw is an auto generated low-level Go binding around an Ethereum contract.
+type ClaimsContractBindingRaw struct {
+	Contract *ClaimsContractBinding // Generic contract binding to access the raw methods on
 }
 
-// ClaimsCallerRaw is an auto generated low-level read-only Go binding around an Ethereum contract.
-type ClaimsCallerRaw struct {
-	Contract *ClaimsCaller // Generic read-only contract binding to access the raw methods on
+// ClaimsContractBindingCallerRaw is an auto generated low-level read-only Go binding around an Ethereum contract.
+type ClaimsContractBindingCallerRaw struct {
+	Contract *ClaimsContractBindingCaller // Generic read-only contract binding to access the raw methods on
 }
 
-// ClaimsTransactorRaw is an auto generated low-level write-only Go binding around an Ethereum contract.
-type ClaimsTransactorRaw struct {
-	Contract *ClaimsTransactor // Generic write-only contract binding to access the raw methods on
+// ClaimsContractBindingTransactorRaw is an auto generated low-level write-only Go binding around an Ethereum contract.
+type ClaimsContractBindingTransactorRaw struct {
+	Contract *ClaimsContractBindingTransactor // Generic write-only contract binding to access the raw methods on
 }
 
-// NewClaims creates a new instance of Claims, bound to a specific deployed contract.
-func NewClaims(address common.Address, backend bind.ContractBackend) (*Claims, error) {
-	contract, err := bindClaims(address, backend, backend, backend)
+// NewClaimsContractBinding creates a new instance of ClaimsContractBinding, bound to a specific deployed contract.
+func NewClaimsContractBinding(address common.Address, backend bind.ContractBackend) (*ClaimsContractBinding, error) {
+	contract, err := bindClaimsContractBinding(address, backend, backend, backend)
 	if err != nil {
 		return nil, err
 	}
-	return &Claims{ClaimsCaller: ClaimsCaller{contract: contract}, ClaimsTransactor: ClaimsTransactor{contract: contract}, ClaimsFilterer: ClaimsFilterer{contract: contract}}, nil
+	return &ClaimsContractBinding{ClaimsContractBindingCaller: ClaimsContractBindingCaller{contract: contract}, ClaimsContractBindingTransactor: ClaimsContractBindingTransactor{contract: contract}, ClaimsContractBindingFilterer: ClaimsContractBindingFilterer{contract: contract}}, nil
 }
 
-// NewClaimsCaller creates a new read-only instance of Claims, bound to a specific deployed contract.
-func NewClaimsCaller(address common.Address, caller bind.ContractCaller) (*ClaimsCaller, error) {
-	contract, err := bindClaims(address, caller, nil, nil)
+// NewClaimsContractBindingCaller creates a new read-only instance of ClaimsContractBinding, bound to a specific deployed contract.
+func NewClaimsContractBindingCaller(address common.Address, caller bind.ContractCaller) (*ClaimsContractBindingCaller, error) {
+	contract, err := bindClaimsContractBinding(address, caller, nil, nil)
 	if err != nil {
 		return nil, err
 	}
-	return &ClaimsCaller{contract: contract}, nil
+	return &ClaimsContractBindingCaller{contract: contract}, nil
 }
 
-// NewClaimsTransactor creates a new write-only instance of Claims, bound to a specific deployed contract.
-func NewClaimsTransactor(address common.Address, transactor bind.ContractTransactor) (*ClaimsTransactor, error) {
-	contract, err := bindClaims(address, nil, transactor, nil)
+// NewClaimsContractBindingTransactor creates a new write-only instance of ClaimsContractBinding, bound to a specific deployed contract.
+func NewClaimsContractBindingTransactor(address common.Address, transactor bind.ContractTransactor) (*ClaimsContractBindingTransactor, error) {
+	contract, err := bindClaimsContractBinding(address, nil, transactor, nil)
 	if err != nil {
 		return nil, err
 	}
-	return &ClaimsTransactor{contract: contract}, nil
+	return &ClaimsContractBindingTransactor{contract: contract}, nil
 }
 
-// NewClaimsFilterer creates a new log filterer instance of Claims, bound to a specific deployed contract.
-func NewClaimsFilterer(address common.Address, filterer bind.ContractFilterer) (*ClaimsFilterer, error) {
-	contract, err := bindClaims(address, nil, nil, filterer)
+// NewClaimsContractBindingFilterer creates a new log filterer instance of ClaimsContractBinding, bound to a specific deployed contract.
+func NewClaimsContractBindingFilterer(address common.Address, filterer bind.ContractFilterer) (*ClaimsContractBindingFilterer, error) {
+	contract, err := bindClaimsContractBinding(address, nil, nil, filterer)
 	if err != nil {
 		return nil, err
 	}
-	return &ClaimsFilterer{contract: contract}, nil
+	return &ClaimsContractBindingFilterer{contract: contract}, nil
 }
 
-// bindClaims binds a generic wrapper to an already deployed contract.
-func bindClaims(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
-	parsed, err := ClaimsMetaData.GetAbi()
+// bindClaimsContractBinding binds a generic wrapper to an already deployed contract.
+func bindClaimsContractBinding(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
+	parsed, err := ClaimsContractBindingMetaData.GetAbi()
 	if err != nil {
 		return nil, err
 	}
@@ -146,46 +146,46 @@ func bindClaims(address common.Address, caller bind.ContractCaller, transactor b
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Claims *ClaimsRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
-	return _Claims.Contract.ClaimsCaller.contract.Call(opts, result, method, params...)
+func (_ClaimsContractBinding *ClaimsContractBindingRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+	return _ClaimsContractBinding.Contract.ClaimsContractBindingCaller.contract.Call(opts, result, method, params...)
 }
 
 // Transfer initiates a plain transaction to move funds to the contract, calling
 // its default method if one is available.
-func (_Claims *ClaimsRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _Claims.Contract.ClaimsTransactor.contract.Transfer(opts)
+func (_ClaimsContractBinding *ClaimsContractBindingRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.ClaimsContractBindingTransactor.contract.Transfer(opts)
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Claims *ClaimsRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
-	return _Claims.Contract.ClaimsTransactor.contract.Transact(opts, method, params...)
+func (_ClaimsContractBinding *ClaimsContractBindingRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.ClaimsContractBindingTransactor.contract.Transact(opts, method, params...)
 }
 
 // Call invokes the (constant) contract method with params as input values and
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Claims *ClaimsCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
-	return _Claims.Contract.contract.Call(opts, result, method, params...)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+	return _ClaimsContractBinding.Contract.contract.Call(opts, result, method, params...)
 }
 
 // Transfer initiates a plain transaction to move funds to the contract, calling
 // its default method if one is available.
-func (_Claims *ClaimsTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _Claims.Contract.contract.Transfer(opts)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.contract.Transfer(opts)
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Claims *ClaimsTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
-	return _Claims.Contract.contract.Transact(opts, method, params...)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.contract.Transact(opts, method, params...)
 }
 
 // ADDRESSSTAKEN is a free data retrieval call binding the contract method 0x232c33bc.
 //
 // Solidity: function ADDRESS_STAKE_N() view returns(uint8)
-func (_Claims *ClaimsCaller) ADDRESSSTAKEN(opts *bind.CallOpts) (uint8, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) ADDRESSSTAKEN(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "ADDRESS_STAKE_N")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "ADDRESS_STAKE_N")
 
 	if err != nil {
 		return *new(uint8), err
@@ -200,23 +200,23 @@ func (_Claims *ClaimsCaller) ADDRESSSTAKEN(opts *bind.CallOpts) (uint8, error) {
 // ADDRESSSTAKEN is a free data retrieval call binding the contract method 0x232c33bc.
 //
 // Solidity: function ADDRESS_STAKE_N() view returns(uint8)
-func (_Claims *ClaimsSession) ADDRESSSTAKEN() (uint8, error) {
-	return _Claims.Contract.ADDRESSSTAKEN(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) ADDRESSSTAKEN() (uint8, error) {
+	return _ClaimsContractBinding.Contract.ADDRESSSTAKEN(&_ClaimsContractBinding.CallOpts)
 }
 
 // ADDRESSSTAKEN is a free data retrieval call binding the contract method 0x232c33bc.
 //
 // Solidity: function ADDRESS_STAKE_N() view returns(uint8)
-func (_Claims *ClaimsCallerSession) ADDRESSSTAKEN() (uint8, error) {
-	return _Claims.Contract.ADDRESSSTAKEN(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) ADDRESSSTAKEN() (uint8, error) {
+	return _ClaimsContractBinding.Contract.ADDRESSSTAKEN(&_ClaimsContractBinding.CallOpts)
 }
 
 // ADDRESSSTAKEY is a free data retrieval call binding the contract method 0xed5822b1.
 //
 // Solidity: function ADDRESS_STAKE_Y() view returns(uint8)
-func (_Claims *ClaimsCaller) ADDRESSSTAKEY(opts *bind.CallOpts) (uint8, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) ADDRESSSTAKEY(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "ADDRESS_STAKE_Y")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "ADDRESS_STAKE_Y")
 
 	if err != nil {
 		return *new(uint8), err
@@ -231,23 +231,23 @@ func (_Claims *ClaimsCaller) ADDRESSSTAKEY(opts *bind.CallOpts) (uint8, error) {
 // ADDRESSSTAKEY is a free data retrieval call binding the contract method 0xed5822b1.
 //
 // Solidity: function ADDRESS_STAKE_Y() view returns(uint8)
-func (_Claims *ClaimsSession) ADDRESSSTAKEY() (uint8, error) {
-	return _Claims.Contract.ADDRESSSTAKEY(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) ADDRESSSTAKEY() (uint8, error) {
+	return _ClaimsContractBinding.Contract.ADDRESSSTAKEY(&_ClaimsContractBinding.CallOpts)
 }
 
 // ADDRESSSTAKEY is a free data retrieval call binding the contract method 0xed5822b1.
 //
 // Solidity: function ADDRESS_STAKE_Y() view returns(uint8)
-func (_Claims *ClaimsCallerSession) ADDRESSSTAKEY() (uint8, error) {
-	return _Claims.Contract.ADDRESSSTAKEY(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) ADDRESSSTAKEY() (uint8, error) {
+	return _ClaimsContractBinding.Contract.ADDRESSSTAKEY(&_ClaimsContractBinding.CallOpts)
 }
 
 // BASISTOTAL is a free data retrieval call binding the contract method 0x9a61d8c3.
 //
 // Solidity: function BASIS_TOTAL() view returns(uint16)
-func (_Claims *ClaimsCaller) BASISTOTAL(opts *bind.CallOpts) (uint16, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) BASISTOTAL(opts *bind.CallOpts) (uint16, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "BASIS_TOTAL")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "BASIS_TOTAL")
 
 	if err != nil {
 		return *new(uint16), err
@@ -262,23 +262,23 @@ func (_Claims *ClaimsCaller) BASISTOTAL(opts *bind.CallOpts) (uint16, error) {
 // BASISTOTAL is a free data retrieval call binding the contract method 0x9a61d8c3.
 //
 // Solidity: function BASIS_TOTAL() view returns(uint16)
-func (_Claims *ClaimsSession) BASISTOTAL() (uint16, error) {
-	return _Claims.Contract.BASISTOTAL(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) BASISTOTAL() (uint16, error) {
+	return _ClaimsContractBinding.Contract.BASISTOTAL(&_ClaimsContractBinding.CallOpts)
 }
 
 // BASISTOTAL is a free data retrieval call binding the contract method 0x9a61d8c3.
 //
 // Solidity: function BASIS_TOTAL() view returns(uint16)
-func (_Claims *ClaimsCallerSession) BASISTOTAL() (uint16, error) {
-	return _Claims.Contract.BASISTOTAL(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) BASISTOTAL() (uint16, error) {
+	return _ClaimsContractBinding.Contract.BASISTOTAL(&_ClaimsContractBinding.CallOpts)
 }
 
 // BOTROLE is a free data retrieval call binding the contract method 0xb1503774.
 //
 // Solidity: function BOT_ROLE() view returns(bytes32)
-func (_Claims *ClaimsCaller) BOTROLE(opts *bind.CallOpts) ([32]byte, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) BOTROLE(opts *bind.CallOpts) ([32]byte, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "BOT_ROLE")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "BOT_ROLE")
 
 	if err != nil {
 		return *new([32]byte), err
@@ -293,23 +293,23 @@ func (_Claims *ClaimsCaller) BOTROLE(opts *bind.CallOpts) ([32]byte, error) {
 // BOTROLE is a free data retrieval call binding the contract method 0xb1503774.
 //
 // Solidity: function BOT_ROLE() view returns(bytes32)
-func (_Claims *ClaimsSession) BOTROLE() ([32]byte, error) {
-	return _Claims.Contract.BOTROLE(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) BOTROLE() ([32]byte, error) {
+	return _ClaimsContractBinding.Contract.BOTROLE(&_ClaimsContractBinding.CallOpts)
 }
 
 // BOTROLE is a free data retrieval call binding the contract method 0xb1503774.
 //
 // Solidity: function BOT_ROLE() view returns(bytes32)
-func (_Claims *ClaimsCallerSession) BOTROLE() ([32]byte, error) {
-	return _Claims.Contract.BOTROLE(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) BOTROLE() ([32]byte, error) {
+	return _ClaimsContractBinding.Contract.BOTROLE(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMADDRESSN is a free data retrieval call binding the contract method 0x5722c818.
 //
 // Solidity: function CLAIM_ADDRESS_N() view returns(uint8)
-func (_Claims *ClaimsCaller) CLAIMADDRESSN(opts *bind.CallOpts) (uint8, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) CLAIMADDRESSN(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "CLAIM_ADDRESS_N")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "CLAIM_ADDRESS_N")
 
 	if err != nil {
 		return *new(uint8), err
@@ -324,23 +324,23 @@ func (_Claims *ClaimsCaller) CLAIMADDRESSN(opts *bind.CallOpts) (uint8, error) {
 // CLAIMADDRESSN is a free data retrieval call binding the contract method 0x5722c818.
 //
 // Solidity: function CLAIM_ADDRESS_N() view returns(uint8)
-func (_Claims *ClaimsSession) CLAIMADDRESSN() (uint8, error) {
-	return _Claims.Contract.CLAIMADDRESSN(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) CLAIMADDRESSN() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMADDRESSN(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMADDRESSN is a free data retrieval call binding the contract method 0x5722c818.
 //
 // Solidity: function CLAIM_ADDRESS_N() view returns(uint8)
-func (_Claims *ClaimsCallerSession) CLAIMADDRESSN() (uint8, error) {
-	return _Claims.Contract.CLAIMADDRESSN(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) CLAIMADDRESSN() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMADDRESSN(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMADDRESSY is a free data retrieval call binding the contract method 0x14ea97a1.
 //
 // Solidity: function CLAIM_ADDRESS_Y() view returns(uint8)
-func (_Claims *ClaimsCaller) CLAIMADDRESSY(opts *bind.CallOpts) (uint8, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) CLAIMADDRESSY(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "CLAIM_ADDRESS_Y")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "CLAIM_ADDRESS_Y")
 
 	if err != nil {
 		return *new(uint8), err
@@ -355,23 +355,23 @@ func (_Claims *ClaimsCaller) CLAIMADDRESSY(opts *bind.CallOpts) (uint8, error) {
 // CLAIMADDRESSY is a free data retrieval call binding the contract method 0x14ea97a1.
 //
 // Solidity: function CLAIM_ADDRESS_Y() view returns(uint8)
-func (_Claims *ClaimsSession) CLAIMADDRESSY() (uint8, error) {
-	return _Claims.Contract.CLAIMADDRESSY(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) CLAIMADDRESSY() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMADDRESSY(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMADDRESSY is a free data retrieval call binding the contract method 0x14ea97a1.
 //
 // Solidity: function CLAIM_ADDRESS_Y() view returns(uint8)
-func (_Claims *ClaimsCallerSession) CLAIMADDRESSY() (uint8, error) {
-	return _Claims.Contract.CLAIMADDRESSY(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) CLAIMADDRESSY() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMADDRESSY(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMBALANCEP is a free data retrieval call binding the contract method 0x409f9ba8.
 //
 // Solidity: function CLAIM_BALANCE_P() view returns(uint8)
-func (_Claims *ClaimsCaller) CLAIMBALANCEP(opts *bind.CallOpts) (uint8, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) CLAIMBALANCEP(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "CLAIM_BALANCE_P")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "CLAIM_BALANCE_P")
 
 	if err != nil {
 		return *new(uint8), err
@@ -386,23 +386,23 @@ func (_Claims *ClaimsCaller) CLAIMBALANCEP(opts *bind.CallOpts) (uint8, error) {
 // CLAIMBALANCEP is a free data retrieval call binding the contract method 0x409f9ba8.
 //
 // Solidity: function CLAIM_BALANCE_P() view returns(uint8)
-func (_Claims *ClaimsSession) CLAIMBALANCEP() (uint8, error) {
-	return _Claims.Contract.CLAIMBALANCEP(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) CLAIMBALANCEP() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMBALANCEP(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMBALANCEP is a free data retrieval call binding the contract method 0x409f9ba8.
 //
 // Solidity: function CLAIM_BALANCE_P() view returns(uint8)
-func (_Claims *ClaimsCallerSession) CLAIMBALANCEP() (uint8, error) {
-	return _Claims.Contract.CLAIMBALANCEP(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) CLAIMBALANCEP() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMBALANCEP(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMBALANCER is a free data retrieval call binding the contract method 0x098e92bd.
 //
 // Solidity: function CLAIM_BALANCE_R() view returns(uint8)
-func (_Claims *ClaimsCaller) CLAIMBALANCER(opts *bind.CallOpts) (uint8, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) CLAIMBALANCER(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "CLAIM_BALANCE_R")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "CLAIM_BALANCE_R")
 
 	if err != nil {
 		return *new(uint8), err
@@ -417,23 +417,23 @@ func (_Claims *ClaimsCaller) CLAIMBALANCER(opts *bind.CallOpts) (uint8, error) {
 // CLAIMBALANCER is a free data retrieval call binding the contract method 0x098e92bd.
 //
 // Solidity: function CLAIM_BALANCE_R() view returns(uint8)
-func (_Claims *ClaimsSession) CLAIMBALANCER() (uint8, error) {
-	return _Claims.Contract.CLAIMBALANCER(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) CLAIMBALANCER() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMBALANCER(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMBALANCER is a free data retrieval call binding the contract method 0x098e92bd.
 //
 // Solidity: function CLAIM_BALANCE_R() view returns(uint8)
-func (_Claims *ClaimsCallerSession) CLAIMBALANCER() (uint8, error) {
-	return _Claims.Contract.CLAIMBALANCER(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) CLAIMBALANCER() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMBALANCER(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMBALANCEU is a free data retrieval call binding the contract method 0x4043ae78.
 //
 // Solidity: function CLAIM_BALANCE_U() view returns(uint8)
-func (_Claims *ClaimsCaller) CLAIMBALANCEU(opts *bind.CallOpts) (uint8, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) CLAIMBALANCEU(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "CLAIM_BALANCE_U")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "CLAIM_BALANCE_U")
 
 	if err != nil {
 		return *new(uint8), err
@@ -448,23 +448,23 @@ func (_Claims *ClaimsCaller) CLAIMBALANCEU(opts *bind.CallOpts) (uint8, error) {
 // CLAIMBALANCEU is a free data retrieval call binding the contract method 0x4043ae78.
 //
 // Solidity: function CLAIM_BALANCE_U() view returns(uint8)
-func (_Claims *ClaimsSession) CLAIMBALANCEU() (uint8, error) {
-	return _Claims.Contract.CLAIMBALANCEU(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) CLAIMBALANCEU() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMBALANCEU(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMBALANCEU is a free data retrieval call binding the contract method 0x4043ae78.
 //
 // Solidity: function CLAIM_BALANCE_U() view returns(uint8)
-func (_Claims *ClaimsCallerSession) CLAIMBALANCEU() (uint8, error) {
-	return _Claims.Contract.CLAIMBALANCEU(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) CLAIMBALANCEU() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMBALANCEU(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMEXPIRYP is a free data retrieval call binding the contract method 0x55151f23.
 //
 // Solidity: function CLAIM_EXPIRY_P() view returns(uint8)
-func (_Claims *ClaimsCaller) CLAIMEXPIRYP(opts *bind.CallOpts) (uint8, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) CLAIMEXPIRYP(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "CLAIM_EXPIRY_P")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "CLAIM_EXPIRY_P")
 
 	if err != nil {
 		return *new(uint8), err
@@ -479,23 +479,23 @@ func (_Claims *ClaimsCaller) CLAIMEXPIRYP(opts *bind.CallOpts) (uint8, error) {
 // CLAIMEXPIRYP is a free data retrieval call binding the contract method 0x55151f23.
 //
 // Solidity: function CLAIM_EXPIRY_P() view returns(uint8)
-func (_Claims *ClaimsSession) CLAIMEXPIRYP() (uint8, error) {
-	return _Claims.Contract.CLAIMEXPIRYP(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) CLAIMEXPIRYP() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMEXPIRYP(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMEXPIRYP is a free data retrieval call binding the contract method 0x55151f23.
 //
 // Solidity: function CLAIM_EXPIRY_P() view returns(uint8)
-func (_Claims *ClaimsCallerSession) CLAIMEXPIRYP() (uint8, error) {
-	return _Claims.Contract.CLAIMEXPIRYP(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) CLAIMEXPIRYP() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMEXPIRYP(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMEXPIRYR is a free data retrieval call binding the contract method 0x4884a67b.
 //
 // Solidity: function CLAIM_EXPIRY_R() view returns(uint8)
-func (_Claims *ClaimsCaller) CLAIMEXPIRYR(opts *bind.CallOpts) (uint8, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) CLAIMEXPIRYR(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "CLAIM_EXPIRY_R")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "CLAIM_EXPIRY_R")
 
 	if err != nil {
 		return *new(uint8), err
@@ -510,23 +510,23 @@ func (_Claims *ClaimsCaller) CLAIMEXPIRYR(opts *bind.CallOpts) (uint8, error) {
 // CLAIMEXPIRYR is a free data retrieval call binding the contract method 0x4884a67b.
 //
 // Solidity: function CLAIM_EXPIRY_R() view returns(uint8)
-func (_Claims *ClaimsSession) CLAIMEXPIRYR() (uint8, error) {
-	return _Claims.Contract.CLAIMEXPIRYR(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) CLAIMEXPIRYR() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMEXPIRYR(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMEXPIRYR is a free data retrieval call binding the contract method 0x4884a67b.
 //
 // Solidity: function CLAIM_EXPIRY_R() view returns(uint8)
-func (_Claims *ClaimsCallerSession) CLAIMEXPIRYR() (uint8, error) {
-	return _Claims.Contract.CLAIMEXPIRYR(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) CLAIMEXPIRYR() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMEXPIRYR(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMEXPIRYT is a free data retrieval call binding the contract method 0x970be447.
 //
 // Solidity: function CLAIM_EXPIRY_T() view returns(uint8)
-func (_Claims *ClaimsCaller) CLAIMEXPIRYT(opts *bind.CallOpts) (uint8, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) CLAIMEXPIRYT(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "CLAIM_EXPIRY_T")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "CLAIM_EXPIRY_T")
 
 	if err != nil {
 		return *new(uint8), err
@@ -541,23 +541,23 @@ func (_Claims *ClaimsCaller) CLAIMEXPIRYT(opts *bind.CallOpts) (uint8, error) {
 // CLAIMEXPIRYT is a free data retrieval call binding the contract method 0x970be447.
 //
 // Solidity: function CLAIM_EXPIRY_T() view returns(uint8)
-func (_Claims *ClaimsSession) CLAIMEXPIRYT() (uint8, error) {
-	return _Claims.Contract.CLAIMEXPIRYT(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) CLAIMEXPIRYT() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMEXPIRYT(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMEXPIRYT is a free data retrieval call binding the contract method 0x970be447.
 //
 // Solidity: function CLAIM_EXPIRY_T() view returns(uint8)
-func (_Claims *ClaimsCallerSession) CLAIMEXPIRYT() (uint8, error) {
-	return _Claims.Contract.CLAIMEXPIRYT(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) CLAIMEXPIRYT() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMEXPIRYT(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMSTAKEA is a free data retrieval call binding the contract method 0xe4b2d71e.
 //
 // Solidity: function CLAIM_STAKE_A() view returns(uint8)
-func (_Claims *ClaimsCaller) CLAIMSTAKEA(opts *bind.CallOpts) (uint8, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) CLAIMSTAKEA(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "CLAIM_STAKE_A")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "CLAIM_STAKE_A")
 
 	if err != nil {
 		return *new(uint8), err
@@ -572,23 +572,23 @@ func (_Claims *ClaimsCaller) CLAIMSTAKEA(opts *bind.CallOpts) (uint8, error) {
 // CLAIMSTAKEA is a free data retrieval call binding the contract method 0xe4b2d71e.
 //
 // Solidity: function CLAIM_STAKE_A() view returns(uint8)
-func (_Claims *ClaimsSession) CLAIMSTAKEA() (uint8, error) {
-	return _Claims.Contract.CLAIMSTAKEA(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) CLAIMSTAKEA() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMSTAKEA(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMSTAKEA is a free data retrieval call binding the contract method 0xe4b2d71e.
 //
 // Solidity: function CLAIM_STAKE_A() view returns(uint8)
-func (_Claims *ClaimsCallerSession) CLAIMSTAKEA() (uint8, error) {
-	return _Claims.Contract.CLAIMSTAKEA(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) CLAIMSTAKEA() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMSTAKEA(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMSTAKEB is a free data retrieval call binding the contract method 0xecc94e8f.
 //
 // Solidity: function CLAIM_STAKE_B() view returns(uint8)
-func (_Claims *ClaimsCaller) CLAIMSTAKEB(opts *bind.CallOpts) (uint8, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) CLAIMSTAKEB(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "CLAIM_STAKE_B")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "CLAIM_STAKE_B")
 
 	if err != nil {
 		return *new(uint8), err
@@ -603,23 +603,23 @@ func (_Claims *ClaimsCaller) CLAIMSTAKEB(opts *bind.CallOpts) (uint8, error) {
 // CLAIMSTAKEB is a free data retrieval call binding the contract method 0xecc94e8f.
 //
 // Solidity: function CLAIM_STAKE_B() view returns(uint8)
-func (_Claims *ClaimsSession) CLAIMSTAKEB() (uint8, error) {
-	return _Claims.Contract.CLAIMSTAKEB(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) CLAIMSTAKEB() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMSTAKEB(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMSTAKEB is a free data retrieval call binding the contract method 0xecc94e8f.
 //
 // Solidity: function CLAIM_STAKE_B() view returns(uint8)
-func (_Claims *ClaimsCallerSession) CLAIMSTAKEB() (uint8, error) {
-	return _Claims.Contract.CLAIMSTAKEB(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) CLAIMSTAKEB() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMSTAKEB(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMSTAKEC is a free data retrieval call binding the contract method 0x8781fa03.
 //
 // Solidity: function CLAIM_STAKE_C() view returns(uint8)
-func (_Claims *ClaimsCaller) CLAIMSTAKEC(opts *bind.CallOpts) (uint8, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) CLAIMSTAKEC(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "CLAIM_STAKE_C")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "CLAIM_STAKE_C")
 
 	if err != nil {
 		return *new(uint8), err
@@ -634,23 +634,23 @@ func (_Claims *ClaimsCaller) CLAIMSTAKEC(opts *bind.CallOpts) (uint8, error) {
 // CLAIMSTAKEC is a free data retrieval call binding the contract method 0x8781fa03.
 //
 // Solidity: function CLAIM_STAKE_C() view returns(uint8)
-func (_Claims *ClaimsSession) CLAIMSTAKEC() (uint8, error) {
-	return _Claims.Contract.CLAIMSTAKEC(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) CLAIMSTAKEC() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMSTAKEC(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMSTAKEC is a free data retrieval call binding the contract method 0x8781fa03.
 //
 // Solidity: function CLAIM_STAKE_C() view returns(uint8)
-func (_Claims *ClaimsCallerSession) CLAIMSTAKEC() (uint8, error) {
-	return _Claims.Contract.CLAIMSTAKEC(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) CLAIMSTAKEC() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMSTAKEC(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMSTAKED is a free data retrieval call binding the contract method 0x62f487a1.
 //
 // Solidity: function CLAIM_STAKE_D() view returns(uint8)
-func (_Claims *ClaimsCaller) CLAIMSTAKED(opts *bind.CallOpts) (uint8, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) CLAIMSTAKED(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "CLAIM_STAKE_D")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "CLAIM_STAKE_D")
 
 	if err != nil {
 		return *new(uint8), err
@@ -665,23 +665,23 @@ func (_Claims *ClaimsCaller) CLAIMSTAKED(opts *bind.CallOpts) (uint8, error) {
 // CLAIMSTAKED is a free data retrieval call binding the contract method 0x62f487a1.
 //
 // Solidity: function CLAIM_STAKE_D() view returns(uint8)
-func (_Claims *ClaimsSession) CLAIMSTAKED() (uint8, error) {
-	return _Claims.Contract.CLAIMSTAKED(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) CLAIMSTAKED() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMSTAKED(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMSTAKED is a free data retrieval call binding the contract method 0x62f487a1.
 //
 // Solidity: function CLAIM_STAKE_D() view returns(uint8)
-func (_Claims *ClaimsCallerSession) CLAIMSTAKED() (uint8, error) {
-	return _Claims.Contract.CLAIMSTAKED(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) CLAIMSTAKED() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMSTAKED(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMSTAKEN is a free data retrieval call binding the contract method 0x4e38bd03.
 //
 // Solidity: function CLAIM_STAKE_N() view returns(uint8)
-func (_Claims *ClaimsCaller) CLAIMSTAKEN(opts *bind.CallOpts) (uint8, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) CLAIMSTAKEN(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "CLAIM_STAKE_N")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "CLAIM_STAKE_N")
 
 	if err != nil {
 		return *new(uint8), err
@@ -696,23 +696,23 @@ func (_Claims *ClaimsCaller) CLAIMSTAKEN(opts *bind.CallOpts) (uint8, error) {
 // CLAIMSTAKEN is a free data retrieval call binding the contract method 0x4e38bd03.
 //
 // Solidity: function CLAIM_STAKE_N() view returns(uint8)
-func (_Claims *ClaimsSession) CLAIMSTAKEN() (uint8, error) {
-	return _Claims.Contract.CLAIMSTAKEN(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) CLAIMSTAKEN() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMSTAKEN(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMSTAKEN is a free data retrieval call binding the contract method 0x4e38bd03.
 //
 // Solidity: function CLAIM_STAKE_N() view returns(uint8)
-func (_Claims *ClaimsCallerSession) CLAIMSTAKEN() (uint8, error) {
-	return _Claims.Contract.CLAIMSTAKEN(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) CLAIMSTAKEN() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMSTAKEN(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMSTAKEY is a free data retrieval call binding the contract method 0x4ded0e71.
 //
 // Solidity: function CLAIM_STAKE_Y() view returns(uint8)
-func (_Claims *ClaimsCaller) CLAIMSTAKEY(opts *bind.CallOpts) (uint8, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) CLAIMSTAKEY(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "CLAIM_STAKE_Y")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "CLAIM_STAKE_Y")
 
 	if err != nil {
 		return *new(uint8), err
@@ -727,23 +727,23 @@ func (_Claims *ClaimsCaller) CLAIMSTAKEY(opts *bind.CallOpts) (uint8, error) {
 // CLAIMSTAKEY is a free data retrieval call binding the contract method 0x4ded0e71.
 //
 // Solidity: function CLAIM_STAKE_Y() view returns(uint8)
-func (_Claims *ClaimsSession) CLAIMSTAKEY() (uint8, error) {
-	return _Claims.Contract.CLAIMSTAKEY(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) CLAIMSTAKEY() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMSTAKEY(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMSTAKEY is a free data retrieval call binding the contract method 0x4ded0e71.
 //
 // Solidity: function CLAIM_STAKE_Y() view returns(uint8)
-func (_Claims *ClaimsCallerSession) CLAIMSTAKEY() (uint8, error) {
-	return _Claims.Contract.CLAIMSTAKEY(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) CLAIMSTAKEY() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMSTAKEY(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMTRUTHN is a free data retrieval call binding the contract method 0x0e532ff2.
 //
 // Solidity: function CLAIM_TRUTH_N() view returns(uint8)
-func (_Claims *ClaimsCaller) CLAIMTRUTHN(opts *bind.CallOpts) (uint8, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) CLAIMTRUTHN(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "CLAIM_TRUTH_N")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "CLAIM_TRUTH_N")
 
 	if err != nil {
 		return *new(uint8), err
@@ -758,23 +758,23 @@ func (_Claims *ClaimsCaller) CLAIMTRUTHN(opts *bind.CallOpts) (uint8, error) {
 // CLAIMTRUTHN is a free data retrieval call binding the contract method 0x0e532ff2.
 //
 // Solidity: function CLAIM_TRUTH_N() view returns(uint8)
-func (_Claims *ClaimsSession) CLAIMTRUTHN() (uint8, error) {
-	return _Claims.Contract.CLAIMTRUTHN(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) CLAIMTRUTHN() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMTRUTHN(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMTRUTHN is a free data retrieval call binding the contract method 0x0e532ff2.
 //
 // Solidity: function CLAIM_TRUTH_N() view returns(uint8)
-func (_Claims *ClaimsCallerSession) CLAIMTRUTHN() (uint8, error) {
-	return _Claims.Contract.CLAIMTRUTHN(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) CLAIMTRUTHN() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMTRUTHN(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMTRUTHY is a free data retrieval call binding the contract method 0x33d9a313.
 //
 // Solidity: function CLAIM_TRUTH_Y() view returns(uint8)
-func (_Claims *ClaimsCaller) CLAIMTRUTHY(opts *bind.CallOpts) (uint8, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) CLAIMTRUTHY(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "CLAIM_TRUTH_Y")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "CLAIM_TRUTH_Y")
 
 	if err != nil {
 		return *new(uint8), err
@@ -789,23 +789,23 @@ func (_Claims *ClaimsCaller) CLAIMTRUTHY(opts *bind.CallOpts) (uint8, error) {
 // CLAIMTRUTHY is a free data retrieval call binding the contract method 0x33d9a313.
 //
 // Solidity: function CLAIM_TRUTH_Y() view returns(uint8)
-func (_Claims *ClaimsSession) CLAIMTRUTHY() (uint8, error) {
-	return _Claims.Contract.CLAIMTRUTHY(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) CLAIMTRUTHY() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMTRUTHY(&_ClaimsContractBinding.CallOpts)
 }
 
 // CLAIMTRUTHY is a free data retrieval call binding the contract method 0x33d9a313.
 //
 // Solidity: function CLAIM_TRUTH_Y() view returns(uint8)
-func (_Claims *ClaimsCallerSession) CLAIMTRUTHY() (uint8, error) {
-	return _Claims.Contract.CLAIMTRUTHY(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) CLAIMTRUTHY() (uint8, error) {
+	return _ClaimsContractBinding.Contract.CLAIMTRUTHY(&_ClaimsContractBinding.CallOpts)
 }
 
 // DEFAULTADMINROLE is a free data retrieval call binding the contract method 0xa217fddf.
 //
 // Solidity: function DEFAULT_ADMIN_ROLE() view returns(bytes32)
-func (_Claims *ClaimsCaller) DEFAULTADMINROLE(opts *bind.CallOpts) ([32]byte, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) DEFAULTADMINROLE(opts *bind.CallOpts) ([32]byte, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "DEFAULT_ADMIN_ROLE")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "DEFAULT_ADMIN_ROLE")
 
 	if err != nil {
 		return *new([32]byte), err
@@ -820,23 +820,23 @@ func (_Claims *ClaimsCaller) DEFAULTADMINROLE(opts *bind.CallOpts) ([32]byte, er
 // DEFAULTADMINROLE is a free data retrieval call binding the contract method 0xa217fddf.
 //
 // Solidity: function DEFAULT_ADMIN_ROLE() view returns(bytes32)
-func (_Claims *ClaimsSession) DEFAULTADMINROLE() ([32]byte, error) {
-	return _Claims.Contract.DEFAULTADMINROLE(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) DEFAULTADMINROLE() ([32]byte, error) {
+	return _ClaimsContractBinding.Contract.DEFAULTADMINROLE(&_ClaimsContractBinding.CallOpts)
 }
 
 // DEFAULTADMINROLE is a free data retrieval call binding the contract method 0xa217fddf.
 //
 // Solidity: function DEFAULT_ADMIN_ROLE() view returns(bytes32)
-func (_Claims *ClaimsCallerSession) DEFAULTADMINROLE() ([32]byte, error) {
-	return _Claims.Contract.DEFAULTADMINROLE(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) DEFAULTADMINROLE() ([32]byte, error) {
+	return _ClaimsContractBinding.Contract.DEFAULTADMINROLE(&_ClaimsContractBinding.CallOpts)
 }
 
 // MAXUINT256 is a free data retrieval call binding the contract method 0x33a581d2.
 //
 // Solidity: function MAX_UINT256() view returns(uint256)
-func (_Claims *ClaimsCaller) MAXUINT256(opts *bind.CallOpts) (*big.Int, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) MAXUINT256(opts *bind.CallOpts) (*big.Int, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "MAX_UINT256")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "MAX_UINT256")
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -851,23 +851,23 @@ func (_Claims *ClaimsCaller) MAXUINT256(opts *bind.CallOpts) (*big.Int, error) {
 // MAXUINT256 is a free data retrieval call binding the contract method 0x33a581d2.
 //
 // Solidity: function MAX_UINT256() view returns(uint256)
-func (_Claims *ClaimsSession) MAXUINT256() (*big.Int, error) {
-	return _Claims.Contract.MAXUINT256(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) MAXUINT256() (*big.Int, error) {
+	return _ClaimsContractBinding.Contract.MAXUINT256(&_ClaimsContractBinding.CallOpts)
 }
 
 // MAXUINT256 is a free data retrieval call binding the contract method 0x33a581d2.
 //
 // Solidity: function MAX_UINT256() view returns(uint256)
-func (_Claims *ClaimsCallerSession) MAXUINT256() (*big.Int, error) {
-	return _Claims.Contract.MAXUINT256(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) MAXUINT256() (*big.Int, error) {
+	return _ClaimsContractBinding.Contract.MAXUINT256(&_ClaimsContractBinding.CallOpts)
 }
 
 // MIDUINT256 is a free data retrieval call binding the contract method 0x795433da.
 //
 // Solidity: function MID_UINT256() view returns(uint256)
-func (_Claims *ClaimsCaller) MIDUINT256(opts *bind.CallOpts) (*big.Int, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) MIDUINT256(opts *bind.CallOpts) (*big.Int, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "MID_UINT256")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "MID_UINT256")
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -882,23 +882,23 @@ func (_Claims *ClaimsCaller) MIDUINT256(opts *bind.CallOpts) (*big.Int, error) {
 // MIDUINT256 is a free data retrieval call binding the contract method 0x795433da.
 //
 // Solidity: function MID_UINT256() view returns(uint256)
-func (_Claims *ClaimsSession) MIDUINT256() (*big.Int, error) {
-	return _Claims.Contract.MIDUINT256(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) MIDUINT256() (*big.Int, error) {
+	return _ClaimsContractBinding.Contract.MIDUINT256(&_ClaimsContractBinding.CallOpts)
 }
 
 // MIDUINT256 is a free data retrieval call binding the contract method 0x795433da.
 //
 // Solidity: function MID_UINT256() view returns(uint256)
-func (_Claims *ClaimsCallerSession) MIDUINT256() (*big.Int, error) {
-	return _Claims.Contract.MIDUINT256(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) MIDUINT256() (*big.Int, error) {
+	return _ClaimsContractBinding.Contract.MIDUINT256(&_ClaimsContractBinding.CallOpts)
 }
 
 // VERSION is a free data retrieval call binding the contract method 0xffa1ad74.
 //
 // Solidity: function VERSION() view returns(string)
-func (_Claims *ClaimsCaller) VERSION(opts *bind.CallOpts) (string, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) VERSION(opts *bind.CallOpts) (string, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "VERSION")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "VERSION")
 
 	if err != nil {
 		return *new(string), err
@@ -913,23 +913,23 @@ func (_Claims *ClaimsCaller) VERSION(opts *bind.CallOpts) (string, error) {
 // VERSION is a free data retrieval call binding the contract method 0xffa1ad74.
 //
 // Solidity: function VERSION() view returns(string)
-func (_Claims *ClaimsSession) VERSION() (string, error) {
-	return _Claims.Contract.VERSION(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) VERSION() (string, error) {
+	return _ClaimsContractBinding.Contract.VERSION(&_ClaimsContractBinding.CallOpts)
 }
 
 // VERSION is a free data retrieval call binding the contract method 0xffa1ad74.
 //
 // Solidity: function VERSION() view returns(string)
-func (_Claims *ClaimsCallerSession) VERSION() (string, error) {
-	return _Claims.Contract.VERSION(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) VERSION() (string, error) {
+	return _ClaimsContractBinding.Contract.VERSION(&_ClaimsContractBinding.CallOpts)
 }
 
 // VOTESTAKEN is a free data retrieval call binding the contract method 0xc61f0ae8.
 //
 // Solidity: function VOTE_STAKE_N() view returns(uint8)
-func (_Claims *ClaimsCaller) VOTESTAKEN(opts *bind.CallOpts) (uint8, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) VOTESTAKEN(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "VOTE_STAKE_N")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "VOTE_STAKE_N")
 
 	if err != nil {
 		return *new(uint8), err
@@ -944,23 +944,23 @@ func (_Claims *ClaimsCaller) VOTESTAKEN(opts *bind.CallOpts) (uint8, error) {
 // VOTESTAKEN is a free data retrieval call binding the contract method 0xc61f0ae8.
 //
 // Solidity: function VOTE_STAKE_N() view returns(uint8)
-func (_Claims *ClaimsSession) VOTESTAKEN() (uint8, error) {
-	return _Claims.Contract.VOTESTAKEN(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) VOTESTAKEN() (uint8, error) {
+	return _ClaimsContractBinding.Contract.VOTESTAKEN(&_ClaimsContractBinding.CallOpts)
 }
 
 // VOTESTAKEN is a free data retrieval call binding the contract method 0xc61f0ae8.
 //
 // Solidity: function VOTE_STAKE_N() view returns(uint8)
-func (_Claims *ClaimsCallerSession) VOTESTAKEN() (uint8, error) {
-	return _Claims.Contract.VOTESTAKEN(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) VOTESTAKEN() (uint8, error) {
+	return _ClaimsContractBinding.Contract.VOTESTAKEN(&_ClaimsContractBinding.CallOpts)
 }
 
 // VOTESTAKEY is a free data retrieval call binding the contract method 0x54785755.
 //
 // Solidity: function VOTE_STAKE_Y() view returns(uint8)
-func (_Claims *ClaimsCaller) VOTESTAKEY(opts *bind.CallOpts) (uint8, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) VOTESTAKEY(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "VOTE_STAKE_Y")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "VOTE_STAKE_Y")
 
 	if err != nil {
 		return *new(uint8), err
@@ -975,23 +975,23 @@ func (_Claims *ClaimsCaller) VOTESTAKEY(opts *bind.CallOpts) (uint8, error) {
 // VOTESTAKEY is a free data retrieval call binding the contract method 0x54785755.
 //
 // Solidity: function VOTE_STAKE_Y() view returns(uint8)
-func (_Claims *ClaimsSession) VOTESTAKEY() (uint8, error) {
-	return _Claims.Contract.VOTESTAKEY(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) VOTESTAKEY() (uint8, error) {
+	return _ClaimsContractBinding.Contract.VOTESTAKEY(&_ClaimsContractBinding.CallOpts)
 }
 
 // VOTESTAKEY is a free data retrieval call binding the contract method 0x54785755.
 //
 // Solidity: function VOTE_STAKE_Y() view returns(uint8)
-func (_Claims *ClaimsCallerSession) VOTESTAKEY() (uint8, error) {
-	return _Claims.Contract.VOTESTAKEY(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) VOTESTAKEY() (uint8, error) {
+	return _ClaimsContractBinding.Contract.VOTESTAKEY(&_ClaimsContractBinding.CallOpts)
 }
 
 // VOTETRUTHN is a free data retrieval call binding the contract method 0x78997fc2.
 //
 // Solidity: function VOTE_TRUTH_N() view returns(uint8)
-func (_Claims *ClaimsCaller) VOTETRUTHN(opts *bind.CallOpts) (uint8, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) VOTETRUTHN(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "VOTE_TRUTH_N")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "VOTE_TRUTH_N")
 
 	if err != nil {
 		return *new(uint8), err
@@ -1006,23 +1006,23 @@ func (_Claims *ClaimsCaller) VOTETRUTHN(opts *bind.CallOpts) (uint8, error) {
 // VOTETRUTHN is a free data retrieval call binding the contract method 0x78997fc2.
 //
 // Solidity: function VOTE_TRUTH_N() view returns(uint8)
-func (_Claims *ClaimsSession) VOTETRUTHN() (uint8, error) {
-	return _Claims.Contract.VOTETRUTHN(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) VOTETRUTHN() (uint8, error) {
+	return _ClaimsContractBinding.Contract.VOTETRUTHN(&_ClaimsContractBinding.CallOpts)
 }
 
 // VOTETRUTHN is a free data retrieval call binding the contract method 0x78997fc2.
 //
 // Solidity: function VOTE_TRUTH_N() view returns(uint8)
-func (_Claims *ClaimsCallerSession) VOTETRUTHN() (uint8, error) {
-	return _Claims.Contract.VOTETRUTHN(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) VOTETRUTHN() (uint8, error) {
+	return _ClaimsContractBinding.Contract.VOTETRUTHN(&_ClaimsContractBinding.CallOpts)
 }
 
 // VOTETRUTHS is a free data retrieval call binding the contract method 0x8a10d237.
 //
 // Solidity: function VOTE_TRUTH_S() view returns(uint8)
-func (_Claims *ClaimsCaller) VOTETRUTHS(opts *bind.CallOpts) (uint8, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) VOTETRUTHS(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "VOTE_TRUTH_S")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "VOTE_TRUTH_S")
 
 	if err != nil {
 		return *new(uint8), err
@@ -1037,23 +1037,23 @@ func (_Claims *ClaimsCaller) VOTETRUTHS(opts *bind.CallOpts) (uint8, error) {
 // VOTETRUTHS is a free data retrieval call binding the contract method 0x8a10d237.
 //
 // Solidity: function VOTE_TRUTH_S() view returns(uint8)
-func (_Claims *ClaimsSession) VOTETRUTHS() (uint8, error) {
-	return _Claims.Contract.VOTETRUTHS(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) VOTETRUTHS() (uint8, error) {
+	return _ClaimsContractBinding.Contract.VOTETRUTHS(&_ClaimsContractBinding.CallOpts)
 }
 
 // VOTETRUTHS is a free data retrieval call binding the contract method 0x8a10d237.
 //
 // Solidity: function VOTE_TRUTH_S() view returns(uint8)
-func (_Claims *ClaimsCallerSession) VOTETRUTHS() (uint8, error) {
-	return _Claims.Contract.VOTETRUTHS(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) VOTETRUTHS() (uint8, error) {
+	return _ClaimsContractBinding.Contract.VOTETRUTHS(&_ClaimsContractBinding.CallOpts)
 }
 
 // VOTETRUTHV is a free data retrieval call binding the contract method 0xcc250655.
 //
 // Solidity: function VOTE_TRUTH_V() view returns(uint8)
-func (_Claims *ClaimsCaller) VOTETRUTHV(opts *bind.CallOpts) (uint8, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) VOTETRUTHV(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "VOTE_TRUTH_V")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "VOTE_TRUTH_V")
 
 	if err != nil {
 		return *new(uint8), err
@@ -1068,23 +1068,23 @@ func (_Claims *ClaimsCaller) VOTETRUTHV(opts *bind.CallOpts) (uint8, error) {
 // VOTETRUTHV is a free data retrieval call binding the contract method 0xcc250655.
 //
 // Solidity: function VOTE_TRUTH_V() view returns(uint8)
-func (_Claims *ClaimsSession) VOTETRUTHV() (uint8, error) {
-	return _Claims.Contract.VOTETRUTHV(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) VOTETRUTHV() (uint8, error) {
+	return _ClaimsContractBinding.Contract.VOTETRUTHV(&_ClaimsContractBinding.CallOpts)
 }
 
 // VOTETRUTHV is a free data retrieval call binding the contract method 0xcc250655.
 //
 // Solidity: function VOTE_TRUTH_V() view returns(uint8)
-func (_Claims *ClaimsCallerSession) VOTETRUTHV() (uint8, error) {
-	return _Claims.Contract.VOTETRUTHV(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) VOTETRUTHV() (uint8, error) {
+	return _ClaimsContractBinding.Contract.VOTETRUTHV(&_ClaimsContractBinding.CallOpts)
 }
 
 // VOTETRUTHY is a free data retrieval call binding the contract method 0x00916264.
 //
 // Solidity: function VOTE_TRUTH_Y() view returns(uint8)
-func (_Claims *ClaimsCaller) VOTETRUTHY(opts *bind.CallOpts) (uint8, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) VOTETRUTHY(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "VOTE_TRUTH_Y")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "VOTE_TRUTH_Y")
 
 	if err != nil {
 		return *new(uint8), err
@@ -1099,23 +1099,23 @@ func (_Claims *ClaimsCaller) VOTETRUTHY(opts *bind.CallOpts) (uint8, error) {
 // VOTETRUTHY is a free data retrieval call binding the contract method 0x00916264.
 //
 // Solidity: function VOTE_TRUTH_Y() view returns(uint8)
-func (_Claims *ClaimsSession) VOTETRUTHY() (uint8, error) {
-	return _Claims.Contract.VOTETRUTHY(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) VOTETRUTHY() (uint8, error) {
+	return _ClaimsContractBinding.Contract.VOTETRUTHY(&_ClaimsContractBinding.CallOpts)
 }
 
 // VOTETRUTHY is a free data retrieval call binding the contract method 0x00916264.
 //
 // Solidity: function VOTE_TRUTH_Y() view returns(uint8)
-func (_Claims *ClaimsCallerSession) VOTETRUTHY() (uint8, error) {
-	return _Claims.Contract.VOTETRUTHY(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) VOTETRUTHY() (uint8, error) {
+	return _ClaimsContractBinding.Contract.VOTETRUTHY(&_ClaimsContractBinding.CallOpts)
 }
 
 // BasisFee is a free data retrieval call binding the contract method 0x971e1a66.
 //
 // Solidity: function basisFee() view returns(uint16)
-func (_Claims *ClaimsCaller) BasisFee(opts *bind.CallOpts) (uint16, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) BasisFee(opts *bind.CallOpts) (uint16, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "basisFee")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "basisFee")
 
 	if err != nil {
 		return *new(uint16), err
@@ -1130,23 +1130,23 @@ func (_Claims *ClaimsCaller) BasisFee(opts *bind.CallOpts) (uint16, error) {
 // BasisFee is a free data retrieval call binding the contract method 0x971e1a66.
 //
 // Solidity: function basisFee() view returns(uint16)
-func (_Claims *ClaimsSession) BasisFee() (uint16, error) {
-	return _Claims.Contract.BasisFee(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) BasisFee() (uint16, error) {
+	return _ClaimsContractBinding.Contract.BasisFee(&_ClaimsContractBinding.CallOpts)
 }
 
 // BasisFee is a free data retrieval call binding the contract method 0x971e1a66.
 //
 // Solidity: function basisFee() view returns(uint16)
-func (_Claims *ClaimsCallerSession) BasisFee() (uint16, error) {
-	return _Claims.Contract.BasisFee(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) BasisFee() (uint16, error) {
+	return _ClaimsContractBinding.Contract.BasisFee(&_ClaimsContractBinding.CallOpts)
 }
 
 // BasisProposer is a free data retrieval call binding the contract method 0x3b0ec0fd.
 //
 // Solidity: function basisProposer() view returns(uint16)
-func (_Claims *ClaimsCaller) BasisProposer(opts *bind.CallOpts) (uint16, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) BasisProposer(opts *bind.CallOpts) (uint16, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "basisProposer")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "basisProposer")
 
 	if err != nil {
 		return *new(uint16), err
@@ -1161,23 +1161,23 @@ func (_Claims *ClaimsCaller) BasisProposer(opts *bind.CallOpts) (uint16, error) 
 // BasisProposer is a free data retrieval call binding the contract method 0x3b0ec0fd.
 //
 // Solidity: function basisProposer() view returns(uint16)
-func (_Claims *ClaimsSession) BasisProposer() (uint16, error) {
-	return _Claims.Contract.BasisProposer(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) BasisProposer() (uint16, error) {
+	return _ClaimsContractBinding.Contract.BasisProposer(&_ClaimsContractBinding.CallOpts)
 }
 
 // BasisProposer is a free data retrieval call binding the contract method 0x3b0ec0fd.
 //
 // Solidity: function basisProposer() view returns(uint16)
-func (_Claims *ClaimsCallerSession) BasisProposer() (uint16, error) {
-	return _Claims.Contract.BasisProposer(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) BasisProposer() (uint16, error) {
+	return _ClaimsContractBinding.Contract.BasisProposer(&_ClaimsContractBinding.CallOpts)
 }
 
 // BasisProtocol is a free data retrieval call binding the contract method 0x1cc13509.
 //
 // Solidity: function basisProtocol() view returns(uint16)
-func (_Claims *ClaimsCaller) BasisProtocol(opts *bind.CallOpts) (uint16, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) BasisProtocol(opts *bind.CallOpts) (uint16, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "basisProtocol")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "basisProtocol")
 
 	if err != nil {
 		return *new(uint16), err
@@ -1192,23 +1192,23 @@ func (_Claims *ClaimsCaller) BasisProtocol(opts *bind.CallOpts) (uint16, error) 
 // BasisProtocol is a free data retrieval call binding the contract method 0x1cc13509.
 //
 // Solidity: function basisProtocol() view returns(uint16)
-func (_Claims *ClaimsSession) BasisProtocol() (uint16, error) {
-	return _Claims.Contract.BasisProtocol(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) BasisProtocol() (uint16, error) {
+	return _ClaimsContractBinding.Contract.BasisProtocol(&_ClaimsContractBinding.CallOpts)
 }
 
 // BasisProtocol is a free data retrieval call binding the contract method 0x1cc13509.
 //
 // Solidity: function basisProtocol() view returns(uint16)
-func (_Claims *ClaimsCallerSession) BasisProtocol() (uint16, error) {
-	return _Claims.Contract.BasisProtocol(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) BasisProtocol() (uint16, error) {
+	return _ClaimsContractBinding.Contract.BasisProtocol(&_ClaimsContractBinding.CallOpts)
 }
 
 // DurationBasis is a free data retrieval call binding the contract method 0x9062a805.
 //
 // Solidity: function durationBasis() view returns(uint64)
-func (_Claims *ClaimsCaller) DurationBasis(opts *bind.CallOpts) (uint64, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) DurationBasis(opts *bind.CallOpts) (uint64, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "durationBasis")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "durationBasis")
 
 	if err != nil {
 		return *new(uint64), err
@@ -1223,23 +1223,23 @@ func (_Claims *ClaimsCaller) DurationBasis(opts *bind.CallOpts) (uint64, error) 
 // DurationBasis is a free data retrieval call binding the contract method 0x9062a805.
 //
 // Solidity: function durationBasis() view returns(uint64)
-func (_Claims *ClaimsSession) DurationBasis() (uint64, error) {
-	return _Claims.Contract.DurationBasis(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) DurationBasis() (uint64, error) {
+	return _ClaimsContractBinding.Contract.DurationBasis(&_ClaimsContractBinding.CallOpts)
 }
 
 // DurationBasis is a free data retrieval call binding the contract method 0x9062a805.
 //
 // Solidity: function durationBasis() view returns(uint64)
-func (_Claims *ClaimsCallerSession) DurationBasis() (uint64, error) {
-	return _Claims.Contract.DurationBasis(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) DurationBasis() (uint64, error) {
+	return _ClaimsContractBinding.Contract.DurationBasis(&_ClaimsContractBinding.CallOpts)
 }
 
 // DurationMax is a free data retrieval call binding the contract method 0xc522a9d4.
 //
 // Solidity: function durationMax() view returns(uint64)
-func (_Claims *ClaimsCaller) DurationMax(opts *bind.CallOpts) (uint64, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) DurationMax(opts *bind.CallOpts) (uint64, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "durationMax")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "durationMax")
 
 	if err != nil {
 		return *new(uint64), err
@@ -1254,23 +1254,23 @@ func (_Claims *ClaimsCaller) DurationMax(opts *bind.CallOpts) (uint64, error) {
 // DurationMax is a free data retrieval call binding the contract method 0xc522a9d4.
 //
 // Solidity: function durationMax() view returns(uint64)
-func (_Claims *ClaimsSession) DurationMax() (uint64, error) {
-	return _Claims.Contract.DurationMax(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) DurationMax() (uint64, error) {
+	return _ClaimsContractBinding.Contract.DurationMax(&_ClaimsContractBinding.CallOpts)
 }
 
 // DurationMax is a free data retrieval call binding the contract method 0xc522a9d4.
 //
 // Solidity: function durationMax() view returns(uint64)
-func (_Claims *ClaimsCallerSession) DurationMax() (uint64, error) {
-	return _Claims.Contract.DurationMax(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) DurationMax() (uint64, error) {
+	return _ClaimsContractBinding.Contract.DurationMax(&_ClaimsContractBinding.CallOpts)
 }
 
 // DurationMin is a free data retrieval call binding the contract method 0xb5392984.
 //
 // Solidity: function durationMin() view returns(uint64)
-func (_Claims *ClaimsCaller) DurationMin(opts *bind.CallOpts) (uint64, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) DurationMin(opts *bind.CallOpts) (uint64, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "durationMin")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "durationMin")
 
 	if err != nil {
 		return *new(uint64), err
@@ -1285,23 +1285,23 @@ func (_Claims *ClaimsCaller) DurationMin(opts *bind.CallOpts) (uint64, error) {
 // DurationMin is a free data retrieval call binding the contract method 0xb5392984.
 //
 // Solidity: function durationMin() view returns(uint64)
-func (_Claims *ClaimsSession) DurationMin() (uint64, error) {
-	return _Claims.Contract.DurationMin(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) DurationMin() (uint64, error) {
+	return _ClaimsContractBinding.Contract.DurationMin(&_ClaimsContractBinding.CallOpts)
 }
 
 // DurationMin is a free data retrieval call binding the contract method 0xb5392984.
 //
 // Solidity: function durationMin() view returns(uint64)
-func (_Claims *ClaimsCallerSession) DurationMin() (uint64, error) {
-	return _Claims.Contract.DurationMin(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) DurationMin() (uint64, error) {
+	return _ClaimsContractBinding.Contract.DurationMin(&_ClaimsContractBinding.CallOpts)
 }
 
 // GetRoleAdmin is a free data retrieval call binding the contract method 0x248a9ca3.
 //
 // Solidity: function getRoleAdmin(bytes32 role) view returns(bytes32)
-func (_Claims *ClaimsCaller) GetRoleAdmin(opts *bind.CallOpts, role [32]byte) ([32]byte, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) GetRoleAdmin(opts *bind.CallOpts, role [32]byte) ([32]byte, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "getRoleAdmin", role)
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "getRoleAdmin", role)
 
 	if err != nil {
 		return *new([32]byte), err
@@ -1316,23 +1316,23 @@ func (_Claims *ClaimsCaller) GetRoleAdmin(opts *bind.CallOpts, role [32]byte) ([
 // GetRoleAdmin is a free data retrieval call binding the contract method 0x248a9ca3.
 //
 // Solidity: function getRoleAdmin(bytes32 role) view returns(bytes32)
-func (_Claims *ClaimsSession) GetRoleAdmin(role [32]byte) ([32]byte, error) {
-	return _Claims.Contract.GetRoleAdmin(&_Claims.CallOpts, role)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) GetRoleAdmin(role [32]byte) ([32]byte, error) {
+	return _ClaimsContractBinding.Contract.GetRoleAdmin(&_ClaimsContractBinding.CallOpts, role)
 }
 
 // GetRoleAdmin is a free data retrieval call binding the contract method 0x248a9ca3.
 //
 // Solidity: function getRoleAdmin(bytes32 role) view returns(bytes32)
-func (_Claims *ClaimsCallerSession) GetRoleAdmin(role [32]byte) ([32]byte, error) {
-	return _Claims.Contract.GetRoleAdmin(&_Claims.CallOpts, role)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) GetRoleAdmin(role [32]byte) ([32]byte, error) {
+	return _ClaimsContractBinding.Contract.GetRoleAdmin(&_ClaimsContractBinding.CallOpts, role)
 }
 
 // GetRoleMember is a free data retrieval call binding the contract method 0x9010d07c.
 //
 // Solidity: function getRoleMember(bytes32 role, uint256 index) view returns(address)
-func (_Claims *ClaimsCaller) GetRoleMember(opts *bind.CallOpts, role [32]byte, index *big.Int) (common.Address, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) GetRoleMember(opts *bind.CallOpts, role [32]byte, index *big.Int) (common.Address, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "getRoleMember", role, index)
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "getRoleMember", role, index)
 
 	if err != nil {
 		return *new(common.Address), err
@@ -1347,23 +1347,23 @@ func (_Claims *ClaimsCaller) GetRoleMember(opts *bind.CallOpts, role [32]byte, i
 // GetRoleMember is a free data retrieval call binding the contract method 0x9010d07c.
 //
 // Solidity: function getRoleMember(bytes32 role, uint256 index) view returns(address)
-func (_Claims *ClaimsSession) GetRoleMember(role [32]byte, index *big.Int) (common.Address, error) {
-	return _Claims.Contract.GetRoleMember(&_Claims.CallOpts, role, index)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) GetRoleMember(role [32]byte, index *big.Int) (common.Address, error) {
+	return _ClaimsContractBinding.Contract.GetRoleMember(&_ClaimsContractBinding.CallOpts, role, index)
 }
 
 // GetRoleMember is a free data retrieval call binding the contract method 0x9010d07c.
 //
 // Solidity: function getRoleMember(bytes32 role, uint256 index) view returns(address)
-func (_Claims *ClaimsCallerSession) GetRoleMember(role [32]byte, index *big.Int) (common.Address, error) {
-	return _Claims.Contract.GetRoleMember(&_Claims.CallOpts, role, index)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) GetRoleMember(role [32]byte, index *big.Int) (common.Address, error) {
+	return _ClaimsContractBinding.Contract.GetRoleMember(&_ClaimsContractBinding.CallOpts, role, index)
 }
 
 // GetRoleMemberCount is a free data retrieval call binding the contract method 0xca15c873.
 //
 // Solidity: function getRoleMemberCount(bytes32 role) view returns(uint256)
-func (_Claims *ClaimsCaller) GetRoleMemberCount(opts *bind.CallOpts, role [32]byte) (*big.Int, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) GetRoleMemberCount(opts *bind.CallOpts, role [32]byte) (*big.Int, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "getRoleMemberCount", role)
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "getRoleMemberCount", role)
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -1378,23 +1378,23 @@ func (_Claims *ClaimsCaller) GetRoleMemberCount(opts *bind.CallOpts, role [32]by
 // GetRoleMemberCount is a free data retrieval call binding the contract method 0xca15c873.
 //
 // Solidity: function getRoleMemberCount(bytes32 role) view returns(uint256)
-func (_Claims *ClaimsSession) GetRoleMemberCount(role [32]byte) (*big.Int, error) {
-	return _Claims.Contract.GetRoleMemberCount(&_Claims.CallOpts, role)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) GetRoleMemberCount(role [32]byte) (*big.Int, error) {
+	return _ClaimsContractBinding.Contract.GetRoleMemberCount(&_ClaimsContractBinding.CallOpts, role)
 }
 
 // GetRoleMemberCount is a free data retrieval call binding the contract method 0xca15c873.
 //
 // Solidity: function getRoleMemberCount(bytes32 role) view returns(uint256)
-func (_Claims *ClaimsCallerSession) GetRoleMemberCount(role [32]byte) (*big.Int, error) {
-	return _Claims.Contract.GetRoleMemberCount(&_Claims.CallOpts, role)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) GetRoleMemberCount(role [32]byte) (*big.Int, error) {
+	return _ClaimsContractBinding.Contract.GetRoleMemberCount(&_ClaimsContractBinding.CallOpts, role)
 }
 
 // HasRole is a free data retrieval call binding the contract method 0x91d14854.
 //
 // Solidity: function hasRole(bytes32 role, address account) view returns(bool)
-func (_Claims *ClaimsCaller) HasRole(opts *bind.CallOpts, role [32]byte, account common.Address) (bool, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) HasRole(opts *bind.CallOpts, role [32]byte, account common.Address) (bool, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "hasRole", role, account)
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "hasRole", role, account)
 
 	if err != nil {
 		return *new(bool), err
@@ -1409,23 +1409,23 @@ func (_Claims *ClaimsCaller) HasRole(opts *bind.CallOpts, role [32]byte, account
 // HasRole is a free data retrieval call binding the contract method 0x91d14854.
 //
 // Solidity: function hasRole(bytes32 role, address account) view returns(bool)
-func (_Claims *ClaimsSession) HasRole(role [32]byte, account common.Address) (bool, error) {
-	return _Claims.Contract.HasRole(&_Claims.CallOpts, role, account)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) HasRole(role [32]byte, account common.Address) (bool, error) {
+	return _ClaimsContractBinding.Contract.HasRole(&_ClaimsContractBinding.CallOpts, role, account)
 }
 
 // HasRole is a free data retrieval call binding the contract method 0x91d14854.
 //
 // Solidity: function hasRole(bytes32 role, address account) view returns(bool)
-func (_Claims *ClaimsCallerSession) HasRole(role [32]byte, account common.Address) (bool, error) {
-	return _Claims.Contract.HasRole(&_Claims.CallOpts, role, account)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) HasRole(role [32]byte, account common.Address) (bool, error) {
+	return _ClaimsContractBinding.Contract.HasRole(&_ClaimsContractBinding.CallOpts, role, account)
 }
 
 // Owner is a free data retrieval call binding the contract method 0x8da5cb5b.
 //
 // Solidity: function owner() view returns(address)
-func (_Claims *ClaimsCaller) Owner(opts *bind.CallOpts) (common.Address, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) Owner(opts *bind.CallOpts) (common.Address, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "owner")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "owner")
 
 	if err != nil {
 		return *new(common.Address), err
@@ -1440,23 +1440,23 @@ func (_Claims *ClaimsCaller) Owner(opts *bind.CallOpts) (common.Address, error) 
 // Owner is a free data retrieval call binding the contract method 0x8da5cb5b.
 //
 // Solidity: function owner() view returns(address)
-func (_Claims *ClaimsSession) Owner() (common.Address, error) {
-	return _Claims.Contract.Owner(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) Owner() (common.Address, error) {
+	return _ClaimsContractBinding.Contract.Owner(&_ClaimsContractBinding.CallOpts)
 }
 
 // Owner is a free data retrieval call binding the contract method 0x8da5cb5b.
 //
 // Solidity: function owner() view returns(address)
-func (_Claims *ClaimsCallerSession) Owner() (common.Address, error) {
-	return _Claims.Contract.Owner(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) Owner() (common.Address, error) {
+	return _ClaimsContractBinding.Contract.Owner(&_ClaimsContractBinding.CallOpts)
 }
 
 // SearchBalance is a free data retrieval call binding the contract method 0x778c06f2.
 //
 // Solidity: function searchBalance(address use) view returns(uint256, uint256)
-func (_Claims *ClaimsCaller) SearchBalance(opts *bind.CallOpts, use common.Address) (*big.Int, *big.Int, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) SearchBalance(opts *bind.CallOpts, use common.Address) (*big.Int, *big.Int, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "searchBalance", use)
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "searchBalance", use)
 
 	if err != nil {
 		return *new(*big.Int), *new(*big.Int), err
@@ -1472,23 +1472,23 @@ func (_Claims *ClaimsCaller) SearchBalance(opts *bind.CallOpts, use common.Addre
 // SearchBalance is a free data retrieval call binding the contract method 0x778c06f2.
 //
 // Solidity: function searchBalance(address use) view returns(uint256, uint256)
-func (_Claims *ClaimsSession) SearchBalance(use common.Address) (*big.Int, *big.Int, error) {
-	return _Claims.Contract.SearchBalance(&_Claims.CallOpts, use)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) SearchBalance(use common.Address) (*big.Int, *big.Int, error) {
+	return _ClaimsContractBinding.Contract.SearchBalance(&_ClaimsContractBinding.CallOpts, use)
 }
 
 // SearchBalance is a free data retrieval call binding the contract method 0x778c06f2.
 //
 // Solidity: function searchBalance(address use) view returns(uint256, uint256)
-func (_Claims *ClaimsCallerSession) SearchBalance(use common.Address) (*big.Int, *big.Int, error) {
-	return _Claims.Contract.SearchBalance(&_Claims.CallOpts, use)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) SearchBalance(use common.Address) (*big.Int, *big.Int, error) {
+	return _ClaimsContractBinding.Contract.SearchBalance(&_ClaimsContractBinding.CallOpts, use)
 }
 
 // SearchExpired is a free data retrieval call binding the contract method 0x33afa97c.
 //
 // Solidity: function searchExpired(uint256 pro) view returns(uint256, uint256)
-func (_Claims *ClaimsCaller) SearchExpired(opts *bind.CallOpts, pro *big.Int) (*big.Int, *big.Int, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) SearchExpired(opts *bind.CallOpts, pro *big.Int) (*big.Int, *big.Int, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "searchExpired", pro)
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "searchExpired", pro)
 
 	if err != nil {
 		return *new(*big.Int), *new(*big.Int), err
@@ -1504,23 +1504,23 @@ func (_Claims *ClaimsCaller) SearchExpired(opts *bind.CallOpts, pro *big.Int) (*
 // SearchExpired is a free data retrieval call binding the contract method 0x33afa97c.
 //
 // Solidity: function searchExpired(uint256 pro) view returns(uint256, uint256)
-func (_Claims *ClaimsSession) SearchExpired(pro *big.Int) (*big.Int, *big.Int, error) {
-	return _Claims.Contract.SearchExpired(&_Claims.CallOpts, pro)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) SearchExpired(pro *big.Int) (*big.Int, *big.Int, error) {
+	return _ClaimsContractBinding.Contract.SearchExpired(&_ClaimsContractBinding.CallOpts, pro)
 }
 
 // SearchExpired is a free data retrieval call binding the contract method 0x33afa97c.
 //
 // Solidity: function searchExpired(uint256 pro) view returns(uint256, uint256)
-func (_Claims *ClaimsCallerSession) SearchExpired(pro *big.Int) (*big.Int, *big.Int, error) {
-	return _Claims.Contract.SearchExpired(&_Claims.CallOpts, pro)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) SearchExpired(pro *big.Int) (*big.Int, *big.Int, error) {
+	return _ClaimsContractBinding.Contract.SearchExpired(&_ClaimsContractBinding.CallOpts, pro)
 }
 
 // SearchIndices is a free data retrieval call binding the contract method 0x9188d532.
 //
 // Solidity: function searchIndices(uint256 pro) view returns(uint256, uint256, uint256, uint256, uint256, uint256, uint256, uint256)
-func (_Claims *ClaimsCaller) SearchIndices(opts *bind.CallOpts, pro *big.Int) (*big.Int, *big.Int, *big.Int, *big.Int, *big.Int, *big.Int, *big.Int, *big.Int, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) SearchIndices(opts *bind.CallOpts, pro *big.Int) (*big.Int, *big.Int, *big.Int, *big.Int, *big.Int, *big.Int, *big.Int, *big.Int, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "searchIndices", pro)
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "searchIndices", pro)
 
 	if err != nil {
 		return *new(*big.Int), *new(*big.Int), *new(*big.Int), *new(*big.Int), *new(*big.Int), *new(*big.Int), *new(*big.Int), *new(*big.Int), err
@@ -1542,23 +1542,23 @@ func (_Claims *ClaimsCaller) SearchIndices(opts *bind.CallOpts, pro *big.Int) (*
 // SearchIndices is a free data retrieval call binding the contract method 0x9188d532.
 //
 // Solidity: function searchIndices(uint256 pro) view returns(uint256, uint256, uint256, uint256, uint256, uint256, uint256, uint256)
-func (_Claims *ClaimsSession) SearchIndices(pro *big.Int) (*big.Int, *big.Int, *big.Int, *big.Int, *big.Int, *big.Int, *big.Int, *big.Int, error) {
-	return _Claims.Contract.SearchIndices(&_Claims.CallOpts, pro)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) SearchIndices(pro *big.Int) (*big.Int, *big.Int, *big.Int, *big.Int, *big.Int, *big.Int, *big.Int, *big.Int, error) {
+	return _ClaimsContractBinding.Contract.SearchIndices(&_ClaimsContractBinding.CallOpts, pro)
 }
 
 // SearchIndices is a free data retrieval call binding the contract method 0x9188d532.
 //
 // Solidity: function searchIndices(uint256 pro) view returns(uint256, uint256, uint256, uint256, uint256, uint256, uint256, uint256)
-func (_Claims *ClaimsCallerSession) SearchIndices(pro *big.Int) (*big.Int, *big.Int, *big.Int, *big.Int, *big.Int, *big.Int, *big.Int, *big.Int, error) {
-	return _Claims.Contract.SearchIndices(&_Claims.CallOpts, pro)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) SearchIndices(pro *big.Int) (*big.Int, *big.Int, *big.Int, *big.Int, *big.Int, *big.Int, *big.Int, *big.Int, error) {
+	return _ClaimsContractBinding.Contract.SearchIndices(&_ClaimsContractBinding.CallOpts, pro)
 }
 
 // SearchPropose is a free data retrieval call binding the contract method 0x209f8eaf.
 //
 // Solidity: function searchPropose(uint256 pro) view returns(uint256, uint256, uint256)
-func (_Claims *ClaimsCaller) SearchPropose(opts *bind.CallOpts, pro *big.Int) (*big.Int, *big.Int, *big.Int, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) SearchPropose(opts *bind.CallOpts, pro *big.Int) (*big.Int, *big.Int, *big.Int, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "searchPropose", pro)
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "searchPropose", pro)
 
 	if err != nil {
 		return *new(*big.Int), *new(*big.Int), *new(*big.Int), err
@@ -1575,23 +1575,23 @@ func (_Claims *ClaimsCaller) SearchPropose(opts *bind.CallOpts, pro *big.Int) (*
 // SearchPropose is a free data retrieval call binding the contract method 0x209f8eaf.
 //
 // Solidity: function searchPropose(uint256 pro) view returns(uint256, uint256, uint256)
-func (_Claims *ClaimsSession) SearchPropose(pro *big.Int) (*big.Int, *big.Int, *big.Int, error) {
-	return _Claims.Contract.SearchPropose(&_Claims.CallOpts, pro)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) SearchPropose(pro *big.Int) (*big.Int, *big.Int, *big.Int, error) {
+	return _ClaimsContractBinding.Contract.SearchPropose(&_ClaimsContractBinding.CallOpts, pro)
 }
 
 // SearchPropose is a free data retrieval call binding the contract method 0x209f8eaf.
 //
 // Solidity: function searchPropose(uint256 pro) view returns(uint256, uint256, uint256)
-func (_Claims *ClaimsCallerSession) SearchPropose(pro *big.Int) (*big.Int, *big.Int, *big.Int, error) {
-	return _Claims.Contract.SearchPropose(&_Claims.CallOpts, pro)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) SearchPropose(pro *big.Int) (*big.Int, *big.Int, *big.Int, error) {
+	return _ClaimsContractBinding.Contract.SearchPropose(&_ClaimsContractBinding.CallOpts, pro)
 }
 
 // SearchResolve is a free data retrieval call binding the contract method 0x88dc0bd2.
 //
 // Solidity: function searchResolve(uint256 pro, uint8 ind) view returns(bool)
-func (_Claims *ClaimsCaller) SearchResolve(opts *bind.CallOpts, pro *big.Int, ind uint8) (bool, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) SearchResolve(opts *bind.CallOpts, pro *big.Int, ind uint8) (bool, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "searchResolve", pro, ind)
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "searchResolve", pro, ind)
 
 	if err != nil {
 		return *new(bool), err
@@ -1606,23 +1606,23 @@ func (_Claims *ClaimsCaller) SearchResolve(opts *bind.CallOpts, pro *big.Int, in
 // SearchResolve is a free data retrieval call binding the contract method 0x88dc0bd2.
 //
 // Solidity: function searchResolve(uint256 pro, uint8 ind) view returns(bool)
-func (_Claims *ClaimsSession) SearchResolve(pro *big.Int, ind uint8) (bool, error) {
-	return _Claims.Contract.SearchResolve(&_Claims.CallOpts, pro, ind)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) SearchResolve(pro *big.Int, ind uint8) (bool, error) {
+	return _ClaimsContractBinding.Contract.SearchResolve(&_ClaimsContractBinding.CallOpts, pro, ind)
 }
 
 // SearchResolve is a free data retrieval call binding the contract method 0x88dc0bd2.
 //
 // Solidity: function searchResolve(uint256 pro, uint8 ind) view returns(bool)
-func (_Claims *ClaimsCallerSession) SearchResolve(pro *big.Int, ind uint8) (bool, error) {
-	return _Claims.Contract.SearchResolve(&_Claims.CallOpts, pro, ind)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) SearchResolve(pro *big.Int, ind uint8) (bool, error) {
+	return _ClaimsContractBinding.Contract.SearchResolve(&_ClaimsContractBinding.CallOpts, pro, ind)
 }
 
 // SearchSamples is a free data retrieval call binding the contract method 0x286d2207.
 //
 // Solidity: function searchSamples(uint256 pro, uint256 lef, uint256 rig) view returns(address[])
-func (_Claims *ClaimsCaller) SearchSamples(opts *bind.CallOpts, pro *big.Int, lef *big.Int, rig *big.Int) ([]common.Address, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) SearchSamples(opts *bind.CallOpts, pro *big.Int, lef *big.Int, rig *big.Int) ([]common.Address, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "searchSamples", pro, lef, rig)
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "searchSamples", pro, lef, rig)
 
 	if err != nil {
 		return *new([]common.Address), err
@@ -1637,23 +1637,23 @@ func (_Claims *ClaimsCaller) SearchSamples(opts *bind.CallOpts, pro *big.Int, le
 // SearchSamples is a free data retrieval call binding the contract method 0x286d2207.
 //
 // Solidity: function searchSamples(uint256 pro, uint256 lef, uint256 rig) view returns(address[])
-func (_Claims *ClaimsSession) SearchSamples(pro *big.Int, lef *big.Int, rig *big.Int) ([]common.Address, error) {
-	return _Claims.Contract.SearchSamples(&_Claims.CallOpts, pro, lef, rig)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) SearchSamples(pro *big.Int, lef *big.Int, rig *big.Int) ([]common.Address, error) {
+	return _ClaimsContractBinding.Contract.SearchSamples(&_ClaimsContractBinding.CallOpts, pro, lef, rig)
 }
 
 // SearchSamples is a free data retrieval call binding the contract method 0x286d2207.
 //
 // Solidity: function searchSamples(uint256 pro, uint256 lef, uint256 rig) view returns(address[])
-func (_Claims *ClaimsCallerSession) SearchSamples(pro *big.Int, lef *big.Int, rig *big.Int) ([]common.Address, error) {
-	return _Claims.Contract.SearchSamples(&_Claims.CallOpts, pro, lef, rig)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) SearchSamples(pro *big.Int, lef *big.Int, rig *big.Int) ([]common.Address, error) {
+	return _ClaimsContractBinding.Contract.SearchSamples(&_ClaimsContractBinding.CallOpts, pro, lef, rig)
 }
 
 // SearchStakers is a free data retrieval call binding the contract method 0x6b250a9f.
 //
 // Solidity: function searchStakers(uint256 pro, uint256 lef, uint256 rig) view returns(address[])
-func (_Claims *ClaimsCaller) SearchStakers(opts *bind.CallOpts, pro *big.Int, lef *big.Int, rig *big.Int) ([]common.Address, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) SearchStakers(opts *bind.CallOpts, pro *big.Int, lef *big.Int, rig *big.Int) ([]common.Address, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "searchStakers", pro, lef, rig)
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "searchStakers", pro, lef, rig)
 
 	if err != nil {
 		return *new([]common.Address), err
@@ -1668,23 +1668,23 @@ func (_Claims *ClaimsCaller) SearchStakers(opts *bind.CallOpts, pro *big.Int, le
 // SearchStakers is a free data retrieval call binding the contract method 0x6b250a9f.
 //
 // Solidity: function searchStakers(uint256 pro, uint256 lef, uint256 rig) view returns(address[])
-func (_Claims *ClaimsSession) SearchStakers(pro *big.Int, lef *big.Int, rig *big.Int) ([]common.Address, error) {
-	return _Claims.Contract.SearchStakers(&_Claims.CallOpts, pro, lef, rig)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) SearchStakers(pro *big.Int, lef *big.Int, rig *big.Int) ([]common.Address, error) {
+	return _ClaimsContractBinding.Contract.SearchStakers(&_ClaimsContractBinding.CallOpts, pro, lef, rig)
 }
 
 // SearchStakers is a free data retrieval call binding the contract method 0x6b250a9f.
 //
 // Solidity: function searchStakers(uint256 pro, uint256 lef, uint256 rig) view returns(address[])
-func (_Claims *ClaimsCallerSession) SearchStakers(pro *big.Int, lef *big.Int, rig *big.Int) ([]common.Address, error) {
-	return _Claims.Contract.SearchStakers(&_Claims.CallOpts, pro, lef, rig)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) SearchStakers(pro *big.Int, lef *big.Int, rig *big.Int) ([]common.Address, error) {
+	return _ClaimsContractBinding.Contract.SearchStakers(&_ClaimsContractBinding.CallOpts, pro, lef, rig)
 }
 
 // SearchToken is a free data retrieval call binding the contract method 0x1a5c9a68.
 //
 // Solidity: function searchToken(uint256 pro) view returns(address[])
-func (_Claims *ClaimsCaller) SearchToken(opts *bind.CallOpts, pro *big.Int) ([]common.Address, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) SearchToken(opts *bind.CallOpts, pro *big.Int) ([]common.Address, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "searchToken", pro)
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "searchToken", pro)
 
 	if err != nil {
 		return *new([]common.Address), err
@@ -1699,23 +1699,23 @@ func (_Claims *ClaimsCaller) SearchToken(opts *bind.CallOpts, pro *big.Int) ([]c
 // SearchToken is a free data retrieval call binding the contract method 0x1a5c9a68.
 //
 // Solidity: function searchToken(uint256 pro) view returns(address[])
-func (_Claims *ClaimsSession) SearchToken(pro *big.Int) ([]common.Address, error) {
-	return _Claims.Contract.SearchToken(&_Claims.CallOpts, pro)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) SearchToken(pro *big.Int) ([]common.Address, error) {
+	return _ClaimsContractBinding.Contract.SearchToken(&_ClaimsContractBinding.CallOpts, pro)
 }
 
 // SearchToken is a free data retrieval call binding the contract method 0x1a5c9a68.
 //
 // Solidity: function searchToken(uint256 pro) view returns(address[])
-func (_Claims *ClaimsCallerSession) SearchToken(pro *big.Int) ([]common.Address, error) {
-	return _Claims.Contract.SearchToken(&_Claims.CallOpts, pro)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) SearchToken(pro *big.Int) ([]common.Address, error) {
+	return _ClaimsContractBinding.Contract.SearchToken(&_ClaimsContractBinding.CallOpts, pro)
 }
 
 // SearchVotes is a free data retrieval call binding the contract method 0xadfef97a.
 //
 // Solidity: function searchVotes(uint256 pro) view returns(uint256, uint256)
-func (_Claims *ClaimsCaller) SearchVotes(opts *bind.CallOpts, pro *big.Int) (*big.Int, *big.Int, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) SearchVotes(opts *bind.CallOpts, pro *big.Int) (*big.Int, *big.Int, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "searchVotes", pro)
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "searchVotes", pro)
 
 	if err != nil {
 		return *new(*big.Int), *new(*big.Int), err
@@ -1731,23 +1731,23 @@ func (_Claims *ClaimsCaller) SearchVotes(opts *bind.CallOpts, pro *big.Int) (*bi
 // SearchVotes is a free data retrieval call binding the contract method 0xadfef97a.
 //
 // Solidity: function searchVotes(uint256 pro) view returns(uint256, uint256)
-func (_Claims *ClaimsSession) SearchVotes(pro *big.Int) (*big.Int, *big.Int, error) {
-	return _Claims.Contract.SearchVotes(&_Claims.CallOpts, pro)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) SearchVotes(pro *big.Int) (*big.Int, *big.Int, error) {
+	return _ClaimsContractBinding.Contract.SearchVotes(&_ClaimsContractBinding.CallOpts, pro)
 }
 
 // SearchVotes is a free data retrieval call binding the contract method 0xadfef97a.
 //
 // Solidity: function searchVotes(uint256 pro) view returns(uint256, uint256)
-func (_Claims *ClaimsCallerSession) SearchVotes(pro *big.Int) (*big.Int, *big.Int, error) {
-	return _Claims.Contract.SearchVotes(&_Claims.CallOpts, pro)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) SearchVotes(pro *big.Int) (*big.Int, *big.Int, error) {
+	return _ClaimsContractBinding.Contract.SearchVotes(&_ClaimsContractBinding.CallOpts, pro)
 }
 
 // SupportsInterface is a free data retrieval call binding the contract method 0x01ffc9a7.
 //
 // Solidity: function supportsInterface(bytes4 interfaceId) view returns(bool)
-func (_Claims *ClaimsCaller) SupportsInterface(opts *bind.CallOpts, interfaceId [4]byte) (bool, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) SupportsInterface(opts *bind.CallOpts, interfaceId [4]byte) (bool, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "supportsInterface", interfaceId)
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "supportsInterface", interfaceId)
 
 	if err != nil {
 		return *new(bool), err
@@ -1762,23 +1762,23 @@ func (_Claims *ClaimsCaller) SupportsInterface(opts *bind.CallOpts, interfaceId 
 // SupportsInterface is a free data retrieval call binding the contract method 0x01ffc9a7.
 //
 // Solidity: function supportsInterface(bytes4 interfaceId) view returns(bool)
-func (_Claims *ClaimsSession) SupportsInterface(interfaceId [4]byte) (bool, error) {
-	return _Claims.Contract.SupportsInterface(&_Claims.CallOpts, interfaceId)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) SupportsInterface(interfaceId [4]byte) (bool, error) {
+	return _ClaimsContractBinding.Contract.SupportsInterface(&_ClaimsContractBinding.CallOpts, interfaceId)
 }
 
 // SupportsInterface is a free data retrieval call binding the contract method 0x01ffc9a7.
 //
 // Solidity: function supportsInterface(bytes4 interfaceId) view returns(bool)
-func (_Claims *ClaimsCallerSession) SupportsInterface(interfaceId [4]byte) (bool, error) {
-	return _Claims.Contract.SupportsInterface(&_Claims.CallOpts, interfaceId)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) SupportsInterface(interfaceId [4]byte) (bool, error) {
+	return _ClaimsContractBinding.Contract.SupportsInterface(&_ClaimsContractBinding.CallOpts, interfaceId)
 }
 
 // Token is a free data retrieval call binding the contract method 0xfc0c546a.
 //
 // Solidity: function token() view returns(address)
-func (_Claims *ClaimsCaller) Token(opts *bind.CallOpts) (common.Address, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) Token(opts *bind.CallOpts) (common.Address, error) {
 	var out []interface{}
-	err := _Claims.contract.Call(opts, &out, "token")
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "token")
 
 	if err != nil {
 		return *new(common.Address), err
@@ -1793,314 +1793,314 @@ func (_Claims *ClaimsCaller) Token(opts *bind.CallOpts) (common.Address, error) 
 // Token is a free data retrieval call binding the contract method 0xfc0c546a.
 //
 // Solidity: function token() view returns(address)
-func (_Claims *ClaimsSession) Token() (common.Address, error) {
-	return _Claims.Contract.Token(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) Token() (common.Address, error) {
+	return _ClaimsContractBinding.Contract.Token(&_ClaimsContractBinding.CallOpts)
 }
 
 // Token is a free data retrieval call binding the contract method 0xfc0c546a.
 //
 // Solidity: function token() view returns(address)
-func (_Claims *ClaimsCallerSession) Token() (common.Address, error) {
-	return _Claims.Contract.Token(&_Claims.CallOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) Token() (common.Address, error) {
+	return _ClaimsContractBinding.Contract.Token(&_ClaimsContractBinding.CallOpts)
 }
 
 // CreateDispute is a paid mutator transaction binding the contract method 0xb30d0a97.
 //
 // Solidity: function createDispute(uint256 dis, uint256 bal, bool vot, uint64 exp, uint256 pro) returns()
-func (_Claims *ClaimsTransactor) CreateDispute(opts *bind.TransactOpts, dis *big.Int, bal *big.Int, vot bool, exp uint64, pro *big.Int) (*types.Transaction, error) {
-	return _Claims.contract.Transact(opts, "createDispute", dis, bal, vot, exp, pro)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactor) CreateDispute(opts *bind.TransactOpts, dis *big.Int, bal *big.Int, vot bool, exp uint64, pro *big.Int) (*types.Transaction, error) {
+	return _ClaimsContractBinding.contract.Transact(opts, "createDispute", dis, bal, vot, exp, pro)
 }
 
 // CreateDispute is a paid mutator transaction binding the contract method 0xb30d0a97.
 //
 // Solidity: function createDispute(uint256 dis, uint256 bal, bool vot, uint64 exp, uint256 pro) returns()
-func (_Claims *ClaimsSession) CreateDispute(dis *big.Int, bal *big.Int, vot bool, exp uint64, pro *big.Int) (*types.Transaction, error) {
-	return _Claims.Contract.CreateDispute(&_Claims.TransactOpts, dis, bal, vot, exp, pro)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) CreateDispute(dis *big.Int, bal *big.Int, vot bool, exp uint64, pro *big.Int) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.CreateDispute(&_ClaimsContractBinding.TransactOpts, dis, bal, vot, exp, pro)
 }
 
 // CreateDispute is a paid mutator transaction binding the contract method 0xb30d0a97.
 //
 // Solidity: function createDispute(uint256 dis, uint256 bal, bool vot, uint64 exp, uint256 pro) returns()
-func (_Claims *ClaimsTransactorSession) CreateDispute(dis *big.Int, bal *big.Int, vot bool, exp uint64, pro *big.Int) (*types.Transaction, error) {
-	return _Claims.Contract.CreateDispute(&_Claims.TransactOpts, dis, bal, vot, exp, pro)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactorSession) CreateDispute(dis *big.Int, bal *big.Int, vot bool, exp uint64, pro *big.Int) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.CreateDispute(&_ClaimsContractBinding.TransactOpts, dis, bal, vot, exp, pro)
 }
 
 // CreatePropose is a paid mutator transaction binding the contract method 0xffb02ec8.
 //
 // Solidity: function createPropose(uint256 pro, uint256 bal, bool vot, uint64 exp, address[] tok) returns()
-func (_Claims *ClaimsTransactor) CreatePropose(opts *bind.TransactOpts, pro *big.Int, bal *big.Int, vot bool, exp uint64, tok []common.Address) (*types.Transaction, error) {
-	return _Claims.contract.Transact(opts, "createPropose", pro, bal, vot, exp, tok)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactor) CreatePropose(opts *bind.TransactOpts, pro *big.Int, bal *big.Int, vot bool, exp uint64, tok []common.Address) (*types.Transaction, error) {
+	return _ClaimsContractBinding.contract.Transact(opts, "createPropose", pro, bal, vot, exp, tok)
 }
 
 // CreatePropose is a paid mutator transaction binding the contract method 0xffb02ec8.
 //
 // Solidity: function createPropose(uint256 pro, uint256 bal, bool vot, uint64 exp, address[] tok) returns()
-func (_Claims *ClaimsSession) CreatePropose(pro *big.Int, bal *big.Int, vot bool, exp uint64, tok []common.Address) (*types.Transaction, error) {
-	return _Claims.Contract.CreatePropose(&_Claims.TransactOpts, pro, bal, vot, exp, tok)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) CreatePropose(pro *big.Int, bal *big.Int, vot bool, exp uint64, tok []common.Address) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.CreatePropose(&_ClaimsContractBinding.TransactOpts, pro, bal, vot, exp, tok)
 }
 
 // CreatePropose is a paid mutator transaction binding the contract method 0xffb02ec8.
 //
 // Solidity: function createPropose(uint256 pro, uint256 bal, bool vot, uint64 exp, address[] tok) returns()
-func (_Claims *ClaimsTransactorSession) CreatePropose(pro *big.Int, bal *big.Int, vot bool, exp uint64, tok []common.Address) (*types.Transaction, error) {
-	return _Claims.Contract.CreatePropose(&_Claims.TransactOpts, pro, bal, vot, exp, tok)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactorSession) CreatePropose(pro *big.Int, bal *big.Int, vot bool, exp uint64, tok []common.Address) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.CreatePropose(&_ClaimsContractBinding.TransactOpts, pro, bal, vot, exp, tok)
 }
 
 // CreateResolve is a paid mutator transaction binding the contract method 0xd4e1dbc0.
 //
 // Solidity: function createResolve(uint256 pro, uint256[] ind, uint64 exp) returns()
-func (_Claims *ClaimsTransactor) CreateResolve(opts *bind.TransactOpts, pro *big.Int, ind []*big.Int, exp uint64) (*types.Transaction, error) {
-	return _Claims.contract.Transact(opts, "createResolve", pro, ind, exp)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactor) CreateResolve(opts *bind.TransactOpts, pro *big.Int, ind []*big.Int, exp uint64) (*types.Transaction, error) {
+	return _ClaimsContractBinding.contract.Transact(opts, "createResolve", pro, ind, exp)
 }
 
 // CreateResolve is a paid mutator transaction binding the contract method 0xd4e1dbc0.
 //
 // Solidity: function createResolve(uint256 pro, uint256[] ind, uint64 exp) returns()
-func (_Claims *ClaimsSession) CreateResolve(pro *big.Int, ind []*big.Int, exp uint64) (*types.Transaction, error) {
-	return _Claims.Contract.CreateResolve(&_Claims.TransactOpts, pro, ind, exp)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) CreateResolve(pro *big.Int, ind []*big.Int, exp uint64) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.CreateResolve(&_ClaimsContractBinding.TransactOpts, pro, ind, exp)
 }
 
 // CreateResolve is a paid mutator transaction binding the contract method 0xd4e1dbc0.
 //
 // Solidity: function createResolve(uint256 pro, uint256[] ind, uint64 exp) returns()
-func (_Claims *ClaimsTransactorSession) CreateResolve(pro *big.Int, ind []*big.Int, exp uint64) (*types.Transaction, error) {
-	return _Claims.Contract.CreateResolve(&_Claims.TransactOpts, pro, ind, exp)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactorSession) CreateResolve(pro *big.Int, ind []*big.Int, exp uint64) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.CreateResolve(&_ClaimsContractBinding.TransactOpts, pro, ind, exp)
 }
 
 // GrantRole is a paid mutator transaction binding the contract method 0x2f2ff15d.
 //
 // Solidity: function grantRole(bytes32 role, address account) returns()
-func (_Claims *ClaimsTransactor) GrantRole(opts *bind.TransactOpts, role [32]byte, account common.Address) (*types.Transaction, error) {
-	return _Claims.contract.Transact(opts, "grantRole", role, account)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactor) GrantRole(opts *bind.TransactOpts, role [32]byte, account common.Address) (*types.Transaction, error) {
+	return _ClaimsContractBinding.contract.Transact(opts, "grantRole", role, account)
 }
 
 // GrantRole is a paid mutator transaction binding the contract method 0x2f2ff15d.
 //
 // Solidity: function grantRole(bytes32 role, address account) returns()
-func (_Claims *ClaimsSession) GrantRole(role [32]byte, account common.Address) (*types.Transaction, error) {
-	return _Claims.Contract.GrantRole(&_Claims.TransactOpts, role, account)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) GrantRole(role [32]byte, account common.Address) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.GrantRole(&_ClaimsContractBinding.TransactOpts, role, account)
 }
 
 // GrantRole is a paid mutator transaction binding the contract method 0x2f2ff15d.
 //
 // Solidity: function grantRole(bytes32 role, address account) returns()
-func (_Claims *ClaimsTransactorSession) GrantRole(role [32]byte, account common.Address) (*types.Transaction, error) {
-	return _Claims.Contract.GrantRole(&_Claims.TransactOpts, role, account)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactorSession) GrantRole(role [32]byte, account common.Address) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.GrantRole(&_ClaimsContractBinding.TransactOpts, role, account)
 }
 
 // RenounceRole is a paid mutator transaction binding the contract method 0x36568abe.
 //
 // Solidity: function renounceRole(bytes32 role, address callerConfirmation) returns()
-func (_Claims *ClaimsTransactor) RenounceRole(opts *bind.TransactOpts, role [32]byte, callerConfirmation common.Address) (*types.Transaction, error) {
-	return _Claims.contract.Transact(opts, "renounceRole", role, callerConfirmation)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactor) RenounceRole(opts *bind.TransactOpts, role [32]byte, callerConfirmation common.Address) (*types.Transaction, error) {
+	return _ClaimsContractBinding.contract.Transact(opts, "renounceRole", role, callerConfirmation)
 }
 
 // RenounceRole is a paid mutator transaction binding the contract method 0x36568abe.
 //
 // Solidity: function renounceRole(bytes32 role, address callerConfirmation) returns()
-func (_Claims *ClaimsSession) RenounceRole(role [32]byte, callerConfirmation common.Address) (*types.Transaction, error) {
-	return _Claims.Contract.RenounceRole(&_Claims.TransactOpts, role, callerConfirmation)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) RenounceRole(role [32]byte, callerConfirmation common.Address) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.RenounceRole(&_ClaimsContractBinding.TransactOpts, role, callerConfirmation)
 }
 
 // RenounceRole is a paid mutator transaction binding the contract method 0x36568abe.
 //
 // Solidity: function renounceRole(bytes32 role, address callerConfirmation) returns()
-func (_Claims *ClaimsTransactorSession) RenounceRole(role [32]byte, callerConfirmation common.Address) (*types.Transaction, error) {
-	return _Claims.Contract.RenounceRole(&_Claims.TransactOpts, role, callerConfirmation)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactorSession) RenounceRole(role [32]byte, callerConfirmation common.Address) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.RenounceRole(&_ClaimsContractBinding.TransactOpts, role, callerConfirmation)
 }
 
 // RevokeRole is a paid mutator transaction binding the contract method 0xd547741f.
 //
 // Solidity: function revokeRole(bytes32 role, address account) returns()
-func (_Claims *ClaimsTransactor) RevokeRole(opts *bind.TransactOpts, role [32]byte, account common.Address) (*types.Transaction, error) {
-	return _Claims.contract.Transact(opts, "revokeRole", role, account)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactor) RevokeRole(opts *bind.TransactOpts, role [32]byte, account common.Address) (*types.Transaction, error) {
+	return _ClaimsContractBinding.contract.Transact(opts, "revokeRole", role, account)
 }
 
 // RevokeRole is a paid mutator transaction binding the contract method 0xd547741f.
 //
 // Solidity: function revokeRole(bytes32 role, address account) returns()
-func (_Claims *ClaimsSession) RevokeRole(role [32]byte, account common.Address) (*types.Transaction, error) {
-	return _Claims.Contract.RevokeRole(&_Claims.TransactOpts, role, account)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) RevokeRole(role [32]byte, account common.Address) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.RevokeRole(&_ClaimsContractBinding.TransactOpts, role, account)
 }
 
 // RevokeRole is a paid mutator transaction binding the contract method 0xd547741f.
 //
 // Solidity: function revokeRole(bytes32 role, address account) returns()
-func (_Claims *ClaimsTransactorSession) RevokeRole(role [32]byte, account common.Address) (*types.Transaction, error) {
-	return _Claims.Contract.RevokeRole(&_Claims.TransactOpts, role, account)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactorSession) RevokeRole(role [32]byte, account common.Address) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.RevokeRole(&_ClaimsContractBinding.TransactOpts, role, account)
 }
 
 // UpdateBalance is a paid mutator transaction binding the contract method 0x58453fef.
 //
 // Solidity: function updateBalance(uint256 cla, uint256 max) returns()
-func (_Claims *ClaimsTransactor) UpdateBalance(opts *bind.TransactOpts, cla *big.Int, max *big.Int) (*types.Transaction, error) {
-	return _Claims.contract.Transact(opts, "updateBalance", cla, max)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactor) UpdateBalance(opts *bind.TransactOpts, cla *big.Int, max *big.Int) (*types.Transaction, error) {
+	return _ClaimsContractBinding.contract.Transact(opts, "updateBalance", cla, max)
 }
 
 // UpdateBalance is a paid mutator transaction binding the contract method 0x58453fef.
 //
 // Solidity: function updateBalance(uint256 cla, uint256 max) returns()
-func (_Claims *ClaimsSession) UpdateBalance(cla *big.Int, max *big.Int) (*types.Transaction, error) {
-	return _Claims.Contract.UpdateBalance(&_Claims.TransactOpts, cla, max)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) UpdateBalance(cla *big.Int, max *big.Int) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.UpdateBalance(&_ClaimsContractBinding.TransactOpts, cla, max)
 }
 
 // UpdateBalance is a paid mutator transaction binding the contract method 0x58453fef.
 //
 // Solidity: function updateBalance(uint256 cla, uint256 max) returns()
-func (_Claims *ClaimsTransactorSession) UpdateBalance(cla *big.Int, max *big.Int) (*types.Transaction, error) {
-	return _Claims.Contract.UpdateBalance(&_Claims.TransactOpts, cla, max)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactorSession) UpdateBalance(cla *big.Int, max *big.Int) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.UpdateBalance(&_ClaimsContractBinding.TransactOpts, cla, max)
 }
 
 // UpdateDuration is a paid mutator transaction binding the contract method 0xcf5e2292.
 //
 // Solidity: function updateDuration(uint64 bas, uint64 max, uint64 min) returns()
-func (_Claims *ClaimsTransactor) UpdateDuration(opts *bind.TransactOpts, bas uint64, max uint64, min uint64) (*types.Transaction, error) {
-	return _Claims.contract.Transact(opts, "updateDuration", bas, max, min)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactor) UpdateDuration(opts *bind.TransactOpts, bas uint64, max uint64, min uint64) (*types.Transaction, error) {
+	return _ClaimsContractBinding.contract.Transact(opts, "updateDuration", bas, max, min)
 }
 
 // UpdateDuration is a paid mutator transaction binding the contract method 0xcf5e2292.
 //
 // Solidity: function updateDuration(uint64 bas, uint64 max, uint64 min) returns()
-func (_Claims *ClaimsSession) UpdateDuration(bas uint64, max uint64, min uint64) (*types.Transaction, error) {
-	return _Claims.Contract.UpdateDuration(&_Claims.TransactOpts, bas, max, min)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) UpdateDuration(bas uint64, max uint64, min uint64) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.UpdateDuration(&_ClaimsContractBinding.TransactOpts, bas, max, min)
 }
 
 // UpdateDuration is a paid mutator transaction binding the contract method 0xcf5e2292.
 //
 // Solidity: function updateDuration(uint64 bas, uint64 max, uint64 min) returns()
-func (_Claims *ClaimsTransactorSession) UpdateDuration(bas uint64, max uint64, min uint64) (*types.Transaction, error) {
-	return _Claims.Contract.UpdateDuration(&_Claims.TransactOpts, bas, max, min)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactorSession) UpdateDuration(bas uint64, max uint64, min uint64) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.UpdateDuration(&_ClaimsContractBinding.TransactOpts, bas, max, min)
 }
 
 // UpdateFees is a paid mutator transaction binding the contract method 0x670babe0.
 //
 // Solidity: function updateFees(uint16 fee, uint16 psr, uint16 ptc) returns()
-func (_Claims *ClaimsTransactor) UpdateFees(opts *bind.TransactOpts, fee uint16, psr uint16, ptc uint16) (*types.Transaction, error) {
-	return _Claims.contract.Transact(opts, "updateFees", fee, psr, ptc)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactor) UpdateFees(opts *bind.TransactOpts, fee uint16, psr uint16, ptc uint16) (*types.Transaction, error) {
+	return _ClaimsContractBinding.contract.Transact(opts, "updateFees", fee, psr, ptc)
 }
 
 // UpdateFees is a paid mutator transaction binding the contract method 0x670babe0.
 //
 // Solidity: function updateFees(uint16 fee, uint16 psr, uint16 ptc) returns()
-func (_Claims *ClaimsSession) UpdateFees(fee uint16, psr uint16, ptc uint16) (*types.Transaction, error) {
-	return _Claims.Contract.UpdateFees(&_Claims.TransactOpts, fee, psr, ptc)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) UpdateFees(fee uint16, psr uint16, ptc uint16) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.UpdateFees(&_ClaimsContractBinding.TransactOpts, fee, psr, ptc)
 }
 
 // UpdateFees is a paid mutator transaction binding the contract method 0x670babe0.
 //
 // Solidity: function updateFees(uint16 fee, uint16 psr, uint16 ptc) returns()
-func (_Claims *ClaimsTransactorSession) UpdateFees(fee uint16, psr uint16, ptc uint16) (*types.Transaction, error) {
-	return _Claims.Contract.UpdateFees(&_Claims.TransactOpts, fee, psr, ptc)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactorSession) UpdateFees(fee uint16, psr uint16, ptc uint16) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.UpdateFees(&_ClaimsContractBinding.TransactOpts, fee, psr, ptc)
 }
 
 // UpdateOwner is a paid mutator transaction binding the contract method 0x880cdc31.
 //
 // Solidity: function updateOwner(address own) returns()
-func (_Claims *ClaimsTransactor) UpdateOwner(opts *bind.TransactOpts, own common.Address) (*types.Transaction, error) {
-	return _Claims.contract.Transact(opts, "updateOwner", own)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactor) UpdateOwner(opts *bind.TransactOpts, own common.Address) (*types.Transaction, error) {
+	return _ClaimsContractBinding.contract.Transact(opts, "updateOwner", own)
 }
 
 // UpdateOwner is a paid mutator transaction binding the contract method 0x880cdc31.
 //
 // Solidity: function updateOwner(address own) returns()
-func (_Claims *ClaimsSession) UpdateOwner(own common.Address) (*types.Transaction, error) {
-	return _Claims.Contract.UpdateOwner(&_Claims.TransactOpts, own)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) UpdateOwner(own common.Address) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.UpdateOwner(&_ClaimsContractBinding.TransactOpts, own)
 }
 
 // UpdateOwner is a paid mutator transaction binding the contract method 0x880cdc31.
 //
 // Solidity: function updateOwner(address own) returns()
-func (_Claims *ClaimsTransactorSession) UpdateOwner(own common.Address) (*types.Transaction, error) {
-	return _Claims.Contract.UpdateOwner(&_Claims.TransactOpts, own)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactorSession) UpdateOwner(own common.Address) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.UpdateOwner(&_ClaimsContractBinding.TransactOpts, own)
 }
 
 // UpdatePropose is a paid mutator transaction binding the contract method 0x6e1ea6e3.
 //
 // Solidity: function updatePropose(uint256 cla, uint256 bal, bool vot, uint256 tok) returns()
-func (_Claims *ClaimsTransactor) UpdatePropose(opts *bind.TransactOpts, cla *big.Int, bal *big.Int, vot bool, tok *big.Int) (*types.Transaction, error) {
-	return _Claims.contract.Transact(opts, "updatePropose", cla, bal, vot, tok)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactor) UpdatePropose(opts *bind.TransactOpts, cla *big.Int, bal *big.Int, vot bool, tok *big.Int) (*types.Transaction, error) {
+	return _ClaimsContractBinding.contract.Transact(opts, "updatePropose", cla, bal, vot, tok)
 }
 
 // UpdatePropose is a paid mutator transaction binding the contract method 0x6e1ea6e3.
 //
 // Solidity: function updatePropose(uint256 cla, uint256 bal, bool vot, uint256 tok) returns()
-func (_Claims *ClaimsSession) UpdatePropose(cla *big.Int, bal *big.Int, vot bool, tok *big.Int) (*types.Transaction, error) {
-	return _Claims.Contract.UpdatePropose(&_Claims.TransactOpts, cla, bal, vot, tok)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) UpdatePropose(cla *big.Int, bal *big.Int, vot bool, tok *big.Int) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.UpdatePropose(&_ClaimsContractBinding.TransactOpts, cla, bal, vot, tok)
 }
 
 // UpdatePropose is a paid mutator transaction binding the contract method 0x6e1ea6e3.
 //
 // Solidity: function updatePropose(uint256 cla, uint256 bal, bool vot, uint256 tok) returns()
-func (_Claims *ClaimsTransactorSession) UpdatePropose(cla *big.Int, bal *big.Int, vot bool, tok *big.Int) (*types.Transaction, error) {
-	return _Claims.Contract.UpdatePropose(&_Claims.TransactOpts, cla, bal, vot, tok)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactorSession) UpdatePropose(cla *big.Int, bal *big.Int, vot bool, tok *big.Int) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.UpdatePropose(&_ClaimsContractBinding.TransactOpts, cla, bal, vot, tok)
 }
 
 // UpdateResolve is a paid mutator transaction binding the contract method 0x1b3569ed.
 //
 // Solidity: function updateResolve(uint256 pro, bool vot) returns()
-func (_Claims *ClaimsTransactor) UpdateResolve(opts *bind.TransactOpts, pro *big.Int, vot bool) (*types.Transaction, error) {
-	return _Claims.contract.Transact(opts, "updateResolve", pro, vot)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactor) UpdateResolve(opts *bind.TransactOpts, pro *big.Int, vot bool) (*types.Transaction, error) {
+	return _ClaimsContractBinding.contract.Transact(opts, "updateResolve", pro, vot)
 }
 
 // UpdateResolve is a paid mutator transaction binding the contract method 0x1b3569ed.
 //
 // Solidity: function updateResolve(uint256 pro, bool vot) returns()
-func (_Claims *ClaimsSession) UpdateResolve(pro *big.Int, vot bool) (*types.Transaction, error) {
-	return _Claims.Contract.UpdateResolve(&_Claims.TransactOpts, pro, vot)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) UpdateResolve(pro *big.Int, vot bool) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.UpdateResolve(&_ClaimsContractBinding.TransactOpts, pro, vot)
 }
 
 // UpdateResolve is a paid mutator transaction binding the contract method 0x1b3569ed.
 //
 // Solidity: function updateResolve(uint256 pro, bool vot) returns()
-func (_Claims *ClaimsTransactorSession) UpdateResolve(pro *big.Int, vot bool) (*types.Transaction, error) {
-	return _Claims.Contract.UpdateResolve(&_Claims.TransactOpts, pro, vot)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactorSession) UpdateResolve(pro *big.Int, vot bool) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.UpdateResolve(&_ClaimsContractBinding.TransactOpts, pro, vot)
 }
 
 // Withdraw is a paid mutator transaction binding the contract method 0x2e1a7d4d.
 //
 // Solidity: function withdraw(uint256 bal) returns()
-func (_Claims *ClaimsTransactor) Withdraw(opts *bind.TransactOpts, bal *big.Int) (*types.Transaction, error) {
-	return _Claims.contract.Transact(opts, "withdraw", bal)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactor) Withdraw(opts *bind.TransactOpts, bal *big.Int) (*types.Transaction, error) {
+	return _ClaimsContractBinding.contract.Transact(opts, "withdraw", bal)
 }
 
 // Withdraw is a paid mutator transaction binding the contract method 0x2e1a7d4d.
 //
 // Solidity: function withdraw(uint256 bal) returns()
-func (_Claims *ClaimsSession) Withdraw(bal *big.Int) (*types.Transaction, error) {
-	return _Claims.Contract.Withdraw(&_Claims.TransactOpts, bal)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) Withdraw(bal *big.Int) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.Withdraw(&_ClaimsContractBinding.TransactOpts, bal)
 }
 
 // Withdraw is a paid mutator transaction binding the contract method 0x2e1a7d4d.
 //
 // Solidity: function withdraw(uint256 bal) returns()
-func (_Claims *ClaimsTransactorSession) Withdraw(bal *big.Int) (*types.Transaction, error) {
-	return _Claims.Contract.Withdraw(&_Claims.TransactOpts, bal)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactorSession) Withdraw(bal *big.Int) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.Withdraw(&_ClaimsContractBinding.TransactOpts, bal)
 }
 
 // Receive is a paid mutator transaction binding the contract receive function.
 //
 // Solidity: receive() payable returns()
-func (_Claims *ClaimsTransactor) Receive(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _Claims.contract.RawTransact(opts, nil) // calldata is disallowed for receive function
+func (_ClaimsContractBinding *ClaimsContractBindingTransactor) Receive(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _ClaimsContractBinding.contract.RawTransact(opts, nil) // calldata is disallowed for receive function
 }
 
 // Receive is a paid mutator transaction binding the contract receive function.
 //
 // Solidity: receive() payable returns()
-func (_Claims *ClaimsSession) Receive() (*types.Transaction, error) {
-	return _Claims.Contract.Receive(&_Claims.TransactOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) Receive() (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.Receive(&_ClaimsContractBinding.TransactOpts)
 }
 
 // Receive is a paid mutator transaction binding the contract receive function.
 //
 // Solidity: receive() payable returns()
-func (_Claims *ClaimsTransactorSession) Receive() (*types.Transaction, error) {
-	return _Claims.Contract.Receive(&_Claims.TransactOpts)
+func (_ClaimsContractBinding *ClaimsContractBindingTransactorSession) Receive() (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.Receive(&_ClaimsContractBinding.TransactOpts)
 }
 
-// ClaimsDisputeCreatedIterator is returned from FilterDisputeCreated and is used to iterate over the raw logs and unpacked data for DisputeCreated events raised by the Claims contract.
-type ClaimsDisputeCreatedIterator struct {
-	Event *ClaimsDisputeCreated // Event containing the contract specifics and raw log
+// ClaimsContractBindingDisputeCreatedIterator is returned from FilterDisputeCreated and is used to iterate over the raw logs and unpacked data for DisputeCreated events raised by the ClaimsContractBinding contract.
+type ClaimsContractBindingDisputeCreatedIterator struct {
+	Event *ClaimsContractBindingDisputeCreated // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -2114,7 +2114,7 @@ type ClaimsDisputeCreatedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *ClaimsDisputeCreatedIterator) Next() bool {
+func (it *ClaimsContractBindingDisputeCreatedIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -2123,7 +2123,7 @@ func (it *ClaimsDisputeCreatedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(ClaimsDisputeCreated)
+			it.Event = new(ClaimsContractBindingDisputeCreated)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -2138,7 +2138,7 @@ func (it *ClaimsDisputeCreatedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(ClaimsDisputeCreated)
+		it.Event = new(ClaimsContractBindingDisputeCreated)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -2154,19 +2154,19 @@ func (it *ClaimsDisputeCreatedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *ClaimsDisputeCreatedIterator) Error() error {
+func (it *ClaimsContractBindingDisputeCreatedIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *ClaimsDisputeCreatedIterator) Close() error {
+func (it *ClaimsContractBindingDisputeCreatedIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// ClaimsDisputeCreated represents a DisputeCreated event raised by the Claims contract.
-type ClaimsDisputeCreated struct {
+// ClaimsContractBindingDisputeCreated represents a DisputeCreated event raised by the ClaimsContractBinding contract.
+type ClaimsContractBindingDisputeCreated struct {
 	Use common.Address
 	Bal *big.Int
 	Exp uint64
@@ -2176,21 +2176,21 @@ type ClaimsDisputeCreated struct {
 // FilterDisputeCreated is a free log retrieval operation binding the contract event 0x2d63b30cb3e22f7f5b576c8e66fa45b23efbd90969ee2fecb0d1a814990db16c.
 //
 // Solidity: event DisputeCreated(address use, uint256 bal, uint64 exp)
-func (_Claims *ClaimsFilterer) FilterDisputeCreated(opts *bind.FilterOpts) (*ClaimsDisputeCreatedIterator, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) FilterDisputeCreated(opts *bind.FilterOpts) (*ClaimsContractBindingDisputeCreatedIterator, error) {
 
-	logs, sub, err := _Claims.contract.FilterLogs(opts, "DisputeCreated")
+	logs, sub, err := _ClaimsContractBinding.contract.FilterLogs(opts, "DisputeCreated")
 	if err != nil {
 		return nil, err
 	}
-	return &ClaimsDisputeCreatedIterator{contract: _Claims.contract, event: "DisputeCreated", logs: logs, sub: sub}, nil
+	return &ClaimsContractBindingDisputeCreatedIterator{contract: _ClaimsContractBinding.contract, event: "DisputeCreated", logs: logs, sub: sub}, nil
 }
 
 // WatchDisputeCreated is a free log subscription operation binding the contract event 0x2d63b30cb3e22f7f5b576c8e66fa45b23efbd90969ee2fecb0d1a814990db16c.
 //
 // Solidity: event DisputeCreated(address use, uint256 bal, uint64 exp)
-func (_Claims *ClaimsFilterer) WatchDisputeCreated(opts *bind.WatchOpts, sink chan<- *ClaimsDisputeCreated) (event.Subscription, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) WatchDisputeCreated(opts *bind.WatchOpts, sink chan<- *ClaimsContractBindingDisputeCreated) (event.Subscription, error) {
 
-	logs, sub, err := _Claims.contract.WatchLogs(opts, "DisputeCreated")
+	logs, sub, err := _ClaimsContractBinding.contract.WatchLogs(opts, "DisputeCreated")
 	if err != nil {
 		return nil, err
 	}
@@ -2200,8 +2200,8 @@ func (_Claims *ClaimsFilterer) WatchDisputeCreated(opts *bind.WatchOpts, sink ch
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(ClaimsDisputeCreated)
-				if err := _Claims.contract.UnpackLog(event, "DisputeCreated", log); err != nil {
+				event := new(ClaimsContractBindingDisputeCreated)
+				if err := _ClaimsContractBinding.contract.UnpackLog(event, "DisputeCreated", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -2225,18 +2225,18 @@ func (_Claims *ClaimsFilterer) WatchDisputeCreated(opts *bind.WatchOpts, sink ch
 // ParseDisputeCreated is a log parse operation binding the contract event 0x2d63b30cb3e22f7f5b576c8e66fa45b23efbd90969ee2fecb0d1a814990db16c.
 //
 // Solidity: event DisputeCreated(address use, uint256 bal, uint64 exp)
-func (_Claims *ClaimsFilterer) ParseDisputeCreated(log types.Log) (*ClaimsDisputeCreated, error) {
-	event := new(ClaimsDisputeCreated)
-	if err := _Claims.contract.UnpackLog(event, "DisputeCreated", log); err != nil {
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) ParseDisputeCreated(log types.Log) (*ClaimsContractBindingDisputeCreated, error) {
+	event := new(ClaimsContractBindingDisputeCreated)
+	if err := _ClaimsContractBinding.contract.UnpackLog(event, "DisputeCreated", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
 	return event, nil
 }
 
-// ClaimsDisputeSettledIterator is returned from FilterDisputeSettled and is used to iterate over the raw logs and unpacked data for DisputeSettled events raised by the Claims contract.
-type ClaimsDisputeSettledIterator struct {
-	Event *ClaimsDisputeSettled // Event containing the contract specifics and raw log
+// ClaimsContractBindingDisputeSettledIterator is returned from FilterDisputeSettled and is used to iterate over the raw logs and unpacked data for DisputeSettled events raised by the ClaimsContractBinding contract.
+type ClaimsContractBindingDisputeSettledIterator struct {
+	Event *ClaimsContractBindingDisputeSettled // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -2250,7 +2250,7 @@ type ClaimsDisputeSettledIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *ClaimsDisputeSettledIterator) Next() bool {
+func (it *ClaimsContractBindingDisputeSettledIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -2259,7 +2259,7 @@ func (it *ClaimsDisputeSettledIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(ClaimsDisputeSettled)
+			it.Event = new(ClaimsContractBindingDisputeSettled)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -2274,7 +2274,7 @@ func (it *ClaimsDisputeSettledIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(ClaimsDisputeSettled)
+		it.Event = new(ClaimsContractBindingDisputeSettled)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -2290,19 +2290,19 @@ func (it *ClaimsDisputeSettledIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *ClaimsDisputeSettledIterator) Error() error {
+func (it *ClaimsContractBindingDisputeSettledIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *ClaimsDisputeSettledIterator) Close() error {
+func (it *ClaimsContractBindingDisputeSettledIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// ClaimsDisputeSettled represents a DisputeSettled event raised by the Claims contract.
-type ClaimsDisputeSettled struct {
+// ClaimsContractBindingDisputeSettled represents a DisputeSettled event raised by the ClaimsContractBinding contract.
+type ClaimsContractBindingDisputeSettled struct {
 	All *big.Int
 	Yay *big.Int
 	Nah *big.Int
@@ -2313,21 +2313,21 @@ type ClaimsDisputeSettled struct {
 // FilterDisputeSettled is a free log retrieval operation binding the contract event 0xe21a3cfb0be3eec935c7dc8d2d7180967cfc67ef41f4b503da1f3d9888a0e1de.
 //
 // Solidity: event DisputeSettled(uint256 all, uint256 yay, uint256 nah, uint256 tot)
-func (_Claims *ClaimsFilterer) FilterDisputeSettled(opts *bind.FilterOpts) (*ClaimsDisputeSettledIterator, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) FilterDisputeSettled(opts *bind.FilterOpts) (*ClaimsContractBindingDisputeSettledIterator, error) {
 
-	logs, sub, err := _Claims.contract.FilterLogs(opts, "DisputeSettled")
+	logs, sub, err := _ClaimsContractBinding.contract.FilterLogs(opts, "DisputeSettled")
 	if err != nil {
 		return nil, err
 	}
-	return &ClaimsDisputeSettledIterator{contract: _Claims.contract, event: "DisputeSettled", logs: logs, sub: sub}, nil
+	return &ClaimsContractBindingDisputeSettledIterator{contract: _ClaimsContractBinding.contract, event: "DisputeSettled", logs: logs, sub: sub}, nil
 }
 
 // WatchDisputeSettled is a free log subscription operation binding the contract event 0xe21a3cfb0be3eec935c7dc8d2d7180967cfc67ef41f4b503da1f3d9888a0e1de.
 //
 // Solidity: event DisputeSettled(uint256 all, uint256 yay, uint256 nah, uint256 tot)
-func (_Claims *ClaimsFilterer) WatchDisputeSettled(opts *bind.WatchOpts, sink chan<- *ClaimsDisputeSettled) (event.Subscription, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) WatchDisputeSettled(opts *bind.WatchOpts, sink chan<- *ClaimsContractBindingDisputeSettled) (event.Subscription, error) {
 
-	logs, sub, err := _Claims.contract.WatchLogs(opts, "DisputeSettled")
+	logs, sub, err := _ClaimsContractBinding.contract.WatchLogs(opts, "DisputeSettled")
 	if err != nil {
 		return nil, err
 	}
@@ -2337,8 +2337,8 @@ func (_Claims *ClaimsFilterer) WatchDisputeSettled(opts *bind.WatchOpts, sink ch
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(ClaimsDisputeSettled)
-				if err := _Claims.contract.UnpackLog(event, "DisputeSettled", log); err != nil {
+				event := new(ClaimsContractBindingDisputeSettled)
+				if err := _ClaimsContractBinding.contract.UnpackLog(event, "DisputeSettled", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -2362,18 +2362,18 @@ func (_Claims *ClaimsFilterer) WatchDisputeSettled(opts *bind.WatchOpts, sink ch
 // ParseDisputeSettled is a log parse operation binding the contract event 0xe21a3cfb0be3eec935c7dc8d2d7180967cfc67ef41f4b503da1f3d9888a0e1de.
 //
 // Solidity: event DisputeSettled(uint256 all, uint256 yay, uint256 nah, uint256 tot)
-func (_Claims *ClaimsFilterer) ParseDisputeSettled(log types.Log) (*ClaimsDisputeSettled, error) {
-	event := new(ClaimsDisputeSettled)
-	if err := _Claims.contract.UnpackLog(event, "DisputeSettled", log); err != nil {
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) ParseDisputeSettled(log types.Log) (*ClaimsContractBindingDisputeSettled, error) {
+	event := new(ClaimsContractBindingDisputeSettled)
+	if err := _ClaimsContractBinding.contract.UnpackLog(event, "DisputeSettled", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
 	return event, nil
 }
 
-// ClaimsProposeCreatedIterator is returned from FilterProposeCreated and is used to iterate over the raw logs and unpacked data for ProposeCreated events raised by the Claims contract.
-type ClaimsProposeCreatedIterator struct {
-	Event *ClaimsProposeCreated // Event containing the contract specifics and raw log
+// ClaimsContractBindingProposeCreatedIterator is returned from FilterProposeCreated and is used to iterate over the raw logs and unpacked data for ProposeCreated events raised by the ClaimsContractBinding contract.
+type ClaimsContractBindingProposeCreatedIterator struct {
+	Event *ClaimsContractBindingProposeCreated // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -2387,7 +2387,7 @@ type ClaimsProposeCreatedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *ClaimsProposeCreatedIterator) Next() bool {
+func (it *ClaimsContractBindingProposeCreatedIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -2396,7 +2396,7 @@ func (it *ClaimsProposeCreatedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(ClaimsProposeCreated)
+			it.Event = new(ClaimsContractBindingProposeCreated)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -2411,7 +2411,7 @@ func (it *ClaimsProposeCreatedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(ClaimsProposeCreated)
+		it.Event = new(ClaimsContractBindingProposeCreated)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -2427,19 +2427,19 @@ func (it *ClaimsProposeCreatedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *ClaimsProposeCreatedIterator) Error() error {
+func (it *ClaimsContractBindingProposeCreatedIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *ClaimsProposeCreatedIterator) Close() error {
+func (it *ClaimsContractBindingProposeCreatedIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// ClaimsProposeCreated represents a ProposeCreated event raised by the Claims contract.
-type ClaimsProposeCreated struct {
+// ClaimsContractBindingProposeCreated represents a ProposeCreated event raised by the ClaimsContractBinding contract.
+type ClaimsContractBindingProposeCreated struct {
 	Use common.Address
 	Bal *big.Int
 	Exp uint64
@@ -2449,21 +2449,21 @@ type ClaimsProposeCreated struct {
 // FilterProposeCreated is a free log retrieval operation binding the contract event 0x9958345afb967495d1c8349a9f0b1eb6fa8da1d797a8e97d8a27b3ef35538e18.
 //
 // Solidity: event ProposeCreated(address use, uint256 bal, uint64 exp)
-func (_Claims *ClaimsFilterer) FilterProposeCreated(opts *bind.FilterOpts) (*ClaimsProposeCreatedIterator, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) FilterProposeCreated(opts *bind.FilterOpts) (*ClaimsContractBindingProposeCreatedIterator, error) {
 
-	logs, sub, err := _Claims.contract.FilterLogs(opts, "ProposeCreated")
+	logs, sub, err := _ClaimsContractBinding.contract.FilterLogs(opts, "ProposeCreated")
 	if err != nil {
 		return nil, err
 	}
-	return &ClaimsProposeCreatedIterator{contract: _Claims.contract, event: "ProposeCreated", logs: logs, sub: sub}, nil
+	return &ClaimsContractBindingProposeCreatedIterator{contract: _ClaimsContractBinding.contract, event: "ProposeCreated", logs: logs, sub: sub}, nil
 }
 
 // WatchProposeCreated is a free log subscription operation binding the contract event 0x9958345afb967495d1c8349a9f0b1eb6fa8da1d797a8e97d8a27b3ef35538e18.
 //
 // Solidity: event ProposeCreated(address use, uint256 bal, uint64 exp)
-func (_Claims *ClaimsFilterer) WatchProposeCreated(opts *bind.WatchOpts, sink chan<- *ClaimsProposeCreated) (event.Subscription, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) WatchProposeCreated(opts *bind.WatchOpts, sink chan<- *ClaimsContractBindingProposeCreated) (event.Subscription, error) {
 
-	logs, sub, err := _Claims.contract.WatchLogs(opts, "ProposeCreated")
+	logs, sub, err := _ClaimsContractBinding.contract.WatchLogs(opts, "ProposeCreated")
 	if err != nil {
 		return nil, err
 	}
@@ -2473,8 +2473,8 @@ func (_Claims *ClaimsFilterer) WatchProposeCreated(opts *bind.WatchOpts, sink ch
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(ClaimsProposeCreated)
-				if err := _Claims.contract.UnpackLog(event, "ProposeCreated", log); err != nil {
+				event := new(ClaimsContractBindingProposeCreated)
+				if err := _ClaimsContractBinding.contract.UnpackLog(event, "ProposeCreated", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -2498,18 +2498,18 @@ func (_Claims *ClaimsFilterer) WatchProposeCreated(opts *bind.WatchOpts, sink ch
 // ParseProposeCreated is a log parse operation binding the contract event 0x9958345afb967495d1c8349a9f0b1eb6fa8da1d797a8e97d8a27b3ef35538e18.
 //
 // Solidity: event ProposeCreated(address use, uint256 bal, uint64 exp)
-func (_Claims *ClaimsFilterer) ParseProposeCreated(log types.Log) (*ClaimsProposeCreated, error) {
-	event := new(ClaimsProposeCreated)
-	if err := _Claims.contract.UnpackLog(event, "ProposeCreated", log); err != nil {
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) ParseProposeCreated(log types.Log) (*ClaimsContractBindingProposeCreated, error) {
+	event := new(ClaimsContractBindingProposeCreated)
+	if err := _ClaimsContractBinding.contract.UnpackLog(event, "ProposeCreated", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
 	return event, nil
 }
 
-// ClaimsProposeSettledIterator is returned from FilterProposeSettled and is used to iterate over the raw logs and unpacked data for ProposeSettled events raised by the Claims contract.
-type ClaimsProposeSettledIterator struct {
-	Event *ClaimsProposeSettled // Event containing the contract specifics and raw log
+// ClaimsContractBindingProposeSettledIterator is returned from FilterProposeSettled and is used to iterate over the raw logs and unpacked data for ProposeSettled events raised by the ClaimsContractBinding contract.
+type ClaimsContractBindingProposeSettledIterator struct {
+	Event *ClaimsContractBindingProposeSettled // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -2523,7 +2523,7 @@ type ClaimsProposeSettledIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *ClaimsProposeSettledIterator) Next() bool {
+func (it *ClaimsContractBindingProposeSettledIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -2532,7 +2532,7 @@ func (it *ClaimsProposeSettledIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(ClaimsProposeSettled)
+			it.Event = new(ClaimsContractBindingProposeSettled)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -2547,7 +2547,7 @@ func (it *ClaimsProposeSettledIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(ClaimsProposeSettled)
+		it.Event = new(ClaimsContractBindingProposeSettled)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -2563,19 +2563,19 @@ func (it *ClaimsProposeSettledIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *ClaimsProposeSettledIterator) Error() error {
+func (it *ClaimsContractBindingProposeSettledIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *ClaimsProposeSettledIterator) Close() error {
+func (it *ClaimsContractBindingProposeSettledIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// ClaimsProposeSettled represents a ProposeSettled event raised by the Claims contract.
-type ClaimsProposeSettled struct {
+// ClaimsContractBindingProposeSettled represents a ProposeSettled event raised by the ClaimsContractBinding contract.
+type ClaimsContractBindingProposeSettled struct {
 	All *big.Int
 	Yay *big.Int
 	Nah *big.Int
@@ -2586,21 +2586,21 @@ type ClaimsProposeSettled struct {
 // FilterProposeSettled is a free log retrieval operation binding the contract event 0xc660c9505d3bd7c0767b64bbebae4279d08366b6f01b10ba5126cffdc3198aee.
 //
 // Solidity: event ProposeSettled(uint256 all, uint256 yay, uint256 nah, uint256 tot)
-func (_Claims *ClaimsFilterer) FilterProposeSettled(opts *bind.FilterOpts) (*ClaimsProposeSettledIterator, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) FilterProposeSettled(opts *bind.FilterOpts) (*ClaimsContractBindingProposeSettledIterator, error) {
 
-	logs, sub, err := _Claims.contract.FilterLogs(opts, "ProposeSettled")
+	logs, sub, err := _ClaimsContractBinding.contract.FilterLogs(opts, "ProposeSettled")
 	if err != nil {
 		return nil, err
 	}
-	return &ClaimsProposeSettledIterator{contract: _Claims.contract, event: "ProposeSettled", logs: logs, sub: sub}, nil
+	return &ClaimsContractBindingProposeSettledIterator{contract: _ClaimsContractBinding.contract, event: "ProposeSettled", logs: logs, sub: sub}, nil
 }
 
 // WatchProposeSettled is a free log subscription operation binding the contract event 0xc660c9505d3bd7c0767b64bbebae4279d08366b6f01b10ba5126cffdc3198aee.
 //
 // Solidity: event ProposeSettled(uint256 all, uint256 yay, uint256 nah, uint256 tot)
-func (_Claims *ClaimsFilterer) WatchProposeSettled(opts *bind.WatchOpts, sink chan<- *ClaimsProposeSettled) (event.Subscription, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) WatchProposeSettled(opts *bind.WatchOpts, sink chan<- *ClaimsContractBindingProposeSettled) (event.Subscription, error) {
 
-	logs, sub, err := _Claims.contract.WatchLogs(opts, "ProposeSettled")
+	logs, sub, err := _ClaimsContractBinding.contract.WatchLogs(opts, "ProposeSettled")
 	if err != nil {
 		return nil, err
 	}
@@ -2610,8 +2610,8 @@ func (_Claims *ClaimsFilterer) WatchProposeSettled(opts *bind.WatchOpts, sink ch
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(ClaimsProposeSettled)
-				if err := _Claims.contract.UnpackLog(event, "ProposeSettled", log); err != nil {
+				event := new(ClaimsContractBindingProposeSettled)
+				if err := _ClaimsContractBinding.contract.UnpackLog(event, "ProposeSettled", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -2635,18 +2635,18 @@ func (_Claims *ClaimsFilterer) WatchProposeSettled(opts *bind.WatchOpts, sink ch
 // ParseProposeSettled is a log parse operation binding the contract event 0xc660c9505d3bd7c0767b64bbebae4279d08366b6f01b10ba5126cffdc3198aee.
 //
 // Solidity: event ProposeSettled(uint256 all, uint256 yay, uint256 nah, uint256 tot)
-func (_Claims *ClaimsFilterer) ParseProposeSettled(log types.Log) (*ClaimsProposeSettled, error) {
-	event := new(ClaimsProposeSettled)
-	if err := _Claims.contract.UnpackLog(event, "ProposeSettled", log); err != nil {
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) ParseProposeSettled(log types.Log) (*ClaimsContractBindingProposeSettled, error) {
+	event := new(ClaimsContractBindingProposeSettled)
+	if err := _ClaimsContractBinding.contract.UnpackLog(event, "ProposeSettled", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
 	return event, nil
 }
 
-// ClaimsResolveCreatedIterator is returned from FilterResolveCreated and is used to iterate over the raw logs and unpacked data for ResolveCreated events raised by the Claims contract.
-type ClaimsResolveCreatedIterator struct {
-	Event *ClaimsResolveCreated // Event containing the contract specifics and raw log
+// ClaimsContractBindingResolveCreatedIterator is returned from FilterResolveCreated and is used to iterate over the raw logs and unpacked data for ResolveCreated events raised by the ClaimsContractBinding contract.
+type ClaimsContractBindingResolveCreatedIterator struct {
+	Event *ClaimsContractBindingResolveCreated // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -2660,7 +2660,7 @@ type ClaimsResolveCreatedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *ClaimsResolveCreatedIterator) Next() bool {
+func (it *ClaimsContractBindingResolveCreatedIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -2669,7 +2669,7 @@ func (it *ClaimsResolveCreatedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(ClaimsResolveCreated)
+			it.Event = new(ClaimsContractBindingResolveCreated)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -2684,7 +2684,7 @@ func (it *ClaimsResolveCreatedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(ClaimsResolveCreated)
+		it.Event = new(ClaimsContractBindingResolveCreated)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -2700,19 +2700,19 @@ func (it *ClaimsResolveCreatedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *ClaimsResolveCreatedIterator) Error() error {
+func (it *ClaimsContractBindingResolveCreatedIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *ClaimsResolveCreatedIterator) Close() error {
+func (it *ClaimsContractBindingResolveCreatedIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// ClaimsResolveCreated represents a ResolveCreated event raised by the Claims contract.
-type ClaimsResolveCreated struct {
+// ClaimsContractBindingResolveCreated represents a ResolveCreated event raised by the ClaimsContractBinding contract.
+type ClaimsContractBindingResolveCreated struct {
 	Use common.Address
 	Len *big.Int
 	Exp uint64
@@ -2722,21 +2722,21 @@ type ClaimsResolveCreated struct {
 // FilterResolveCreated is a free log retrieval operation binding the contract event 0xf7430e9eb3d2013265aa9b15a468fe43f023d694832c76117e47e30963f82cf9.
 //
 // Solidity: event ResolveCreated(address use, uint256 len, uint64 exp)
-func (_Claims *ClaimsFilterer) FilterResolveCreated(opts *bind.FilterOpts) (*ClaimsResolveCreatedIterator, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) FilterResolveCreated(opts *bind.FilterOpts) (*ClaimsContractBindingResolveCreatedIterator, error) {
 
-	logs, sub, err := _Claims.contract.FilterLogs(opts, "ResolveCreated")
+	logs, sub, err := _ClaimsContractBinding.contract.FilterLogs(opts, "ResolveCreated")
 	if err != nil {
 		return nil, err
 	}
-	return &ClaimsResolveCreatedIterator{contract: _Claims.contract, event: "ResolveCreated", logs: logs, sub: sub}, nil
+	return &ClaimsContractBindingResolveCreatedIterator{contract: _ClaimsContractBinding.contract, event: "ResolveCreated", logs: logs, sub: sub}, nil
 }
 
 // WatchResolveCreated is a free log subscription operation binding the contract event 0xf7430e9eb3d2013265aa9b15a468fe43f023d694832c76117e47e30963f82cf9.
 //
 // Solidity: event ResolveCreated(address use, uint256 len, uint64 exp)
-func (_Claims *ClaimsFilterer) WatchResolveCreated(opts *bind.WatchOpts, sink chan<- *ClaimsResolveCreated) (event.Subscription, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) WatchResolveCreated(opts *bind.WatchOpts, sink chan<- *ClaimsContractBindingResolveCreated) (event.Subscription, error) {
 
-	logs, sub, err := _Claims.contract.WatchLogs(opts, "ResolveCreated")
+	logs, sub, err := _ClaimsContractBinding.contract.WatchLogs(opts, "ResolveCreated")
 	if err != nil {
 		return nil, err
 	}
@@ -2746,8 +2746,8 @@ func (_Claims *ClaimsFilterer) WatchResolveCreated(opts *bind.WatchOpts, sink ch
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(ClaimsResolveCreated)
-				if err := _Claims.contract.UnpackLog(event, "ResolveCreated", log); err != nil {
+				event := new(ClaimsContractBindingResolveCreated)
+				if err := _ClaimsContractBinding.contract.UnpackLog(event, "ResolveCreated", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -2771,18 +2771,18 @@ func (_Claims *ClaimsFilterer) WatchResolveCreated(opts *bind.WatchOpts, sink ch
 // ParseResolveCreated is a log parse operation binding the contract event 0xf7430e9eb3d2013265aa9b15a468fe43f023d694832c76117e47e30963f82cf9.
 //
 // Solidity: event ResolveCreated(address use, uint256 len, uint64 exp)
-func (_Claims *ClaimsFilterer) ParseResolveCreated(log types.Log) (*ClaimsResolveCreated, error) {
-	event := new(ClaimsResolveCreated)
-	if err := _Claims.contract.UnpackLog(event, "ResolveCreated", log); err != nil {
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) ParseResolveCreated(log types.Log) (*ClaimsContractBindingResolveCreated, error) {
+	event := new(ClaimsContractBindingResolveCreated)
+	if err := _ClaimsContractBinding.contract.UnpackLog(event, "ResolveCreated", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
 	return event, nil
 }
 
-// ClaimsRoleAdminChangedIterator is returned from FilterRoleAdminChanged and is used to iterate over the raw logs and unpacked data for RoleAdminChanged events raised by the Claims contract.
-type ClaimsRoleAdminChangedIterator struct {
-	Event *ClaimsRoleAdminChanged // Event containing the contract specifics and raw log
+// ClaimsContractBindingRoleAdminChangedIterator is returned from FilterRoleAdminChanged and is used to iterate over the raw logs and unpacked data for RoleAdminChanged events raised by the ClaimsContractBinding contract.
+type ClaimsContractBindingRoleAdminChangedIterator struct {
+	Event *ClaimsContractBindingRoleAdminChanged // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -2796,7 +2796,7 @@ type ClaimsRoleAdminChangedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *ClaimsRoleAdminChangedIterator) Next() bool {
+func (it *ClaimsContractBindingRoleAdminChangedIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -2805,7 +2805,7 @@ func (it *ClaimsRoleAdminChangedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(ClaimsRoleAdminChanged)
+			it.Event = new(ClaimsContractBindingRoleAdminChanged)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -2820,7 +2820,7 @@ func (it *ClaimsRoleAdminChangedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(ClaimsRoleAdminChanged)
+		it.Event = new(ClaimsContractBindingRoleAdminChanged)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -2836,19 +2836,19 @@ func (it *ClaimsRoleAdminChangedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *ClaimsRoleAdminChangedIterator) Error() error {
+func (it *ClaimsContractBindingRoleAdminChangedIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *ClaimsRoleAdminChangedIterator) Close() error {
+func (it *ClaimsContractBindingRoleAdminChangedIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// ClaimsRoleAdminChanged represents a RoleAdminChanged event raised by the Claims contract.
-type ClaimsRoleAdminChanged struct {
+// ClaimsContractBindingRoleAdminChanged represents a RoleAdminChanged event raised by the ClaimsContractBinding contract.
+type ClaimsContractBindingRoleAdminChanged struct {
 	Role              [32]byte
 	PreviousAdminRole [32]byte
 	NewAdminRole      [32]byte
@@ -2858,7 +2858,7 @@ type ClaimsRoleAdminChanged struct {
 // FilterRoleAdminChanged is a free log retrieval operation binding the contract event 0xbd79b86ffe0ab8e8776151514217cd7cacd52c909f66475c3af44e129f0b00ff.
 //
 // Solidity: event RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole)
-func (_Claims *ClaimsFilterer) FilterRoleAdminChanged(opts *bind.FilterOpts, role [][32]byte, previousAdminRole [][32]byte, newAdminRole [][32]byte) (*ClaimsRoleAdminChangedIterator, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) FilterRoleAdminChanged(opts *bind.FilterOpts, role [][32]byte, previousAdminRole [][32]byte, newAdminRole [][32]byte) (*ClaimsContractBindingRoleAdminChangedIterator, error) {
 
 	var roleRule []interface{}
 	for _, roleItem := range role {
@@ -2873,17 +2873,17 @@ func (_Claims *ClaimsFilterer) FilterRoleAdminChanged(opts *bind.FilterOpts, rol
 		newAdminRoleRule = append(newAdminRoleRule, newAdminRoleItem)
 	}
 
-	logs, sub, err := _Claims.contract.FilterLogs(opts, "RoleAdminChanged", roleRule, previousAdminRoleRule, newAdminRoleRule)
+	logs, sub, err := _ClaimsContractBinding.contract.FilterLogs(opts, "RoleAdminChanged", roleRule, previousAdminRoleRule, newAdminRoleRule)
 	if err != nil {
 		return nil, err
 	}
-	return &ClaimsRoleAdminChangedIterator{contract: _Claims.contract, event: "RoleAdminChanged", logs: logs, sub: sub}, nil
+	return &ClaimsContractBindingRoleAdminChangedIterator{contract: _ClaimsContractBinding.contract, event: "RoleAdminChanged", logs: logs, sub: sub}, nil
 }
 
 // WatchRoleAdminChanged is a free log subscription operation binding the contract event 0xbd79b86ffe0ab8e8776151514217cd7cacd52c909f66475c3af44e129f0b00ff.
 //
 // Solidity: event RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole)
-func (_Claims *ClaimsFilterer) WatchRoleAdminChanged(opts *bind.WatchOpts, sink chan<- *ClaimsRoleAdminChanged, role [][32]byte, previousAdminRole [][32]byte, newAdminRole [][32]byte) (event.Subscription, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) WatchRoleAdminChanged(opts *bind.WatchOpts, sink chan<- *ClaimsContractBindingRoleAdminChanged, role [][32]byte, previousAdminRole [][32]byte, newAdminRole [][32]byte) (event.Subscription, error) {
 
 	var roleRule []interface{}
 	for _, roleItem := range role {
@@ -2898,7 +2898,7 @@ func (_Claims *ClaimsFilterer) WatchRoleAdminChanged(opts *bind.WatchOpts, sink 
 		newAdminRoleRule = append(newAdminRoleRule, newAdminRoleItem)
 	}
 
-	logs, sub, err := _Claims.contract.WatchLogs(opts, "RoleAdminChanged", roleRule, previousAdminRoleRule, newAdminRoleRule)
+	logs, sub, err := _ClaimsContractBinding.contract.WatchLogs(opts, "RoleAdminChanged", roleRule, previousAdminRoleRule, newAdminRoleRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2908,8 +2908,8 @@ func (_Claims *ClaimsFilterer) WatchRoleAdminChanged(opts *bind.WatchOpts, sink 
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(ClaimsRoleAdminChanged)
-				if err := _Claims.contract.UnpackLog(event, "RoleAdminChanged", log); err != nil {
+				event := new(ClaimsContractBindingRoleAdminChanged)
+				if err := _ClaimsContractBinding.contract.UnpackLog(event, "RoleAdminChanged", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -2933,18 +2933,18 @@ func (_Claims *ClaimsFilterer) WatchRoleAdminChanged(opts *bind.WatchOpts, sink 
 // ParseRoleAdminChanged is a log parse operation binding the contract event 0xbd79b86ffe0ab8e8776151514217cd7cacd52c909f66475c3af44e129f0b00ff.
 //
 // Solidity: event RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole)
-func (_Claims *ClaimsFilterer) ParseRoleAdminChanged(log types.Log) (*ClaimsRoleAdminChanged, error) {
-	event := new(ClaimsRoleAdminChanged)
-	if err := _Claims.contract.UnpackLog(event, "RoleAdminChanged", log); err != nil {
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) ParseRoleAdminChanged(log types.Log) (*ClaimsContractBindingRoleAdminChanged, error) {
+	event := new(ClaimsContractBindingRoleAdminChanged)
+	if err := _ClaimsContractBinding.contract.UnpackLog(event, "RoleAdminChanged", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
 	return event, nil
 }
 
-// ClaimsRoleGrantedIterator is returned from FilterRoleGranted and is used to iterate over the raw logs and unpacked data for RoleGranted events raised by the Claims contract.
-type ClaimsRoleGrantedIterator struct {
-	Event *ClaimsRoleGranted // Event containing the contract specifics and raw log
+// ClaimsContractBindingRoleGrantedIterator is returned from FilterRoleGranted and is used to iterate over the raw logs and unpacked data for RoleGranted events raised by the ClaimsContractBinding contract.
+type ClaimsContractBindingRoleGrantedIterator struct {
+	Event *ClaimsContractBindingRoleGranted // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -2958,7 +2958,7 @@ type ClaimsRoleGrantedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *ClaimsRoleGrantedIterator) Next() bool {
+func (it *ClaimsContractBindingRoleGrantedIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -2967,7 +2967,7 @@ func (it *ClaimsRoleGrantedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(ClaimsRoleGranted)
+			it.Event = new(ClaimsContractBindingRoleGranted)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -2982,7 +2982,7 @@ func (it *ClaimsRoleGrantedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(ClaimsRoleGranted)
+		it.Event = new(ClaimsContractBindingRoleGranted)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -2998,19 +2998,19 @@ func (it *ClaimsRoleGrantedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *ClaimsRoleGrantedIterator) Error() error {
+func (it *ClaimsContractBindingRoleGrantedIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *ClaimsRoleGrantedIterator) Close() error {
+func (it *ClaimsContractBindingRoleGrantedIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// ClaimsRoleGranted represents a RoleGranted event raised by the Claims contract.
-type ClaimsRoleGranted struct {
+// ClaimsContractBindingRoleGranted represents a RoleGranted event raised by the ClaimsContractBinding contract.
+type ClaimsContractBindingRoleGranted struct {
 	Role    [32]byte
 	Account common.Address
 	Sender  common.Address
@@ -3020,7 +3020,7 @@ type ClaimsRoleGranted struct {
 // FilterRoleGranted is a free log retrieval operation binding the contract event 0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d.
 //
 // Solidity: event RoleGranted(bytes32 indexed role, address indexed account, address indexed sender)
-func (_Claims *ClaimsFilterer) FilterRoleGranted(opts *bind.FilterOpts, role [][32]byte, account []common.Address, sender []common.Address) (*ClaimsRoleGrantedIterator, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) FilterRoleGranted(opts *bind.FilterOpts, role [][32]byte, account []common.Address, sender []common.Address) (*ClaimsContractBindingRoleGrantedIterator, error) {
 
 	var roleRule []interface{}
 	for _, roleItem := range role {
@@ -3035,17 +3035,17 @@ func (_Claims *ClaimsFilterer) FilterRoleGranted(opts *bind.FilterOpts, role [][
 		senderRule = append(senderRule, senderItem)
 	}
 
-	logs, sub, err := _Claims.contract.FilterLogs(opts, "RoleGranted", roleRule, accountRule, senderRule)
+	logs, sub, err := _ClaimsContractBinding.contract.FilterLogs(opts, "RoleGranted", roleRule, accountRule, senderRule)
 	if err != nil {
 		return nil, err
 	}
-	return &ClaimsRoleGrantedIterator{contract: _Claims.contract, event: "RoleGranted", logs: logs, sub: sub}, nil
+	return &ClaimsContractBindingRoleGrantedIterator{contract: _ClaimsContractBinding.contract, event: "RoleGranted", logs: logs, sub: sub}, nil
 }
 
 // WatchRoleGranted is a free log subscription operation binding the contract event 0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d.
 //
 // Solidity: event RoleGranted(bytes32 indexed role, address indexed account, address indexed sender)
-func (_Claims *ClaimsFilterer) WatchRoleGranted(opts *bind.WatchOpts, sink chan<- *ClaimsRoleGranted, role [][32]byte, account []common.Address, sender []common.Address) (event.Subscription, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) WatchRoleGranted(opts *bind.WatchOpts, sink chan<- *ClaimsContractBindingRoleGranted, role [][32]byte, account []common.Address, sender []common.Address) (event.Subscription, error) {
 
 	var roleRule []interface{}
 	for _, roleItem := range role {
@@ -3060,7 +3060,7 @@ func (_Claims *ClaimsFilterer) WatchRoleGranted(opts *bind.WatchOpts, sink chan<
 		senderRule = append(senderRule, senderItem)
 	}
 
-	logs, sub, err := _Claims.contract.WatchLogs(opts, "RoleGranted", roleRule, accountRule, senderRule)
+	logs, sub, err := _ClaimsContractBinding.contract.WatchLogs(opts, "RoleGranted", roleRule, accountRule, senderRule)
 	if err != nil {
 		return nil, err
 	}
@@ -3070,8 +3070,8 @@ func (_Claims *ClaimsFilterer) WatchRoleGranted(opts *bind.WatchOpts, sink chan<
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(ClaimsRoleGranted)
-				if err := _Claims.contract.UnpackLog(event, "RoleGranted", log); err != nil {
+				event := new(ClaimsContractBindingRoleGranted)
+				if err := _ClaimsContractBinding.contract.UnpackLog(event, "RoleGranted", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -3095,18 +3095,18 @@ func (_Claims *ClaimsFilterer) WatchRoleGranted(opts *bind.WatchOpts, sink chan<
 // ParseRoleGranted is a log parse operation binding the contract event 0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d.
 //
 // Solidity: event RoleGranted(bytes32 indexed role, address indexed account, address indexed sender)
-func (_Claims *ClaimsFilterer) ParseRoleGranted(log types.Log) (*ClaimsRoleGranted, error) {
-	event := new(ClaimsRoleGranted)
-	if err := _Claims.contract.UnpackLog(event, "RoleGranted", log); err != nil {
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) ParseRoleGranted(log types.Log) (*ClaimsContractBindingRoleGranted, error) {
+	event := new(ClaimsContractBindingRoleGranted)
+	if err := _ClaimsContractBinding.contract.UnpackLog(event, "RoleGranted", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
 	return event, nil
 }
 
-// ClaimsRoleRevokedIterator is returned from FilterRoleRevoked and is used to iterate over the raw logs and unpacked data for RoleRevoked events raised by the Claims contract.
-type ClaimsRoleRevokedIterator struct {
-	Event *ClaimsRoleRevoked // Event containing the contract specifics and raw log
+// ClaimsContractBindingRoleRevokedIterator is returned from FilterRoleRevoked and is used to iterate over the raw logs and unpacked data for RoleRevoked events raised by the ClaimsContractBinding contract.
+type ClaimsContractBindingRoleRevokedIterator struct {
+	Event *ClaimsContractBindingRoleRevoked // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -3120,7 +3120,7 @@ type ClaimsRoleRevokedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *ClaimsRoleRevokedIterator) Next() bool {
+func (it *ClaimsContractBindingRoleRevokedIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -3129,7 +3129,7 @@ func (it *ClaimsRoleRevokedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(ClaimsRoleRevoked)
+			it.Event = new(ClaimsContractBindingRoleRevoked)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -3144,7 +3144,7 @@ func (it *ClaimsRoleRevokedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(ClaimsRoleRevoked)
+		it.Event = new(ClaimsContractBindingRoleRevoked)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -3160,19 +3160,19 @@ func (it *ClaimsRoleRevokedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *ClaimsRoleRevokedIterator) Error() error {
+func (it *ClaimsContractBindingRoleRevokedIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *ClaimsRoleRevokedIterator) Close() error {
+func (it *ClaimsContractBindingRoleRevokedIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// ClaimsRoleRevoked represents a RoleRevoked event raised by the Claims contract.
-type ClaimsRoleRevoked struct {
+// ClaimsContractBindingRoleRevoked represents a RoleRevoked event raised by the ClaimsContractBinding contract.
+type ClaimsContractBindingRoleRevoked struct {
 	Role    [32]byte
 	Account common.Address
 	Sender  common.Address
@@ -3182,7 +3182,7 @@ type ClaimsRoleRevoked struct {
 // FilterRoleRevoked is a free log retrieval operation binding the contract event 0xf6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b.
 //
 // Solidity: event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender)
-func (_Claims *ClaimsFilterer) FilterRoleRevoked(opts *bind.FilterOpts, role [][32]byte, account []common.Address, sender []common.Address) (*ClaimsRoleRevokedIterator, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) FilterRoleRevoked(opts *bind.FilterOpts, role [][32]byte, account []common.Address, sender []common.Address) (*ClaimsContractBindingRoleRevokedIterator, error) {
 
 	var roleRule []interface{}
 	for _, roleItem := range role {
@@ -3197,17 +3197,17 @@ func (_Claims *ClaimsFilterer) FilterRoleRevoked(opts *bind.FilterOpts, role [][
 		senderRule = append(senderRule, senderItem)
 	}
 
-	logs, sub, err := _Claims.contract.FilterLogs(opts, "RoleRevoked", roleRule, accountRule, senderRule)
+	logs, sub, err := _ClaimsContractBinding.contract.FilterLogs(opts, "RoleRevoked", roleRule, accountRule, senderRule)
 	if err != nil {
 		return nil, err
 	}
-	return &ClaimsRoleRevokedIterator{contract: _Claims.contract, event: "RoleRevoked", logs: logs, sub: sub}, nil
+	return &ClaimsContractBindingRoleRevokedIterator{contract: _ClaimsContractBinding.contract, event: "RoleRevoked", logs: logs, sub: sub}, nil
 }
 
 // WatchRoleRevoked is a free log subscription operation binding the contract event 0xf6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b.
 //
 // Solidity: event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender)
-func (_Claims *ClaimsFilterer) WatchRoleRevoked(opts *bind.WatchOpts, sink chan<- *ClaimsRoleRevoked, role [][32]byte, account []common.Address, sender []common.Address) (event.Subscription, error) {
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) WatchRoleRevoked(opts *bind.WatchOpts, sink chan<- *ClaimsContractBindingRoleRevoked, role [][32]byte, account []common.Address, sender []common.Address) (event.Subscription, error) {
 
 	var roleRule []interface{}
 	for _, roleItem := range role {
@@ -3222,7 +3222,7 @@ func (_Claims *ClaimsFilterer) WatchRoleRevoked(opts *bind.WatchOpts, sink chan<
 		senderRule = append(senderRule, senderItem)
 	}
 
-	logs, sub, err := _Claims.contract.WatchLogs(opts, "RoleRevoked", roleRule, accountRule, senderRule)
+	logs, sub, err := _ClaimsContractBinding.contract.WatchLogs(opts, "RoleRevoked", roleRule, accountRule, senderRule)
 	if err != nil {
 		return nil, err
 	}
@@ -3232,8 +3232,8 @@ func (_Claims *ClaimsFilterer) WatchRoleRevoked(opts *bind.WatchOpts, sink chan<
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(ClaimsRoleRevoked)
-				if err := _Claims.contract.UnpackLog(event, "RoleRevoked", log); err != nil {
+				event := new(ClaimsContractBindingRoleRevoked)
+				if err := _ClaimsContractBinding.contract.UnpackLog(event, "RoleRevoked", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -3257,9 +3257,9 @@ func (_Claims *ClaimsFilterer) WatchRoleRevoked(opts *bind.WatchOpts, sink chan<
 // ParseRoleRevoked is a log parse operation binding the contract event 0xf6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b.
 //
 // Solidity: event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender)
-func (_Claims *ClaimsFilterer) ParseRoleRevoked(log types.Log) (*ClaimsRoleRevoked, error) {
-	event := new(ClaimsRoleRevoked)
-	if err := _Claims.contract.UnpackLog(event, "RoleRevoked", log); err != nil {
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) ParseRoleRevoked(log types.Log) (*ClaimsContractBindingRoleRevoked, error) {
+	event := new(ClaimsContractBindingRoleRevoked)
+	if err := _ClaimsContractBinding.contract.UnpackLog(event, "RoleRevoked", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

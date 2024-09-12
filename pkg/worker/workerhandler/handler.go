@@ -3,16 +3,21 @@ package workerhandler
 import (
 	"fmt"
 
+	"github.com/uvio-network/apiserver/pkg/contract"
+	"github.com/uvio-network/apiserver/pkg/emitter"
 	"github.com/uvio-network/apiserver/pkg/envvar"
 	"github.com/uvio-network/apiserver/pkg/storage"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/claimresolvehandler"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/usercreatehandler"
+	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/uvxminthandler"
 	"github.com/xh3b4sd/locker"
 	"github.com/xh3b4sd/logger"
 	"github.com/xh3b4sd/tracer"
 )
 
 type Config struct {
+	Con contract.Interface
+	Emi emitter.Interface
 	Env envvar.Env
 	Loc locker.Interface
 	Log logger.Interface
@@ -24,6 +29,12 @@ type Handler struct {
 }
 
 func New(c Config) *Handler {
+	if c.Con == nil {
+		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Con must not be empty", c)))
+	}
+	if c.Emi == nil {
+		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Emi must not be empty", c)))
+	}
 	if c.Loc == nil {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Loc must not be empty", c)))
 	}
@@ -43,6 +54,13 @@ func New(c Config) *Handler {
 		}))
 
 		han = append(han, usercreatehandler.NewExternHandler(usercreatehandler.ExternHandlerConfig{
+			Emi: c.Emi,
+			Log: c.Log,
+			Sto: c.Sto,
+		}))
+
+		han = append(han, uvxminthandler.NewInternHandler(uvxminthandler.InternHandlerConfig{
+			Con: c.Con,
 			Log: c.Log,
 			Sto: c.Sto,
 		}))

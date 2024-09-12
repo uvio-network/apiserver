@@ -3,22 +3,28 @@ package uvxminthandler
 import (
 	"fmt"
 
+	"github.com/uvio-network/apiserver/pkg/contract"
 	"github.com/uvio-network/apiserver/pkg/storage"
 	"github.com/xh3b4sd/logger"
 	"github.com/xh3b4sd/tracer"
 )
 
-type ExternHandlerConfig struct {
+type InternHandlerConfig struct {
+	Con contract.Interface
 	Log logger.Interface
 	Sto storage.Interface
 }
 
 type InternHandler struct {
+	con contract.Interface
 	log logger.Interface
 	sto storage.Interface
 }
 
-func NewExternHandler(c ExternHandlerConfig) *InternHandler {
+func NewInternHandler(c InternHandlerConfig) *InternHandler {
+	if c.Con == nil {
+		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Con must not be empty", c)))
+	}
 	if c.Log == nil {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Log must not be empty", c)))
 	}
@@ -27,6 +33,7 @@ func NewExternHandler(c ExternHandlerConfig) *InternHandler {
 	}
 
 	return &InternHandler{
+		con: c.Con,
 		log: c.Log,
 		sto: c.Sto,
 	}
