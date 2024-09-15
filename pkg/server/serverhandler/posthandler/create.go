@@ -25,7 +25,7 @@ func (h *Handler) Create(ctx context.Context, req *post.CreateI) (*post.CreateO,
 			Labels: converter.StringToSlice(x.Public.Labels),
 			Lifecycle: objectfield.Lifecycle{
 				Data: objectlabel.DesiredLifecycle(x.Public.Lifecycle),
-				Hash: x.Public.Hash,
+				Hash: converter.StringToSlice(x.Public.Hash),
 			},
 			Meta:   x.Public.Meta,
 			Owner:  userid.FromContext(ctx),

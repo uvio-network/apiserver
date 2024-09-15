@@ -20,12 +20,12 @@ func (r *Redis) UpdateHash(pos []*poststorage.Object, has []string) ([]*poststor
 			return nil, tracer.Maskf(ClaimUpdateKindError, "%s=%s", pos[i].ID, pos[i].Kind)
 		}
 
-		if pos[i].Lifecycle.Hash != "" {
+		if !pos[i].Lifecycle.Pending() {
 			return nil, tracer.Maskf(ClaimUpdateHashError, "%s=%s", pos[i].ID, pos[i].Lifecycle.Hash)
 		}
 
 		{
-			pos[i].Lifecycle.Hash = has[i]
+			pos[i].Lifecycle.Hash = append(pos[i].Lifecycle.Hash, has[i])
 		}
 	}
 
