@@ -1,4 +1,4 @@
-package claimresolvehandler
+package claimexpiryhandler
 
 import (
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
@@ -11,7 +11,7 @@ func (h *InternHandler) Create() *task.Task {
 			task.Aevery: "hour",
 		},
 		Meta: &task.Meta{
-			objectlabel.ClaimAction: objectlabel.ActionResolve,
+			objectlabel.ClaimAction: objectlabel.ActionExpiry,
 			objectlabel.ClaimObject: "*",
 			objectlabel.ClaimOrigin: objectlabel.OriginIntern,
 		},
