@@ -9,6 +9,7 @@ const (
 
 const (
 	LifecycleAdjourn DesiredLifecycle = "adjourn"
+	LifecycleBalance DesiredLifecycle = "balance"
 	LifecycleDispute DesiredLifecycle = "dispute"
 	LifecycleNullify DesiredLifecycle = "nullify"
 	LifecycleOnchain DesiredLifecycle = "onchain"

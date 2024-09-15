@@ -13,4 +13,12 @@ type Interface interface {
 	//     inp[1] the desired lifecycle phase of the claim to create
 	//
 	Create(objectid.ID, objectlabel.DesiredLifecycle) error
+
+	// Update emits an event that intends to trigger the update of a claim's
+	// lifecycle phase.
+	//
+	//     inp[0] the propose ID for which to update the lifecycle phase
+	//     inp[1] the lifecycle phase to update
+	//
+	Update(objectid.ID, objectlabel.DesiredLifecycle) error
 }
