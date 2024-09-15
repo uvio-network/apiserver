@@ -10,7 +10,7 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Redis) SearchOwner(own []objectid.ID) ([]*Object, error) {
+func (r *Redigo) SearchOwner(own []objectid.ID) ([]*Object, error) {
 	// wal will result in a list of all wallet IDs belonging to the given user
 	// IDs, if any.
 	var wal []string
@@ -44,7 +44,7 @@ func (r *Redis) SearchOwner(own []objectid.ID) ([]*Object, error) {
 	return out, nil
 }
 
-func (r *Redis) SearchWallet(inp []objectid.ID) ([]*Object, error) {
+func (r *Redigo) SearchWallet(inp []objectid.ID) ([]*Object, error) {
 	var err error
 
 	var jsn []string
