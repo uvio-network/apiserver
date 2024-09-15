@@ -20,9 +20,18 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	}
 
 	for _, x := range cla {
-		err = h.emi.Claim().Create(x.ID, objectlabel.LifecycleResolve)
-		if err != nil {
-			return tracer.Mask(err)
+		{
+			err = h.emi.Claim().Create(x.ID, objectlabel.LifecycleResolve)
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
+
+		{
+			err = h.sto.Post().DeleteExpiry([]*poststorage.Object{x})
+			if err != nil {
+				return tracer.Mask(err)
+			}
 		}
 	}
 

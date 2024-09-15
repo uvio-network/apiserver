@@ -19,9 +19,9 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 
 	fmt.Printf("cla %#v\n", cla)
 
-	// TODO create post object with lifecycle phase resolve
-	// TODO create resolve onchain
-	// TODO update hash in post object with transaction hash once confirmed onchain
+	// TODO create post object with lifecycle phase resolve, if it does not already exist
+	// TODO create resolve onchain, if it does not already exist
+	// TODO update hash in post object with transaction hash once confirmed onchain, if it does not already exist
 
 	return nil
 }
