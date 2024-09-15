@@ -41,7 +41,7 @@ func New(c Config) *Storage {
 			Log: c.Log,
 			Red: c.Red,
 		}),
-		vot: votestorage.NewRedis(votestorage.RedisConfig{
+		vot: votestorage.NewRedigo(votestorage.RedigoConfig{
 			Log: c.Log,
 			Red: c.Red,
 		}),

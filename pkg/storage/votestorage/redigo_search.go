@@ -11,7 +11,7 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Redis) SearchClaim(cla []objectid.ID) ([]*Object, error) {
+func (r *Redigo) SearchClaim(cla []objectid.ID) ([]*Object, error) {
 	// vot will result in a list of all vote IDs belonging to the given claim IDs,
 	// if any.
 	var vot []string
@@ -45,7 +45,7 @@ func (r *Redis) SearchClaim(cla []objectid.ID) ([]*Object, error) {
 	return out, nil
 }
 
-func (r *Redis) SearchOwner(own []objectid.ID) ([]*Object, error) {
+func (r *Redigo) SearchOwner(own []objectid.ID) ([]*Object, error) {
 	// vot will result in a list of all vote IDs belonging to the given user IDs,
 	// if any.
 	var vot []string
@@ -79,7 +79,7 @@ func (r *Redis) SearchOwner(own []objectid.ID) ([]*Object, error) {
 	return out, nil
 }
 
-func (r *Redis) SearchOwnerClaim(own []objectid.ID, cla []objectid.ID) ([]*Object, error) {
+func (r *Redigo) SearchOwnerClaim(own []objectid.ID, cla []objectid.ID) ([]*Object, error) {
 	var err error
 
 	if len(own) != len(cla) {
@@ -117,7 +117,7 @@ func (r *Redis) SearchOwnerClaim(own []objectid.ID, cla []objectid.ID) ([]*Objec
 	return out, nil
 }
 
-func (r *Redis) SearchVote(inp []objectid.ID) ([]*Object, error) {
+func (r *Redigo) SearchVote(inp []objectid.ID) ([]*Object, error) {
 	var err error
 
 	var jsn []string
