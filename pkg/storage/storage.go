@@ -45,7 +45,7 @@ func New(c Config) *Storage {
 			Log: c.Log,
 			Red: c.Red,
 		}),
-		wal: walletstorage.NewRedis(walletstorage.RedisConfig{
+		wal: walletstorage.NewRedigo(walletstorage.RedigoConfig{
 			Log: c.Log,
 			Red: c.Red,
 		}),

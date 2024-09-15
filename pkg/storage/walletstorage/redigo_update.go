@@ -4,7 +4,7 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Redis) UpdateWallet(inp []*Object) error {
+func (r *Redigo) UpdateWallet(inp []*Object) error {
 	var err error
 
 	for i := range inp {
