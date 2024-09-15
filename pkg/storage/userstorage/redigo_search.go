@@ -11,7 +11,7 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Redis) SearchSubject(sub string) (*Object, error) {
+func (r *Redigo) SearchSubject(sub string) (*Object, error) {
 	var err error
 
 	if sub == "" {
@@ -43,7 +43,7 @@ func (r *Redis) SearchSubject(sub string) (*Object, error) {
 	return out[0], nil
 }
 
-func (r *Redis) SearchUser(use []objectid.ID) ([]*Object, error) {
+func (r *Redigo) SearchUser(use []objectid.ID) ([]*Object, error) {
 	var err error
 
 	var jsn []string

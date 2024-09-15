@@ -37,7 +37,7 @@ func New(c Config) *Storage {
 			Log: c.Log,
 			Red: c.Red,
 		}),
-		use: userstorage.NewRedis(userstorage.RedisConfig{
+		use: userstorage.NewRedigo(userstorage.RedigoConfig{
 			Log: c.Log,
 			Red: c.Red,
 		}),
