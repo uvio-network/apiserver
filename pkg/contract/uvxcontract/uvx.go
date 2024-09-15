@@ -116,7 +116,6 @@ func (u *UVX) Mint(dst string, bal int64) (*types.Transaction, error) {
 		"address", dst,
 		"amount", strconv.FormatInt(bal, 10),
 		"transaction", txn.Hash().Hex(),
-		"stack", tracer.Stack(err),
 	)
 
 	return txn, nil
