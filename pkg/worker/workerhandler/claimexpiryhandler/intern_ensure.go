@@ -1,9 +1,6 @@
-package claimresolvehandler
+package claimexpiryhandler
 
 import (
-	"fmt"
-	"math/big"
-
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
 	"github.com/uvio-network/apiserver/pkg/worker/budget"
@@ -23,8 +20,19 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	}
 
 	for _, x := range cla {
-		// TODO create resolve claims onchain
-		fmt.Printf("cla %#v\n", big.NewInt(x.ID.Int()))
+		{
+			err = h.emi.Claim().Create(x.ID, objectlabel.LifecycleResolve)
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
+
+		{
+			err = h.sto.Post().DeleteExpiry([]*poststorage.Object{x})
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
 	}
 
 	return nil

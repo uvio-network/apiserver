@@ -1,8 +1,8 @@
 package objectlabel
 
 const (
-	ActionCreate  string = "create"
-	ActionDelete  string = "delete"
-	ActionMint    string = "mint"
-	ActionResolve string = "resolve"
+	ActionCreate string = "create"
+	ActionDelete string = "delete"
+	ActionExpiry string = "expiry"
+	ActionMint   string = "mint"
 )

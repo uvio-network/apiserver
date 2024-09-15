@@ -7,7 +7,8 @@ import (
 	"github.com/uvio-network/apiserver/pkg/emitter"
 	"github.com/uvio-network/apiserver/pkg/envvar"
 	"github.com/uvio-network/apiserver/pkg/storage"
-	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/claimresolvehandler"
+	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/claimexpiryhandler"
+	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/createresolvehandler"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/usercreatehandler"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/uvxminthandler"
 	"github.com/xh3b4sd/locker"
@@ -48,7 +49,14 @@ func New(c Config) *Handler {
 	var han []Interface
 
 	{
-		han = append(han, claimresolvehandler.NewInternHandler(claimresolvehandler.InternHandlerConfig{
+		han = append(han, claimexpiryhandler.NewInternHandler(claimexpiryhandler.InternHandlerConfig{
+			Emi: c.Emi,
+			Log: c.Log,
+			Sto: c.Sto,
+		}))
+
+		han = append(han, createresolvehandler.NewInternHandler(createresolvehandler.InternHandlerConfig{
+			Con: c.Con,
 			Log: c.Log,
 			Sto: c.Sto,
 		}))

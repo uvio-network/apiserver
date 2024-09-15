@@ -1,4 +1,4 @@
-package claimresolvehandler
+package claimexpiryhandler
 
 import (
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
@@ -7,7 +7,7 @@ import (
 
 func (h *InternHandler) Filter(tas *task.Task) bool {
 	return tas.Meta.Has(map[string]string{
-		objectlabel.ClaimAction: objectlabel.ActionResolve,
+		objectlabel.ClaimAction: objectlabel.ActionExpiry,
 		objectlabel.ClaimObject: "*",
 		objectlabel.ClaimOrigin: objectlabel.OriginIntern,
 	})
