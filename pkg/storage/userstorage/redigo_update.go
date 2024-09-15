@@ -4,7 +4,7 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Redis) UpdateUser(inp []*Object) error {
+func (r *Redigo) UpdateUser(inp []*Object) error {
 	var err error
 
 	for i := range inp {
