@@ -14,12 +14,12 @@ func (r *Redis) UpdateHash(vot []*votestorage.Object, has []string) ([]*votestor
 	var err error
 
 	for i := range vot {
-		if vot[i].Lifecycle.Hash != "" {
+		if !vot[i].Lifecycle.Pending() {
 			return nil, tracer.Maskf(VoteUpdateHashError, "%s=%s", vot[i].ID, vot[i].Lifecycle.Hash)
 		}
 
 		{
-			vot[i].Lifecycle.Hash = has[i]
+			vot[i].Lifecycle.Hash = append(vot[i].Lifecycle.Hash, has[i])
 		}
 
 		if vot[i].Kind == "stake" {

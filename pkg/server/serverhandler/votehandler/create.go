@@ -25,7 +25,7 @@ func (h *Handler) Create(ctx context.Context, req *vote.CreateI) (*vote.CreateO,
 			Kind:  x.Public.Kind,
 			Lifecycle: objectfield.Lifecycle{
 				Data: objectlabel.DesiredLifecycle(x.Public.Lifecycle),
-				Hash: x.Public.Hash,
+				Hash: converter.StringToSlice(x.Public.Hash),
 			},
 			Meta:   x.Public.Meta,
 			Option: converter.StringToBool(x.Public.Option),

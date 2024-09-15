@@ -89,8 +89,10 @@ func (o *Object) Verify() error {
 		if o.Kind == "comment" && !o.Lifecycle.Empty() {
 			return tracer.Maskf(CommentLifecycleInvalidError, o.Lifecycle.String())
 		}
-		if o.Lifecycle.Hash != "" && !hexencoding.Verify(o.Lifecycle.Hash) {
-			return tracer.Maskf(ClaimHashFormatError, o.Lifecycle.Hash)
+		for _, x := range o.Lifecycle.Hash {
+			if x != "" && !hexencoding.Verify(x) {
+				return tracer.Maskf(ClaimHashFormatError, x)
+			}
 		}
 	}
 

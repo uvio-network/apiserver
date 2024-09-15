@@ -117,7 +117,7 @@ func (h *Handler) Search(ctx context.Context, req *vote.SearchI) (*vote.SearchO,
 			Public: &vote.SearchO_Object_Public{
 				Chain:     x.Chain,
 				Claim:     x.Claim.String(),
-				Hash:      x.Lifecycle.Hash,
+				Hash:      converter.SliceToString(x.Lifecycle.Hash),
 				Kind:      x.Kind,
 				Lifecycle: x.Lifecycle.String(),
 				Meta:      x.Meta,
