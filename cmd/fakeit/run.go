@@ -17,7 +17,7 @@ import (
 
 type run struct{}
 
-func (r *run) runE(cmd *cobra.Command, args []string) error {
+func (r *run) runE(cmd *cobra.Command, arg []string) error {
 	var err error
 
 	var env envvar.Env

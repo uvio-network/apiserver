@@ -21,7 +21,6 @@ func (h *Handler) Create(ctx context.Context, req *wallet.CreateI) (*wallet.Crea
 			Description: x.Public.Description,
 			Kind:        x.Public.Kind,
 			Owner:       userid.FromContext(ctx),
-			Provider:    x.Public.Provider,
 		})
 	}
 

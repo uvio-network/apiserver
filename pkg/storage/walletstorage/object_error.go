@@ -21,15 +21,10 @@ var WalletDescriptionLimitError = &tracer.Error{
 
 var WalletKindInvalidError = &tracer.Error{
 	Kind: "WalletKindInvalidError",
-	Desc: "The request expects the wallet kind to be one of [contract signer]. The wallet kind was not found to be one of those values. Therefore the request failed.",
+	Desc: "The request expects the wallet kind to be one of [embedded injected]. The wallet kind was not found to be one of those values. Therefore the request failed.",
 }
 
 var WalletOwnerEmptyError = &tracer.Error{
 	Kind: "WalletOwnerEmptyError",
 	Desc: "The request expects the wallet owner not to be empty. The wallet owner was found to be empty. Therefore the request failed.",
-}
-
-var WalletProviderInvalidError = &tracer.Error{
-	Kind: "WalletProviderInvalidError",
-	Desc: "The request expects the wallet provider to be one of [biconomy external privy]. The wallet provider was not found to be one of those values. Therefore the request failed.",
 }

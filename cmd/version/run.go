@@ -10,7 +10,7 @@ import (
 
 type run struct{}
 
-func (r *run) run(cmd *cobra.Command, args []string) {
+func (r *run) run(cmd *cobra.Command, arg []string) {
 	fmt.Fprintf(os.Stdout, "Git Sha       %s\n", runtime.Sha())
 	fmt.Fprintf(os.Stdout, "Git Tag       %s\n", runtime.Tag())
 	fmt.Fprintf(os.Stdout, "Repository    %s\n", runtime.Src())

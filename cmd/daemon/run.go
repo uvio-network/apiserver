@@ -13,7 +13,7 @@ import (
 
 type run struct{}
 
-func (r *run) runE(cmd *cobra.Command, args []string) error {
+func (r *run) runE(cmd *cobra.Command, arg []string) error {
 	var env envvar.Env
 	{
 		env = envvar.Load(envvar.Local)
