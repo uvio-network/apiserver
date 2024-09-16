@@ -6,7 +6,7 @@ import (
 
 type run struct{}
 
-func (r *run) run(cmd *cobra.Command, args []string) {
+func (r *run) run(cmd *cobra.Command, arg []string) {
 	err := cmd.Help()
 	if err != nil {
 		panic(err)

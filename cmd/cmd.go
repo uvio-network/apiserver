@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/uvio-network/apiserver/cmd/daemon"
 	"github.com/uvio-network/apiserver/cmd/fakeit"
+	"github.com/uvio-network/apiserver/cmd/redis"
 	"github.com/uvio-network/apiserver/cmd/version"
 	"github.com/xh3b4sd/tracer"
 )
@@ -34,6 +35,16 @@ func New() (*cobra.Command, error) {
 		c := fakeit.Config{}
 
 		fak, err = fakeit.New(c)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	var red *cobra.Command
+	{
+		c := redis.Config{}
+
+		red, err = redis.New(c)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -77,6 +88,7 @@ func New() (*cobra.Command, error) {
 	{
 		c.AddCommand(dae)
 		c.AddCommand(fak)
+		c.AddCommand(red)
 		c.AddCommand(ver)
 	}
 

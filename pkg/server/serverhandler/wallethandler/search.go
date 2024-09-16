@@ -89,7 +89,6 @@ func (h *Handler) Search(ctx context.Context, req *wallet.SearchI) (*wallet.Sear
 				Address:     x.Address,
 				Description: x.Description,
 				Kind:        x.Kind,
-				Provider:    x.Provider,
 			},
 		})
 	}

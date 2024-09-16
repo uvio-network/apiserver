@@ -16,7 +16,6 @@ type Object struct {
 	ID          objectid.ID `json:"id"`
 	Kind        string      `json:"kind"`
 	Owner       objectid.ID `json:"owner"`
-	Provider    string      `json:"provider"`
 }
 
 func (o *Object) Verify() error {
@@ -36,7 +35,7 @@ func (o *Object) Verify() error {
 	}
 
 	{
-		if o.Kind != "contract" && o.Kind != "signer" {
+		if o.Kind != "embedded" && o.Kind != "injected" {
 			return tracer.Maskf(WalletKindInvalidError, o.Kind)
 		}
 	}
@@ -44,14 +43,6 @@ func (o *Object) Verify() error {
 	{
 		if o.Owner == "" {
 			return tracer.Mask(WalletOwnerEmptyError)
-		}
-	}
-
-	// TODO validate kind and provider combos
-
-	{
-		if o.Provider != "biconomy" && o.Provider != "external" && o.Provider != "privy" {
-			return tracer.Maskf(WalletProviderInvalidError, o.Kind)
 		}
 	}
 

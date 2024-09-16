@@ -5,7 +5,6 @@ import (
 	"strconv"
 
 	"github.com/uvio-network/apigocode/pkg/user"
-	"github.com/uvio-network/apiserver/pkg/object/objectfield"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/server/context/subjectclaim"
 	"github.com/uvio-network/apiserver/pkg/server/converter"
@@ -84,9 +83,6 @@ func (h *Handler) Search(ctx context.Context, req *user.SearchI) (*user.SearchO,
 
 	for _, x := range out[:limiter.Len(len(out))] {
 		res.Object = append(res.Object, &user.SearchO_Object{
-			Extern: &user.SearchO_Object_Extern{
-				Staked: mapToStaked(x.Staked),
-			},
 			Intern: &user.SearchO_Object_Intern{
 				Created: converter.TimeToString(x.Created),
 				Id:      x.ID.String(),
@@ -99,17 +95,4 @@ func (h *Handler) Search(ctx context.Context, req *user.SearchI) (*user.SearchO,
 	}
 
 	return res, nil
-}
-
-func mapToStaked(inp objectfield.MapFloat) []*user.SearchO_Object_Extern_Staked {
-	var out []*user.SearchO_Object_Extern_Staked
-
-	for k, v := range inp.Data {
-		out = append(out, &user.SearchO_Object_Extern_Staked{
-			Balance: converter.FloatToString(v),
-			Token:   k,
-		})
-	}
-
-	return out
 }
