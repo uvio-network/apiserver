@@ -1,9 +1,7 @@
 package generic
 
-import "github.com/uvio-network/apiserver/pkg/object/objectid"
-
 // Select returns the subset of elements that are not present in all.
-func Select[T string | objectid.ID | int64](all []T, sub []T) []T {
+func Select[T comparable](all []T, sub []T) []T {
 	if len(sub) == 0 {
 		return nil
 	}

@@ -1,9 +1,7 @@
 package generic
 
-import "github.com/uvio-network/apiserver/pkg/object/objectid"
-
 // Difference returns the symmetric difference of the given slices.
-func Difference[T string | objectid.ID | int64](a []T, b []T) []T {
+func Difference[T comparable](a []T, b []T) []T {
 	m := make(map[T]bool, len(a)+len(b))
 
 	for _, x := range a {
