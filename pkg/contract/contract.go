@@ -14,12 +14,15 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/uvio-network/apiserver/pkg/contract/claimscontract"
 	"github.com/uvio-network/apiserver/pkg/contract/uvxcontract"
 	"github.com/xh3b4sd/logger"
 	"github.com/xh3b4sd/tracer"
 )
 
 type Config struct {
+	// Cla is the deployed Claims contract address.
+	Cla string
 	// Key is the private key signing transactions for contract writes.
 	Key string
 	Log logger.Interface
@@ -30,6 +33,7 @@ type Config struct {
 }
 
 type Contract struct {
+	cla *claimscontract.Claims
 	cli *ethclient.Client
 	uvx *uvxcontract.UVX
 }
@@ -73,6 +77,16 @@ func New(c Config) *Contract {
 		}
 	}
 
+	var cla *claimscontract.Claims
+	{
+		cla = claimscontract.NewClaims(claimscontract.ClaimsConfig{
+			Add: common.HexToAddress(c.Cla),
+			Cli: cli,
+			Log: c.Log,
+			Opt: opt,
+		})
+	}
+
 	var uvx *uvxcontract.UVX
 	{
 		uvx = uvxcontract.NewUVX(uvxcontract.UVXConfig{
@@ -84,9 +98,14 @@ func New(c Config) *Contract {
 	}
 
 	return &Contract{
+		cla: cla,
 		cli: cli,
 		uvx: uvx,
 	}
+}
+
+func (c *Contract) Claims() claimscontract.Interface {
+	return c.cla
 }
 
 func (c *Contract) UVX() uvxcontract.Interface {

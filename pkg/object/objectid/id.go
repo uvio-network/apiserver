@@ -14,6 +14,10 @@ func Random(num int64) ID {
 	return ID(fmt.Sprintf("%d%06d", num, rand.Intn(999999)))
 }
 
+func System() ID {
+	return ID("1")
+}
+
 func (i ID) Float() float64 {
 	f, e := strconv.ParseFloat(string(i), 64)
 	if e != nil {

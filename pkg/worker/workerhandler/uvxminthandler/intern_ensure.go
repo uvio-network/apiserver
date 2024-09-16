@@ -14,12 +14,12 @@ import (
 )
 
 const (
-	// max is the maximum amount of time to wait for transactions per task
+	// maxWait is the maximum amount of time to wait for transactions per task
 	// execution. We need to limit the task execution time because every worker
 	// has only 30 seconds to process a task by default before ownership of the
-	// provided task will be revoked. Therefore defining max under 30 seconds
+	// provided task will be revoked. Therefore defining maxWait under 30 seconds
 	// gives us enough time to gracefully process the task given to us.
-	max = 20 * time.Second
+	maxWait = 20 * time.Second
 )
 
 func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
@@ -111,7 +111,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	// network hickups to funding issues, where the underlying signer may ran out
 	// of ETH used to pay for gas.
 	{
-		err = h.con.Wait(txn, max)
+		err = h.con.Wait(txn, maxWait)
 		if err != nil {
 			h.log.Log(
 				context.Background(),

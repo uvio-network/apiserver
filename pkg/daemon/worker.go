@@ -10,6 +10,7 @@ func (d *Daemon) Worker() *worker.Worker {
 	var con contract.Interface
 	{
 		con = contract.New(contract.Config{
+			Cla: d.env.ChainClaimsContract,
 			Key: d.env.SignerPrivateKey,
 			Log: d.log,
 			RPC: d.env.ChainRpcEndpoint,
@@ -25,6 +26,8 @@ func (d *Daemon) Worker() *worker.Worker {
 			Env: d.env,
 			Loc: d.loc,
 			Log: d.log,
+			Rec: d.rec,
+			Sam: d.sam,
 			Sto: d.sto,
 		})
 	}

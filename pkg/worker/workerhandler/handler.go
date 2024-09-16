@@ -6,6 +6,8 @@ import (
 	"github.com/uvio-network/apiserver/pkg/contract"
 	"github.com/uvio-network/apiserver/pkg/emitter"
 	"github.com/uvio-network/apiserver/pkg/envvar"
+	"github.com/uvio-network/apiserver/pkg/reconciler"
+	"github.com/uvio-network/apiserver/pkg/sample"
 	"github.com/uvio-network/apiserver/pkg/storage"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/claimexpiryhandler"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/createresolvehandler"
@@ -22,6 +24,8 @@ type Config struct {
 	Env envvar.Env
 	Loc locker.Interface
 	Log logger.Interface
+	Rec reconciler.Interface
+	Sam *sample.Sample
 	Sto storage.Interface
 }
 
@@ -42,6 +46,12 @@ func New(c Config) *Handler {
 	if c.Log == nil {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Log must not be empty", c)))
 	}
+	if c.Rec == nil {
+		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Rec must not be empty", c)))
+	}
+	if c.Sam == nil {
+		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Sam must not be empty", c)))
+	}
 	if c.Sto == nil {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Sto must not be empty", c)))
 	}
@@ -58,6 +68,7 @@ func New(c Config) *Handler {
 		han = append(han, createresolvehandler.NewInternHandler(createresolvehandler.InternHandlerConfig{
 			Con: c.Con,
 			Log: c.Log,
+			Rec: c.Rec,
 			Sto: c.Sto,
 		}))
 

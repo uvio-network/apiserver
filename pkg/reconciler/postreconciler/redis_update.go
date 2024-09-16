@@ -83,7 +83,12 @@ func (r *Redis) UpdateVotes(vot []*votestorage.Object) ([]*poststorage.Object, e
 		}
 
 		for _, x := range vot {
-			for _, y := range com.ObjectID(x.Claim) {
+			var y *poststorage.Object
+			{
+				y = com.IDClaim(x.Claim)
+			}
+
+			if y != nil {
 				pos = append(pos, updateVotes(y, x))
 			}
 		}

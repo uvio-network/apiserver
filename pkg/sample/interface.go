@@ -11,5 +11,5 @@ type Interface interface {
 	//     out[2] the random points on line A
 	//     out[3] the random points on line B
 	//
-	Random(uint, uint) ([]int, []int)
+	Random(uint64, uint64) ([]uint64, []uint64)
 }

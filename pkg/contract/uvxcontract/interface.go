@@ -8,7 +8,7 @@ type Interface interface {
 	// bal must be provided as a nominal value without additional decimal
 	// conversion. The following example would mint 100 UVX tokens to 0x1234.
 	//
-	//     Mind("0x1234", 100)
+	//     Mint("0x1234", 100)
 	//
 	Mint(dst string, bal int64) (*types.Transaction, error)
 }

@@ -1,34 +1,35 @@
-package uvxcontract
+package claimscontract
 
 import (
 	"context"
 	"fmt"
 	"math/big"
-	"strconv"
+	"time"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/xh3b4sd/logger"
 	"github.com/xh3b4sd/tracer"
 )
 
-type UVXConfig struct {
+type ClaimsConfig struct {
 	Add common.Address
 	Cli *ethclient.Client
 	Log logger.Interface
 	Opt *bind.TransactOpts
 }
 
-type UVX struct {
-	bin *UvxContractBinding
+type Claims struct {
+	bin *ClaimsContractBinding
 	cli *ethclient.Client
 	log logger.Interface
 	opt *bind.TransactOpts
 }
 
-func NewUVX(c UVXConfig) *UVX {
+func NewClaims(c ClaimsConfig) *Claims {
 	if len(c.Add) == 0 {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Add must not be empty", c)))
 	}
@@ -44,15 +45,15 @@ func NewUVX(c UVXConfig) *UVX {
 
 	var err error
 
-	var bin *UvxContractBinding
+	var bin *ClaimsContractBinding
 	{
-		bin, err = NewUvxContractBinding(c.Add, c.Cli)
+		bin, err = NewClaimsContractBinding(c.Add, c.Cli)
 		if err != nil {
 			tracer.Panic(err)
 		}
 	}
 
-	return &UVX{
+	return &Claims{
 		bin: bin,
 		cli: c.Cli,
 		log: c.Log,
@@ -60,17 +61,8 @@ func NewUVX(c UVXConfig) *UVX {
 	}
 }
 
-func (u *UVX) Mint(dst string, bal int64) (*types.Transaction, error) {
+func (u *Claims) CreateResolve(pro objectid.ID, ind []*big.Int, exp time.Time) (*types.Transaction, error) {
 	var err error
-
-	// In case a balance is provided that appears to account for decimals already,
-	// we reject the minting request. The Mint interface states that Mint is
-	// responsible for converting decimals according to the provided nominal
-	// value. Nobody should ever be able to mint exorbitant amounts of tokens,
-	// especially not by accident.
-	if bal > 1_000_000 {
-		return nil, tracer.Mask(BalanceConversionError)
-	}
 
 	var opt *bind.TransactOpts
 	{
@@ -86,7 +78,7 @@ func (u *UVX) Mint(dst string, bal int64) (*types.Transaction, error) {
 			// Below is a testnet transaction providing some real world insight into
 			// effective gas usage.
 			//
-			//     https://sepolia.basescan.org/tx/0x036cf41f0e0187848c0365d91eb368c8ffd589f2794a34caba5cd2609ca8f00a
+			//     https://sepolia.basescan.org/tx/TODO
 			//
 			// Below is a dune dashboard to show current and historical gas metrics on
 			// the Base L2.
@@ -102,7 +94,7 @@ func (u *UVX) Mint(dst string, bal int64) (*types.Transaction, error) {
 
 	var txn *types.Transaction
 	{
-		txn, err = u.bin.Mint(opt, common.HexToAddress(dst), addDec(bal))
+		txn, err = u.bin.CreateResolve(opt, big.NewInt(pro.Int()), ind, uint64(exp.Unix()))
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -111,28 +103,55 @@ func (u *UVX) Mint(dst string, bal int64) (*types.Transaction, error) {
 	u.log.Log(
 		context.Background(),
 		"level", "debug",
-		"message", "submitted UVX.mint transaction onchain",
+		"message", "submitted Claims.createResolve transaction onchain",
 		"signer", u.opt.From.Hex(),
-		"address", dst,
-		"amount", strconv.FormatInt(bal, 10),
+		"propose", pro.String(),
+		"expiry", exp.String(),
 		"transaction", txn.Hash().Hex(),
 	)
 
 	return txn, nil
 }
 
-// addDec returns the given balance with 18 additional decimals. 18 decimals are
-// what the UVX contract uses. And so what is being returned by addDec is ready
-// to be used for onchain transactions.
-func addDec(bal int64) *big.Int {
-	dec := new(big.Int).Exp(
-		big.NewInt(10),
-		big.NewInt(18), // 10^18
-		nil,
-	)
+func (u *Claims) ExistsResolve(pro objectid.ID) (bool, error) {
+	var err error
 
-	return new(big.Int).Mul(
-		big.NewInt(bal),
-		dec,
-	)
+	var res *big.Int
+	{
+		_, res, err = u.bin.SearchExpired(nil, big.NewInt(pro.Int()))
+		if err != nil {
+			return false, tracer.Mask(err)
+		}
+	}
+
+	return res.Uint64() != 0, nil
+}
+
+func (u *Claims) SearchIndices(pro objectid.ID) (uint64, uint64, error) {
+	var err error
+
+	var lef *big.Int
+	var rig *big.Int
+	{
+		lef, _, _, _, _, _, _, rig, err = u.bin.SearchIndices(nil, big.NewInt(pro.Int()))
+		if err != nil {
+			return 0, 0, tracer.Mask(err)
+		}
+	}
+
+	return lef.Uint64(), rig.Uint64(), nil
+}
+
+func (u *Claims) SearchSamples(pro objectid.ID, lef uint64, rig uint64) ([]common.Address, error) {
+	var err error
+
+	var add []common.Address
+	{
+		add, err = u.bin.SearchSamples(nil, big.NewInt(pro.Int()), big.NewInt(0).SetUint64(lef), big.NewInt(0).SetUint64(rig))
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	return add, nil
 }
