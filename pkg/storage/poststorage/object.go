@@ -15,21 +15,21 @@ import (
 )
 
 type Object struct {
-	Chain     string                          `json:"chain"`
-	Created   time.Time                       `json:"created"`
-	Expiry    time.Time                       `json:"expiry"`
-	ID        objectid.ID                     `json:"id"`
-	Kind      string                          `json:"kind"`
-	Labels    []string                        `json:"labels"`
-	Lifecycle objectfield.Lifecycle           `json:"lifecycle"`
-	Meta      string                          `json:"meta"`
-	Owner     objectid.ID                     `json:"owner"`
-	Parent    objectid.ID                     `json:"parent"`
-	Samples   map[bool]map[string]objectid.ID `json:"samples"`
-	Text      string                          `json:"text"`
-	Token     string                          `json:"token"`
-	Tree      objectid.ID                     `json:"tree"`
-	Votes     []float64                       `json:"votes"`
+	Chain     string                       `json:"chain"`
+	Created   time.Time                    `json:"created"`
+	Expiry    time.Time                    `json:"expiry"`
+	ID        objectid.ID                  `json:"id"`
+	Kind      string                       `json:"kind"`
+	Labels    []string                     `json:"labels"`
+	Lifecycle objectfield.Lifecycle        `json:"lifecycle"`
+	Meta      string                       `json:"meta"`
+	Owner     objectid.ID                  `json:"owner"`
+	Parent    objectid.ID                  `json:"parent"`
+	Samples   map[string]map[string]string `json:"samples"`
+	Text      string                       `json:"text"`
+	Token     string                       `json:"token"`
+	Tree      objectid.ID                  `json:"tree"`
+	Votes     []float64                    `json:"votes"`
 }
 
 func (o *Object) Verify() error {
