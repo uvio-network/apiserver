@@ -191,7 +191,7 @@ func (h *InternHandler) createObject(pro *poststorage.Object, exp time.Time) err
 	return nil
 }
 
-func (h *InternHandler) searchAddress(add []common.Address) (map[string]objectid.ID, error) {
+func (h *InternHandler) searchAddress(add []common.Address) (map[string]string, error) {
 	var err error
 
 	var str []string
@@ -211,10 +211,10 @@ func (h *InternHandler) searchAddress(add []common.Address) (map[string]objectid
 		return nil, tracer.Maskf(runtime.ExecutionFailedError, "%d != %d", len(wal), len(add))
 	}
 
-	dic := map[string]objectid.ID{}
+	dic := map[string]string{}
 
 	for i := range add {
-		dic[str[i]] = wal[i].Owner
+		dic[str[i]] = string(wal[i].Owner)
 	}
 
 	return dic, nil
@@ -269,7 +269,7 @@ func (h *InternHandler) updateObject(res *poststorage.Object, txn *types.Transac
 	}
 
 	{
-		var tmp map[string]objectid.ID
+		var tmp map[string]string
 		if len(tru) != 0 {
 			tmp, err = h.searchAddress(tru)
 			if err != nil {
@@ -277,7 +277,7 @@ func (h *InternHandler) updateObject(res *poststorage.Object, txn *types.Transac
 			}
 		}
 
-		var fmp map[string]objectid.ID
+		var fmp map[string]string
 		if len(fls) != 0 {
 			fmp, err = h.searchAddress(fls)
 			if err != nil {
@@ -286,9 +286,9 @@ func (h *InternHandler) updateObject(res *poststorage.Object, txn *types.Transac
 		}
 
 		{
-			res.Samples = map[bool]map[string]objectid.ID{
-				true:  tmp,
-				false: fmp,
+			res.Samples = map[string]map[string]string{
+				"true":  tmp,
+				"false": fmp,
 			}
 		}
 	}

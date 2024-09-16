@@ -69,6 +69,7 @@ func New(c Config) *Handler {
 			Con: c.Con,
 			Log: c.Log,
 			Rec: c.Rec,
+			Sam: c.Sam,
 			Sto: c.Sto,
 		}))
 
