@@ -12,6 +12,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/object/objectfield"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
+	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/uvio-network/apiserver/pkg/sample"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
 	"github.com/uvio-network/apiserver/pkg/worker/budget"
@@ -75,10 +76,9 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 	}
 
-	var lef uint64
-	var rig uint64
+	var ind []*big.Int
 	{
-		lef, rig, err = h.con.Claims().SearchIndices(cla)
+		ind, err = h.con.Claims().SearchIndices(cla)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -86,13 +86,13 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 
 	var txn *types.Transaction
 	if !exi {
-		var ind []*big.Int
+		var sam []*big.Int
 		{
-			ind = sample.BigInt(h.sam.Random(lef, rig))
+			sam = sample.BigInt(h.sam.Random(ind[0].Uint64(), ind[7].Uint64()))
 		}
 
 		{
-			txn, err = h.con.Claims().CreateResolve(cla, ind, exp)
+			txn, err = h.con.Claims().CreateResolve(cla, sam, exp)
 			if err != nil {
 				return tracer.Mask(err)
 			}
@@ -108,7 +108,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 
 	var add []common.Address
 	{
-		add, err = h.con.Claims().SearchSamples(cla, lef, rig)
+		add, err = h.searchSamples(cla, ind)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -188,6 +188,32 @@ func (h *InternHandler) ensureObject(cla objectid.ID, txn *types.Transaction, ad
 	}
 
 	return nil
+}
+
+func (h *InternHandler) searchSamples(cla objectid.ID, ind []*big.Int) ([]common.Address, error) {
+	var err error
+
+	if len(ind) != 8 {
+		return nil, tracer.Maskf(runtime.ExecutionFailedError, "onchain indices invalid")
+	}
+
+	var tru []common.Address
+	{
+		tru, err = h.con.Claims().SearchSamples(cla, ind[1], ind[2])
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	var fls []common.Address
+	{
+		fls, err = h.con.Claims().SearchSamples(cla, ind[5], ind[6])
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	return append(tru, fls...), nil
 }
 
 func resTxt(add []common.Address) string {

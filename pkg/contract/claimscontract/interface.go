@@ -21,13 +21,19 @@ type Interface interface {
 	// market.
 	//
 	//     inp[0] the propose ID to search indices for
-	//     out[0] the total amount of first stakers in agreement
-	//     out[1] the total amount of first stakers in disagreement
+	//     out[0][0] the total amount of first stakers in agreement
+	//     out[0][1] the left handside index for addresses on the agreeing side
+	//     out[0][2] the right handside index for addresses on the agreeing side
+	//     out[0][3] the left handside index of the proposer address
+	//     out[0][4] the right handside index of the proposer address
+	//     out[0][5] the left handside index for addresses on the disagreeing side
+	//     out[0][6] the right handside index for addresses on the disagreeing side
+	//     out[0][7] the total amount of first stakers in disagreement
 	//
-	SearchIndices(objectid.ID) (uint64, uint64, error)
+	SearchIndices(objectid.ID) ([]*big.Int, error)
 
 	// SearchSamples returns the registered voters of the given propose, according
 	// to the provided cursors. If a propose has not reached the resolution phase
 	// yet, then an empty list is returned.
-	SearchSamples(objectid.ID, uint64, uint64) ([]common.Address, error)
+	SearchSamples(objectid.ID, *big.Int, *big.Int) ([]common.Address, error)
 }

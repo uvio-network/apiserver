@@ -94,6 +94,10 @@ func min(a uint64, b uint64) uint64 {
 // io.Reader, which is supposed to be some source of entropy, in order to
 // shuffle the items of the given int slice.
 func mix(rea io.Reader, lis []uint64) {
+	if len(lis) == 0 {
+		return
+	}
+
 	var m uint64
 	{
 		m = uint64(len(lis))

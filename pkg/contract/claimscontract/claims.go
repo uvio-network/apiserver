@@ -127,27 +127,33 @@ func (u *Claims) ExistsResolve(pro objectid.ID) (bool, error) {
 	return res.Uint64() != 0, nil
 }
 
-func (u *Claims) SearchIndices(pro objectid.ID) (uint64, uint64, error) {
+func (u *Claims) SearchIndices(pro objectid.ID) ([]*big.Int, error) {
 	var err error
 
-	var lef *big.Int
-	var rig *big.Int
+	var zer *big.Int
+	var one *big.Int
+	var two *big.Int
+	var thr *big.Int
+	var fou *big.Int
+	var fiv *big.Int
+	var six *big.Int
+	var sev *big.Int
 	{
-		lef, _, _, _, _, _, _, rig, err = u.bin.SearchIndices(nil, big.NewInt(pro.Int()))
+		zer, one, two, thr, fou, fiv, six, sev, err = u.bin.SearchIndices(nil, big.NewInt(pro.Int()))
 		if err != nil {
-			return 0, 0, tracer.Mask(err)
+			return nil, tracer.Mask(err)
 		}
 	}
 
-	return lef.Uint64(), rig.Uint64(), nil
+	return []*big.Int{zer, one, two, thr, fou, fiv, six, sev}, nil
 }
 
-func (u *Claims) SearchSamples(pro objectid.ID, lef uint64, rig uint64) ([]common.Address, error) {
+func (u *Claims) SearchSamples(pro objectid.ID, lef *big.Int, rig *big.Int) ([]common.Address, error) {
 	var err error
 
 	var add []common.Address
 	{
-		add, err = u.bin.SearchSamples(nil, big.NewInt(pro.Int()), big.NewInt(0).SetUint64(lef), big.NewInt(0).SetUint64(rig))
+		add, err = u.bin.SearchSamples(nil, big.NewInt(pro.Int()), lef, rig)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
