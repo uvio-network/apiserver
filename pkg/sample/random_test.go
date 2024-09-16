@@ -13,11 +13,11 @@ import (
 
 func Test_Sample_Random_crv(t *testing.T) {
 	testCases := []struct {
-		seq map[uint]int
+		seq map[uint64]uint64
 	}{
 		// Case 000
 		{
-			seq: map[uint]int{
+			seq: map[uint64]uint64{
 				0: 1,
 				1: 1,
 				2: 1,
@@ -87,7 +87,7 @@ func Test_Sample_Random_crv(t *testing.T) {
 		},
 		// Case 001
 		{
-			seq: map[uint]int{
+			seq: map[uint64]uint64{
 				95: 5,
 				96: 5,
 				97: 5,
@@ -115,7 +115,7 @@ func Test_Sample_Random_crv(t *testing.T) {
 		},
 		// Case 002
 		{
-			seq: map[uint]int{
+			seq: map[uint64]uint64{
 				200: 10,
 				201: 10,
 				202: 10,
@@ -125,7 +125,7 @@ func Test_Sample_Random_crv(t *testing.T) {
 		},
 		// Case 003
 		{
-			seq: map[uint]int{
+			seq: map[uint64]uint64{
 				300: 15,
 				301: 15,
 				302: 15,
@@ -135,7 +135,7 @@ func Test_Sample_Random_crv(t *testing.T) {
 		},
 		// Case 004
 		{
-			seq: map[uint]int{
+			seq: map[uint64]uint64{
 				400: 20,
 				401: 20,
 				402: 20,
@@ -145,7 +145,7 @@ func Test_Sample_Random_crv(t *testing.T) {
 		},
 		// Case 005
 		{
-			seq: map[uint]int{
+			seq: map[uint64]uint64{
 				500: 25,
 				501: 25,
 				502: 25,
@@ -155,7 +155,7 @@ func Test_Sample_Random_crv(t *testing.T) {
 		},
 		// Case 006
 		{
-			seq: map[uint]int{
+			seq: map[uint64]uint64{
 				600: 30,
 				601: 30,
 				602: 30,
@@ -165,7 +165,7 @@ func Test_Sample_Random_crv(t *testing.T) {
 		},
 		// Case 007
 		{
-			seq: map[uint]int{
+			seq: map[uint64]uint64{
 				995: 50,
 				996: 50,
 				997: 50,
@@ -175,7 +175,7 @@ func Test_Sample_Random_crv(t *testing.T) {
 		},
 		// Case 008
 		{
-			seq: map[uint]int{
+			seq: map[uint64]uint64{
 				1000:   50,
 				1500:   50,
 				5000:   50,
@@ -200,8 +200,8 @@ func Test_Sample_Random_crv(t *testing.T) {
 
 func Test_Sample_Random_Crypto(t *testing.T) {
 	testCases := []struct {
-		a uint
-		b uint
+		a uint64
+		b uint64
 	}{
 		// Case 000
 		{
@@ -402,8 +402,8 @@ func Test_Sample_Random_Crypto(t *testing.T) {
 
 	for i, tc := range testCases {
 		t.Run(fmt.Sprintf("%03d", i), func(t *testing.T) {
-			mpx := map[string]int{}
-			mpy := map[string]int{}
+			mpx := map[string]uint64{}
+			mpy := map[string]uint64{}
 
 			for i := 0; i < 1000; i++ {
 				var sam *Sample
@@ -413,8 +413,8 @@ func Test_Sample_Random_Crypto(t *testing.T) {
 					})
 				}
 
-				var x []int
-				var y []int
+				var x []uint64
+				var y []uint64
 				{
 					x, y = sam.Random(tc.a, tc.b)
 				}
@@ -445,12 +445,12 @@ func Test_Sample_Random_Crypto(t *testing.T) {
 				// creating a runtime panic, then our implementation is safe to the
 				// extend that no indices are generated out of bounds.
 				{
-					slx := make([]int, tc.a)
+					slx := make([]uint64, tc.a)
 					for _, i := range x {
 						_ = slx[i]
 					}
 
-					sly := make([]int, tc.b)
+					sly := make([]uint64, tc.b)
 					for _, i := range y {
 						_ = sly[i]
 					}
@@ -464,13 +464,13 @@ func Test_Sample_Random_Crypto(t *testing.T) {
 			// More keys equals more randomness. And so we compare against the
 			// smallest common denominator of the given test case.
 			{
-				lnx := uint(len(mpx))
+				lnx := uint64(len(mpx))
 				mnx := min(tc.a, tc.b)
 				if lnx < mnx {
 					t.Fatalf("expected x to generate at least %d different variations, got %d", lnx, mnx)
 				}
 
-				lny := uint(len(mpy))
+				lny := uint64(len(mpy))
 				mny := min(tc.a, tc.b)
 				if lny < mny {
 					t.Fatalf("expected y to generate at least %d different variations, got %d", lny, mny)
@@ -482,11 +482,11 @@ func Test_Sample_Random_Crypto(t *testing.T) {
 
 func Test_Sample_Random_Fake(t *testing.T) {
 	testCases := []struct {
-		a uint
-		b uint
-		s int
-		x []int
-		y []int
+		a uint64
+		b uint64
+		s uint64
+		x []uint64
+		y []uint64
 	}{
 		// Case 000
 		{
@@ -510,7 +510,7 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			a: 1,
 			b: 0,
 			s: 0,
-			x: []int{
+			x: []uint64{
 				0,
 			},
 			y: nil,
@@ -521,7 +521,7 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			b: 1,
 			s: 0,
 			x: nil,
-			y: []int{
+			y: []uint64{
 				0,
 			},
 		},
@@ -531,7 +531,7 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			a: 1,
 			b: 0,
 			s: 2376,
-			x: []int{
+			x: []uint64{
 				0,
 			},
 			y: nil,
@@ -542,7 +542,7 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			b: 1,
 			s: 2376,
 			x: nil,
-			y: []int{
+			y: []uint64{
 				0,
 			},
 		},
@@ -552,7 +552,7 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			a: 3,
 			b: 0,
 			s: 0,
-			x: []int{
+			x: []uint64{
 				2,
 			},
 			y: nil,
@@ -563,7 +563,7 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			b: 3,
 			s: 0,
 			x: nil,
-			y: []int{
+			y: []uint64{
 				2,
 			},
 		},
@@ -573,7 +573,7 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			a: 3,
 			b: 0,
 			s: 665117,
-			x: []int{
+			x: []uint64{
 				1,
 			},
 			y: nil,
@@ -584,7 +584,7 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			b: 3,
 			s: 665117,
 			x: nil,
-			y: []int{
+			y: []uint64{
 				1,
 			},
 		},
@@ -594,7 +594,7 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			a: 10,
 			b: 0,
 			s: 0,
-			x: []int{
+			x: []uint64{
 				9,
 			},
 			y: nil,
@@ -605,7 +605,7 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			b: 10,
 			s: 0,
 			x: nil,
-			y: []int{
+			y: []uint64{
 				9,
 			},
 		},
@@ -615,7 +615,7 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			a: 10,
 			b: 0,
 			s: 104017,
-			x: []int{
+			x: []uint64{
 				6,
 			},
 			y: nil,
@@ -626,7 +626,7 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			b: 10,
 			s: 104017,
 			x: nil,
-			y: []int{
+			y: []uint64{
 				6,
 			},
 		},
@@ -636,10 +636,10 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			a: 1,
 			b: 1,
 			s: 0,
-			x: []int{
+			x: []uint64{
 				0,
 			},
-			y: []int{
+			y: []uint64{
 				0,
 			},
 		},
@@ -648,10 +648,10 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			a: 1,
 			b: 1,
 			s: 367425,
-			x: []int{
+			x: []uint64{
 				0,
 			},
-			y: []int{
+			y: []uint64{
 				0,
 			},
 		},
@@ -661,10 +661,10 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			a: 1,
 			b: 2,
 			s: 2376,
-			x: []int{
+			x: []uint64{
 				0,
 			},
-			y: []int{
+			y: []uint64{
 				1,
 			},
 		},
@@ -673,10 +673,10 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			a: 2,
 			b: 1,
 			s: 2376,
-			x: []int{
+			x: []uint64{
 				1,
 			},
-			y: []int{
+			y: []uint64{
 				0,
 			},
 		},
@@ -686,10 +686,10 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			a: 3,
 			b: 1,
 			s: 0,
-			x: []int{
+			x: []uint64{
 				2,
 			},
-			y: []int{
+			y: []uint64{
 				0,
 			},
 		},
@@ -698,10 +698,10 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			a: 1,
 			b: 3,
 			s: 0,
-			x: []int{
+			x: []uint64{
 				0,
 			},
-			y: []int{
+			y: []uint64{
 				2,
 			},
 		},
@@ -711,10 +711,10 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			a: 3,
 			b: 1,
 			s: 665117,
-			x: []int{
+			x: []uint64{
 				1,
 			},
-			y: []int{
+			y: []uint64{
 				0,
 			},
 		},
@@ -723,10 +723,10 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			a: 1,
 			b: 3,
 			s: 665117,
-			x: []int{
+			x: []uint64{
 				0,
 			},
-			y: []int{
+			y: []uint64{
 				1,
 			},
 		},
@@ -736,10 +736,10 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			a: 3,
 			b: 3,
 			s: 0,
-			x: []int{
+			x: []uint64{
 				2,
 			},
-			y: []int{
+			y: []uint64{
 				0,
 			},
 		},
@@ -748,10 +748,10 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			a: 3,
 			b: 3,
 			s: 665117,
-			x: []int{
+			x: []uint64{
 				1,
 			},
-			y: []int{
+			y: []uint64{
 				0,
 			},
 		},
@@ -761,10 +761,10 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			a: 3,
 			b: 5,
 			s: 0,
-			x: []int{
+			x: []uint64{
 				2,
 			},
-			y: []int{
+			y: []uint64{
 				0,
 			},
 		},
@@ -773,10 +773,10 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			a: 5,
 			b: 3,
 			s: 0,
-			x: []int{
+			x: []uint64{
 				4,
 			},
-			y: []int{
+			y: []uint64{
 				0,
 			},
 		},
@@ -786,11 +786,11 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			a: 5,
 			b: 5,
 			s: 29384,
-			x: []int{
+			x: []uint64{
 				3,
 				4,
 			},
-			y: []int{
+			y: []uint64{
 				0,
 				1,
 			},
@@ -800,12 +800,12 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			a: 10,
 			b: 10,
 			s: 10197437167,
-			x: []int{
+			x: []uint64{
 				2,
 				8,
 				6,
 			},
-			y: []int{
+			y: []uint64{
 				0,
 				1,
 				2,
@@ -822,8 +822,8 @@ func Test_Sample_Random_Fake(t *testing.T) {
 				})
 			}
 
-			var x []int
-			var y []int
+			var x []uint64
+			var y []uint64
 			{
 				x, y = sam.Random(tc.a, tc.b)
 			}
@@ -843,12 +843,12 @@ func Test_Sample_Random_Fake(t *testing.T) {
 			// creating a runtime panic, then our implementation is safe to the extend
 			// that no indices are generated out of bounds.
 			{
-				slx := make([]int, tc.a)
+				slx := make([]uint64, tc.a)
 				for _, i := range x {
 					_ = slx[i]
 				}
 
-				sly := make([]int, tc.b)
+				sly := make([]uint64, tc.b)
 				for _, i := range y {
 					_ = sly[i]
 				}
@@ -857,7 +857,7 @@ func Test_Sample_Random_Fake(t *testing.T) {
 	}
 }
 
-func musStr(lis []int) string {
+func musStr(lis []uint64) string {
 	byt, err := json.Marshal(lis)
 	if err != nil {
 		tracer.Panic(tracer.Mask(err))

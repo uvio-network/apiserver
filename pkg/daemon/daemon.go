@@ -1,12 +1,14 @@
 package daemon
 
 import (
+	"crypto/rand"
 	"net"
 	"time"
 
 	"github.com/uvio-network/apiserver/pkg/emitter"
 	"github.com/uvio-network/apiserver/pkg/envvar"
 	"github.com/uvio-network/apiserver/pkg/reconciler"
+	"github.com/uvio-network/apiserver/pkg/sample"
 	"github.com/uvio-network/apiserver/pkg/storage"
 	"github.com/xh3b4sd/breakr"
 	"github.com/xh3b4sd/locker"
@@ -28,6 +30,7 @@ type Daemon struct {
 	rec reconciler.Interface
 	red redigo.Interface
 	res rescue.Interface
+	sam *sample.Sample
 	sto storage.Interface
 }
 
@@ -93,6 +96,13 @@ func New(env envvar.Env) *Daemon {
 		})
 	}
 
+	var sam *sample.Sample
+	{
+		sam = sample.New(sample.Config{
+			Rea: rand.Reader,
+		})
+	}
+
 	return &Daemon{
 		emi: emi,
 		env: env,
@@ -102,6 +112,7 @@ func New(env envvar.Env) *Daemon {
 		rec: rec,
 		red: red,
 		res: res,
+		sam: sam,
 		sto: sto,
 	}
 }

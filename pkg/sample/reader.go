@@ -10,7 +10,7 @@ type fake struct {
 	pos int
 }
 
-func newFakeReader(num int) io.Reader {
+func newFakeReader(num uint64) io.Reader {
 	return &fake{byt: []byte(fmt.Sprintf("%d", num))}
 }
 

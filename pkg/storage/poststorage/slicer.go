@@ -35,18 +35,6 @@ func (s Slicer) Parent() []objectid.ID {
 
 // --------------------------------------------------------------------- //
 
-func (s Slicer) ObjectID(cla objectid.ID) Slicer {
-	var lis Slicer
-
-	for _, x := range s {
-		if cla == x.ID {
-			lis = append(lis, x)
-		}
-	}
-
-	return lis
-}
-
 func (s Slicer) ObjectKind(kin string) Slicer {
 	var lis Slicer
 
@@ -73,6 +61,16 @@ func (s Slicer) ObjectLifecycle(lif objectlabel.DesiredLifecycle) Slicer {
 
 // --------------------------------------------------------------------- //
 
+func (s Slicer) IDClaim(cla objectid.ID) *Object {
+	for _, x := range s {
+		if cla == x.ID {
+			return x
+		}
+	}
+
+	return nil
+}
+
 func (s Slicer) LatestClaim() *Object {
 	if len(s) == 0 {
 		return nil
@@ -88,4 +86,14 @@ func (s Slicer) LatestClaim() *Object {
 	}
 
 	return las
+}
+
+func (s Slicer) NextClaim(par objectid.ID) *Object {
+	for _, x := range s {
+		if x.Parent == par {
+			return x
+		}
+	}
+
+	return nil
 }
