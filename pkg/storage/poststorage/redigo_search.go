@@ -184,75 +184,6 @@ func (r *Redigo) SearchLifecycle(lif []string) ([]*Object, error) {
 	return out, nil
 }
 
-func (r *Redigo) SearchPost(inp []objectid.ID) ([]*Object, error) {
-	var err error
-
-	var jsn []string
-	{
-		jsn, err = r.red.Simple().Search().Multi(generic.Arg1(storageformat.PostObject, inp)...)
-		if simple.IsNotFound(err) {
-			return nil, tracer.Maskf(PostObjectNotFoundError, "%v", inp)
-		} else if err != nil {
-			return nil, tracer.Mask(err)
-		}
-	}
-
-	var out []*Object
-	for _, x := range jsn {
-		var obj *Object
-		{
-			obj = &Object{}
-		}
-
-		if x != "" {
-			err = json.Unmarshal([]byte(x), obj)
-			if err != nil {
-				return nil, tracer.Mask(err)
-			}
-		}
-
-		{
-			out = append(out, obj)
-		}
-	}
-
-	return out, nil
-}
-
-func (r *Redigo) SearchTree(tre []objectid.ID) ([]*Object, error) {
-	var err error
-
-	// pos will result in a list of all post IDs belonging to the given tree IDs,
-	// if any.
-	var pos []string
-	{
-		pos, err = r.red.Sorted().Search().Union(generic.Arg1(storageformat.PostTree, tre)...)
-		if err != nil {
-			return nil, tracer.Mask(err)
-		}
-	}
-
-	// There might not be any post IDs, so we do not proceed, but instead return
-	// nothing.
-	if len(pos) == 0 {
-		return nil, nil
-	}
-
-	// Having collected all post IDs, we go ahead and search all post objects at
-	// once.
-	var out []*Object
-	{
-		lis, err := r.SearchPost(objectid.IDs(pos))
-		if err != nil {
-			return nil, tracer.Mask(err)
-		}
-
-		out = append(out, lis...)
-	}
-
-	return out, nil
-}
-
 func (r *Redigo) SearchOwner(use []objectid.ID) ([]*Object, error) {
 	var err error
 
@@ -315,6 +246,75 @@ func (r *Redigo) SearchOwnerComment(own []objectid.ID, cla []objectid.ID) ([]*Ob
 	var out []*Object
 	{
 		lis, err := r.SearchPost(objectid.IDs(com))
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+
+		out = append(out, lis...)
+	}
+
+	return out, nil
+}
+
+func (r *Redigo) SearchPost(inp []objectid.ID) ([]*Object, error) {
+	var err error
+
+	var jsn []string
+	{
+		jsn, err = r.red.Simple().Search().Multi(generic.Arg1(storageformat.PostObject, inp)...)
+		if simple.IsNotFound(err) {
+			return nil, tracer.Maskf(PostObjectNotFoundError, "%v", inp)
+		} else if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	var out []*Object
+	for _, x := range jsn {
+		var obj *Object
+		{
+			obj = &Object{}
+		}
+
+		if x != "" {
+			err = json.Unmarshal([]byte(x), obj)
+			if err != nil {
+				return nil, tracer.Mask(err)
+			}
+		}
+
+		{
+			out = append(out, obj)
+		}
+	}
+
+	return out, nil
+}
+
+func (r *Redigo) SearchTree(tre []objectid.ID) ([]*Object, error) {
+	var err error
+
+	// pos will result in a list of all post IDs belonging to the given tree IDs,
+	// if any.
+	var pos []string
+	{
+		pos, err = r.red.Sorted().Search().Union(generic.Arg1(storageformat.PostTree, tre)...)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	// There might not be any post IDs, so we do not proceed, but instead return
+	// nothing.
+	if len(pos) == 0 {
+		return nil, nil
+	}
+
+	// Having collected all post IDs, we go ahead and search all post objects at
+	// once.
+	var out []*Object
+	{
+		lis, err := r.SearchPost(objectid.IDs(pos))
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}

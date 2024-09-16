@@ -12,16 +12,16 @@ import (
 )
 
 func (r *Redigo) SearchClaim(cla []objectid.ID) ([]*Object, error) {
+	var err error
+
 	// vot will result in a list of all vote IDs belonging to the given claim IDs,
 	// if any.
 	var vot []string
-	for _, x := range cla {
-		val, err := r.red.Sorted().Search().Order(votCla(x), 0, -1)
+	{
+		vot, err = r.red.Sorted().Search().Union(generic.Arg1(storageformat.VoteClaim, cla)...)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
-
-		vot = append(vot, val...)
 	}
 
 	// There might not be any vote IDs, so we do not proceed, but instead return
@@ -46,16 +46,16 @@ func (r *Redigo) SearchClaim(cla []objectid.ID) ([]*Object, error) {
 }
 
 func (r *Redigo) SearchOwner(own []objectid.ID) ([]*Object, error) {
+	var err error
+
 	// vot will result in a list of all vote IDs belonging to the given user IDs,
 	// if any.
 	var vot []string
-	for _, x := range own {
-		val, err := r.red.Sorted().Search().Order(votOwn(x), 0, -1)
+	{
+		vot, err = r.red.Sorted().Search().Union(generic.Arg1(storageformat.VoteOwner, own)...)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
-
-		vot = append(vot, val...)
 	}
 
 	// There might not be any vote IDs, so we do not proceed, but instead return

@@ -15,6 +15,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/uvio-network/apiserver/pkg/sample"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
+	"github.com/uvio-network/apiserver/pkg/storage/walletstorage"
 	"github.com/uvio-network/apiserver/pkg/worker/budget"
 	"github.com/xh3b4sd/logger/meta"
 	"github.com/xh3b4sd/rescue/task"
@@ -47,7 +48,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 
 	if cyc > 10 {
 		h.log.Log(
-			logctx(tas),
+			logCtx(tas),
 			"level", "error",
 			"message", "task cycle limit error",
 			"description", "Creating the resolve onchain failed. The root cause for this failure needs to be investigated. The given propose may still not have a resolve as requested.",
@@ -63,14 +64,39 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		cla = objectid.ID(tas.Meta.Get(objectlabel.ClaimObject))
 	}
 
+	var tre poststorage.Slicer
+	{
+		tre, err = h.sto.Post().SearchTree([]objectid.ID{cla})
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
+	var pro *poststorage.Object
+	var res *poststorage.Object
+	{
+		pro = tre.IDClaim(cla)
+		res = tre.NextClaim(cla)
+	}
+
 	var exp time.Time
 	{
 		exp = time.Now().Add(oneWeek)
 	}
 
+	// If the next claim within this tree relative to the provided propose is nil,
+	// then that means that we have not yet created the required resolve. And so
+	// we can proceed to create the post object for the requested resolve.
+	if res == nil {
+		err = h.createObject(pro, exp)
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
 	var exi bool
 	{
-		exi, err = h.con.Claims().ExistsResolve(cla)
+		exi, err = h.con.Claims().ExistsResolve(pro.ID)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -78,7 +104,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 
 	var ind []*big.Int
 	{
-		ind, err = h.con.Claims().SearchIndices(cla)
+		ind, err = h.con.Claims().SearchIndices(pro.ID)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -92,7 +118,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 
 		{
-			txn, err = h.con.Claims().CreateResolve(cla, sam, exp)
+			txn, err = h.con.Claims().CreateResolve(pro.ID, sam, exp)
 			if err != nil {
 				return tracer.Mask(err)
 			}
@@ -106,9 +132,17 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 	}
 
-	var add []common.Address
+	var tru []common.Address
+	var fls []common.Address
 	{
-		add, err = h.searchSamples(cla, ind)
+		tru, fls, err = h.searchSamples(pro.ID, ind)
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
+	if res.Lifecycle.Pending() {
+		err = h.updateObject(res, txn, tru, fls)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -117,43 +151,11 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	// TODO we need to notify the voters somehow so that they know they have to
 	// verify events in the real world
 
-	{
-		err = h.ensureObject(cla, txn, add, exp)
-		if err != nil {
-			return tracer.Mask(err)
-		}
-	}
-
 	return nil
 }
 
-func (h *InternHandler) ensureObject(cla objectid.ID, txn *types.Transaction, add []common.Address, exp time.Time) error {
+func (h *InternHandler) createObject(pro *poststorage.Object, exp time.Time) error {
 	var err error
-
-	var tre poststorage.Slicer
-	{
-		tre, err = h.sto.Post().SearchTree([]objectid.ID{cla})
-		if err != nil {
-			return tracer.Mask(err)
-		}
-	}
-
-	// If the next claim within this tree relative to the provided propose is not
-	// nil, then that means that we have already created the required resolve. And
-	// so we can stop processing here already.
-	if tre.NextClaim(cla) != nil {
-		return nil
-	}
-
-	var has []string
-	if txn != nil {
-		has = []string{txn.Hash().Hex()}
-	}
-
-	var pro *poststorage.Object
-	{
-		pro = tre.IDClaim(cla)
-	}
 
 	var res *poststorage.Object
 	{
@@ -164,11 +166,10 @@ func (h *InternHandler) ensureObject(cla objectid.ID, txn *types.Transaction, ad
 			Labels: pro.Labels,
 			Lifecycle: objectfield.Lifecycle{
 				Data: objectlabel.LifecycleResolve,
-				Hash: has,
 			},
 			Owner:  objectid.System(),
 			Parent: pro.ID,
-			Text:   resTxt(add),
+			Text:   "# Market Resolution\n\n The random truth sampling process has begun and is waiting for onchain confirmation.",
 		}
 	}
 
@@ -190,18 +191,53 @@ func (h *InternHandler) ensureObject(cla objectid.ID, txn *types.Transaction, ad
 	return nil
 }
 
-func (h *InternHandler) searchSamples(cla objectid.ID, ind []*big.Int) ([]common.Address, error) {
+func (h *InternHandler) searchAddress(add []common.Address) (map[string]objectid.ID, error) {
+	var err error
+
+	var str []string
+	for _, x := range add {
+		str = append(str, x.Hex())
+	}
+
+	var wal []*walletstorage.Object
+	{
+		wal, err = h.sto.Wallet().SearchAddress(str)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	if len(wal) != len(add) {
+		return nil, tracer.Maskf(runtime.ExecutionFailedError, "%d != %d", len(wal), len(add))
+	}
+
+	dic := map[string]objectid.ID{}
+
+	for i := range add {
+		dic[str[i]] = wal[i].Owner
+	}
+
+	return dic, nil
+}
+
+func (h *InternHandler) searchSamples(cla objectid.ID, ind []*big.Int) ([]common.Address, []common.Address, error) {
 	var err error
 
 	if len(ind) != 8 {
-		return nil, tracer.Maskf(runtime.ExecutionFailedError, "onchain indices invalid")
+		return nil, nil, tracer.Maskf(runtime.ExecutionFailedError, "onchain indices invalid")
 	}
+
+	// Searching for the sampled addresses works according to the indices [1, 2]
+	// and [5, 6] according to the Claims contract documentation linked below.
+	//
+	//     https://github.com/uvio-network/contracts/blob/v0.2.0/contracts/Claims.sol#L1721-L1728
+	//
 
 	var tru []common.Address
 	{
 		tru, err = h.con.Claims().SearchSamples(cla, ind[1], ind[2])
 		if err != nil {
-			return nil, tracer.Mask(err)
+			return nil, nil, tracer.Mask(err)
 		}
 	}
 
@@ -209,27 +245,65 @@ func (h *InternHandler) searchSamples(cla objectid.ID, ind []*big.Int) ([]common
 	{
 		fls, err = h.con.Claims().SearchSamples(cla, ind[5], ind[6])
 		if err != nil {
-			return nil, tracer.Mask(err)
+			return nil, nil, tracer.Mask(err)
 		}
 	}
 
-	return append(tru, fls...), nil
+	return tru, fls, nil
 }
 
-func resTxt(add []common.Address) string {
-	var use string
+func (h *InternHandler) updateObject(res *poststorage.Object, txn *types.Transaction, tru []common.Address, fls []common.Address) error {
+	var err error
+
+	var num int
 	{
-		use = "user"
+		num = len(tru) + len(fls)
 	}
 
-	if len(add) > 1 {
-		use += "s"
+	{
+		res.Text = resTxt(num)
 	}
 
-	return fmt.Sprintf("# Market Resolution\n\n %d %s have been randomly selected to verify events in the real world for the proposed claim below.", len(add), use)
+	if txn != nil {
+		res.Lifecycle.Hash = []string{txn.Hash().Hex()}
+	}
+
+	{
+		var tmp map[string]objectid.ID
+		if len(tru) != 0 {
+			tmp, err = h.searchAddress(tru)
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
+
+		var fmp map[string]objectid.ID
+		if len(fls) != 0 {
+			fmp, err = h.searchAddress(fls)
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
+
+		{
+			res.Samples = map[bool]map[string]objectid.ID{
+				true:  tmp,
+				false: fmp,
+			}
+		}
+	}
+
+	{
+		err = h.sto.Post().UpdatePost([]*poststorage.Object{res})
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
+	return nil
 }
 
-func logctx(tas *task.Task) context.Context {
+func logCtx(tas *task.Task) context.Context {
 	ctx := context.Background()
 
 	for k, v := range *tas.Meta {
@@ -237,4 +311,17 @@ func logctx(tas *task.Task) context.Context {
 	}
 
 	return ctx
+}
+
+func resTxt(num int) string {
+	var use string
+	{
+		use = "user"
+	}
+
+	if num > 1 {
+		use += "s"
+	}
+
+	return fmt.Sprintf("# Market Resolution\n\n %d %s have been randomly selected to verify events in the real world for the proposed claim below.", num, use)
 }

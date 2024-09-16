@@ -35,6 +35,10 @@ func NewRedigo(c RedigoConfig) *Redigo {
 	}
 }
 
+func walAdd(str string) string {
+	return fmt.Sprintf(storageformat.WalletAddress, str)
+}
+
 func walObj(oid objectid.ID) string {
 	return fmt.Sprintf(storageformat.WalletObject, oid)
 }

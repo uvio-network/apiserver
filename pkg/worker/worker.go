@@ -201,7 +201,7 @@ func (w *Worker) search() {
 
 		{
 			w.log.Log(
-				logctx(tas),
+				logCtx(tas),
 				"level", "info",
 				"message", "processing worker task",
 				objectlabel.WorkerObject, object.String(x),
@@ -222,7 +222,7 @@ func (w *Worker) search() {
 				// the desired amount of handlers we that we track.
 				if bud.Break() {
 					w.log.Log(
-						logctx(tas),
+						logCtx(tas),
 						"level", "warning",
 						"message", "task budget exhausted",
 					)
@@ -238,7 +238,7 @@ func (w *Worker) search() {
 				// info log for visibility.
 				if tas.Pag() {
 					w.log.Log(
-						logctx(tas),
+						logCtx(tas),
 						"level", "info",
 						"message", "task being requeued",
 						"paging", tas.Sync.Get(task.Paging),
@@ -265,7 +265,7 @@ func (w *Worker) ticker() {
 	}
 }
 
-func logctx(tas *task.Task) context.Context {
+func logCtx(tas *task.Task) context.Context {
 	ctx := context.Background()
 
 	for k, v := range *tas.Meta {

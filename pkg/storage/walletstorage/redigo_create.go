@@ -17,8 +17,18 @@ func (r *Redigo) CreateWallet(inp []*Object) error {
 			}
 		}
 
-		// Track the user creating this wallet as the owner, and make sure that we can
-		// find all wallets for any given user ID.
+		// Store the association between wallet address and wallet ID, so that we
+		// can later find any wallet object given any wallet address. This enables
+		// us in turn to lookup any user ID given any wallet address.
+		{
+			err = r.red.Sorted().Create().Score(walAdd(inp[i].Address), inp[i].ID.String(), inp[i].ID.Float())
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
+
+		// Track the user creating this wallet as the owner, and make sure that we
+		// can find all wallets for any given user ID.
 		{
 			err = r.red.Sorted().Create().Score(walOwn(inp[i].Owner), inp[i].ID.String(), inp[i].ID.Float())
 			if err != nil {
