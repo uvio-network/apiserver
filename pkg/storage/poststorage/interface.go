@@ -61,20 +61,6 @@ type Interface interface {
 	//
 	SearchLifecycle([]string) ([]*Object, error)
 
-	// SearchPost returns the post objects matching the given post IDs.
-	//
-	//     @inp[0] the post IDs to search for
-	//     @out[0] the list of post objects matching the given post IDs
-	//
-	SearchPost([]objectid.ID) ([]*Object, error)
-
-	// SearchTree returns the post objects belonging to the given tree IDs.
-	//
-	//     @inp[0] the tree IDs to search for
-	//     @out[0] the list of post objects belonging to the given tree IDs
-	//
-	SearchTree([]objectid.ID) ([]*Object, error)
-
 	// SearchOwner returns the post objects created by the given user.
 	//
 	//     @inp[0] the user IDs to search for
@@ -93,6 +79,20 @@ type Interface interface {
 	//     @out[0] the list of post objects representing market and user specific comments
 	//
 	SearchOwnerComment([]objectid.ID, []objectid.ID) ([]*Object, error)
+
+	// SearchPost returns the post objects matching the given post IDs.
+	//
+	//     @inp[0] the post IDs to search for
+	//     @out[0] the list of post objects matching the given post IDs
+	//
+	SearchPost([]objectid.ID) ([]*Object, error)
+
+	// SearchTree returns the post objects belonging to the given tree IDs.
+	//
+	//     @inp[0] the tree IDs to search for
+	//     @out[0] the list of post objects belonging to the given tree IDs
+	//
+	SearchTree([]objectid.ID) ([]*Object, error)
 
 	// UpdatePost modifies the given post objects in the underlying storage.
 	//

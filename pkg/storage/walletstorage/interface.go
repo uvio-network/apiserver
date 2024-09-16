@@ -9,6 +9,13 @@ type Interface interface {
 	//
 	CreateWallet([]*Object) error
 
+	// SearchAddress returns the wallet objects for the given addresses.
+	//
+	//     @inp[0] the wallet addresses to search for
+	//     @out[0] the list of wallet objects for the given addresses
+	//
+	SearchAddress([]string) ([]*Object, error)
+
 	// SearchOwner returns the wallet objects created by the given user.
 	//
 	//     @inp[0] the user IDs to search for

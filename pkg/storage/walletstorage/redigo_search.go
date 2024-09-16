@@ -10,17 +10,51 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Redigo) SearchOwner(own []objectid.ID) ([]*Object, error) {
-	// wal will result in a list of all wallet IDs belonging to the given user
-	// IDs, if any.
+func (r *Redigo) SearchAddress(add []string) ([]*Object, error) {
+	var err error
+
+	// wal will result in a list of all wallet IDs associated to the given wallet
+	// addresses, if any.
 	var wal []string
-	for _, x := range own {
-		val, err := r.red.Sorted().Search().Order(walOwn(x), 0, -1)
+	{
+		wal, err = r.red.Sorted().Search().Union(generic.Arg1(storageformat.WalletAddress, add)...)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	// There might not be any wallet IDs, so we do not proceed, but instead return
+	// nothing.
+	if len(wal) == 0 {
+		return nil, nil
+	}
+
+	// Having collected all wallet IDs, we go ahead and search all wallet objects at
+	// once.
+	var out []*Object
+	{
+		lis, err := r.SearchWallet(objectid.IDs(wal))
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
 
-		wal = append(wal, val...)
+		out = append(out, lis...)
+	}
+
+	return out, nil
+}
+
+func (r *Redigo) SearchOwner(own []objectid.ID) ([]*Object, error) {
+	var err error
+
+	// wal will result in a list of all wallet IDs belonging to the given user
+	// IDs, if any.
+	var wal []string
+	{
+		wal, err = r.red.Sorted().Search().Union(generic.Arg1(storageformat.WalletOwner, own)...)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
 	}
 
 	// There might not be any wallet IDs, so we do not proceed, but instead return

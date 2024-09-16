@@ -149,6 +149,16 @@ const (
 	//
 	VoteOwnerClaim = "vote/owner/%s/claim/%s"
 
+	// WalletAddress is used to store all wallet IDs that are associated to a
+	// particular wallet address. This key allows us to search for all user IDs
+	// given any wallet address.
+	//
+	//     wallet address                 wallet IDs
+	//                              ->
+	//     wallet/address/0x1234          3456,5678
+	//
+	WalletAddress = "wallet/address/%s"
+
 	// WalletObject is used to store our internal representation of a wallet
 	// object. This key allows us to search for all wallet objects by their own
 	// object ID.
