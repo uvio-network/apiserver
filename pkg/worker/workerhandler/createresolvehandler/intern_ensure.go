@@ -40,7 +40,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 
 	var cyc int
 	{
-		cyc, err = strconv.Atoi(tas.Meta.Get(task.Cycles))
+		cyc, err = strconv.Atoi(zerStr(tas.Meta.Get(task.Cycles)))
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -64,18 +64,29 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		cla = objectid.ID(tas.Meta.Get(objectlabel.ClaimObject))
 	}
 
-	var tre poststorage.Slicer
+	var pos poststorage.Slicer
 	{
-		tre, err = h.sto.Post().SearchTree([]objectid.ID{cla})
+		pos, err = h.sto.Post().SearchPost([]objectid.ID{cla})
 		if err != nil {
 			return tracer.Mask(err)
 		}
 	}
 
 	var pro *poststorage.Object
+	{
+		pro = pos.IDClaim(cla)
+	}
+
+	var tre poststorage.Slicer
+	{
+		tre, err = h.sto.Post().SearchTree([]objectid.ID{pro.Tree})
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
 	var res *poststorage.Object
 	{
-		pro = tre.IDClaim(cla)
 		res = tre.NextClaim(cla)
 	}
 
@@ -316,12 +327,20 @@ func logCtx(tas *task.Task) context.Context {
 func resTxt(num int) string {
 	var use string
 	{
-		use = "user"
+		use = "user has"
 	}
 
 	if num > 1 {
-		use += "s"
+		use = "users have"
 	}
 
-	return fmt.Sprintf("# Market Resolution\n\n %d %s have been randomly selected to verify events in the real world for the proposed claim below.", num, use)
+	return fmt.Sprintf("# Market Resolution\n\n %d %s been randomly selected to verify events in the real world for the proposed claim below.", num, use)
+}
+
+func zerStr(str string) string {
+	if str == "" {
+		str = "0"
+	}
+
+	return str
 }
