@@ -48,7 +48,7 @@ func (r *run) runE(cmd *cobra.Command, arg []string) error {
 	}
 
 	{
-		go srvJwk(set)
+		go srvJwk(env, set)
 	}
 
 	// --------------------------------------------------------------------- //
