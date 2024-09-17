@@ -7,11 +7,13 @@ import (
 	"crypto/rand"
 	"encoding/json"
 	"net/http"
+	"net/url"
 
 	"github.com/lestrrat-go/jwx/jwa"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/lestrrat-go/jwx/jwt"
 	"github.com/twitchtv/twirp"
+	"github.com/uvio-network/apiserver/pkg/envvar"
 	"github.com/xh3b4sd/tracer"
 )
 
@@ -145,7 +147,7 @@ func newKey() (jwk.Key, jwk.Set, error) {
 	return key, set, nil
 }
 
-func srvJwk(set jwk.Set) {
+func srvJwk(env envvar.Env, set jwk.Set) {
 	var err error
 
 	var byt []byte
@@ -160,8 +162,16 @@ func srvJwk(set jwk.Set) {
 		http.HandleFunc("/jwk", bytHan(byt, "application/json"))
 	}
 
+	var loc *url.URL
 	{
-		err := http.ListenAndServe("localhost:7171", nil)
+		loc, err = url.Parse(env.AuthJwksUrl)
+		if err != nil {
+			tracer.Panic(err)
+		}
+	}
+
+	{
+		err := http.ListenAndServe(loc.Host, nil)
 		if err != nil {
 			tracer.Panic(err)
 		}
