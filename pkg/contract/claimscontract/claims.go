@@ -85,8 +85,8 @@ func (u *Claims) CreateResolve(pro objectid.ID, ind []*big.Int, exp time.Time) (
 			//
 			//     https://dune.com/payton/base-l2-gas-price-tracker
 			//
-			GasFeeCap: big.NewInt(30_000_000), // 0.030 gwei
-			GasTipCap: big.NewInt(3_000_000),  // 0.003 gwei
+			GasFeeCap: big.NewInt(600_000_000), // 0.60 gwei
+			GasTipCap: big.NewInt(30_000_000),  // 0.03 gwei
 
 			Signer: u.opt.Signer,
 		}
