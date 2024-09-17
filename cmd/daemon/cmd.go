@@ -13,14 +13,23 @@ const (
 type Config struct{}
 
 func New(config Config) (*cobra.Command, error) {
+	var f *flag
+	{
+		f = &flag{}
+	}
+
 	var c *cobra.Command
 	{
 		c = &cobra.Command{
 			Use:   use,
 			Short: sho,
 			Long:  lon,
-			RunE:  (&run{}).runE,
+			RunE:  (&run{flag: f}).runE,
 		}
+	}
+
+	{
+		f.Init(c)
 	}
 
 	return c, nil

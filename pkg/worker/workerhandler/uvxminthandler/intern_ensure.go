@@ -41,7 +41,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	var con walletstorage.Slicer
 	{
 
-		con = wal.ObjectActive(true).ObjectKind("contract")
+		con = wal.ObjectActive(true)
 	}
 
 	// Anyone not having a wallet cannot receive minted UVX tokens. We are not

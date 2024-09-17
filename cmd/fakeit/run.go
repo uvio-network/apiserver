@@ -22,7 +22,7 @@ func (r *run) runE(cmd *cobra.Command, arg []string) error {
 
 	var env envvar.Env
 	{
-		env = envvar.Load(envvar.Fake)
+		env = envvar.Load("fake")
 	}
 
 	// --------------------------------------------------------------------- //

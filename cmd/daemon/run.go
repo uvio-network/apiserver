@@ -11,12 +11,14 @@ import (
 	"github.com/uvio-network/apiserver/pkg/envvar"
 )
 
-type run struct{}
+type run struct {
+	flag *flag
+}
 
 func (r *run) runE(cmd *cobra.Command, arg []string) error {
 	var env envvar.Env
 	{
-		env = envvar.Load(envvar.Local)
+		env = envvar.Load(r.flag.Env)
 	}
 
 	// --------------------------------------------------------------------- //
