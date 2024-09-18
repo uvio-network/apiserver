@@ -15,4 +15,5 @@ const (
 	LifecycleNullify DesiredLifecycle = "nullify"
 	LifecyclePropose DesiredLifecycle = "propose"
 	LifecycleResolve DesiredLifecycle = "resolve"
+	LifecycleSettled DesiredLifecycle = "settled"
 )

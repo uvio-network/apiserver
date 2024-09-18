@@ -6,6 +6,11 @@ import (
 )
 
 func (h *InternHandler) Filter(tas *task.Task) bool {
+	// The tasks filtered for here are emitted using Emitter.Claim.Update in the
+	// file below.
+	//
+	//     pkg/worker/workerhandler/claimexpiryhandler/intern_ensure.go
+	//
 	return tas.Meta.Has(map[string]string{
 		objectlabel.ClaimAction:    objectlabel.ActionUpdate,
 		objectlabel.ClaimLifecycle: string(objectlabel.LifecycleBalance),
