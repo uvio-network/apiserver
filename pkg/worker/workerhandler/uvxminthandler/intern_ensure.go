@@ -30,7 +30,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		use = objectid.ID(tas.Meta.Get(objectlabel.UserObject))
 	}
 
-	var wal walletstorage.Slicer
+	var wal []*walletstorage.Object
 	{
 		wal, err = h.sto.Wallet().SearchOwner([]objectid.ID{use})
 		if err != nil {
@@ -38,18 +38,12 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 	}
 
-	var con walletstorage.Slicer
-	{
-
-		con = wal.ObjectActive(true)
-	}
-
 	// Anyone not having a wallet cannot receive minted UVX tokens. We are not
 	// returning an error here in case no wallet can be found, because that would
 	// produce a deadlock scenario in which tasks would be repeatedly called
 	// forever, only to end up in the same situation. Instead we are using the the
 	// task's sync paging pointer as a delayed retry signal.
-	if len(con) == 0 {
+	if len(wal) == 0 {
 		var cur string
 		{
 			cur = tas.Sync.Get(task.Paging)
@@ -90,7 +84,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 
 	var add string
 	{
-		add = con[0].Address
+		add = wal[0].Address
 	}
 
 	var txn *types.Transaction

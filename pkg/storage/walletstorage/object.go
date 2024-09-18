@@ -9,7 +9,6 @@ import (
 )
 
 type Object struct {
-	Active      bool        `json:"active"`
 	Address     string      `json:"address"`
 	Created     time.Time   `json:"created"`
 	Description string      `json:"description"`

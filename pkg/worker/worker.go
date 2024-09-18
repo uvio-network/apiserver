@@ -229,22 +229,26 @@ func (w *Worker) search() {
 				} else {
 					cur++
 				}
-
-				// We want to requeue a task that carries a paging pointer that is not
-				// empty. So if the given task carries a paging pointer that indicates
-				// to continue processing at a certain stage of the process itself, then
-				// the rescue engine will expire it immediately and update the synced
-				// paging state so that we can pick it up ASAP. Below we simply emit an
-				// info log for visibility.
-				if tas.Pag() {
-					w.log.Log(
-						logCtx(tas),
-						"level", "info",
-						"message", "task being requeued",
-						"paging", tas.Sync.Get(task.Paging),
-					)
-				}
 			}
+		}
+
+		// We want to requeue a task that carries a paging pointer, whether the task
+		// execution failed or not. So if the given task carries a paging pointer
+		// that indicates to continue processing at a certain stage of the worker
+		// process itself, then the rescue engine will expire the task immediately
+		// and update the synced paging state so that another worker can pick up the
+		// task again ASAP.
+		if tas.Pag() {
+			{
+				cur++
+			}
+
+			w.log.Log(
+				logCtx(tas),
+				"level", "info",
+				"message", "task being requeued",
+				"paging", tas.Sync.Get(task.Paging),
+			)
 		}
 	}
 

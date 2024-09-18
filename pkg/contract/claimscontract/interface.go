@@ -6,16 +6,33 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 )
 
 type Interface interface {
+	// Client is the underlying go-ethereum client interacting with the configured
+	// RPC.
+	Client() *ethclient.Client
+
 	// CreateResolve initiates the market resolution of the given propose onchain,
 	// so that the randomly selected users can verify events in the real world.
 	CreateResolve(objectid.ID, []*big.Int, time.Time) (*types.Transaction, error)
 
 	// ExistsResolve returns whether an onchain resolve exists for the given propose.
 	ExistsResolve(objectid.ID) (bool, error)
+
+	// ResolveCreated searched for the transaction hash of the transaction that
+	// emitted the event ResolveCreated. The underlying log filter iterates
+	// through all blocks since blc until the event matching all required fields
+	// was found. If no matching event could be found the underlying iterator
+	// stops at the latest block.
+	//
+	//     inp[0] the block number to start filtering from
+	//     inp[1] the ID of the propose for which the resolve got created
+	//     out[0] the transaction hash emitting the filtered event, if any
+	//
+	ResolveCreated(uint64, uint64) (common.Hash, error)
 
 	// SearchIndices returns the the total amount of stakers on either side of the
 	// market.

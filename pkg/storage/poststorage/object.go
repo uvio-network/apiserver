@@ -15,21 +15,21 @@ import (
 )
 
 type Object struct {
-	Chain     string                       `json:"chain"`
-	Created   time.Time                    `json:"created"`
-	Expiry    time.Time                    `json:"expiry"`
-	ID        objectid.ID                  `json:"id"`
-	Kind      string                       `json:"kind"`
-	Labels    []string                     `json:"labels"`
-	Lifecycle objectfield.Lifecycle        `json:"lifecycle"`
-	Meta      string                       `json:"meta"`
-	Owner     objectid.ID                  `json:"owner"`
-	Parent    objectid.ID                  `json:"parent"`
-	Samples   map[string]map[string]string `json:"samples"`
-	Text      string                       `json:"text"`
-	Token     string                       `json:"token"`
-	Tree      objectid.ID                  `json:"tree"`
-	Votes     []float64                    `json:"votes"`
+	Chain     string                `json:"chain"`
+	Created   time.Time             `json:"created"`
+	Expiry    time.Time             `json:"expiry"`
+	ID        objectid.ID           `json:"id"`
+	Kind      string                `json:"kind"`
+	Labels    []string              `json:"labels"`
+	Lifecycle objectfield.Lifecycle `json:"lifecycle"`
+	Meta      string                `json:"meta"`
+	Owner     objectid.ID           `json:"owner"`
+	Parent    objectid.ID           `json:"parent"`
+	Samples   map[string]string     `json:"samples"`
+	Text      string                `json:"text"`
+	Token     string                `json:"token"`
+	Tree      objectid.ID           `json:"tree"`
+	Votes     []float64             `json:"votes"`
 }
 
 func (o *Object) Verify() error {
@@ -85,10 +85,10 @@ func (o *Object) Verify() error {
 
 	{
 		if o.Kind == "claim" && !o.Lifecycle.Is(objectlabel.LifecycleAdjourn, objectlabel.LifecycleDispute, objectlabel.LifecycleNullify, objectlabel.LifecyclePropose, objectlabel.LifecycleResolve) {
-			return tracer.Maskf(ClaimLifecycleInvalidError, o.Lifecycle.String())
+			return tracer.Maskf(ClaimLifecycleInvalidError, string(o.Lifecycle.Data))
 		}
 		if o.Kind == "comment" && !o.Lifecycle.Empty() {
-			return tracer.Maskf(CommentLifecycleInvalidError, o.Lifecycle.String())
+			return tracer.Maskf(CommentLifecycleInvalidError, string(o.Lifecycle.Data))
 		}
 		for _, x := range o.Lifecycle.Hash {
 			if x != "" && !hexencoding.Verify(x) {
@@ -100,15 +100,15 @@ func (o *Object) Verify() error {
 	{
 		// Any claim with lifecycle other than "propose" must reference a parent.
 		if o.Kind == "claim" && !o.Lifecycle.Is(objectlabel.LifecyclePropose) && o.Parent == "" {
-			return tracer.Maskf(ClaimParentEmptyError, o.Lifecycle.String())
+			return tracer.Maskf(ClaimParentEmptyError, string(o.Lifecycle.Data))
 		}
 		// Any claim with lifecycle "propose" must not reference a parent.
 		if o.Kind == "claim" && o.Lifecycle.Is(objectlabel.LifecyclePropose) && o.Parent != "" {
-			return tracer.Maskf(ClaimParentInvalidError, o.Lifecycle.String())
+			return tracer.Maskf(ClaimParentInvalidError, string(o.Lifecycle.Data))
 		}
 		// Any comment must reference its parent claim.
 		if o.Kind == "comment" && o.Parent == "" {
-			return tracer.Maskf(CommentParentEmptyError, o.Lifecycle.String())
+			return tracer.Maskf(CommentParentEmptyError, string(o.Lifecycle.Data))
 		}
 	}
 

@@ -61,13 +61,17 @@ func NewClaims(c ClaimsConfig) *Claims {
 	}
 }
 
-func (u *Claims) CreateResolve(pro objectid.ID, ind []*big.Int, exp time.Time) (*types.Transaction, error) {
+func (c *Claims) Client() *ethclient.Client {
+	return c.cli
+}
+
+func (c *Claims) CreateResolve(pro objectid.ID, ind []*big.Int, exp time.Time) (*types.Transaction, error) {
 	var err error
 
 	var opt *bind.TransactOpts
 	{
 		opt = &bind.TransactOpts{
-			From: u.opt.From,
+			From: c.opt.From,
 
 			// Here we are trying to set some reasonable gas limits, specifically for
 			// the EIP-1559 enabled minting transaction.
@@ -88,23 +92,23 @@ func (u *Claims) CreateResolve(pro objectid.ID, ind []*big.Int, exp time.Time) (
 			GasFeeCap: big.NewInt(600_000_000), // 0.60 gwei
 			GasTipCap: big.NewInt(30_000_000),  // 0.03 gwei
 
-			Signer: u.opt.Signer,
+			Signer: c.opt.Signer,
 		}
 	}
 
 	var txn *types.Transaction
 	{
-		txn, err = u.bin.CreateResolve(opt, big.NewInt(pro.Int()), ind, uint64(exp.Unix()))
+		txn, err = c.bin.CreateResolve(opt, big.NewInt(pro.Int()), ind, uint64(exp.Unix()))
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
 	}
 
-	u.log.Log(
+	c.log.Log(
 		context.Background(),
 		"level", "debug",
 		"message", "submitted Claims.createResolve transaction onchain",
-		"signer", u.opt.From.Hex(),
+		"signer", c.opt.From.Hex(),
 		"propose", pro.String(),
 		"expiry", exp.String(),
 		"transaction", txn.Hash().Hex(),
@@ -113,12 +117,12 @@ func (u *Claims) CreateResolve(pro objectid.ID, ind []*big.Int, exp time.Time) (
 	return txn, nil
 }
 
-func (u *Claims) ExistsResolve(pro objectid.ID) (bool, error) {
+func (c *Claims) ExistsResolve(pro objectid.ID) (bool, error) {
 	var err error
 
 	var res *big.Int
 	{
-		_, res, err = u.bin.SearchExpired(nil, big.NewInt(pro.Int()))
+		_, res, err = c.bin.SearchExpired(nil, big.NewInt(pro.Int()))
 		if err != nil {
 			return false, tracer.Mask(err)
 		}
@@ -127,7 +131,40 @@ func (u *Claims) ExistsResolve(pro objectid.ID) (bool, error) {
 	return res.Uint64() != 0, nil
 }
 
-func (u *Claims) SearchIndices(pro objectid.ID) ([]*big.Int, error) {
+func (c *Claims) ResolveCreated(blc uint64, pro uint64) (common.Hash, error) {
+	var err error
+
+	var ite *ClaimsContractBindingResolveCreatedIterator
+	{
+		ite, err = c.bin.FilterResolveCreated(&bind.FilterOpts{Start: blc})
+		if err != nil {
+			return common.Hash{}, tracer.Mask(err)
+		}
+	}
+
+	{
+		defer ite.Close()
+	}
+
+	for ite.Next() {
+		err := ite.Error()
+		if err != nil {
+			return common.Hash{}, tracer.Mask(err)
+		}
+
+		if ite.Event.Pro.Uint64() != pro {
+			continue
+		}
+
+		{
+			return ite.Event.Raw.TxHash, nil
+		}
+	}
+
+	return common.Hash{}, nil
+}
+
+func (c *Claims) SearchIndices(pro objectid.ID) ([]*big.Int, error) {
 	var err error
 
 	var zer *big.Int
@@ -139,7 +176,7 @@ func (u *Claims) SearchIndices(pro objectid.ID) ([]*big.Int, error) {
 	var six *big.Int
 	var sev *big.Int
 	{
-		zer, one, two, thr, fou, fiv, six, sev, err = u.bin.SearchIndices(nil, big.NewInt(pro.Int()))
+		zer, one, two, thr, fou, fiv, six, sev, err = c.bin.SearchIndices(nil, big.NewInt(pro.Int()))
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -148,12 +185,12 @@ func (u *Claims) SearchIndices(pro objectid.ID) ([]*big.Int, error) {
 	return []*big.Int{zer, one, two, thr, fou, fiv, six, sev}, nil
 }
 
-func (u *Claims) SearchSamples(pro objectid.ID, lef *big.Int, rig *big.Int) ([]common.Address, error) {
+func (c *Claims) SearchSamples(pro objectid.ID, lef *big.Int, rig *big.Int) ([]common.Address, error) {
 	var err error
 
 	var add []common.Address
 	{
-		add, err = u.bin.SearchSamples(nil, big.NewInt(pro.Int()), lef, rig)
+		add, err = c.bin.SearchSamples(nil, big.NewInt(pro.Int()), lef, rig)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}

@@ -31,7 +31,7 @@ var (
 
 // ClaimsContractBindingMetaData contains all meta data concerning the ClaimsContractBinding contract.
 var ClaimsContractBindingMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"own\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"tok\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"AccessControlBadConfirmation\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"neededRole\",\"type\":\"bytes32\"}],\"name\":\"AccessControlUnauthorizedAccount\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"why\",\"type\":\"string\"}],\"name\":\"Address\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"why\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"bal\",\"type\":\"uint256\"}],\"name\":\"Balance\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"why\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"unx\",\"type\":\"uint256\"}],\"name\":\"Expired\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"why\",\"type\":\"string\"}],\"name\":\"Mapping\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"why\",\"type\":\"string\"}],\"name\":\"Process\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"use\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"bal\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"exp\",\"type\":\"uint64\"}],\"name\":\"DisputeCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"all\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"yay\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"nah\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tot\",\"type\":\"uint256\"}],\"name\":\"DisputeSettled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"use\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"bal\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"exp\",\"type\":\"uint64\"}],\"name\":\"ProposeCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"all\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"yay\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"nah\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tot\",\"type\":\"uint256\"}],\"name\":\"ProposeSettled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"use\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"len\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"exp\",\"type\":\"uint64\"}],\"name\":\"ResolveCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"ADDRESS_STAKE_N\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ADDRESS_STAKE_Y\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"BASIS_TOTAL\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"BOT_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_ADDRESS_N\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_ADDRESS_Y\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_BALANCE_P\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_BALANCE_R\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_BALANCE_U\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_EXPIRY_P\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_EXPIRY_R\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_EXPIRY_T\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_STAKE_A\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_STAKE_B\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_STAKE_C\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_STAKE_D\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_STAKE_N\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_STAKE_Y\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_TRUTH_N\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_TRUTH_Y\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MAX_UINT256\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MID_UINT256\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VERSION\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VOTE_STAKE_N\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VOTE_STAKE_Y\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VOTE_TRUTH_N\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VOTE_TRUTH_S\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VOTE_TRUTH_V\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VOTE_TRUTH_Y\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"basisFee\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"basisProposer\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"basisProtocol\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"dis\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"bal\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"vot\",\"type\":\"bool\"},{\"internalType\":\"uint64\",\"name\":\"exp\",\"type\":\"uint64\"},{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"}],\"name\":\"createDispute\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"bal\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"vot\",\"type\":\"bool\"},{\"internalType\":\"uint64\",\"name\":\"exp\",\"type\":\"uint64\"},{\"internalType\":\"address[]\",\"name\":\"tok\",\"type\":\"address[]\"}],\"name\":\"createPropose\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"},{\"internalType\":\"uint256[]\",\"name\":\"ind\",\"type\":\"uint256[]\"},{\"internalType\":\"uint64\",\"name\":\"exp\",\"type\":\"uint64\"}],\"name\":\"createResolve\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"durationBasis\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"durationMax\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"durationMin\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getRoleMember\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleMemberCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"callerConfirmation\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"use\",\"type\":\"address\"}],\"name\":\"searchBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"}],\"name\":\"searchExpired\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"}],\"name\":\"searchIndices\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"}],\"name\":\"searchPropose\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"},{\"internalType\":\"uint8\",\"name\":\"ind\",\"type\":\"uint8\"}],\"name\":\"searchResolve\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lef\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rig\",\"type\":\"uint256\"}],\"name\":\"searchSamples\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lef\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rig\",\"type\":\"uint256\"}],\"name\":\"searchStakers\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"}],\"name\":\"searchToken\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"}],\"name\":\"searchVotes\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"token\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"cla\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"max\",\"type\":\"uint256\"}],\"name\":\"updateBalance\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint64\",\"name\":\"bas\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"max\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"min\",\"type\":\"uint64\"}],\"name\":\"updateDuration\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint16\",\"name\":\"fee\",\"type\":\"uint16\"},{\"internalType\":\"uint16\",\"name\":\"psr\",\"type\":\"uint16\"},{\"internalType\":\"uint16\",\"name\":\"ptc\",\"type\":\"uint16\"}],\"name\":\"updateFees\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"own\",\"type\":\"address\"}],\"name\":\"updateOwner\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"cla\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"bal\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"vot\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"tok\",\"type\":\"uint256\"}],\"name\":\"updatePropose\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"vot\",\"type\":\"bool\"}],\"name\":\"updateResolve\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"bal\",\"type\":\"uint256\"}],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}]",
+	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"own\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"tok\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"AccessControlBadConfirmation\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"neededRole\",\"type\":\"bytes32\"}],\"name\":\"AccessControlUnauthorizedAccount\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"why\",\"type\":\"string\"}],\"name\":\"Address\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"why\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"bal\",\"type\":\"uint256\"}],\"name\":\"Balance\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"why\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"unx\",\"type\":\"uint256\"}],\"name\":\"Expired\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"why\",\"type\":\"string\"}],\"name\":\"Mapping\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"why\",\"type\":\"string\"}],\"name\":\"Process\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"cla\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"use\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"bal\",\"type\":\"uint256\"}],\"name\":\"ClaimUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"dis\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"use\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"bal\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"exp\",\"type\":\"uint64\"}],\"name\":\"DisputeCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"dis\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"all\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"yay\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"nah\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tot\",\"type\":\"uint256\"}],\"name\":\"DisputeSettled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"use\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"bal\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"exp\",\"type\":\"uint64\"}],\"name\":\"ProposeCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"all\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"yay\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"nah\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tot\",\"type\":\"uint256\"}],\"name\":\"ProposeSettled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"use\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"len\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"exp\",\"type\":\"uint64\"}],\"name\":\"ResolveCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"ADDRESS_STAKE_N\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ADDRESS_STAKE_Y\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"BASIS_TOTAL\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"BOT_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_ADDRESS_N\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_ADDRESS_Y\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_BALANCE_P\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_BALANCE_R\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_BALANCE_U\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_EXPIRY_P\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_EXPIRY_R\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_EXPIRY_T\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_STAKE_A\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_STAKE_B\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_STAKE_C\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_STAKE_D\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_STAKE_N\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_STAKE_Y\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_TRUTH_N\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CLAIM_TRUTH_Y\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MAX_UINT256\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MID_UINT256\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VERSION\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VOTE_STAKE_N\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VOTE_STAKE_Y\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VOTE_TRUTH_N\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VOTE_TRUTH_S\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VOTE_TRUTH_V\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VOTE_TRUTH_Y\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"basisFee\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"basisProposer\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"basisProtocol\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"dis\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"bal\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"vot\",\"type\":\"bool\"},{\"internalType\":\"uint64\",\"name\":\"exp\",\"type\":\"uint64\"},{\"internalType\":\"string\",\"name\":\"con\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"}],\"name\":\"createDispute\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"bal\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"vot\",\"type\":\"bool\"},{\"internalType\":\"uint64\",\"name\":\"exp\",\"type\":\"uint64\"},{\"internalType\":\"string\",\"name\":\"con\",\"type\":\"string\"},{\"internalType\":\"address[]\",\"name\":\"tok\",\"type\":\"address[]\"}],\"name\":\"createPropose\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"},{\"internalType\":\"uint256[]\",\"name\":\"ind\",\"type\":\"uint256[]\"},{\"internalType\":\"uint64\",\"name\":\"exp\",\"type\":\"uint64\"}],\"name\":\"createResolve\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"durationBasis\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"durationMax\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"durationMin\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getRoleMember\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleMemberCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"callerConfirmation\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"use\",\"type\":\"address\"}],\"name\":\"searchBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"cla\",\"type\":\"uint256\"}],\"name\":\"searchContent\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"}],\"name\":\"searchExpired\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"}],\"name\":\"searchIndices\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"}],\"name\":\"searchPropose\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"},{\"internalType\":\"uint8\",\"name\":\"ind\",\"type\":\"uint8\"}],\"name\":\"searchResolve\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lef\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rig\",\"type\":\"uint256\"}],\"name\":\"searchSamples\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lef\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rig\",\"type\":\"uint256\"}],\"name\":\"searchStakers\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"}],\"name\":\"searchToken\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"}],\"name\":\"searchVotes\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"token\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"cla\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"max\",\"type\":\"uint256\"}],\"name\":\"updateBalance\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint64\",\"name\":\"bas\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"max\",\"type\":\"uint64\"},{\"internalType\":\"uint64\",\"name\":\"min\",\"type\":\"uint64\"}],\"name\":\"updateDuration\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint16\",\"name\":\"fee\",\"type\":\"uint16\"},{\"internalType\":\"uint16\",\"name\":\"psr\",\"type\":\"uint16\"},{\"internalType\":\"uint16\",\"name\":\"ptc\",\"type\":\"uint16\"}],\"name\":\"updateFees\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"own\",\"type\":\"address\"}],\"name\":\"updateOwner\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"cla\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"bal\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"vot\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"tok\",\"type\":\"uint256\"}],\"name\":\"updatePropose\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pro\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"vot\",\"type\":\"bool\"}],\"name\":\"updateResolve\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"bal\",\"type\":\"uint256\"}],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}]",
 }
 
 // ClaimsContractBindingABI is the input ABI used to generate the binding from.
@@ -1483,6 +1483,37 @@ func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) SearchBalance(
 	return _ClaimsContractBinding.Contract.SearchBalance(&_ClaimsContractBinding.CallOpts, use)
 }
 
+// SearchContent is a free data retrieval call binding the contract method 0xa7236020.
+//
+// Solidity: function searchContent(uint256 cla) view returns(string)
+func (_ClaimsContractBinding *ClaimsContractBindingCaller) SearchContent(opts *bind.CallOpts, cla *big.Int) (string, error) {
+	var out []interface{}
+	err := _ClaimsContractBinding.contract.Call(opts, &out, "searchContent", cla)
+
+	if err != nil {
+		return *new(string), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(string)).(*string)
+
+	return out0, err
+
+}
+
+// SearchContent is a free data retrieval call binding the contract method 0xa7236020.
+//
+// Solidity: function searchContent(uint256 cla) view returns(string)
+func (_ClaimsContractBinding *ClaimsContractBindingSession) SearchContent(cla *big.Int) (string, error) {
+	return _ClaimsContractBinding.Contract.SearchContent(&_ClaimsContractBinding.CallOpts, cla)
+}
+
+// SearchContent is a free data retrieval call binding the contract method 0xa7236020.
+//
+// Solidity: function searchContent(uint256 cla) view returns(string)
+func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) SearchContent(cla *big.Int) (string, error) {
+	return _ClaimsContractBinding.Contract.SearchContent(&_ClaimsContractBinding.CallOpts, cla)
+}
+
 // SearchExpired is a free data retrieval call binding the contract method 0x33afa97c.
 //
 // Solidity: function searchExpired(uint256 pro) view returns(uint256, uint256)
@@ -1804,46 +1835,46 @@ func (_ClaimsContractBinding *ClaimsContractBindingCallerSession) Token() (commo
 	return _ClaimsContractBinding.Contract.Token(&_ClaimsContractBinding.CallOpts)
 }
 
-// CreateDispute is a paid mutator transaction binding the contract method 0xb30d0a97.
+// CreateDispute is a paid mutator transaction binding the contract method 0x60528d35.
 //
-// Solidity: function createDispute(uint256 dis, uint256 bal, bool vot, uint64 exp, uint256 pro) returns()
-func (_ClaimsContractBinding *ClaimsContractBindingTransactor) CreateDispute(opts *bind.TransactOpts, dis *big.Int, bal *big.Int, vot bool, exp uint64, pro *big.Int) (*types.Transaction, error) {
-	return _ClaimsContractBinding.contract.Transact(opts, "createDispute", dis, bal, vot, exp, pro)
+// Solidity: function createDispute(uint256 dis, uint256 bal, bool vot, uint64 exp, string con, uint256 pro) returns()
+func (_ClaimsContractBinding *ClaimsContractBindingTransactor) CreateDispute(opts *bind.TransactOpts, dis *big.Int, bal *big.Int, vot bool, exp uint64, con string, pro *big.Int) (*types.Transaction, error) {
+	return _ClaimsContractBinding.contract.Transact(opts, "createDispute", dis, bal, vot, exp, con, pro)
 }
 
-// CreateDispute is a paid mutator transaction binding the contract method 0xb30d0a97.
+// CreateDispute is a paid mutator transaction binding the contract method 0x60528d35.
 //
-// Solidity: function createDispute(uint256 dis, uint256 bal, bool vot, uint64 exp, uint256 pro) returns()
-func (_ClaimsContractBinding *ClaimsContractBindingSession) CreateDispute(dis *big.Int, bal *big.Int, vot bool, exp uint64, pro *big.Int) (*types.Transaction, error) {
-	return _ClaimsContractBinding.Contract.CreateDispute(&_ClaimsContractBinding.TransactOpts, dis, bal, vot, exp, pro)
+// Solidity: function createDispute(uint256 dis, uint256 bal, bool vot, uint64 exp, string con, uint256 pro) returns()
+func (_ClaimsContractBinding *ClaimsContractBindingSession) CreateDispute(dis *big.Int, bal *big.Int, vot bool, exp uint64, con string, pro *big.Int) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.CreateDispute(&_ClaimsContractBinding.TransactOpts, dis, bal, vot, exp, con, pro)
 }
 
-// CreateDispute is a paid mutator transaction binding the contract method 0xb30d0a97.
+// CreateDispute is a paid mutator transaction binding the contract method 0x60528d35.
 //
-// Solidity: function createDispute(uint256 dis, uint256 bal, bool vot, uint64 exp, uint256 pro) returns()
-func (_ClaimsContractBinding *ClaimsContractBindingTransactorSession) CreateDispute(dis *big.Int, bal *big.Int, vot bool, exp uint64, pro *big.Int) (*types.Transaction, error) {
-	return _ClaimsContractBinding.Contract.CreateDispute(&_ClaimsContractBinding.TransactOpts, dis, bal, vot, exp, pro)
+// Solidity: function createDispute(uint256 dis, uint256 bal, bool vot, uint64 exp, string con, uint256 pro) returns()
+func (_ClaimsContractBinding *ClaimsContractBindingTransactorSession) CreateDispute(dis *big.Int, bal *big.Int, vot bool, exp uint64, con string, pro *big.Int) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.CreateDispute(&_ClaimsContractBinding.TransactOpts, dis, bal, vot, exp, con, pro)
 }
 
-// CreatePropose is a paid mutator transaction binding the contract method 0xffb02ec8.
+// CreatePropose is a paid mutator transaction binding the contract method 0x6e43e824.
 //
-// Solidity: function createPropose(uint256 pro, uint256 bal, bool vot, uint64 exp, address[] tok) returns()
-func (_ClaimsContractBinding *ClaimsContractBindingTransactor) CreatePropose(opts *bind.TransactOpts, pro *big.Int, bal *big.Int, vot bool, exp uint64, tok []common.Address) (*types.Transaction, error) {
-	return _ClaimsContractBinding.contract.Transact(opts, "createPropose", pro, bal, vot, exp, tok)
+// Solidity: function createPropose(uint256 pro, uint256 bal, bool vot, uint64 exp, string con, address[] tok) returns()
+func (_ClaimsContractBinding *ClaimsContractBindingTransactor) CreatePropose(opts *bind.TransactOpts, pro *big.Int, bal *big.Int, vot bool, exp uint64, con string, tok []common.Address) (*types.Transaction, error) {
+	return _ClaimsContractBinding.contract.Transact(opts, "createPropose", pro, bal, vot, exp, con, tok)
 }
 
-// CreatePropose is a paid mutator transaction binding the contract method 0xffb02ec8.
+// CreatePropose is a paid mutator transaction binding the contract method 0x6e43e824.
 //
-// Solidity: function createPropose(uint256 pro, uint256 bal, bool vot, uint64 exp, address[] tok) returns()
-func (_ClaimsContractBinding *ClaimsContractBindingSession) CreatePropose(pro *big.Int, bal *big.Int, vot bool, exp uint64, tok []common.Address) (*types.Transaction, error) {
-	return _ClaimsContractBinding.Contract.CreatePropose(&_ClaimsContractBinding.TransactOpts, pro, bal, vot, exp, tok)
+// Solidity: function createPropose(uint256 pro, uint256 bal, bool vot, uint64 exp, string con, address[] tok) returns()
+func (_ClaimsContractBinding *ClaimsContractBindingSession) CreatePropose(pro *big.Int, bal *big.Int, vot bool, exp uint64, con string, tok []common.Address) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.CreatePropose(&_ClaimsContractBinding.TransactOpts, pro, bal, vot, exp, con, tok)
 }
 
-// CreatePropose is a paid mutator transaction binding the contract method 0xffb02ec8.
+// CreatePropose is a paid mutator transaction binding the contract method 0x6e43e824.
 //
-// Solidity: function createPropose(uint256 pro, uint256 bal, bool vot, uint64 exp, address[] tok) returns()
-func (_ClaimsContractBinding *ClaimsContractBindingTransactorSession) CreatePropose(pro *big.Int, bal *big.Int, vot bool, exp uint64, tok []common.Address) (*types.Transaction, error) {
-	return _ClaimsContractBinding.Contract.CreatePropose(&_ClaimsContractBinding.TransactOpts, pro, bal, vot, exp, tok)
+// Solidity: function createPropose(uint256 pro, uint256 bal, bool vot, uint64 exp, string con, address[] tok) returns()
+func (_ClaimsContractBinding *ClaimsContractBindingTransactorSession) CreatePropose(pro *big.Int, bal *big.Int, vot bool, exp uint64, con string, tok []common.Address) (*types.Transaction, error) {
+	return _ClaimsContractBinding.Contract.CreatePropose(&_ClaimsContractBinding.TransactOpts, pro, bal, vot, exp, con, tok)
 }
 
 // CreateResolve is a paid mutator transaction binding the contract method 0xd4e1dbc0.
@@ -2098,6 +2129,142 @@ func (_ClaimsContractBinding *ClaimsContractBindingTransactorSession) Receive() 
 	return _ClaimsContractBinding.Contract.Receive(&_ClaimsContractBinding.TransactOpts)
 }
 
+// ClaimsContractBindingClaimUpdatedIterator is returned from FilterClaimUpdated and is used to iterate over the raw logs and unpacked data for ClaimUpdated events raised by the ClaimsContractBinding contract.
+type ClaimsContractBindingClaimUpdatedIterator struct {
+	Event *ClaimsContractBindingClaimUpdated // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *ClaimsContractBindingClaimUpdatedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(ClaimsContractBindingClaimUpdated)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(ClaimsContractBindingClaimUpdated)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *ClaimsContractBindingClaimUpdatedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *ClaimsContractBindingClaimUpdatedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// ClaimsContractBindingClaimUpdated represents a ClaimUpdated event raised by the ClaimsContractBinding contract.
+type ClaimsContractBindingClaimUpdated struct {
+	Cla *big.Int
+	Use common.Address
+	Bal *big.Int
+	Raw types.Log // Blockchain specific contextual infos
+}
+
+// FilterClaimUpdated is a free log retrieval operation binding the contract event 0x456e7c3ba307b1c39b4aa965dad80444be2ddffd40b0d6e930507c5858faf33e.
+//
+// Solidity: event ClaimUpdated(uint256 cla, address use, uint256 bal)
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) FilterClaimUpdated(opts *bind.FilterOpts) (*ClaimsContractBindingClaimUpdatedIterator, error) {
+
+	logs, sub, err := _ClaimsContractBinding.contract.FilterLogs(opts, "ClaimUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return &ClaimsContractBindingClaimUpdatedIterator{contract: _ClaimsContractBinding.contract, event: "ClaimUpdated", logs: logs, sub: sub}, nil
+}
+
+// WatchClaimUpdated is a free log subscription operation binding the contract event 0x456e7c3ba307b1c39b4aa965dad80444be2ddffd40b0d6e930507c5858faf33e.
+//
+// Solidity: event ClaimUpdated(uint256 cla, address use, uint256 bal)
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) WatchClaimUpdated(opts *bind.WatchOpts, sink chan<- *ClaimsContractBindingClaimUpdated) (event.Subscription, error) {
+
+	logs, sub, err := _ClaimsContractBinding.contract.WatchLogs(opts, "ClaimUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(ClaimsContractBindingClaimUpdated)
+				if err := _ClaimsContractBinding.contract.UnpackLog(event, "ClaimUpdated", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseClaimUpdated is a log parse operation binding the contract event 0x456e7c3ba307b1c39b4aa965dad80444be2ddffd40b0d6e930507c5858faf33e.
+//
+// Solidity: event ClaimUpdated(uint256 cla, address use, uint256 bal)
+func (_ClaimsContractBinding *ClaimsContractBindingFilterer) ParseClaimUpdated(log types.Log) (*ClaimsContractBindingClaimUpdated, error) {
+	event := new(ClaimsContractBindingClaimUpdated)
+	if err := _ClaimsContractBinding.contract.UnpackLog(event, "ClaimUpdated", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
 // ClaimsContractBindingDisputeCreatedIterator is returned from FilterDisputeCreated and is used to iterate over the raw logs and unpacked data for DisputeCreated events raised by the ClaimsContractBinding contract.
 type ClaimsContractBindingDisputeCreatedIterator struct {
 	Event *ClaimsContractBindingDisputeCreated // Event containing the contract specifics and raw log
@@ -2167,15 +2334,16 @@ func (it *ClaimsContractBindingDisputeCreatedIterator) Close() error {
 
 // ClaimsContractBindingDisputeCreated represents a DisputeCreated event raised by the ClaimsContractBinding contract.
 type ClaimsContractBindingDisputeCreated struct {
+	Dis *big.Int
 	Use common.Address
 	Bal *big.Int
 	Exp uint64
 	Raw types.Log // Blockchain specific contextual infos
 }
 
-// FilterDisputeCreated is a free log retrieval operation binding the contract event 0x2d63b30cb3e22f7f5b576c8e66fa45b23efbd90969ee2fecb0d1a814990db16c.
+// FilterDisputeCreated is a free log retrieval operation binding the contract event 0x848ff8058c972bb6cd367b414b3cd1799ef42a941e7800185f0e580bda9c3cc5.
 //
-// Solidity: event DisputeCreated(address use, uint256 bal, uint64 exp)
+// Solidity: event DisputeCreated(uint256 dis, address use, uint256 bal, uint64 exp)
 func (_ClaimsContractBinding *ClaimsContractBindingFilterer) FilterDisputeCreated(opts *bind.FilterOpts) (*ClaimsContractBindingDisputeCreatedIterator, error) {
 
 	logs, sub, err := _ClaimsContractBinding.contract.FilterLogs(opts, "DisputeCreated")
@@ -2185,9 +2353,9 @@ func (_ClaimsContractBinding *ClaimsContractBindingFilterer) FilterDisputeCreate
 	return &ClaimsContractBindingDisputeCreatedIterator{contract: _ClaimsContractBinding.contract, event: "DisputeCreated", logs: logs, sub: sub}, nil
 }
 
-// WatchDisputeCreated is a free log subscription operation binding the contract event 0x2d63b30cb3e22f7f5b576c8e66fa45b23efbd90969ee2fecb0d1a814990db16c.
+// WatchDisputeCreated is a free log subscription operation binding the contract event 0x848ff8058c972bb6cd367b414b3cd1799ef42a941e7800185f0e580bda9c3cc5.
 //
-// Solidity: event DisputeCreated(address use, uint256 bal, uint64 exp)
+// Solidity: event DisputeCreated(uint256 dis, address use, uint256 bal, uint64 exp)
 func (_ClaimsContractBinding *ClaimsContractBindingFilterer) WatchDisputeCreated(opts *bind.WatchOpts, sink chan<- *ClaimsContractBindingDisputeCreated) (event.Subscription, error) {
 
 	logs, sub, err := _ClaimsContractBinding.contract.WatchLogs(opts, "DisputeCreated")
@@ -2222,9 +2390,9 @@ func (_ClaimsContractBinding *ClaimsContractBindingFilterer) WatchDisputeCreated
 	}), nil
 }
 
-// ParseDisputeCreated is a log parse operation binding the contract event 0x2d63b30cb3e22f7f5b576c8e66fa45b23efbd90969ee2fecb0d1a814990db16c.
+// ParseDisputeCreated is a log parse operation binding the contract event 0x848ff8058c972bb6cd367b414b3cd1799ef42a941e7800185f0e580bda9c3cc5.
 //
-// Solidity: event DisputeCreated(address use, uint256 bal, uint64 exp)
+// Solidity: event DisputeCreated(uint256 dis, address use, uint256 bal, uint64 exp)
 func (_ClaimsContractBinding *ClaimsContractBindingFilterer) ParseDisputeCreated(log types.Log) (*ClaimsContractBindingDisputeCreated, error) {
 	event := new(ClaimsContractBindingDisputeCreated)
 	if err := _ClaimsContractBinding.contract.UnpackLog(event, "DisputeCreated", log); err != nil {
@@ -2303,6 +2471,7 @@ func (it *ClaimsContractBindingDisputeSettledIterator) Close() error {
 
 // ClaimsContractBindingDisputeSettled represents a DisputeSettled event raised by the ClaimsContractBinding contract.
 type ClaimsContractBindingDisputeSettled struct {
+	Dis *big.Int
 	All *big.Int
 	Yay *big.Int
 	Nah *big.Int
@@ -2310,9 +2479,9 @@ type ClaimsContractBindingDisputeSettled struct {
 	Raw types.Log // Blockchain specific contextual infos
 }
 
-// FilterDisputeSettled is a free log retrieval operation binding the contract event 0xe21a3cfb0be3eec935c7dc8d2d7180967cfc67ef41f4b503da1f3d9888a0e1de.
+// FilterDisputeSettled is a free log retrieval operation binding the contract event 0x885d609f8d9d1fc5b04cdedac72087d79d587398e79a263f148e64f9275fc929.
 //
-// Solidity: event DisputeSettled(uint256 all, uint256 yay, uint256 nah, uint256 tot)
+// Solidity: event DisputeSettled(uint256 dis, uint256 all, uint256 yay, uint256 nah, uint256 tot)
 func (_ClaimsContractBinding *ClaimsContractBindingFilterer) FilterDisputeSettled(opts *bind.FilterOpts) (*ClaimsContractBindingDisputeSettledIterator, error) {
 
 	logs, sub, err := _ClaimsContractBinding.contract.FilterLogs(opts, "DisputeSettled")
@@ -2322,9 +2491,9 @@ func (_ClaimsContractBinding *ClaimsContractBindingFilterer) FilterDisputeSettle
 	return &ClaimsContractBindingDisputeSettledIterator{contract: _ClaimsContractBinding.contract, event: "DisputeSettled", logs: logs, sub: sub}, nil
 }
 
-// WatchDisputeSettled is a free log subscription operation binding the contract event 0xe21a3cfb0be3eec935c7dc8d2d7180967cfc67ef41f4b503da1f3d9888a0e1de.
+// WatchDisputeSettled is a free log subscription operation binding the contract event 0x885d609f8d9d1fc5b04cdedac72087d79d587398e79a263f148e64f9275fc929.
 //
-// Solidity: event DisputeSettled(uint256 all, uint256 yay, uint256 nah, uint256 tot)
+// Solidity: event DisputeSettled(uint256 dis, uint256 all, uint256 yay, uint256 nah, uint256 tot)
 func (_ClaimsContractBinding *ClaimsContractBindingFilterer) WatchDisputeSettled(opts *bind.WatchOpts, sink chan<- *ClaimsContractBindingDisputeSettled) (event.Subscription, error) {
 
 	logs, sub, err := _ClaimsContractBinding.contract.WatchLogs(opts, "DisputeSettled")
@@ -2359,9 +2528,9 @@ func (_ClaimsContractBinding *ClaimsContractBindingFilterer) WatchDisputeSettled
 	}), nil
 }
 
-// ParseDisputeSettled is a log parse operation binding the contract event 0xe21a3cfb0be3eec935c7dc8d2d7180967cfc67ef41f4b503da1f3d9888a0e1de.
+// ParseDisputeSettled is a log parse operation binding the contract event 0x885d609f8d9d1fc5b04cdedac72087d79d587398e79a263f148e64f9275fc929.
 //
-// Solidity: event DisputeSettled(uint256 all, uint256 yay, uint256 nah, uint256 tot)
+// Solidity: event DisputeSettled(uint256 dis, uint256 all, uint256 yay, uint256 nah, uint256 tot)
 func (_ClaimsContractBinding *ClaimsContractBindingFilterer) ParseDisputeSettled(log types.Log) (*ClaimsContractBindingDisputeSettled, error) {
 	event := new(ClaimsContractBindingDisputeSettled)
 	if err := _ClaimsContractBinding.contract.UnpackLog(event, "DisputeSettled", log); err != nil {
@@ -2440,15 +2609,16 @@ func (it *ClaimsContractBindingProposeCreatedIterator) Close() error {
 
 // ClaimsContractBindingProposeCreated represents a ProposeCreated event raised by the ClaimsContractBinding contract.
 type ClaimsContractBindingProposeCreated struct {
+	Pro *big.Int
 	Use common.Address
 	Bal *big.Int
 	Exp uint64
 	Raw types.Log // Blockchain specific contextual infos
 }
 
-// FilterProposeCreated is a free log retrieval operation binding the contract event 0x9958345afb967495d1c8349a9f0b1eb6fa8da1d797a8e97d8a27b3ef35538e18.
+// FilterProposeCreated is a free log retrieval operation binding the contract event 0x560897c1e1894395c161cb6ee32a257c436c4f5e19d550b5b80a6043fd166c78.
 //
-// Solidity: event ProposeCreated(address use, uint256 bal, uint64 exp)
+// Solidity: event ProposeCreated(uint256 pro, address use, uint256 bal, uint64 exp)
 func (_ClaimsContractBinding *ClaimsContractBindingFilterer) FilterProposeCreated(opts *bind.FilterOpts) (*ClaimsContractBindingProposeCreatedIterator, error) {
 
 	logs, sub, err := _ClaimsContractBinding.contract.FilterLogs(opts, "ProposeCreated")
@@ -2458,9 +2628,9 @@ func (_ClaimsContractBinding *ClaimsContractBindingFilterer) FilterProposeCreate
 	return &ClaimsContractBindingProposeCreatedIterator{contract: _ClaimsContractBinding.contract, event: "ProposeCreated", logs: logs, sub: sub}, nil
 }
 
-// WatchProposeCreated is a free log subscription operation binding the contract event 0x9958345afb967495d1c8349a9f0b1eb6fa8da1d797a8e97d8a27b3ef35538e18.
+// WatchProposeCreated is a free log subscription operation binding the contract event 0x560897c1e1894395c161cb6ee32a257c436c4f5e19d550b5b80a6043fd166c78.
 //
-// Solidity: event ProposeCreated(address use, uint256 bal, uint64 exp)
+// Solidity: event ProposeCreated(uint256 pro, address use, uint256 bal, uint64 exp)
 func (_ClaimsContractBinding *ClaimsContractBindingFilterer) WatchProposeCreated(opts *bind.WatchOpts, sink chan<- *ClaimsContractBindingProposeCreated) (event.Subscription, error) {
 
 	logs, sub, err := _ClaimsContractBinding.contract.WatchLogs(opts, "ProposeCreated")
@@ -2495,9 +2665,9 @@ func (_ClaimsContractBinding *ClaimsContractBindingFilterer) WatchProposeCreated
 	}), nil
 }
 
-// ParseProposeCreated is a log parse operation binding the contract event 0x9958345afb967495d1c8349a9f0b1eb6fa8da1d797a8e97d8a27b3ef35538e18.
+// ParseProposeCreated is a log parse operation binding the contract event 0x560897c1e1894395c161cb6ee32a257c436c4f5e19d550b5b80a6043fd166c78.
 //
-// Solidity: event ProposeCreated(address use, uint256 bal, uint64 exp)
+// Solidity: event ProposeCreated(uint256 pro, address use, uint256 bal, uint64 exp)
 func (_ClaimsContractBinding *ClaimsContractBindingFilterer) ParseProposeCreated(log types.Log) (*ClaimsContractBindingProposeCreated, error) {
 	event := new(ClaimsContractBindingProposeCreated)
 	if err := _ClaimsContractBinding.contract.UnpackLog(event, "ProposeCreated", log); err != nil {
@@ -2576,6 +2746,7 @@ func (it *ClaimsContractBindingProposeSettledIterator) Close() error {
 
 // ClaimsContractBindingProposeSettled represents a ProposeSettled event raised by the ClaimsContractBinding contract.
 type ClaimsContractBindingProposeSettled struct {
+	Pro *big.Int
 	All *big.Int
 	Yay *big.Int
 	Nah *big.Int
@@ -2583,9 +2754,9 @@ type ClaimsContractBindingProposeSettled struct {
 	Raw types.Log // Blockchain specific contextual infos
 }
 
-// FilterProposeSettled is a free log retrieval operation binding the contract event 0xc660c9505d3bd7c0767b64bbebae4279d08366b6f01b10ba5126cffdc3198aee.
+// FilterProposeSettled is a free log retrieval operation binding the contract event 0x02b6b8b1e0e988010b10993e9424cd6b9a8f599a653942c3fec3756d53f14e68.
 //
-// Solidity: event ProposeSettled(uint256 all, uint256 yay, uint256 nah, uint256 tot)
+// Solidity: event ProposeSettled(uint256 pro, uint256 all, uint256 yay, uint256 nah, uint256 tot)
 func (_ClaimsContractBinding *ClaimsContractBindingFilterer) FilterProposeSettled(opts *bind.FilterOpts) (*ClaimsContractBindingProposeSettledIterator, error) {
 
 	logs, sub, err := _ClaimsContractBinding.contract.FilterLogs(opts, "ProposeSettled")
@@ -2595,9 +2766,9 @@ func (_ClaimsContractBinding *ClaimsContractBindingFilterer) FilterProposeSettle
 	return &ClaimsContractBindingProposeSettledIterator{contract: _ClaimsContractBinding.contract, event: "ProposeSettled", logs: logs, sub: sub}, nil
 }
 
-// WatchProposeSettled is a free log subscription operation binding the contract event 0xc660c9505d3bd7c0767b64bbebae4279d08366b6f01b10ba5126cffdc3198aee.
+// WatchProposeSettled is a free log subscription operation binding the contract event 0x02b6b8b1e0e988010b10993e9424cd6b9a8f599a653942c3fec3756d53f14e68.
 //
-// Solidity: event ProposeSettled(uint256 all, uint256 yay, uint256 nah, uint256 tot)
+// Solidity: event ProposeSettled(uint256 pro, uint256 all, uint256 yay, uint256 nah, uint256 tot)
 func (_ClaimsContractBinding *ClaimsContractBindingFilterer) WatchProposeSettled(opts *bind.WatchOpts, sink chan<- *ClaimsContractBindingProposeSettled) (event.Subscription, error) {
 
 	logs, sub, err := _ClaimsContractBinding.contract.WatchLogs(opts, "ProposeSettled")
@@ -2632,9 +2803,9 @@ func (_ClaimsContractBinding *ClaimsContractBindingFilterer) WatchProposeSettled
 	}), nil
 }
 
-// ParseProposeSettled is a log parse operation binding the contract event 0xc660c9505d3bd7c0767b64bbebae4279d08366b6f01b10ba5126cffdc3198aee.
+// ParseProposeSettled is a log parse operation binding the contract event 0x02b6b8b1e0e988010b10993e9424cd6b9a8f599a653942c3fec3756d53f14e68.
 //
-// Solidity: event ProposeSettled(uint256 all, uint256 yay, uint256 nah, uint256 tot)
+// Solidity: event ProposeSettled(uint256 pro, uint256 all, uint256 yay, uint256 nah, uint256 tot)
 func (_ClaimsContractBinding *ClaimsContractBindingFilterer) ParseProposeSettled(log types.Log) (*ClaimsContractBindingProposeSettled, error) {
 	event := new(ClaimsContractBindingProposeSettled)
 	if err := _ClaimsContractBinding.contract.UnpackLog(event, "ProposeSettled", log); err != nil {
@@ -2713,15 +2884,16 @@ func (it *ClaimsContractBindingResolveCreatedIterator) Close() error {
 
 // ClaimsContractBindingResolveCreated represents a ResolveCreated event raised by the ClaimsContractBinding contract.
 type ClaimsContractBindingResolveCreated struct {
+	Pro *big.Int
 	Use common.Address
 	Len *big.Int
 	Exp uint64
 	Raw types.Log // Blockchain specific contextual infos
 }
 
-// FilterResolveCreated is a free log retrieval operation binding the contract event 0xf7430e9eb3d2013265aa9b15a468fe43f023d694832c76117e47e30963f82cf9.
+// FilterResolveCreated is a free log retrieval operation binding the contract event 0xe3c5a61bbb499af1d75605281b4c8c6e4635121595fe0cdc3ef366e28204dbef.
 //
-// Solidity: event ResolveCreated(address use, uint256 len, uint64 exp)
+// Solidity: event ResolveCreated(uint256 pro, address use, uint256 len, uint64 exp)
 func (_ClaimsContractBinding *ClaimsContractBindingFilterer) FilterResolveCreated(opts *bind.FilterOpts) (*ClaimsContractBindingResolveCreatedIterator, error) {
 
 	logs, sub, err := _ClaimsContractBinding.contract.FilterLogs(opts, "ResolveCreated")
@@ -2731,9 +2903,9 @@ func (_ClaimsContractBinding *ClaimsContractBindingFilterer) FilterResolveCreate
 	return &ClaimsContractBindingResolveCreatedIterator{contract: _ClaimsContractBinding.contract, event: "ResolveCreated", logs: logs, sub: sub}, nil
 }
 
-// WatchResolveCreated is a free log subscription operation binding the contract event 0xf7430e9eb3d2013265aa9b15a468fe43f023d694832c76117e47e30963f82cf9.
+// WatchResolveCreated is a free log subscription operation binding the contract event 0xe3c5a61bbb499af1d75605281b4c8c6e4635121595fe0cdc3ef366e28204dbef.
 //
-// Solidity: event ResolveCreated(address use, uint256 len, uint64 exp)
+// Solidity: event ResolveCreated(uint256 pro, address use, uint256 len, uint64 exp)
 func (_ClaimsContractBinding *ClaimsContractBindingFilterer) WatchResolveCreated(opts *bind.WatchOpts, sink chan<- *ClaimsContractBindingResolveCreated) (event.Subscription, error) {
 
 	logs, sub, err := _ClaimsContractBinding.contract.WatchLogs(opts, "ResolveCreated")
@@ -2768,9 +2940,9 @@ func (_ClaimsContractBinding *ClaimsContractBindingFilterer) WatchResolveCreated
 	}), nil
 }
 
-// ParseResolveCreated is a log parse operation binding the contract event 0xf7430e9eb3d2013265aa9b15a468fe43f023d694832c76117e47e30963f82cf9.
+// ParseResolveCreated is a log parse operation binding the contract event 0xe3c5a61bbb499af1d75605281b4c8c6e4635121595fe0cdc3ef366e28204dbef.
 //
-// Solidity: event ResolveCreated(address use, uint256 len, uint64 exp)
+// Solidity: event ResolveCreated(uint256 pro, address use, uint256 len, uint64 exp)
 func (_ClaimsContractBinding *ClaimsContractBindingFilterer) ParseResolveCreated(log types.Log) (*ClaimsContractBindingResolveCreated, error) {
 	event := new(ClaimsContractBindingResolveCreated)
 	if err := _ClaimsContractBinding.contract.UnpackLog(event, "ResolveCreated", log); err != nil {

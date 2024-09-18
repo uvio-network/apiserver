@@ -38,23 +38,43 @@ const (
 func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	var err error
 
-	var cyc int
 	{
-		cyc, err = strconv.Atoi(zerStr(tas.Meta.Get(task.Cycles)))
-		if err != nil {
-			return tracer.Mask(err)
+		var cyc uint64
+		{
+			cyc, err = tasInt(tas.Meta.Get(task.Cycles))
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
+
+		if cyc > 10 {
+			h.log.Log(
+				logCtx(tas),
+				"level", "error",
+				"message", "task cycle limit error",
+				"description", "Creating the resolve onchain failed. The root cause for this failure needs to be investigated. The given propose may still not have a resolve as requested.",
+			)
+
+			return nil
 		}
 	}
 
-	if cyc > 10 {
-		h.log.Log(
-			logCtx(tas),
-			"level", "error",
-			"message", "task cycle limit error",
-			"description", "Creating the resolve onchain failed. The root cause for this failure needs to be investigated. The given propose may still not have a resolve as requested.",
-		)
+	{
+		var blc uint64
+		{
+			blc, err = h.con.Claims().Client().BlockNumber(context.Background())
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
 
-		return nil
+		if tas.Sync == nil {
+			tas.Sync = &task.Sync{}
+		}
+
+		{
+			tas.Sync.Set(task.Paging, strconv.FormatInt(int64(blc), 10))
+		}
 	}
 
 	// The claim ID obtained here is the ID of the propose that expired when the
@@ -72,6 +92,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 	}
 
+	// This is the claim with lifecycle phase propose that has been expired.
 	var pro *poststorage.Object
 	{
 		pro = pos.IDClaim(cla)
@@ -121,13 +142,14 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 	}
 
-	var txn *types.Transaction
+	var hsh common.Hash
 	if !exi {
 		var sam []*big.Int
 		{
 			sam = sample.BigInt(h.sam.Random(ind[0].Uint64(), ind[7].Uint64()))
 		}
 
+		var txn *types.Transaction
 		{
 			txn, err = h.con.Claims().CreateResolve(pro.ID, sam, exp)
 			if err != nil {
@@ -141,6 +163,23 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 				return tracer.Mask(err)
 			}
 		}
+
+		{
+			hsh = txn.Hash()
+		}
+	} else {
+		var blc uint64
+		{
+			blc, err = tasInt(tas.Sync.Get(task.Paging))
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
+
+		hsh, err = h.con.Claims().ResolveCreated(blc, uint64(pro.ID.Int()))
+		if err != nil {
+			return tracer.Mask(err)
+		}
 	}
 
 	var tru []common.Address
@@ -153,10 +192,17 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	}
 
 	if res.Lifecycle.Pending() {
-		err = h.updateObject(res, txn, tru, fls)
+		err = h.updateObject(res, hsh, append(tru, fls...))
 		if err != nil {
 			return tracer.Mask(err)
 		}
+	}
+
+	// Once the new post object got updated with the transaction ID and the
+	// sampled addresses we can remove the paging pointer and all sync state from
+	// the task so that it can be deleted eventually by the rescue engine.
+	{
+		tas.Sync = nil
 	}
 
 	// TODO we need to notify the voters somehow so that they know they have to
@@ -263,44 +309,25 @@ func (h *InternHandler) searchSamples(cla objectid.ID, ind []*big.Int) ([]common
 	return tru, fls, nil
 }
 
-func (h *InternHandler) updateObject(res *poststorage.Object, txn *types.Transaction, tru []common.Address, fls []common.Address) error {
+func (h *InternHandler) updateObject(res *poststorage.Object, hsh common.Hash, all []common.Address) error {
 	var err error
 
-	var num int
 	{
-		num = len(tru) + len(fls)
+		res.Text = resTxt(len(all))
+	}
+
+	if len(hsh) != 0 {
+		res.Lifecycle.Hash = []string{hsh.Hex()}
 	}
 
 	{
-		res.Text = resTxt(num)
-	}
-
-	if txn != nil {
-		res.Lifecycle.Hash = []string{txn.Hash().Hex()}
-	}
-
-	{
-		var tmp map[string]string
-		if len(tru) != 0 {
-			tmp, err = h.searchAddress(tru)
-			if err != nil {
-				return tracer.Mask(err)
-			}
+		sam, err := h.searchAddress(all)
+		if err != nil {
+			return tracer.Mask(err)
 		}
 
-		var fmp map[string]string
-		if len(fls) != 0 {
-			fmp, err = h.searchAddress(fls)
-			if err != nil {
-				return tracer.Mask(err)
-			}
-		}
-
-		{
-			res.Samples = map[string]map[string]string{
-				"true":  tmp,
-				"false": fmp,
-			}
+		for k, v := range sam {
+			res.Samples[k] = v
 		}
 	}
 
@@ -335,6 +362,15 @@ func resTxt(num int) string {
 	}
 
 	return fmt.Sprintf("# Market Resolution\n\n %d %s been randomly selected to verify events in the real world for the proposed claim below.", num, use)
+}
+
+func tasInt(str string) (uint64, error) {
+	num, err := strconv.Atoi(zerStr(str))
+	if err != nil {
+		return 0, tracer.Mask(err)
+	}
+
+	return uint64(num), nil
 }
 
 func zerStr(str string) string {

@@ -38,7 +38,7 @@ func (o *Object) Verify() error {
 
 	{
 		if !o.Lifecycle.Is(objectlabel.LifecycleOnchain) {
-			return tracer.Maskf(VoteLifecycleInvalidError, o.Lifecycle.String())
+			return tracer.Maskf(VoteLifecycleInvalidError, string(o.Lifecycle.Data))
 		}
 		for _, x := range o.Lifecycle.Hash {
 			if x != "" && !hexencoding.Verify(x) {

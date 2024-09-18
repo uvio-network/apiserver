@@ -16,7 +16,6 @@ func (h *Handler) Create(ctx context.Context, req *wallet.CreateI) (*wallet.Crea
 	var inp []*walletstorage.Object
 	for _, x := range req.Object {
 		inp = append(inp, &walletstorage.Object{
-			Active:      converter.StringToBool(x.Public.Active),
 			Address:     x.Public.Address,
 			Description: x.Public.Description,
 			Kind:        x.Public.Kind,

@@ -14,7 +14,7 @@ require (
 	github.com/rs/cors v1.11.1
 	github.com/spf13/cobra v1.8.1
 	github.com/twitchtv/twirp v8.1.3+incompatible
-	github.com/uvio-network/apigocode v0.1.15
+	github.com/uvio-network/apigocode v0.1.16
 	github.com/xh3b4sd/breakr v0.1.0
 	github.com/xh3b4sd/locker v0.1.0
 	github.com/xh3b4sd/logger v0.8.1
@@ -56,7 +56,7 @@ require (
 	github.com/mmcloughlin/addchain v0.4.0 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/prometheus/client_golang v1.20.3 // indirect
+	github.com/prometheus/client_golang v1.20.4 // indirect
 	github.com/prometheus/client_model v0.6.1 // indirect
 	github.com/prometheus/common v0.59.1 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect
