@@ -60,6 +60,10 @@ func NewUVX(c UVXConfig) *UVX {
 	}
 }
 
+func (u *UVX) Client() *ethclient.Client {
+	return u.cli
+}
+
 func (u *UVX) Mint(dst string, bal int64) (*types.Transaction, error) {
 	var err error
 

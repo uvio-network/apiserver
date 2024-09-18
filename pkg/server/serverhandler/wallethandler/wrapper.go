@@ -98,7 +98,7 @@ func (w *wrapper) Update(ctx context.Context, req *wallet.UpdateI) (*wallet.Upda
 }
 
 func createPublicEmpty(x *wallet.CreateI_Object_Public) bool {
-	return x == nil || (x.Active == "" && x.Address == "" && x.Description == "" && x.Kind == "")
+	return x == nil || (x.Address == "" && x.Description == "" && x.Kind == "")
 }
 
 func searchInternEmpty(x *wallet.SearchI_Object_Intern) bool {

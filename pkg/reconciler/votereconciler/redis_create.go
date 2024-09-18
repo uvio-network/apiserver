@@ -54,7 +54,7 @@ func (r *Redis) CreateVote(inp []*votestorage.Object) ([]*votestorage.Object, er
 			// Votes of kind "stake" must comply with the lifecycle of their
 			// referenced claim object.
 			if inp[i].Kind == "stake" && !cla.Lifecycle.Is(objectlabel.LifecycleAdjourn, objectlabel.LifecycleDispute, objectlabel.LifecycleNullify, objectlabel.LifecyclePropose) {
-				return nil, tracer.Maskf(StakeLifecycleInvalidError, cla.Lifecycle.String())
+				return nil, tracer.Maskf(StakeLifecycleInvalidError, string(cla.Lifecycle.Data))
 			}
 
 			// Votes of kind "truth" must comply with the lifecycle of their

@@ -1,6 +1,7 @@
 package objectfield
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
@@ -33,10 +34,21 @@ func (l Lifecycle) Pending() bool {
 	return len(l.Hash) == 0
 }
 
+// String returns the underlying lifecycle, formatted using its desired
+// lifecycle phase and its current system status, separated by a colon, e.g.
+// propose:pending or resolve:onchain.
 func (l Lifecycle) String() string {
 	if len(l.Hash) == 0 {
-		return string(objectlabel.LifecyclePending)
+		if l.Data == objectlabel.LifecycleOnchain {
+			return string(objectlabel.LifecyclePending)
+		}
+
+		return fmt.Sprintf("%s:%s", l.Data, objectlabel.LifecyclePending)
 	}
 
-	return string(l.Data)
+	if l.Data == objectlabel.LifecycleOnchain {
+		return string(objectlabel.LifecycleOnchain)
+	}
+
+	return fmt.Sprintf("%s:%s", l.Data, objectlabel.LifecycleOnchain)
 }

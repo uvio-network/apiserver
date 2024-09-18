@@ -211,7 +211,7 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 	var par []objectid.ID
 	var pos []objectid.ID
 	{
-		par = poststorage.Slicer(out).ObjectKind("comment").Parent()
+		par = poststorage.Slicer(out).Parent()
 		pos = poststorage.Slicer(out).ID()
 	}
 
@@ -251,6 +251,9 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 
 	for _, x := range out[:limiter.Len(len(out))] {
 		res.Object = append(res.Object, &post.SearchO_Object{
+			Extern: &post.SearchO_Object_Extern{
+				Samples: x.Samples,
+			},
 			Intern: &post.SearchO_Object_Intern{
 				Created: converter.TimeToString(x.Created),
 				Id:      x.ID.String(),

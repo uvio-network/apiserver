@@ -85,7 +85,6 @@ func (h *Handler) Search(ctx context.Context, req *wallet.SearchI) (*wallet.Sear
 				Owner:   x.Owner.String(),
 			},
 			Public: &wallet.SearchO_Object_Public{
-				Active:      converter.BoolToString(x.Active),
 				Address:     x.Address,
 				Description: x.Description,
 				Kind:        x.Kind,
