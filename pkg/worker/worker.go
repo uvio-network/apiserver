@@ -209,26 +209,11 @@ func (w *Worker) search() {
 		}
 
 		{
-			err := x.Ensure(tas, bud)
+			err = x.Ensure(tas, bud)
 			if err != nil {
 				w.lerror(tracer.Mask(err))
-			} else {
-				// We have to account for the worker budget when processing a task.
-				// Calling Handler.Ensure may use up the entire budget and it may break
-				// through the budget or it may not. Breaking through the budget means
-				// that there is still work left to do. And so not breaking the worker
-				// budget tells us here that Handler.Ensure successfully resolved the
-				// task from its own point of view, allowing us to count with it towards
-				// the desired amount of handlers we that we track.
-				if bud.Break() {
-					w.log.Log(
-						logCtx(tas),
-						"level", "warning",
-						"message", "task budget exhausted",
-					)
-				} else {
-					cur++
-				}
+			} else if !bud.Break() || tas.Pag() {
+				cur++
 			}
 		}
 
@@ -239,10 +224,6 @@ func (w *Worker) search() {
 		// and update the synced paging state so that another worker can pick up the
 		// task again ASAP.
 		if tas.Pag() {
-			{
-				cur++
-			}
-
 			w.log.Log(
 				logCtx(tas),
 				"level", "info",
@@ -250,12 +231,27 @@ func (w *Worker) search() {
 				"paging", tas.Sync.Get(task.Paging),
 			)
 		}
+
+		// We have to account for the worker budget when processing a task.  Calling
+		// Handler.Ensure may use up the entire budget and it may break through the
+		// budget or it may not. Breaking through the budget means that there is
+		// still work left to do. And so not breaking the worker budget tells us
+		// here that Handler.Ensure successfully resolved the task from its own
+		// point of view, allowing us to count with it towards the desired amount of
+		// handlers we that we track.
+		if bud.Break() {
+			w.log.Log(
+				logCtx(tas),
+				"level", "warning",
+				"message", "task budget exhausted",
+			)
+		}
 	}
 
 	// If the current and desired amount of handlers match, we can delete the
 	// task, assuming that it got properly resolved.
 	if cur != 0 && des != 0 && cur == des {
-		err := w.res.Delete(tas)
+		err = w.res.Delete(tas)
 		if err != nil {
 			w.lerror(tracer.Mask(err))
 		}

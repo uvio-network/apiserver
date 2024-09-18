@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/hex"
 	"fmt"
+	"strings"
 
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/lestrrat-go/jwx/jwk"
@@ -31,7 +32,7 @@ func (r *run) createVote(cli Client, key jwk.Key, fak *gofakeit.Faker, use *user
 		}
 
 		// As long as the claim is still "pending", only the owner can vote on it.
-		if cla.Object[0].Public.Lifecycle == "pending" {
+		if strings.HasSuffix(cla.Object[0].Public.Lifecycle, "pending") {
 			nam = useObj(use, cla.Object[0].Intern.Owner).Public.Name
 		}
 
@@ -83,9 +84,9 @@ func (r *run) createVote(cli Client, key jwk.Key, fak *gofakeit.Faker, use *user
 }
 
 func (r *run) randomVote(fak *gofakeit.Faker, cla *post.SearchO_Object) *vote.CreateI {
-	var has string
-	if fak.Float64() > 0.3 {
-		has = fmt.Sprintf("0x%s", hex.EncodeToString([]byte(fak.StreetName())))
+	var hsh string
+	if fak.Float64() > 0.2 {
+		hsh = fmt.Sprintf("0x%s", hex.EncodeToString([]byte(fak.StreetName())))
 	}
 
 	var opt []string
@@ -104,7 +105,7 @@ func (r *run) randomVote(fak *gofakeit.Faker, cla *post.SearchO_Object) *vote.Cr
 					Public: &vote.CreateI_Object_Public{
 						Chain:     "421614",
 						Claim:     cla.Intern.Id,
-						Hash:      has,
+						Hash:      hsh,
 						Kind:      "stake",
 						Lifecycle: string(objectlabel.LifecycleOnchain),
 						Option:    fak.RandomString(opt),
