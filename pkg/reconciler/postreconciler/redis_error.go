@@ -6,7 +6,7 @@ import (
 
 var ClaimAlreadyExpiredError = &tracer.Error{
 	Kind: "ClaimAlreadyExpiredError",
-	Desc: "The request expects the claim expiry not to have passed already. The referenced claim expiry was found to have passed already. Therefore the request failed.",
+	Desc: "The request expects the claim expiry not to have passed already. The claim expiry was found to have passed already. Therefore the request failed.",
 }
 
 var ClaimLifecycleOnchainError = &tracer.Error{
