@@ -54,7 +54,7 @@ func (h *Handler) Create(ctx context.Context, req *vote.CreateI) (*vote.CreateO,
 	}
 
 	//
-	// update the vote summary for the referenced post
+	// Update the vote summary for the referenced posts.
 	//
 
 	var pos []*poststorage.Object
@@ -65,7 +65,7 @@ func (h *Handler) Create(ctx context.Context, req *vote.CreateI) (*vote.CreateO,
 		}
 	}
 
-	{
+	if len(pos) != 0 {
 		err = h.sto.Post().UpdatePost(pos)
 		if err != nil {
 			return nil, tracer.Mask(err)

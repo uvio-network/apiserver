@@ -50,6 +50,38 @@ func (w *wrapper) Create(ctx context.Context, req *vote.CreateI) (*vote.CreateO,
 }
 
 func (w *wrapper) Delete(ctx context.Context, req *vote.DeleteI) (*vote.DeleteO, error) {
+	{
+		if len(req.Object) == 0 {
+			return nil, tracer.Mask(runtime.QueryObjectEmptyError)
+		}
+
+		if len(req.Object) > 100 {
+			return nil, tracer.Mask(runtime.QueryObjectLimitError)
+		}
+
+		for _, x := range req.Object {
+			if !x.ProtoReflect().IsValid() {
+				return nil, tracer.Mask(runtime.QueryObjectEmptyError)
+			}
+		}
+	}
+
+	{
+		for _, x := range req.Object {
+			p := deleteInternEmpty(x.Intern)
+
+			if p {
+				return nil, tracer.Maskf(runtime.QueryObjectInvalidError, "intern must not be empty")
+			}
+		}
+	}
+
+	{
+		if userid.FromContext(ctx) == "" {
+			return nil, tracer.Mask(runtime.UserAuthError)
+		}
+	}
+
 	return w.han.Delete(ctx, req)
 }
 
@@ -126,6 +158,10 @@ func (w *wrapper) Update(ctx context.Context, req *vote.UpdateI) (*vote.UpdateO,
 
 func createPublicEmpty(x *vote.CreateI_Object_Public) bool {
 	return x == nil || (x.Chain == "" && x.Claim == "" && x.Hash == "" && x.Kind == "" && x.Lifecycle == "" && x.Meta == "" && x.Option == "" && x.Value == "")
+}
+
+func deleteInternEmpty(x *vote.DeleteI_Object_Intern) bool {
+	return x == nil || (x.Id == "")
 }
 
 func searchInternEmpty(x *vote.SearchI_Object_Intern) bool {

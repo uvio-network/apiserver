@@ -19,6 +19,13 @@ type Interface interface {
 	//
 	DeleteExpiry(inp []*Object) error
 
+	// DeletePost removes existing post objects from the underlying storage.
+	// Deleting posts is effectively the reversed operation of CreatePost.
+	//
+	//     @inp[0] the post objects to delete
+	//
+	DeletePost([]*Object) error
+
 	// SearchComment returns the post objects that represent market specific
 	// comments. All of the comments on a claim can be fetched using this method.
 	//

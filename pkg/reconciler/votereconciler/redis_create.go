@@ -68,18 +68,6 @@ func (r *Redis) CreateVote(inp []*votestorage.Object) ([]*votestorage.Object, er
 		if now.After(cla.Expiry) {
 			return nil, tracer.Maskf(ClaimAlreadyExpiredError, "%d", cla.Expiry.Unix())
 		}
-
-		// Once all cross validation is done we can proceed with cross mutation. One
-		// important thing we need to do for all users is to update their staked
-		// token balances within their respective user objects, but only if the
-		// given vote is of kind "stake", and only if the given vote is already
-		// confirmed onchain.
-		if inp[i].Kind == "stake" && !inp[i].Lifecycle.Pending() {
-			err = r.updateStaked(inp[i], cla.Token, now)
-			if err != nil {
-				return nil, tracer.Mask(err)
-			}
-		}
 	}
 
 	return inp, nil

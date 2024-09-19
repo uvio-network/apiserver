@@ -17,8 +17,6 @@ type Object struct {
 	Image objectfield.String `json:"image"`
 	// Name is the user name.
 	Name objectfield.String `json:"name"`
-	// Staked tracks the staked user balances, if any.
-	Staked objectfield.MapFloat `json:"staked"`
 	// Subject is the list of external subject claims mapped to the user being
 	// created.
 	Subject []string `json:"subject"`

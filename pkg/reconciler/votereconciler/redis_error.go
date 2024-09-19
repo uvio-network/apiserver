@@ -29,6 +29,11 @@ var VoteClaimNotFoundError = &tracer.Error{
 	Desc: "The request expects the vote claim to exist. The vote claim was not found to exist. Therefore the request failed.",
 }
 
+var VoteLifecycleOnchainError = &tracer.Error{
+	Kind: "VoteLifecycleOnchainError",
+	Desc: "The request expects the vote to be pending in order to be deleted. The vote was found to be confirmed onchain already. Therefore the request failed.",
+}
+
 var VoteUpdateHashError = &tracer.Error{
 	Kind: "VoteUpdateHashError",
 	Desc: "The request expects the vote hash to be updated only once. The vote hash was found to be updated already. Therefore the request failed.",

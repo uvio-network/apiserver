@@ -50,6 +50,38 @@ func (w *wrapper) Create(ctx context.Context, req *post.CreateI) (*post.CreateO,
 }
 
 func (w *wrapper) Delete(ctx context.Context, req *post.DeleteI) (*post.DeleteO, error) {
+	{
+		if len(req.Object) == 0 {
+			return nil, tracer.Mask(runtime.QueryObjectEmptyError)
+		}
+
+		if len(req.Object) > 100 {
+			return nil, tracer.Mask(runtime.QueryObjectLimitError)
+		}
+
+		for _, x := range req.Object {
+			if !x.ProtoReflect().IsValid() {
+				return nil, tracer.Mask(runtime.QueryObjectEmptyError)
+			}
+		}
+	}
+
+	{
+		for _, x := range req.Object {
+			p := deleteInternEmpty(x.Intern)
+
+			if p {
+				return nil, tracer.Maskf(runtime.QueryObjectInvalidError, "intern must not be empty")
+			}
+		}
+	}
+
+	{
+		if userid.FromContext(ctx) == "" {
+			return nil, tracer.Mask(runtime.UserAuthError)
+		}
+	}
+
 	return w.han.Delete(ctx, req)
 }
 
@@ -136,6 +168,10 @@ func (w *wrapper) Update(ctx context.Context, req *post.UpdateI) (*post.UpdateO,
 
 func createPublicEmpty(x *post.CreateI_Object_Public) bool {
 	return x == nil || (x.Chain == "" && x.Expiry == "" && x.Hash == "" && x.Kind == "" && x.Labels == "" && x.Lifecycle == "" && x.Meta == "" && x.Parent == "" && x.Text == "" && x.Token == "")
+}
+
+func deleteInternEmpty(x *post.DeleteI_Object_Intern) bool {
+	return x == nil || (x.Id == "")
 }
 
 func searchInternEmpty(x *post.SearchI_Object_Intern) bool {

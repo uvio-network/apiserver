@@ -120,7 +120,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	// then that means that we have not yet created the required resolve. And so
 	// we can proceed to create the post object for the requested resolve.
 	if res == nil {
-		err = h.createObject(pro, exp)
+		res, err = h.createObject(pro, exp)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -211,7 +211,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	return nil
 }
 
-func (h *InternHandler) createObject(pro *poststorage.Object, exp time.Time) error {
+func (h *InternHandler) createObject(pro *poststorage.Object, exp time.Time) (*poststorage.Object, error) {
 	var err error
 
 	var res *poststorage.Object
@@ -234,18 +234,18 @@ func (h *InternHandler) createObject(pro *poststorage.Object, exp time.Time) err
 	{
 		out, err = h.rec.Post().CreatePost([]*poststorage.Object{res})
 		if err != nil {
-			return tracer.Mask(err)
+			return nil, tracer.Mask(err)
 		}
 	}
 
 	{
 		err = h.sto.Post().CreatePost(out)
 		if err != nil {
-			return tracer.Mask(err)
+			return nil, tracer.Mask(err)
 		}
 	}
 
-	return nil
+	return out[0], nil
 }
 
 func (h *InternHandler) searchAddress(add []common.Address) (map[string]string, error) {
@@ -324,6 +324,10 @@ func (h *InternHandler) updateObject(res *poststorage.Object, hsh common.Hash, a
 		sam, err := h.searchAddress(all)
 		if err != nil {
 			return tracer.Mask(err)
+		}
+
+		if res.Samples == nil {
+			res.Samples = map[string]string{}
 		}
 
 		for k, v := range sam {

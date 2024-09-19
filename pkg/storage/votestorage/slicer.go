@@ -23,3 +23,15 @@ func (s Slicer) Owner() []objectid.ID {
 
 	return lis
 }
+
+func (s Slicer) LifecycleConfirmed() Slicer {
+	var lis Slicer
+
+	for _, x := range s {
+		if !x.Lifecycle.Pending() {
+			lis = append(lis, x)
+		}
+	}
+
+	return lis
+}
