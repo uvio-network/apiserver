@@ -9,6 +9,13 @@ type Interface interface {
 	//
 	CreateVote([]*Object) error
 
+	// DeleteVote removes existing vote objects from the underlying storage.
+	// Deleting votes is effectively the reversed operation of CreateVote
+	//
+	//     @inp[0] the vote objects to delete
+	//
+	DeleteVote([]*Object) error
+
 	// SearchClaim returns the vote objects matching the given claim IDs.
 	//
 	//     @inp[0] the claim IDs used to search vote objects

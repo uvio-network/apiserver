@@ -191,7 +191,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 	}
 
-	if res.Lifecycle.Pending() {
+	if res == nil || res.Lifecycle.Pending() {
 		err = h.updateObject(res, hsh, append(tru, fls...))
 		if err != nil {
 			return tracer.Mask(err)
@@ -324,6 +324,10 @@ func (h *InternHandler) updateObject(res *poststorage.Object, hsh common.Hash, a
 		sam, err := h.searchAddress(all)
 		if err != nil {
 			return tracer.Mask(err)
+		}
+
+		if res.Samples == nil {
+			res.Samples = map[string]string{}
 		}
 
 		for k, v := range sam {

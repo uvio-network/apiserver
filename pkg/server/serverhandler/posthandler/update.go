@@ -21,14 +21,14 @@ func (h *Handler) Update(ctx context.Context, req *post.UpdateI) (*post.UpdateO,
 	}
 
 	var ids []objectid.ID
-	var has []string
+	var hsh []string
 	var met []string
 	for _, x := range req.Object {
 		if x.Intern != nil && x.Intern.Id != "" {
 			ids = append(ids, objectid.ID(x.Intern.Id))
 		}
 		if x.Public != nil && x.Public.Hash != "" {
-			has = append(has, x.Public.Hash)
+			hsh = append(hsh, x.Public.Hash)
 		}
 		if x.Public != nil && x.Public.Meta != "" {
 			met = append(met, x.Public.Meta)
@@ -61,13 +61,13 @@ func (h *Handler) Update(ctx context.Context, req *post.UpdateI) (*post.UpdateO,
 	// Update the post hash.
 	//
 
-	if len(has) != 0 {
-		if len(ids) != len(has) {
-			return nil, tracer.Maskf(runtime.ExecutionFailedError, "%d != %d", len(ids), len(has))
+	if len(hsh) != 0 {
+		if len(ids) != len(hsh) {
+			return nil, tracer.Maskf(runtime.ExecutionFailedError, "%d != %d", len(ids), len(hsh))
 		}
 
 		{
-			pos, err = h.rec.Post().UpdateHash(pos, has)
+			pos, err = h.rec.Post().UpdateHash(pos, hsh)
 			if err != nil {
 				return nil, tracer.Mask(err)
 			}

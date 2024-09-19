@@ -14,7 +14,7 @@ const (
 	Creator      = 3
 )
 
-func (r *Redis) UpdateHash(pos []*poststorage.Object, has []string) ([]*poststorage.Object, error) {
+func (r *Redis) UpdateHash(pos []*poststorage.Object, hsh []string) ([]*poststorage.Object, error) {
 	for i := range pos {
 		if pos[i].Kind != "claim" {
 			return nil, tracer.Maskf(ClaimUpdateKindError, "%s=%s", pos[i].ID, pos[i].Kind)
@@ -25,7 +25,7 @@ func (r *Redis) UpdateHash(pos []*poststorage.Object, has []string) ([]*poststor
 		}
 
 		{
-			pos[i].Lifecycle.Hash = append(pos[i].Lifecycle.Hash, has[i])
+			pos[i].Lifecycle.Hash = append(pos[i].Lifecycle.Hash, hsh[i])
 		}
 	}
 
@@ -47,6 +47,18 @@ func (r *Redis) UpdateVotes(vot []*votestorage.Object) ([]*poststorage.Object, e
 	var sli votestorage.Slicer
 	{
 		sli = votestorage.Slicer(vot)
+	}
+
+	// Ensure that we do only update vote summaries for vote objects that have
+	// already been confirmed onchain. Any pending votes will be ignored.
+	{
+		{
+			sli = sli.LifecycleConfirmed()
+		}
+
+		if len(sli) == 0 {
+			return nil, nil
+		}
 	}
 
 	// Here we update the vote summary for the claims on which the provided votes

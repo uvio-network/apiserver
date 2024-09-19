@@ -4,6 +4,16 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
+var ClaimAlreadyExpiredError = &tracer.Error{
+	Kind: "ClaimAlreadyExpiredError",
+	Desc: "The request expects the claim expiry not to have passed already. The referenced claim expiry was found to have passed already. Therefore the request failed.",
+}
+
+var ClaimLifecycleOnchainError = &tracer.Error{
+	Kind: "ClaimLifecycleOnchainError",
+	Desc: "The request expects the claim to be pending in order to be deleted. The claim was found to be confirmed onchain already. Therefore the request failed.",
+}
+
 var ClaimUpdateHashError = &tracer.Error{
 	Kind: "ClaimUpdateHashError",
 	Desc: "The request expects the claim hash to be updated only once. The claim hash was found to be updated already. Therefore the request failed.",

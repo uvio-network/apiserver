@@ -13,6 +13,14 @@ type Interface interface {
 	//
 	CreateVote([]*votestorage.Object) ([]*votestorage.Object, error)
 
+	// DeleteVote prepares the provided vote objects so that they can be removed
+	// from the underlying storage.
+	//
+	//     inp[0] the vote objects to be deleted
+	//     out[0] the vote objects ready to be removed from storage
+	//
+	DeleteVote([]*votestorage.Object) ([]*votestorage.Object, error)
+
 	// UpdateHash modifies the transaction hash of the votes as provided by the
 	// given vote objects. Note that transaction hashes can only be updated once,
 	// if their prior value was empty.

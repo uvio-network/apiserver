@@ -8,6 +8,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/object/objectstatus"
 	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/uvio-network/apiserver/pkg/server/context/userid"
+	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
 	"github.com/uvio-network/apiserver/pkg/storage/votestorage"
 	"github.com/xh3b4sd/tracer"
 )
@@ -21,11 +22,11 @@ func (h *Handler) Update(ctx context.Context, req *vote.UpdateI) (*vote.UpdateO,
 	}
 
 	var ids []objectid.ID
-	var has []string
+	var hsh []string
 	for _, x := range req.Object {
 		if x.Intern != nil && x.Intern.Id != "" && x.Public != nil && x.Public.Hash != "" {
 			ids = append(ids, objectid.ID(x.Intern.Id))
-			has = append(has, x.Public.Hash)
+			hsh = append(hsh, x.Public.Hash)
 		}
 	}
 
@@ -55,13 +56,13 @@ func (h *Handler) Update(ctx context.Context, req *vote.UpdateI) (*vote.UpdateO,
 	// Update the vote hash.
 	//
 
-	if len(has) != 0 {
-		if len(ids) != len(has) {
-			return nil, tracer.Maskf(runtime.ExecutionFailedError, "%d != %d", len(ids), len(has))
+	if len(hsh) != 0 {
+		if len(ids) != len(hsh) {
+			return nil, tracer.Maskf(runtime.ExecutionFailedError, "%d != %d", len(ids), len(hsh))
 		}
 
 		{
-			vot, err = h.rec.Vote().UpdateHash(vot, has)
+			vot, err = h.rec.Vote().UpdateHash(vot, hsh)
 			if err != nil {
 				return nil, tracer.Mask(err)
 			}
@@ -74,6 +75,25 @@ func (h *Handler) Update(ctx context.Context, req *vote.UpdateI) (*vote.UpdateO,
 
 	{
 		err = h.sto.Vote().UpdateVote(vot)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	//
+	// Update the vote summary for the referenced posts.
+	//
+
+	var pos []*poststorage.Object
+	{
+		pos, err = h.rec.Post().UpdateVotes(vot)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	if len(pos) != 0 {
+		err = h.sto.Post().UpdatePost(pos)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}

@@ -75,9 +75,9 @@ func (r *run) createClaim(cli Client, key jwk.Key, fak *gofakeit.Faker, use *use
 }
 
 func (r *run) randomClaim(fak *gofakeit.Faker) *post.CreateI {
-	var has string
+	var hsh string
 	if fak.Float64() > 0.3 {
-		has = fmt.Sprintf("0x%s", hex.EncodeToString([]byte(fak.StreetName())))
+		hsh = fmt.Sprintf("0x%s", hex.EncodeToString([]byte(fak.StreetName())))
 	}
 
 	var lab []string
@@ -136,7 +136,7 @@ func (r *run) randomClaim(fak *gofakeit.Faker) *post.CreateI {
 					Public: &post.CreateI_Object_Public{
 						Chain:     "421614",
 						Expiry:    converter.TimeToString(time.Now().UTC().AddDate(0, fak.Number(1, 9), fak.Number(10, 30))),
-						Hash:      has,
+						Hash:      hsh,
 						Kind:      "claim",
 						Labels:    strings.Join(lab[:fak.Number(1, 4)], ","),
 						Lifecycle: string(objectlabel.LifecyclePropose),

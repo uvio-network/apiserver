@@ -31,9 +31,6 @@ func (h *Handler) Create(ctx context.Context, req *user.CreateI) (*user.CreateO,
 			Name: objectfield.String{
 				Data: nam,
 			},
-			Staked: objectfield.MapFloat{
-				Data: map[string]float64{},
-			},
 			Subject: []string{subjectclaim.FromContext(ctx)},
 		}
 	}
