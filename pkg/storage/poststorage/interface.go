@@ -20,7 +20,7 @@ type Interface interface {
 	DeleteExpiry(inp []*Object) error
 
 	// DeletePost removes existing post objects from the underlying storage.
-	// Deleting posts is effectively the reversed operation of CreatePost
+	// Deleting posts is effectively the reversed operation of CreatePost.
 	//
 	//     @inp[0] the post objects to delete
 	//
