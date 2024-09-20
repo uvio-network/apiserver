@@ -16,6 +16,7 @@ import (
 
 type Object struct {
 	Chain     string                `json:"chain"`
+	Contract  string                `json:"contract"`
 	Created   time.Time             `json:"created"`
 	Expiry    time.Time             `json:"expiry"`
 	ID        objectid.ID           `json:"id"`
@@ -39,6 +40,12 @@ func (o *Object) Verify() error {
 		}
 		if o.Kind == "comment" && o.Chain != "" {
 			return tracer.Maskf(ClaimChainInvalidError, o.Chain)
+		}
+	}
+
+	{
+		if o.Kind == "claim" && o.Contract == "" {
+			return tracer.Mask(ClaimContractEmptyError)
 		}
 	}
 

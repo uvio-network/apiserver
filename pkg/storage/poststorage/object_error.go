@@ -9,6 +9,11 @@ var ClaimChainEmptyError = &tracer.Error{
 	Desc: "The request expects the claim chain not to be empty. The claim chain was found to be empty. Therefore the request failed.",
 }
 
+var ClaimContractEmptyError = &tracer.Error{
+	Kind: "ClaimContractEmptyError",
+	Desc: "The request expects the claim contract not to be empty. The claim contract was found to be empty. Therefore the request failed.",
+}
+
 var ClaimChainInvalidError = &tracer.Error{
 	Kind: "ClaimChainInvalidError",
 	Desc: "The request expects the claim chain to be empty. The claim chain was not found to be empty. Therefore the request failed.",

@@ -167,7 +167,7 @@ func (w *wrapper) Update(ctx context.Context, req *post.UpdateI) (*post.UpdateO,
 }
 
 func createPublicEmpty(x *post.CreateI_Object_Public) bool {
-	return x == nil || (x.Chain == "" && x.Expiry == "" && x.Hash == "" && x.Kind == "" && x.Labels == "" && x.Lifecycle == "" && x.Meta == "" && x.Parent == "" && x.Text == "" && x.Token == "")
+	return x == nil || (x.Chain == "" && x.Contract == "" && x.Expiry == "" && x.Hash == "" && x.Kind == "" && x.Labels == "" && x.Lifecycle == "" && x.Meta == "" && x.Parent == "" && x.Text == "" && x.Token == "")
 }
 
 func deleteInternEmpty(x *post.DeleteI_Object_Intern) bool {

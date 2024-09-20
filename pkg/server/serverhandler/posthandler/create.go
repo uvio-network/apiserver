@@ -19,10 +19,11 @@ func (h *Handler) Create(ctx context.Context, req *post.CreateI) (*post.CreateO,
 	var inp []*poststorage.Object
 	for _, x := range req.Object {
 		inp = append(inp, &poststorage.Object{
-			Chain:  x.Public.Chain,
-			Expiry: converter.StringToTime(x.Public.Expiry),
-			Kind:   x.Public.Kind,
-			Labels: converter.StringToSlice(x.Public.Labels),
+			Chain:    x.Public.Chain,
+			Contract: x.Public.Contract,
+			Expiry:   converter.StringToTime(x.Public.Expiry),
+			Kind:     x.Public.Kind,
+			Labels:   converter.StringToSlice(x.Public.Labels),
 			Lifecycle: objectfield.Lifecycle{
 				Data: objectlabel.DesiredLifecycle(x.Public.Lifecycle),
 				Hash: converter.StringToSlice(x.Public.Hash),

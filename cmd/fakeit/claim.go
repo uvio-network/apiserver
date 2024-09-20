@@ -2,7 +2,6 @@ package fakeit
 
 import (
 	"context"
-	"encoding/hex"
 	"fmt"
 	"strings"
 	"time"
@@ -75,9 +74,14 @@ func (r *run) createClaim(cli Client, key jwk.Key, fak *gofakeit.Faker, use *use
 }
 
 func (r *run) randomClaim(fak *gofakeit.Faker) *post.CreateI {
+	var con string
+	{
+		con = fak.HexUint(160)
+	}
+
 	var hsh string
-	if fak.Float64() > 0.3 {
-		hsh = fmt.Sprintf("0x%s", hex.EncodeToString([]byte(fak.StreetName())))
+	if fak.Float64() > 0.2 {
+		hsh = fak.HexUint(256)
 	}
 
 	var lab []string
@@ -135,6 +139,7 @@ func (r *run) randomClaim(fak *gofakeit.Faker) *post.CreateI {
 				{
 					Public: &post.CreateI_Object_Public{
 						Chain:     "421614",
+						Contract:  con,
 						Expiry:    converter.TimeToString(time.Now().UTC().AddDate(0, fak.Number(1, 9), fak.Number(10, 30))),
 						Hash:      hsh,
 						Kind:      "claim",
