@@ -27,7 +27,7 @@ func (r *Redis) DeleteVote(inp []*votestorage.Object) ([]*votestorage.Object, er
 
 		// Votes can only be deleted as long as they have not been confirmed
 		// onchain.
-		if !cla.Lifecycle.Pending() {
+		if !inp[i].Lifecycle.Pending() {
 			return nil, tracer.Maskf(VoteLifecycleOnchainError, inp[i].ID.String())
 		}
 
