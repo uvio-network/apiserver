@@ -474,7 +474,7 @@
   },
   {
     "inputs": [],
-    "name": "CLAIM_BALANCE_U",
+    "name": "CLAIM_BALANCE_S",
     "outputs": [
       {
         "internalType": "uint8",
