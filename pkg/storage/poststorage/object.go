@@ -15,22 +15,22 @@ import (
 )
 
 type Object struct {
-	Chain     string                `json:"chain"`
-	Contract  string                `json:"contract"`
-	Created   time.Time             `json:"created"`
-	Expiry    time.Time             `json:"expiry"`
-	ID        objectid.ID           `json:"id"`
-	Kind      string                `json:"kind"`
-	Labels    []string              `json:"labels"`
-	Lifecycle objectfield.Lifecycle `json:"lifecycle"`
-	Meta      string                `json:"meta"`
-	Owner     objectid.ID           `json:"owner"`
-	Parent    objectid.ID           `json:"parent"`
-	Samples   map[string]string     `json:"samples"`
-	Text      string                `json:"text"`
-	Token     string                `json:"token"`
-	Tree      objectid.ID           `json:"tree"`
-	Votes     []float64             `json:"votes"`
+	Chain     string                `json:"chain,omitempty"`
+	Contract  string                `json:"contract,omitempty"`
+	Created   time.Time             `json:"created,omitempty"`
+	Expiry    time.Time             `json:"expiry,omitempty"`
+	ID        objectid.ID           `json:"id,omitempty"`
+	Kind      string                `json:"kind,omitempty"`
+	Labels    []string              `json:"labels,omitempty"`
+	Lifecycle objectfield.Lifecycle `json:"lifecycle,omitempty"`
+	Meta      string                `json:"meta,omitempty"`
+	Owner     objectid.ID           `json:"owner,omitempty"`
+	Parent    objectid.ID           `json:"parent,omitempty"`
+	Samples   map[string]string     `json:"samples,omitempty"`
+	Text      string                `json:"text,omitempty"`
+	Token     string                `json:"token,omitempty"`
+	Tree      objectid.ID           `json:"tree,omitempty"`
+	Votes     []float64             `json:"votes,omitempty"`
 }
 
 func (o *Object) Verify() error {

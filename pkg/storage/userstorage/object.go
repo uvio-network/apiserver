@@ -10,16 +10,16 @@ import (
 
 type Object struct {
 	// Created is the time at which the user got created.
-	Created time.Time `json:"created"`
+	Created time.Time `json:"created,omitempty"`
 	// ID is the internal ID of the user being created.
-	ID objectid.ID `json:"id"`
+	ID objectid.ID `json:"id,omitempty"`
 	// Imag is the URL pointing to the user's profile picture.
-	Image objectfield.String `json:"image"`
+	Image objectfield.String `json:"image,omitempty"`
 	// Name is the user name.
-	Name objectfield.String `json:"name"`
+	Name objectfield.String `json:"name,omitempty"`
 	// Subject is the list of external subject claims mapped to the user being
 	// created.
-	Subject []string `json:"subject"`
+	Subject []string `json:"subject,omitempty"`
 }
 
 func (o *Object) Verify() error {

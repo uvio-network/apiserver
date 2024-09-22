@@ -19,8 +19,14 @@ func (r *Redis) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, er
 	var err error
 
 	for i := range inp {
+		var now time.Time
+		{
+			now = time.Now().UTC()
+		}
+
 		{
 			if inp[i].Kind == "claim" {
+				inp[i].Lifecycle.Time = now
 				inp[i].Votes = []float64{0, 0, 0, 0}
 			}
 
@@ -36,16 +42,10 @@ func (r *Redis) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, er
 			}
 		}
 
-		var now time.Time
-		{
-			now = time.Now().UTC()
-		}
-
 		{
 			inp[i].Created = now
 			inp[i].ID = objectid.Random(objectid.Time(now))
 			inp[i].Labels = generic.Func(inp[i].Labels, labelname.Format)
-			inp[i].Lifecycle.Time = now
 			inp[i].Text = strings.TrimSpace(inp[i].Text)
 			inp[i].Token = strings.TrimSpace(inp[i].Token)
 		}

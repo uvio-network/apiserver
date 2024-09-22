@@ -9,11 +9,11 @@ import (
 
 type Lifecycle struct {
 	// Data is the string data of this object field.
-	Data objectlabel.DesiredLifecycle `json:"data"`
+	Data objectlabel.DesiredLifecycle `json:"data,omitempty"`
 	// Hash is the lifecycle confirmation of this object field.
-	Hash []string `json:"hash"`
+	Hash []string `json:"hash,omitempty"`
 	// Time is the most recent time at which this object field got updated.
-	Time time.Time `json:"time"`
+	Time time.Time `json:"time,omitempty"`
 }
 
 func (l Lifecycle) Empty() bool {

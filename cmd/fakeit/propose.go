@@ -73,11 +73,6 @@ func (r *run) createPropose(key jwk.Key, use *user.SearchO) (*post.SearchO, erro
 }
 
 func (r *run) randomClaim() *post.CreateI {
-	var con string
-	{
-		con = r.fak.HexUint(160)
-	}
-
 	var hsh string
 	if r.fak.Float64() > 0.2 {
 		hsh = r.fak.HexUint(256)
@@ -137,8 +132,8 @@ func (r *run) randomClaim() *post.CreateI {
 			Object: []*post.CreateI_Object{
 				{
 					Public: &post.CreateI_Object_Public{
-						Chain:     "421614",
-						Contract:  con,
+						Chain:     r.cid.String(),
+						Contract:  r.dae.Env().ChainClaimsContract,
 						Expiry:    converter.TimeToString(time.Now().UTC().AddDate(0, r.fak.Number(1, 9), r.fak.Number(10, 30))),
 						Hash:      hsh,
 						Kind:      "claim",

@@ -11,15 +11,15 @@ import (
 )
 
 type Object struct {
-	Claim     objectid.ID           `json:"claim"`
-	Created   time.Time             `json:"created"`
-	ID        objectid.ID           `json:"id"`
-	Kind      string                `json:"kind"`
-	Lifecycle objectfield.Lifecycle `json:"lifecycle"`
-	Meta      string                `json:"meta"`
-	Option    bool                  `json:"option"`
-	Owner     objectid.ID           `json:"owner"`
-	Value     float64               `json:"value"`
+	Claim     objectid.ID           `json:"claim,omitempty"`
+	Created   time.Time             `json:"created,omitempty"`
+	ID        objectid.ID           `json:"id,omitempty"`
+	Kind      string                `json:"kind,omitempty"`
+	Lifecycle objectfield.Lifecycle `json:"lifecycle,omitempty"`
+	Meta      string                `json:"meta,omitempty"`
+	Option    bool                  `json:"option,omitempty"`
+	Owner     objectid.ID           `json:"owner,omitempty"`
+	Value     float64               `json:"value,omitempty"`
 }
 
 func (o *Object) Verify() error {

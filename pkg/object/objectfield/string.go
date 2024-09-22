@@ -4,7 +4,7 @@ import "time"
 
 type String struct {
 	// Data is the string data of this object field.
-	Data string `json:"data"`
+	Data string `json:"data,omitempty"`
 	// Time is the most recent time at which this object field got updated.
-	Time time.Time `json:"time"`
+	Time time.Time `json:"time,omitempty"`
 }
