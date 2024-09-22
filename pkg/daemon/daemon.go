@@ -117,6 +117,14 @@ func New(env envvar.Env) *Daemon {
 	}
 }
 
+func (d *Daemon) Env() envvar.Env {
+	return d.env
+}
+
+func (d *Daemon) Rec() reconciler.Interface {
+	return d.rec
+}
+
 func defLoc(add string) locker.Interface {
 	return lock.New(lock.Config{
 		Brk: breakr.New(breakr.Config{

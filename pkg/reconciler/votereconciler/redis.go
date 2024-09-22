@@ -18,6 +18,7 @@ type Redis struct {
 	sto storage.Interface
 }
 
+// TODO rename reconciler
 func NewRedis(c RedisConfig) *Redis {
 	if c.Log == nil {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Log must not be empty", c)))

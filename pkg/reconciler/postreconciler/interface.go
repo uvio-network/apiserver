@@ -1,6 +1,9 @@
 package postreconciler
 
 import (
+	"time"
+
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
 	"github.com/uvio-network/apiserver/pkg/storage/votestorage"
 )
@@ -13,6 +16,15 @@ type Interface interface {
 	//     out[0] the post objects verified, extended and ready for storage
 	//
 	CreatePost([]*poststorage.Object) ([]*poststorage.Object, error)
+
+	// CreateResolve creates a new pending resolve for the provided propose using
+	// the provided expiry.
+	//
+	//     inp[0] the propose to create a pending resolve for
+	//     inp[1] the desired resolve expiry
+	//     out[0] the pending resolve as persisted in the underlying storage
+	//
+	CreateResolve(*poststorage.Object, time.Time) (*poststorage.Object, error)
 
 	// DeletePost prepares the provided post objects so that they can be removed
 	// from the underlying storage.
@@ -39,6 +51,17 @@ type Interface interface {
 	//     out[0] the post objects reflecting their updated state
 	//
 	UpdateMeta([]*poststorage.Object, []string) ([]*poststorage.Object, error)
+
+	// UpdateResolve modifies the provided post object of lifecycle phase
+	// "resolve" with the given transaction hash and voter addresses. Once
+	// UpdateResolve succeeded, the provided resolve is not considered pending
+	// anymore, since the provided transaction hash got confirmed onchain.
+	//
+	//     inp[0] the post objects of lifecycle phase "resolve"
+	//     inp[1] the confirmed onchain transaction hash to set
+	//     inp[2] the staker addresses to set
+	//
+	UpdateResolve(*poststorage.Object, common.Hash, []common.Address) error
 
 	// UpdateVotes modifies the vote summary of the existing post objects that are
 	// linked to the provided onchain vote objects, so that said vote summary

@@ -23,7 +23,7 @@ func (r *run) runE(cmd *cobra.Command, arg []string) error {
 
 	// --------------------------------------------------------------------- //
 
-	var dae *daemon.Daemon
+	var dae daemon.Interface
 	{
 		dae = daemon.New(env)
 	}

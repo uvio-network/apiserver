@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/brianvoe/gofakeit/v7"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/uvio-network/apigocode/pkg/post"
 	"github.com/uvio-network/apigocode/pkg/user"
@@ -16,14 +15,14 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *run) createVote(cli Client, key jwk.Key, fak *gofakeit.Faker, use *user.SearchO, cla *post.SearchO) (*vote.SearchO, error) {
+func (r *run) createVote(key jwk.Key, use *user.SearchO, cla *post.SearchO) (*vote.SearchO, error) {
 	var err error
 
 	var ids []string
 	for i := 0; i < 100; i++ {
 		{
-			fak.ShuffleAnySlice(use.Object)
-			fak.ShuffleAnySlice(cla.Object)
+			r.fak.ShuffleAnySlice(use.Object)
+			r.fak.ShuffleAnySlice(cla.Object)
 		}
 
 		var nam string
@@ -38,7 +37,7 @@ func (r *run) createVote(cli Client, key jwk.Key, fak *gofakeit.Faker, use *user
 
 		var inp *vote.CreateI
 		{
-			inp = r.randomVote(fak, cla.Object[0])
+			inp = r.randomVote(cla.Object[0])
 		}
 
 		var ctx context.Context
@@ -48,7 +47,7 @@ func (r *run) createVote(cli Client, key jwk.Key, fak *gofakeit.Faker, use *user
 
 		var out *vote.CreateO
 		{
-			out, err = cli.Vote.Create(ctx, inp)
+			out, err = r.cli.Vote.Create(ctx, inp)
 			if err != nil {
 				tracer.Panic(tracer.Mask(err))
 			}
@@ -74,7 +73,7 @@ func (r *run) createVote(cli Client, key jwk.Key, fak *gofakeit.Faker, use *user
 
 	var out *vote.SearchO
 	{
-		out, err = cli.Vote.Search(context.Background(), inp)
+		out, err = r.cli.Vote.Search(context.Background(), inp)
 		if err != nil {
 			tracer.Panic(tracer.Mask(err))
 		}
@@ -83,10 +82,10 @@ func (r *run) createVote(cli Client, key jwk.Key, fak *gofakeit.Faker, use *user
 	return out, nil
 }
 
-func (r *run) randomVote(fak *gofakeit.Faker, cla *post.SearchO_Object) *vote.CreateI {
+func (r *run) randomVote(cla *post.SearchO_Object) *vote.CreateI {
 	var hsh string
-	if fak.Float64() > 0.2 {
-		hsh = fmt.Sprintf("0x%s", hex.EncodeToString([]byte(fak.StreetName())))
+	if r.fak.Float64() > 0.2 {
+		hsh = fmt.Sprintf("0x%s", hex.EncodeToString([]byte(r.fak.StreetName())))
 	}
 
 	var opt []string
@@ -108,8 +107,8 @@ func (r *run) randomVote(fak *gofakeit.Faker, cla *post.SearchO_Object) *vote.Cr
 						Hash:      hsh,
 						Kind:      "stake",
 						Lifecycle: string(objectlabel.LifecycleOnchain),
-						Option:    fak.RandomString(opt),
-						Value:     limStr(converter.FloatToString(fak.Float64Range(0.0001, 2.5)), 6),
+						Option:    r.fak.RandomString(opt),
+						Value:     limStr(converter.FloatToString(r.fak.Float64Range(0.0001, 2.5)), 6),
 					},
 				},
 			},
