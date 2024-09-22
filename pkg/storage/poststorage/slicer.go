@@ -35,6 +35,28 @@ func (s Slicer) Parent() []objectid.ID {
 
 // --------------------------------------------------------------------- //
 
+func (s Slicer) ObjectID(oid []objectid.ID) Slicer {
+	all := map[objectid.ID]struct{}{}
+	for _, x := range oid {
+		all[x] = struct{}{}
+	}
+
+	var lis Slicer
+
+	for _, x := range s {
+		var exi bool
+		{
+			_, exi = all[x.ID]
+		}
+
+		if exi {
+			lis = append(lis, x)
+		}
+	}
+
+	return lis
+}
+
 func (s Slicer) ObjectKind(kin string) Slicer {
 	var lis Slicer
 

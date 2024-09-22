@@ -83,6 +83,7 @@ func New(c Config) *Handler {
 			Con: c.Con,
 			Log: c.Log,
 			Sto: c.Sto,
+			UVX: c.Env.ChainUvxContract,
 		}))
 	}
 

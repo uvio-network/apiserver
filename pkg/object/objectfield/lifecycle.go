@@ -38,6 +38,10 @@ func (l Lifecycle) Pending() bool {
 // lifecycle phase and its current system status, separated by a colon, e.g.
 // propose:pending or resolve:onchain.
 func (l Lifecycle) String() string {
+	if l.Empty() {
+		return ""
+	}
+
 	if len(l.Hash) == 0 {
 		if l.Data == objectlabel.LifecycleOnchain {
 			return string(objectlabel.LifecyclePending)
