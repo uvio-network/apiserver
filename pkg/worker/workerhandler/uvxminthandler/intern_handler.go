@@ -13,12 +13,14 @@ type InternHandlerConfig struct {
 	Con contract.Interface
 	Log logger.Interface
 	Sto storage.Interface
+	UVX string
 }
 
 type InternHandler struct {
 	con contract.Interface
 	log logger.Interface
 	sto storage.Interface
+	uvx string
 }
 
 func NewInternHandler(c InternHandlerConfig) *InternHandler {
@@ -31,10 +33,14 @@ func NewInternHandler(c InternHandlerConfig) *InternHandler {
 	if c.Sto == nil {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Sto must not be empty", c)))
 	}
+	if c.UVX == "" {
+		tracer.Panic(tracer.Mask(fmt.Errorf("%T.UVX must not be empty", c)))
+	}
 
 	return &InternHandler{
 		con: c.Con,
 		log: c.Log,
 		sto: c.Sto,
+		uvx: c.UVX,
 	}
 }

@@ -18,7 +18,7 @@ import (
 
 func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO, error) {
 	var err error
-	var out []*poststorage.Object
+	var out poststorage.Slicer
 
 	var ids []objectid.ID
 	var lab [][]string
@@ -209,24 +209,35 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 	//
 
 	var par []objectid.ID
-	var pos []objectid.ID
 	{
-		par = poststorage.Slicer(out).Parent()
-		pos = poststorage.Slicer(out).ID()
+		par = generic.Select(out.ID(), out.Parent())
 	}
 
-	var com []objectid.ID
-	{
-		com = generic.Select(pos, par)
-	}
-
-	if len(com) != 0 {
-		lis, err := h.sto.Post().SearchPost(com)
+	if len(par) != 0 {
+		lis, err := h.sto.Post().SearchPost(par)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
 
-		out = append(out, lis...)
+		{
+			out = append(out, lis...)
+		}
+
+		var pro []objectid.ID
+		{
+			pro = generic.Select(out.ID(), out.ObjectID(out.ObjectKind("comment").Parent()).Parent())
+		}
+
+		if len(pro) != 0 {
+			sec, err := h.sto.Post().SearchPost(pro)
+			if err != nil {
+				return nil, tracer.Mask(err)
+			}
+
+			{
+				out = append(out, sec...)
+			}
+		}
 	}
 
 	//

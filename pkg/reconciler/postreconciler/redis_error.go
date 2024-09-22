@@ -24,8 +24,8 @@ var ClaimUpdateKindError = &tracer.Error{
 	Desc: "The request expects the post ID to reference a claim. The post ID was not found to reference a claim. Therefore the request failed.",
 }
 
-var PostOwnerVoteError = &tracer.Error{
-	Kind: "PostOwnerVoteError",
+var MarketParticipationError = &tracer.Error{
+	Kind: "MarketParticipationError",
 	Desc: "The request expects the calling user to have participated in the referenced market. The calling user was not found to have participated in the referenced market. Therefore the request failed.",
 }
 

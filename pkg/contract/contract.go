@@ -21,21 +21,18 @@ import (
 )
 
 type Config struct {
-	// Cla is the deployed Claims contract address.
-	Cla string
 	// Key is the private key signing transactions for contract writes.
 	Key string
+	// Log is a simple logger interface to print system relevant information.
 	Log logger.Interface
 	// RPC is the RPC endpoint for network connection.
 	RPC string
-	// UVX is the deployed UVX contract address.
-	UVX string
 }
 
 type Contract struct {
-	cla *claimscontract.Claims
 	cli *ethclient.Client
-	uvx *uvxcontract.UVX
+	log logger.Interface
+	opt *bind.TransactOpts
 }
 
 func New(c Config) *Contract {
@@ -77,39 +74,29 @@ func New(c Config) *Contract {
 		}
 	}
 
-	var cla *claimscontract.Claims
-	{
-		cla = claimscontract.NewClaims(claimscontract.ClaimsConfig{
-			Add: common.HexToAddress(c.Cla),
-			Cli: cli,
-			Log: c.Log,
-			Opt: opt,
-		})
-	}
-
-	var uvx *uvxcontract.UVX
-	{
-		uvx = uvxcontract.NewUVX(uvxcontract.UVXConfig{
-			Add: common.HexToAddress(c.UVX),
-			Cli: cli,
-			Log: c.Log,
-			Opt: opt,
-		})
-	}
-
 	return &Contract{
-		cla: cla,
 		cli: cli,
-		uvx: uvx,
+		log: c.Log,
+		opt: opt,
 	}
 }
 
-func (c *Contract) Claims() claimscontract.Interface {
-	return c.cla
+func (c *Contract) Claims(add string) claimscontract.Interface {
+	return claimscontract.NewClaims(claimscontract.ClaimsConfig{
+		Add: common.HexToAddress(add),
+		Cli: c.cli,
+		Log: c.log,
+		Opt: c.opt,
+	})
 }
 
-func (c *Contract) UVX() uvxcontract.Interface {
-	return c.uvx
+func (c *Contract) UVX(add string) uvxcontract.Interface {
+	return uvxcontract.NewUVX(uvxcontract.UVXConfig{
+		Add: common.HexToAddress(add),
+		Cli: c.cli,
+		Log: c.log,
+		Opt: c.opt,
+	})
 }
 
 func (c *Contract) Wait(txn *types.Transaction, max time.Duration) error {

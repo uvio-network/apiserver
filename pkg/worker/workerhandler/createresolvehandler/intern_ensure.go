@@ -9,6 +9,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/uvio-network/apiserver/pkg/contract/claimscontract"
 	"github.com/uvio-network/apiserver/pkg/object/objectfield"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
@@ -59,10 +60,24 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 	}
 
+	var pro *poststorage.Object
+	var res *poststorage.Object
+	{
+		pro, res, err = h.searchClaims(tas)
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
+	var cla claimscontract.Interface
+	{
+		cla = h.con.Claims(pro.Contract)
+	}
+
 	{
 		var blc uint64
 		{
-			blc, err = h.con.Claims().Client().BlockNumber(context.Background())
+			blc, err = cla.Client().BlockNumber(context.Background())
 			if err != nil {
 				return tracer.Mask(err)
 			}
@@ -75,40 +90,6 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		{
 			tas.Sync.Set(task.Paging, strconv.FormatInt(int64(blc), 10))
 		}
-	}
-
-	// The claim ID obtained here is the ID of the propose that expired when the
-	// task that we are processing right now got emitted.
-	var cla objectid.ID
-	{
-		cla = objectid.ID(tas.Meta.Get(objectlabel.ClaimObject))
-	}
-
-	var pos poststorage.Slicer
-	{
-		pos, err = h.sto.Post().SearchPost([]objectid.ID{cla})
-		if err != nil {
-			return tracer.Mask(err)
-		}
-	}
-
-	// This is the claim with lifecycle phase propose that has been expired.
-	var pro *poststorage.Object
-	{
-		pro = pos.IDClaim(cla)
-	}
-
-	var tre poststorage.Slicer
-	{
-		tre, err = h.sto.Post().SearchTree([]objectid.ID{pro.Tree})
-		if err != nil {
-			return tracer.Mask(err)
-		}
-	}
-
-	var res *poststorage.Object
-	{
-		res = tre.NextClaim(cla)
 	}
 
 	var exp time.Time
@@ -128,7 +109,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 
 	var exi bool
 	{
-		exi, err = h.con.Claims().ExistsResolve(pro.ID)
+		exi, err = cla.ExistsResolve(pro.ID)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -136,7 +117,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 
 	var ind []*big.Int
 	{
-		ind, err = h.con.Claims().SearchIndices(pro.ID)
+		ind, err = cla.SearchIndices(pro.ID)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -151,7 +132,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 
 		var txn *types.Transaction
 		{
-			txn, err = h.con.Claims().CreateResolve(pro.ID, sam, exp)
+			txn, err = cla.CreateResolve(pro.ID, sam, exp)
 			if err != nil {
 				return tracer.Mask(err)
 			}
@@ -176,7 +157,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 			}
 		}
 
-		hsh, err = h.con.Claims().ResolveCreated(blc, uint64(pro.ID.Int()))
+		hsh, err = cla.ResolveCreated(blc, uint64(pro.ID.Int()))
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -185,7 +166,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	var tru []common.Address
 	var fls []common.Address
 	{
-		tru, fls, err = h.searchSamples(pro.ID, ind)
+		tru, fls, err = h.searchSamples(cla, pro.ID, ind)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -217,16 +198,17 @@ func (h *InternHandler) createObject(pro *poststorage.Object, exp time.Time) (*p
 	var res *poststorage.Object
 	{
 		res = &poststorage.Object{
-			Chain:  pro.Chain,
-			Expiry: exp,
-			Kind:   "claim",
-			Labels: pro.Labels,
+			Chain:    pro.Chain,
+			Contract: pro.Contract,
+			Expiry:   exp,
+			Kind:     "claim",
+			Labels:   pro.Labels,
 			Lifecycle: objectfield.Lifecycle{
 				Data: objectlabel.LifecycleResolve,
 			},
 			Owner:  objectid.System(),
 			Parent: pro.ID,
-			Text:   "# Market Resolution\n\n The random truth sampling process has begun and is waiting for onchain confirmation.",
+			Text:   "# Market Resolution\n\nThe random truth sampling process has begun and is waiting for onchain confirmation.",
 		}
 	}
 
@@ -277,7 +259,47 @@ func (h *InternHandler) searchAddress(add []common.Address) (map[string]string, 
 	return dic, nil
 }
 
-func (h *InternHandler) searchSamples(cla objectid.ID, ind []*big.Int) ([]common.Address, []common.Address, error) {
+func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *poststorage.Object, error) {
+	var err error
+
+	// The claim ID obtained here is the ID of the propose that expired when the
+	// task that we are processing right now got emitted.
+	var cla objectid.ID
+	{
+		cla = objectid.ID(tas.Meta.Get(objectlabel.ClaimObject))
+	}
+
+	var pos poststorage.Slicer
+	{
+		pos, err = h.sto.Post().SearchPost([]objectid.ID{cla})
+		if err != nil {
+			return nil, nil, tracer.Mask(err)
+		}
+	}
+
+	// This is the claim with lifecycle phase propose that has been expired.
+	var pro *poststorage.Object
+	{
+		pro = pos.IDClaim(cla)
+	}
+
+	var tre poststorage.Slicer
+	{
+		tre, err = h.sto.Post().SearchTree([]objectid.ID{pro.Tree})
+		if err != nil {
+			return nil, nil, tracer.Mask(err)
+		}
+	}
+
+	var res *poststorage.Object
+	{
+		res = tre.NextClaim(pro.ID)
+	}
+
+	return pro, res, nil
+}
+
+func (h *InternHandler) searchSamples(cla claimscontract.Interface, pro objectid.ID, ind []*big.Int) ([]common.Address, []common.Address, error) {
 	var err error
 
 	if len(ind) != 8 {
@@ -292,7 +314,7 @@ func (h *InternHandler) searchSamples(cla objectid.ID, ind []*big.Int) ([]common
 
 	var tru []common.Address
 	{
-		tru, err = h.con.Claims().SearchSamples(cla, ind[1], ind[2])
+		tru, err = cla.SearchSamples(pro, ind[1], ind[2])
 		if err != nil {
 			return nil, nil, tracer.Mask(err)
 		}
@@ -300,7 +322,7 @@ func (h *InternHandler) searchSamples(cla objectid.ID, ind []*big.Int) ([]common
 
 	var fls []common.Address
 	{
-		fls, err = h.con.Claims().SearchSamples(cla, ind[5], ind[6])
+		fls, err = cla.SearchSamples(pro, ind[5], ind[6])
 		if err != nil {
 			return nil, nil, tracer.Mask(err)
 		}
@@ -365,7 +387,7 @@ func resTxt(num int) string {
 		use = "users have"
 	}
 
-	return fmt.Sprintf("# Market Resolution\n\n %d %s been randomly selected to verify events in the real world for the proposed claim below.", num, use)
+	return fmt.Sprintf("# Market Resolution\n\n%d %s been randomly selected to verify events in the real world for the proposed claim below.", num, use)
 }
 
 func tasInt(str string) (uint64, error) {

@@ -89,7 +89,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 
 	var txn *types.Transaction
 	{
-		txn, err = h.con.UVX().Mint(add, 100)
+		txn, err = h.con.UVX(h.uvx).Mint(add, 100)
 		if err != nil {
 			return tracer.Mask(err)
 		}

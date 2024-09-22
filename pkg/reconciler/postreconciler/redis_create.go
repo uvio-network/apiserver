@@ -56,6 +56,7 @@ func (r *Redis) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, er
 		// object provided in the parent field, and take the existing tree ID from
 		// there. Note that we are indirectly validating here that the given parent
 		// ID does in fact exist.
+		var sel bool
 		if inp[i].Kind == "claim" && inp[i].Lifecycle.Is(objectlabel.LifecyclePropose) {
 			inp[i].Tree = objectid.Random(objectid.Time(now))
 		} else {
@@ -70,13 +71,25 @@ func (r *Redis) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, er
 			{
 				inp[i].Tree = par.Tree
 			}
+
+			// Lookup whether the post owner was selected by the truth sampling
+			// process. If the post being created is for instance a comment, and if
+			// that comment is referencing a resolve, then "sel" will be set to true,
+			// which prevents the MarketParticipationError to be returned below.
+			for _, v := range par.Samples {
+				if v == string(inp[i].Owner) {
+					sel = true
+					break
+				}
+			}
 		}
 
 		// Ensure that the calling user has in fact skin in the game. If we cannot
 		// find a single vote object referencing the provided parent claim for the
-		// calling user, then we return an error, because only users who have
+		// calling user, and if the calling user has not been selected by the truth
+		// sampling process, then we return an error, because only users who have
 		// actually participated in any given market are allowed to express their
-		// opinions about it.
+		// opinions about those markets.
 		if inp[i].Kind == "comment" {
 			var vot []*votestorage.Object
 			{
@@ -86,8 +99,8 @@ func (r *Redis) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, er
 				}
 			}
 
-			if len(vot) == 0 {
-				return nil, tracer.Mask(PostOwnerVoteError)
+			if !sel && len(vot) == 0 {
+				return nil, tracer.Mask(MarketParticipationError)
 			}
 
 			// Update the vote summary of the comment according to all existing votes.
