@@ -208,7 +208,7 @@ func (h *InternHandler) createObject(pro *poststorage.Object, exp time.Time) (*p
 			},
 			Owner:  objectid.System(),
 			Parent: pro.ID,
-			Text:   "# Market Resolution\n\nThe random truth sampling process has begun and is waiting for onchain confirmation.\n\n",
+			Text:   "# Market Resolution\n\nThe random truth sampling process has begun and is waiting for onchain confirmation.",
 		}
 	}
 
