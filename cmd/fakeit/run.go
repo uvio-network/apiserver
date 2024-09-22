@@ -86,9 +86,9 @@ func (r *run) runE(cmd *cobra.Command, arg []string) error {
 		}
 	}
 
-	var vot *vote.SearchO
+	var pvt *vote.SearchO
 	{
-		vot, err = r.createVote(key, use, pro)
+		pvt, err = r.createVotePropose(key, use, pro)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -102,9 +102,25 @@ func (r *run) runE(cmd *cobra.Command, arg []string) error {
 		}
 	}
 
-	var com *post.SearchO
+	var rvt *vote.SearchO
 	{
-		com, err = r.createComment(key, use, pro, vot)
+		rvt, err = r.createVoteResolve(key, use, res)
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
+	var pcm *post.SearchO
+	{
+		pcm, err = r.createComment(key, use, pro, pvt)
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
+	var rcm *post.SearchO
+	{
+		rcm, err = r.createComment(key, use, res, rvt)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -115,8 +131,8 @@ func (r *run) runE(cmd *cobra.Command, arg []string) error {
 		fmt.Printf("Generated %d fake wallets.\n", len(wal.Object))
 		fmt.Printf("Generated %d fake claims of lifecycle phase %q.\n", len(pro.Object), "propose")
 		fmt.Printf("Generated %d fake claims of lifecycle phase %q.\n", len(res.Object), "resolve")
-		fmt.Printf("Generated %d fake votes.\n", len(vot.Object))
-		fmt.Printf("Generated %d fake comments.\n", len(com.Object))
+		fmt.Printf("Generated %d fake votes.\n", len(pvt.Object)+len(rvt.Object))
+		fmt.Printf("Generated %d fake comments.\n", len(pcm.Object)+len(rcm.Object))
 	}
 
 	return nil
