@@ -6,6 +6,7 @@ import (
 
 	"github.com/uvio-network/apiserver/pkg/format/labelname"
 	"github.com/uvio-network/apiserver/pkg/generic"
+	"github.com/uvio-network/apiserver/pkg/object/objectfield"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/runtime"
@@ -111,6 +112,44 @@ func (r *Redis) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, er
 	}
 
 	return inp, nil
+}
+
+func (r *Redis) CreateResolve(pro *poststorage.Object, exp time.Time) (*poststorage.Object, error) {
+	var err error
+
+	var res *poststorage.Object
+	{
+		res = &poststorage.Object{
+			Chain:    pro.Chain,
+			Contract: pro.Contract,
+			Expiry:   exp,
+			Kind:     "claim",
+			Labels:   pro.Labels,
+			Lifecycle: objectfield.Lifecycle{
+				Data: objectlabel.LifecycleResolve,
+			},
+			Owner:  objectid.System(),
+			Parent: pro.ID,
+			Text:   "# Market Resolution\n\nThe random truth sampling process has begun and is waiting for onchain confirmation.",
+		}
+	}
+
+	var out []*poststorage.Object
+	{
+		out, err = r.CreatePost([]*poststorage.Object{res})
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	{
+		err = r.sto.Post().CreatePost(out)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	return out[0], nil
 }
 
 func (r *Redis) verifyParent(par objectid.ID) (*poststorage.Object, error) {

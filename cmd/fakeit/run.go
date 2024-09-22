@@ -15,25 +15,23 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-type run struct{}
+type run struct {
+	cli Client
+	dae daemon.Interface
+	fak *gofakeit.Faker
+}
 
 func (r *run) runE(cmd *cobra.Command, arg []string) error {
 	var err error
 
-	var env envvar.Env
-	{
-		env = envvar.Load("fake")
-	}
-
 	// --------------------------------------------------------------------- //
 
-	var dae *daemon.Daemon
 	{
-		dae = daemon.New(env)
+		r.dae = daemon.New(envvar.Load("fake"))
 	}
 
 	{
-		go dae.Server().Daemon()
+		go r.dae.Server().Daemon()
 	}
 
 	// --------------------------------------------------------------------- //
@@ -48,26 +46,24 @@ func (r *run) runE(cmd *cobra.Command, arg []string) error {
 	}
 
 	{
-		go srvJwk(env, set)
+		go srvJwk(r.dae.Env(), set)
 	}
 
 	// --------------------------------------------------------------------- //
 
-	var cli Client
 	{
-		cli = NewClient(env)
+		r.cli = NewClient(r.dae.Env())
 	}
 
-	var fak *gofakeit.Faker
 	{
-		fak = gofakeit.NewFaker(source.NewCrypto(), true)
+		r.fak = gofakeit.NewFaker(source.NewCrypto(), true)
 	}
 
 	// --------------------------------------------------------------------- //
 
 	var use *user.SearchO
 	{
-		use, err = r.createUser(cli, key, fak)
+		use, err = r.createUser(key)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -75,7 +71,7 @@ func (r *run) runE(cmd *cobra.Command, arg []string) error {
 
 	var cla *post.SearchO
 	{
-		cla, err = r.createClaim(cli, key, fak, use)
+		cla, err = r.createClaim(key, use)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -83,7 +79,7 @@ func (r *run) runE(cmd *cobra.Command, arg []string) error {
 
 	var vot *vote.SearchO
 	{
-		vot, err = r.createVote(cli, key, fak, use, cla)
+		vot, err = r.createVote(key, use, cla)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -91,7 +87,7 @@ func (r *run) runE(cmd *cobra.Command, arg []string) error {
 
 	var com *post.SearchO
 	{
-		com, err = r.createComment(cli, key, fak, use, cla, vot)
+		com, err = r.createComment(key, use, cla, vot)
 		if err != nil {
 			return tracer.Mask(err)
 		}

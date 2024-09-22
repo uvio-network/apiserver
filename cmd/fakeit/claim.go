@@ -6,7 +6,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/brianvoe/gofakeit/v7"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/uvio-network/apigocode/pkg/post"
 	"github.com/uvio-network/apigocode/pkg/user"
@@ -17,18 +16,18 @@ import (
 	"golang.org/x/text/language"
 )
 
-func (r *run) createClaim(cli Client, key jwk.Key, fak *gofakeit.Faker, use *user.SearchO) (*post.SearchO, error) {
+func (r *run) createClaim(key jwk.Key, use *user.SearchO) (*post.SearchO, error) {
 	var err error
 
 	var ids []string
 	for i := 0; i < 20; i++ {
 		{
-			fak.ShuffleAnySlice(use.Object)
+			r.fak.ShuffleAnySlice(use.Object)
 		}
 
 		var inp *post.CreateI
 		{
-			inp = r.randomClaim(fak)
+			inp = r.randomClaim()
 		}
 
 		var ctx context.Context
@@ -38,7 +37,7 @@ func (r *run) createClaim(cli Client, key jwk.Key, fak *gofakeit.Faker, use *use
 
 		var out *post.CreateO
 		{
-			out, err = cli.Post.Create(ctx, inp)
+			out, err = r.cli.Post.Create(ctx, inp)
 			if err != nil {
 				tracer.Panic(tracer.Mask(err))
 			}
@@ -64,7 +63,7 @@ func (r *run) createClaim(cli Client, key jwk.Key, fak *gofakeit.Faker, use *use
 
 	var out *post.SearchO
 	{
-		out, err = cli.Post.Search(context.Background(), inp)
+		out, err = r.cli.Post.Search(context.Background(), inp)
 		if err != nil {
 			tracer.Panic(tracer.Mask(err))
 		}
@@ -73,15 +72,15 @@ func (r *run) createClaim(cli Client, key jwk.Key, fak *gofakeit.Faker, use *use
 	return out, nil
 }
 
-func (r *run) randomClaim(fak *gofakeit.Faker) *post.CreateI {
+func (r *run) randomClaim() *post.CreateI {
 	var con string
 	{
-		con = fak.HexUint(160)
+		con = r.fak.HexUint(160)
 	}
 
 	var hsh string
-	if fak.Float64() > 0.2 {
-		hsh = fak.HexUint(256)
+	if r.fak.Float64() > 0.2 {
+		hsh = r.fak.HexUint(256)
 	}
 
 	var lab []string
@@ -100,36 +99,36 @@ func (r *run) randomClaim(fak *gofakeit.Faker) *post.CreateI {
 	}
 
 	{
-		fak.ShuffleAnySlice(lab)
+		r.fak.ShuffleAnySlice(lab)
 	}
 
 	var tit string
 	{
-		tit = fak.BookTitle()
+		tit = r.fak.BookTitle()
 	}
 
 	var par string
 	{
-		par = fak.Paragraph(fak.Number(1, 3), fak.Number(2, 5), fak.Number(10, 40), "\n\n")
+		par = r.fak.Paragraph(r.fak.Number(1, 3), r.fak.Number(2, 5), r.fak.Number(10, 40), "\n\n")
 	}
 
 	var lis []string
 	{
 		lis = []string{
-			"* " + ranLin(fak, fak.Sentence(fak.Number(3, 9))),
-			"* " + ranLin(fak, fak.Sentence(fak.Number(3, 9))),
-			"* " + ranLin(fak, fak.Sentence(fak.Number(3, 9))),
-			"* " + ranLin(fak, fak.Sentence(fak.Number(3, 9))),
-			"* " + ranLin(fak, fak.Sentence(fak.Number(3, 9))),
-			"* " + ranLin(fak, fak.Sentence(fak.Number(3, 9))),
-			"* " + ranLin(fak, fak.Sentence(fak.Number(3, 9))),
-			"* " + ranLin(fak, fak.Sentence(fak.Number(3, 9))),
-			"* " + ranLin(fak, fak.Sentence(fak.Number(3, 9))),
+			"* " + r.ranLin(r.fak.Sentence(r.fak.Number(3, 9))),
+			"* " + r.ranLin(r.fak.Sentence(r.fak.Number(3, 9))),
+			"* " + r.ranLin(r.fak.Sentence(r.fak.Number(3, 9))),
+			"* " + r.ranLin(r.fak.Sentence(r.fak.Number(3, 9))),
+			"* " + r.ranLin(r.fak.Sentence(r.fak.Number(3, 9))),
+			"* " + r.ranLin(r.fak.Sentence(r.fak.Number(3, 9))),
+			"* " + r.ranLin(r.fak.Sentence(r.fak.Number(3, 9))),
+			"* " + r.ranLin(r.fak.Sentence(r.fak.Number(3, 9))),
+			"* " + r.ranLin(r.fak.Sentence(r.fak.Number(3, 9))),
 		}
 	}
 
 	{
-		fak.ShuffleAnySlice(lis)
+		r.fak.ShuffleAnySlice(lis)
 	}
 
 	var obj *post.CreateI
@@ -140,14 +139,14 @@ func (r *run) randomClaim(fak *gofakeit.Faker) *post.CreateI {
 					Public: &post.CreateI_Object_Public{
 						Chain:     "421614",
 						Contract:  con,
-						Expiry:    converter.TimeToString(time.Now().UTC().AddDate(0, fak.Number(1, 9), fak.Number(10, 30))),
+						Expiry:    converter.TimeToString(time.Now().UTC().AddDate(0, r.fak.Number(1, 9), r.fak.Number(10, 30))),
 						Hash:      hsh,
 						Kind:      "claim",
-						Labels:    strings.Join(lab[:fak.Number(1, 4)], ","),
+						Labels:    strings.Join(lab[:r.fak.Number(1, 4)], ","),
 						Lifecycle: string(objectlabel.LifecyclePropose),
 						Meta:      "9,0",
-						Text:      fmt.Sprintf("# %s\n\n%s\n\n%s", tit, par, strings.Join(lis[:fak.Number(2, 5)], "\n")),
-						Token:     fak.RandomString([]string{"USDC", "UVX", "WETH"}),
+						Text:      fmt.Sprintf("# %s\n\n%s\n\n%s", tit, par, strings.Join(lis[:r.fak.Number(2, 5)], "\n")),
+						Token:     r.fak.RandomString([]string{"USDC", "UVX", "WETH"}),
 					},
 				},
 			},
@@ -157,7 +156,7 @@ func (r *run) randomClaim(fak *gofakeit.Faker) *post.CreateI {
 	return obj
 }
 
-func ranLin(fak *gofakeit.Faker, str string) string {
+func (r *run) ranLin(str string) string {
 	var spl []string
 	{
 		spl = strings.Split(str, " ")
@@ -165,12 +164,12 @@ func ranLin(fak *gofakeit.Faker, str string) string {
 
 	var ind int
 	{
-		ind = fak.Number(0, len(spl)-1)
+		ind = r.fak.Number(0, len(spl)-1)
 	}
 
 	var txt string
 	{
-		txt = fak.PetName()
+		txt = r.fak.PetName()
 	}
 
 	if ind == 0 {
@@ -183,7 +182,7 @@ func ranLin(fak *gofakeit.Faker, str string) string {
 	}
 
 	{
-		spl[ind] = fmt.Sprintf("[%s](%s)", txt, fak.URL())
+		spl[ind] = fmt.Sprintf("[%s](%s)", txt, r.fak.URL())
 	}
 
 	return strings.Join(spl, " ") + end

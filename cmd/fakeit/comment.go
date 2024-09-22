@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/brianvoe/gofakeit/v7"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/uvio-network/apigocode/pkg/post"
 	"github.com/uvio-network/apigocode/pkg/user"
@@ -13,18 +12,18 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *run) createComment(cli Client, key jwk.Key, fak *gofakeit.Faker, use *user.SearchO, cla *post.SearchO, vot *vote.SearchO) (*post.SearchO, error) {
+func (r *run) createComment(key jwk.Key, use *user.SearchO, cla *post.SearchO, vot *vote.SearchO) (*post.SearchO, error) {
 	var err error
 
 	var ids []string
 	for i := 0; i < 10; i++ {
 		{
-			fak.ShuffleAnySlice(vot.Object)
+			r.fak.ShuffleAnySlice(vot.Object)
 		}
 
 		var inp *post.CreateI
 		{
-			inp = r.randomComment(fak, claVot(cla, vot.Object[0].Public.Claim))
+			inp = r.randomComment(claVot(cla, vot.Object[0].Public.Claim))
 		}
 
 		var ctx context.Context
@@ -34,7 +33,7 @@ func (r *run) createComment(cli Client, key jwk.Key, fak *gofakeit.Faker, use *u
 
 		var out *post.CreateO
 		{
-			out, err = cli.Post.Create(ctx, inp)
+			out, err = r.cli.Post.Create(ctx, inp)
 			if err != nil {
 				tracer.Panic(tracer.Mask(err))
 			}
@@ -60,7 +59,7 @@ func (r *run) createComment(cli Client, key jwk.Key, fak *gofakeit.Faker, use *u
 
 	var out *post.SearchO
 	{
-		out, err = cli.Post.Search(context.Background(), inp)
+		out, err = r.cli.Post.Search(context.Background(), inp)
 		if err != nil {
 			tracer.Panic(tracer.Mask(err))
 		}
@@ -73,34 +72,34 @@ func (r *run) createComment(cli Client, key jwk.Key, fak *gofakeit.Faker, use *u
 	return out, nil
 }
 
-func (r *run) randomComment(fak *gofakeit.Faker, cla *post.SearchO_Object) *post.CreateI {
+func (r *run) randomComment(cla *post.SearchO_Object) *post.CreateI {
 	var tit string
 	{
-		tit = fak.BookTitle()
+		tit = r.fak.BookTitle()
 	}
 
 	var par string
 	{
-		par = fak.Paragraph(fak.Number(1, 3), fak.Number(2, 5), fak.Number(10, 40), "\n\n")
+		par = r.fak.Paragraph(r.fak.Number(1, 3), r.fak.Number(2, 5), r.fak.Number(10, 40), "\n\n")
 	}
 
 	var lis []string
 	{
 		lis = []string{
-			"* " + ranLin(fak, fak.Sentence(fak.Number(3, 9))),
-			"* " + ranLin(fak, fak.Sentence(fak.Number(3, 9))),
-			"* " + ranLin(fak, fak.Sentence(fak.Number(3, 9))),
-			"* " + ranLin(fak, fak.Sentence(fak.Number(3, 9))),
-			"* " + ranLin(fak, fak.Sentence(fak.Number(3, 9))),
-			"* " + ranLin(fak, fak.Sentence(fak.Number(3, 9))),
-			"* " + ranLin(fak, fak.Sentence(fak.Number(3, 9))),
-			"* " + ranLin(fak, fak.Sentence(fak.Number(3, 9))),
-			"* " + ranLin(fak, fak.Sentence(fak.Number(3, 9))),
+			"* " + r.ranLin(r.fak.Sentence(r.fak.Number(3, 9))),
+			"* " + r.ranLin(r.fak.Sentence(r.fak.Number(3, 9))),
+			"* " + r.ranLin(r.fak.Sentence(r.fak.Number(3, 9))),
+			"* " + r.ranLin(r.fak.Sentence(r.fak.Number(3, 9))),
+			"* " + r.ranLin(r.fak.Sentence(r.fak.Number(3, 9))),
+			"* " + r.ranLin(r.fak.Sentence(r.fak.Number(3, 9))),
+			"* " + r.ranLin(r.fak.Sentence(r.fak.Number(3, 9))),
+			"* " + r.ranLin(r.fak.Sentence(r.fak.Number(3, 9))),
+			"* " + r.ranLin(r.fak.Sentence(r.fak.Number(3, 9))),
 		}
 	}
 
 	{
-		fak.ShuffleAnySlice(lis)
+		r.fak.ShuffleAnySlice(lis)
 	}
 
 	var obj *post.CreateI
@@ -111,7 +110,7 @@ func (r *run) randomComment(fak *gofakeit.Faker, cla *post.SearchO_Object) *post
 					Public: &post.CreateI_Object_Public{
 						Kind:   "comment",
 						Parent: cla.Intern.Id,
-						Text:   fmt.Sprintf("# %s\n\n%s\n\n%s", tit, par, strings.Join(lis[:fak.Number(2, 5)], "\n")),
+						Text:   fmt.Sprintf("# %s\n\n%s\n\n%s", tit, par, strings.Join(lis[:r.fak.Number(2, 5)], "\n")),
 					},
 				},
 			},

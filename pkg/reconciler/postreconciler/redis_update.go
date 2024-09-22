@@ -1,9 +1,13 @@
 package postreconciler
 
 import (
+	"fmt"
+
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
 	"github.com/uvio-network/apiserver/pkg/storage/votestorage"
+	"github.com/uvio-network/apiserver/pkg/storage/walletstorage"
 	"github.com/xh3b4sd/tracer"
 )
 
@@ -38,6 +42,42 @@ func (r *Redis) UpdateMeta(pos []*poststorage.Object, met []string) ([]*poststor
 	}
 
 	return pos, nil
+}
+
+func (r *Redis) UpdateResolve(res *poststorage.Object, hsh common.Hash, all []common.Address) error {
+	var err error
+
+	{
+		res.Text = resTxt(len(all))
+	}
+
+	if len(hsh) != 0 {
+		res.Lifecycle.Hash = []string{hsh.Hex()}
+	}
+
+	{
+		sam, err := r.searchAddress(all)
+		if err != nil {
+			return tracer.Mask(err)
+		}
+
+		if res.Samples == nil {
+			res.Samples = map[string]string{}
+		}
+
+		for k, v := range sam {
+			res.Samples[k] = v
+		}
+	}
+
+	{
+		err = r.sto.Post().UpdatePost([]*poststorage.Object{res})
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
+	return nil
 }
 
 func (r *Redis) UpdateVotes(vot []*votestorage.Object) ([]*poststorage.Object, error) {
@@ -107,6 +147,48 @@ func (r *Redis) UpdateVotes(vot []*votestorage.Object) ([]*poststorage.Object, e
 	}
 
 	return pos, nil
+}
+
+func (r *Redis) searchAddress(add []common.Address) (map[string]string, error) {
+	var err error
+
+	var str []string
+	for _, x := range add {
+		str = append(str, x.Hex())
+	}
+
+	var wal []*walletstorage.Object
+	{
+		wal, err = r.sto.Wallet().SearchAddress(str)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	if len(wal) != len(add) {
+		return nil, tracer.Maskf(runtime.ExecutionFailedError, "%d != %d", len(wal), len(add))
+	}
+
+	dic := map[string]string{}
+
+	for i := range add {
+		dic[str[i]] = string(wal[i].Owner)
+	}
+
+	return dic, nil
+}
+
+func resTxt(num int) string {
+	var use string
+	{
+		use = "user has"
+	}
+
+	if num > 1 {
+		use = "users have"
+	}
+
+	return fmt.Sprintf("# Market Resolution\n\n%d %s been randomly selected to verify events in the real world for the proposed claim below.", num, use)
 }
 
 // updateVotes is responsible for incrementing the vote summary of the provided

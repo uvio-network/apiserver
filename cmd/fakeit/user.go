@@ -4,20 +4,19 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/brianvoe/gofakeit/v7"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/uvio-network/apigocode/pkg/user"
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *run) createUser(cli Client, key jwk.Key, fak *gofakeit.Faker) (*user.SearchO, error) {
+func (r *run) createUser(key jwk.Key) (*user.SearchO, error) {
 	var err error
 
 	var ids []string
 	for i := 0; i < 10; i++ {
 		var inp *user.CreateI
 		{
-			inp = r.randomUser(fak)
+			inp = r.randomUser()
 		}
 
 		var ctx context.Context
@@ -27,7 +26,7 @@ func (r *run) createUser(cli Client, key jwk.Key, fak *gofakeit.Faker) (*user.Se
 
 		var out *user.CreateO
 		{
-			out, err = cli.User.Create(ctx, inp)
+			out, err = r.cli.User.Create(ctx, inp)
 			if err != nil {
 				tracer.Panic(tracer.Mask(err))
 			}
@@ -53,7 +52,7 @@ func (r *run) createUser(cli Client, key jwk.Key, fak *gofakeit.Faker) (*user.Se
 
 	var out *user.SearchO
 	{
-		out, err = cli.User.Search(context.Background(), inp)
+		out, err = r.cli.User.Search(context.Background(), inp)
 		if err != nil {
 			tracer.Panic(tracer.Mask(err))
 		}
@@ -62,10 +61,10 @@ func (r *run) createUser(cli Client, key jwk.Key, fak *gofakeit.Faker) (*user.Se
 	return out, nil
 }
 
-func (r *run) randomUser(fak *gofakeit.Faker) *user.CreateI {
+func (r *run) randomUser() *user.CreateI {
 	var nam string
 	{
-		nam = fak.Username()
+		nam = r.fak.Username()
 	}
 
 	var obj *user.CreateI

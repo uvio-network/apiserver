@@ -2,7 +2,6 @@ package createresolvehandler
 
 import (
 	"context"
-	"fmt"
 	"math/big"
 	"strconv"
 	"time"
@@ -10,13 +9,11 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/uvio-network/apiserver/pkg/contract/claimscontract"
-	"github.com/uvio-network/apiserver/pkg/object/objectfield"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/uvio-network/apiserver/pkg/sample"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
-	"github.com/uvio-network/apiserver/pkg/storage/walletstorage"
 	"github.com/uvio-network/apiserver/pkg/worker/budget"
 	"github.com/xh3b4sd/logger/meta"
 	"github.com/xh3b4sd/rescue/task"
@@ -101,7 +98,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	// then that means that we have not yet created the required resolve. And so
 	// we can proceed to create the post object for the requested resolve.
 	if res == nil {
-		res, err = h.createObject(pro, exp)
+		res, err = h.rec.Post().CreateResolve(pro, exp)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -173,7 +170,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	}
 
 	if res.Lifecycle.Pending() {
-		err = h.updateObject(res, hsh, append(tru, fls...))
+		err = h.rec.Post().UpdateResolve(res, hsh, append(tru, fls...))
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -190,73 +187,6 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	// verify events in the real world
 
 	return nil
-}
-
-func (h *InternHandler) createObject(pro *poststorage.Object, exp time.Time) (*poststorage.Object, error) {
-	var err error
-
-	var res *poststorage.Object
-	{
-		res = &poststorage.Object{
-			Chain:    pro.Chain,
-			Contract: pro.Contract,
-			Expiry:   exp,
-			Kind:     "claim",
-			Labels:   pro.Labels,
-			Lifecycle: objectfield.Lifecycle{
-				Data: objectlabel.LifecycleResolve,
-			},
-			Owner:  objectid.System(),
-			Parent: pro.ID,
-			Text:   "# Market Resolution\n\nThe random truth sampling process has begun and is waiting for onchain confirmation.",
-		}
-	}
-
-	var out []*poststorage.Object
-	{
-		out, err = h.rec.Post().CreatePost([]*poststorage.Object{res})
-		if err != nil {
-			return nil, tracer.Mask(err)
-		}
-	}
-
-	{
-		err = h.sto.Post().CreatePost(out)
-		if err != nil {
-			return nil, tracer.Mask(err)
-		}
-	}
-
-	return out[0], nil
-}
-
-func (h *InternHandler) searchAddress(add []common.Address) (map[string]string, error) {
-	var err error
-
-	var str []string
-	for _, x := range add {
-		str = append(str, x.Hex())
-	}
-
-	var wal []*walletstorage.Object
-	{
-		wal, err = h.sto.Wallet().SearchAddress(str)
-		if err != nil {
-			return nil, tracer.Mask(err)
-		}
-	}
-
-	if len(wal) != len(add) {
-		return nil, tracer.Maskf(runtime.ExecutionFailedError, "%d != %d", len(wal), len(add))
-	}
-
-	dic := map[string]string{}
-
-	for i := range add {
-		dic[str[i]] = string(wal[i].Owner)
-	}
-
-	return dic, nil
 }
 
 func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *poststorage.Object, error) {
@@ -331,42 +261,6 @@ func (h *InternHandler) searchSamples(cla claimscontract.Interface, pro objectid
 	return tru, fls, nil
 }
 
-func (h *InternHandler) updateObject(res *poststorage.Object, hsh common.Hash, all []common.Address) error {
-	var err error
-
-	{
-		res.Text = resTxt(len(all))
-	}
-
-	if len(hsh) != 0 {
-		res.Lifecycle.Hash = []string{hsh.Hex()}
-	}
-
-	{
-		sam, err := h.searchAddress(all)
-		if err != nil {
-			return tracer.Mask(err)
-		}
-
-		if res.Samples == nil {
-			res.Samples = map[string]string{}
-		}
-
-		for k, v := range sam {
-			res.Samples[k] = v
-		}
-	}
-
-	{
-		err = h.sto.Post().UpdatePost([]*poststorage.Object{res})
-		if err != nil {
-			return tracer.Mask(err)
-		}
-	}
-
-	return nil
-}
-
 func logCtx(tas *task.Task) context.Context {
 	ctx := context.Background()
 
@@ -375,19 +269,6 @@ func logCtx(tas *task.Task) context.Context {
 	}
 
 	return ctx
-}
-
-func resTxt(num int) string {
-	var use string
-	{
-		use = "user has"
-	}
-
-	if num > 1 {
-		use = "users have"
-	}
-
-	return fmt.Sprintf("# Market Resolution\n\n%d %s been randomly selected to verify events in the real world for the proposed claim below.", num, use)
 }
 
 func tasInt(str string) (uint64, error) {
