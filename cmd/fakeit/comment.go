@@ -28,7 +28,7 @@ func (r *run) createComment(key jwk.Key, use *user.SearchO, cla *post.SearchO, v
 
 		var ctx context.Context
 		{
-			ctx = newCtx(key, useObj(use, vot.Object[0].Intern.Owner).Public.Name)
+			ctx = newCtx(key, useUID(use, vot.Object[0].Intern.Owner).Public.Name)
 		}
 
 		var out *post.CreateO

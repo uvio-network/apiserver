@@ -84,7 +84,7 @@ func (r *run) randomUser() *user.CreateI {
 	return obj
 }
 
-func useObj(use *user.SearchO, uid string) *user.SearchO_Object {
+func useUID(use *user.SearchO, uid string) *user.SearchO_Object {
 	for _, x := range use.Object {
 		if x.Intern.Id == uid {
 			return x
