@@ -75,12 +75,18 @@ func (r *run) createResolve(wal *wallet.SearchO, cla *post.SearchO) (*post.Searc
 			pos[0].Expiry = time.Now().UTC()
 		}
 
-		{
-			err = r.dae.Sto().Post().CreateExpiry(pos)
-			if err != nil {
-				tracer.Panic(tracer.Mask(err))
-			}
-		}
+		// We are explicitely not adding the artificially expired propose to the
+		// expiry queue, since the local fake setup is not fully implemented
+		// onchain. If we were to expire the proposes here properly, the worker
+		// handlers would not find proposes in the smart contracts of the local
+		// blockchain node (anvil/hardhat).
+		//
+		// {
+		// 	err = r.dae.Sto().Post().CreateExpiry(pos)
+		// 	if err != nil {
+		// 		tracer.Panic(tracer.Mask(err))
+		// 	}
+		// }
 
 		{
 			err = r.dae.Sto().Post().UpdatePost(pos)

@@ -9,12 +9,12 @@ import (
 )
 
 type Object struct {
-	Address     string      `json:"address"`
-	Created     time.Time   `json:"created"`
-	Description string      `json:"description"`
-	ID          objectid.ID `json:"id"`
-	Kind        string      `json:"kind"`
-	Owner       objectid.ID `json:"owner"`
+	Address     string      `json:"address,omitempty"`
+	Created     time.Time   `json:"created,omitempty"`
+	Description string      `json:"description,omitempty"`
+	ID          objectid.ID `json:"id,omitempty"`
+	Kind        string      `json:"kind,omitempty"`
+	Owner       objectid.ID `json:"owner,omitempty"`
 }
 
 func (o *Object) Verify() error {

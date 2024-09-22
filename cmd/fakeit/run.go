@@ -1,10 +1,13 @@
 package fakeit
 
 import (
+	"context"
 	"fmt"
+	"math/big"
 
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/brianvoe/gofakeit/v7/source"
+	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/spf13/cobra"
 	"github.com/uvio-network/apigocode/pkg/post"
@@ -17,6 +20,7 @@ import (
 )
 
 type run struct {
+	cid *big.Int
 	cli Client
 	dae daemon.Interface
 	fak *gofakeit.Faker
@@ -58,6 +62,23 @@ func (r *run) runE(cmd *cobra.Command, arg []string) error {
 
 	{
 		r.fak = gofakeit.NewFaker(source.NewCrypto(), true)
+	}
+
+	// --------------------------------------------------------------------- //
+
+	var cli *ethclient.Client
+	{
+		cli, err = ethclient.Dial(r.dae.Env().ChainRpcEndpoint)
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
+	{
+		r.cid, err = cli.ChainID(context.Background())
+		if err != nil {
+			r.cid = big.NewInt(1337)
+		}
 	}
 
 	// --------------------------------------------------------------------- //
