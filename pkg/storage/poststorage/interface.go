@@ -6,6 +6,13 @@ import (
 )
 
 type Interface interface {
+	// CreateExpiry adds the referenced IDs of the given post objects to the
+	// lifecycle specific PostExpiry index.
+	//
+	//     @inp[0] the post objects to add to the PostExpiry index
+	//
+	CreateExpiry(inp []*Object) error
+
 	// CreatePost persists new post objects in the underlying storage.
 	//
 	//     @inp[0] the post objects to create

@@ -20,7 +20,6 @@ func (h *Handler) Create(ctx context.Context, req *vote.CreateI) (*vote.CreateO,
 	var inp []*votestorage.Object
 	for _, x := range req.Object {
 		inp = append(inp, &votestorage.Object{
-			Chain: x.Public.Chain,
 			Claim: objectid.ID(x.Public.Claim),
 			Kind:  x.Public.Kind,
 			Lifecycle: objectfield.Lifecycle{

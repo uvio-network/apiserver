@@ -9,13 +9,15 @@ import (
 	"github.com/uvio-network/apigocode/pkg/post"
 	"github.com/uvio-network/apigocode/pkg/user"
 	"github.com/uvio-network/apigocode/pkg/vote"
+	"github.com/uvio-network/apigocode/pkg/wallet"
 	"github.com/uvio-network/apiserver/pkg/envvar"
 )
 
 type Client struct {
-	Post post.API
-	User user.API
-	Vote vote.API
+	Post   post.API
+	User   user.API
+	Vote   vote.API
+	Wallet wallet.API
 }
 
 func NewClient(env envvar.Env) Client {
@@ -37,8 +39,9 @@ func NewClient(env envvar.Env) Client {
 	}
 
 	return Client{
-		Post: post.NewAPIJSONClient(url, cli, opt...),
-		User: user.NewAPIJSONClient(url, cli, opt...),
-		Vote: vote.NewAPIJSONClient(url, cli, opt...),
+		Post:   post.NewAPIJSONClient(url, cli, opt...),
+		User:   user.NewAPIJSONClient(url, cli, opt...),
+		Vote:   vote.NewAPIJSONClient(url, cli, opt...),
+		Wallet: wallet.NewAPIJSONClient(url, cli, opt...),
 	}
 }
