@@ -14,11 +14,6 @@ var TruthValueInvalidError = &tracer.Error{
 	Desc: "The request expects the truth value to be 1. The truth value was not found to be 1. Therefore the request failed.",
 }
 
-var VoteChainEmptyError = &tracer.Error{
-	Kind: "VoteChainEmptyError",
-	Desc: "The request expects the vote chain not to be empty. The vote chain was found to be empty. Therefore the request failed.",
-}
-
 var VoteHashFormatError = &tracer.Error{
 	Kind: "VoteHashFormatError",
 	Desc: "The request expects the vote hash to be in hex format including 0x prefix. The vote hash was not found to comply with that format. Therefore the request failed.",

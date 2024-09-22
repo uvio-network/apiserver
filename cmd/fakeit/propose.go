@@ -16,7 +16,7 @@ import (
 	"golang.org/x/text/language"
 )
 
-func (r *run) createClaim(key jwk.Key, use *user.SearchO) (*post.SearchO, error) {
+func (r *run) createPropose(key jwk.Key, use *user.SearchO) (*post.SearchO, error) {
 	var err error
 
 	var ids []string

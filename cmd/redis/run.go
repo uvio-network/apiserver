@@ -1,13 +1,10 @@
 package redis
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/spf13/cobra"
-	"github.com/uvio-network/apiserver/pkg/format/storageformat"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
-	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/uvio-network/apiserver/pkg/server/converter"
 	"github.com/uvio-network/apiserver/pkg/storage"
@@ -66,15 +63,17 @@ func (r *run) runE(cmd *cobra.Command, arg []string) error {
 		if err != nil {
 			return tracer.Mask(err)
 		}
-
-		err = red.Sorted().Create().Score(posExp(pos.Lifecycle.Data), pos.ID.String(), float64(exp.UnixNano()))
-		if err != nil {
-			return tracer.Mask(err)
-		}
 	}
 
 	{
 		pos.Expiry = exp
+	}
+
+	{
+		err = sto.Post().CreateExpiry([]*poststorage.Object{pos})
+		if err != nil {
+			return tracer.Mask(err)
+		}
 	}
 
 	{
@@ -103,8 +102,4 @@ func (r *run) seaPos(sto storage.Interface, cla objectid.ID) (*poststorage.Objec
 	}
 
 	return pos[0], nil
-}
-
-func posExp(str objectlabel.DesiredLifecycle) string {
-	return fmt.Sprintf(storageformat.PostExpiry, str)
 }

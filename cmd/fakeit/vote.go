@@ -2,8 +2,6 @@ package fakeit
 
 import (
 	"context"
-	"encoding/hex"
-	"fmt"
 	"strings"
 
 	"github.com/lestrrat-go/jwx/jwk"
@@ -85,7 +83,7 @@ func (r *run) createVote(key jwk.Key, use *user.SearchO, cla *post.SearchO) (*vo
 func (r *run) randomVote(cla *post.SearchO_Object) *vote.CreateI {
 	var hsh string
 	if r.fak.Float64() > 0.2 {
-		hsh = fmt.Sprintf("0x%s", hex.EncodeToString([]byte(r.fak.StreetName())))
+		hsh = r.fak.HexUint(256)
 	}
 
 	var opt []string
@@ -102,7 +100,6 @@ func (r *run) randomVote(cla *post.SearchO_Object) *vote.CreateI {
 			Object: []*vote.CreateI_Object{
 				{
 					Public: &vote.CreateI_Object_Public{
-						Chain:     "421614",
 						Claim:     cla.Intern.Id,
 						Hash:      hsh,
 						Kind:      "stake",

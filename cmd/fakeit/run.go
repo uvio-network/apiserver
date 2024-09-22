@@ -10,6 +10,7 @@ import (
 	"github.com/uvio-network/apigocode/pkg/post"
 	"github.com/uvio-network/apigocode/pkg/user"
 	"github.com/uvio-network/apigocode/pkg/vote"
+	"github.com/uvio-network/apigocode/pkg/wallet"
 	"github.com/uvio-network/apiserver/pkg/daemon"
 	"github.com/uvio-network/apiserver/pkg/envvar"
 	"github.com/xh3b4sd/tracer"
@@ -69,9 +70,17 @@ func (r *run) runE(cmd *cobra.Command, arg []string) error {
 		}
 	}
 
-	var cla *post.SearchO
+	var wal *wallet.SearchO
 	{
-		cla, err = r.createClaim(key, use)
+		wal, err = r.createWallet(key, use)
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
+	var pro *post.SearchO
+	{
+		pro, err = r.createPropose(key, use)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -79,7 +88,15 @@ func (r *run) runE(cmd *cobra.Command, arg []string) error {
 
 	var vot *vote.SearchO
 	{
-		vot, err = r.createVote(key, use, cla)
+		vot, err = r.createVote(key, use, pro)
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
+	var res *post.SearchO
+	{
+		res, err = r.createResolve(wal, pro)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -87,7 +104,7 @@ func (r *run) runE(cmd *cobra.Command, arg []string) error {
 
 	var com *post.SearchO
 	{
-		com, err = r.createComment(key, use, cla, vot)
+		com, err = r.createComment(key, use, pro, vot)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -95,7 +112,9 @@ func (r *run) runE(cmd *cobra.Command, arg []string) error {
 
 	{
 		fmt.Printf("Generated %d fake users.\n", len(use.Object))
-		fmt.Printf("Generated %d fake claims.\n", len(cla.Object))
+		fmt.Printf("Generated %d fake wallets.\n", len(wal.Object))
+		fmt.Printf("Generated %d fake claims of lifecycle phase %q.\n", len(pro.Object), "propose")
+		fmt.Printf("Generated %d fake claims of lifecycle phase %q.\n", len(res.Object), "resolve")
 		fmt.Printf("Generated %d fake votes.\n", len(vot.Object))
 		fmt.Printf("Generated %d fake comments.\n", len(com.Object))
 	}

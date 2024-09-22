@@ -125,6 +125,14 @@ func (d *Daemon) Rec() reconciler.Interface {
 	return d.rec
 }
 
+func (d *Daemon) Red() redigo.Interface {
+	return d.red
+}
+
+func (d *Daemon) Sto() storage.Interface {
+	return d.sto
+}
+
 func defLoc(add string) locker.Interface {
 	return lock.New(lock.Config{
 		Brk: breakr.New(breakr.Config{
