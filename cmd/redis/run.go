@@ -70,7 +70,7 @@ func (r *run) runE(cmd *cobra.Command, arg []string) error {
 	}
 
 	{
-		err = sto.Post().CreateExpiry([]*poststorage.Object{pos})
+		err = sto.Post().InternCreateExpiry([]*poststorage.Object{pos})
 		if err != nil {
 			return tracer.Mask(err)
 		}

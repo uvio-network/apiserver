@@ -11,7 +11,7 @@ var ClaimAlreadyExpiredError = &tracer.Error{
 
 var StakeLifecycleInvalidError = &tracer.Error{
 	Kind: "StakeLifecycleInvalidError",
-	Desc: "The request expects the lifecycle of the referenced claim to be one of [adjourn dispute nullify propose]. The lifecycle of the referenced claim was not found to be one of those values. Therefore the request failed.",
+	Desc: "The request expects the lifecycle of the referenced claim to be one of [dispute propose]. The lifecycle of the referenced claim was not found to be one of those values. Therefore the request failed.",
 }
 
 var StakeLifecyclePendingError = &tracer.Error{

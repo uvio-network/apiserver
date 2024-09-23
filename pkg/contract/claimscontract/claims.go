@@ -15,6 +15,13 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
+const (
+	// CLAIM_BALANCE_S is the bitmap index to call SearchResolve with. This index
+	// is mapped to a boolean that tracks whether claims got already fully settled
+	// onchain.
+	CLAIM_BALANCE_S uint8 = 2
+)
+
 type ClaimsConfig struct {
 	Add common.Address
 	Cli *ethclient.Client
@@ -59,6 +66,43 @@ func NewClaims(c ClaimsConfig) *Claims {
 		log: c.Log,
 		opt: c.Opt,
 	}
+}
+
+func (c *Claims) BalanceUpdated(blc uint64, pod uint64) ([]common.Hash, error) {
+	var err error
+
+	var ite *ClaimsContractBindingBalanceUpdatedIterator
+	{
+		ite, err = c.bin.FilterBalanceUpdated(&bind.FilterOpts{Start: blc})
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	{
+		defer ite.Close()
+	}
+
+	var hsh []common.Hash
+	for ite.Next() {
+		err := ite.Error()
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+
+		if ite.Event.Pod.Uint64() != pod {
+			continue
+		}
+
+		// Since there are potentially multiple calls to updateBalance, there are
+		// potentially multiple events emitted for multiple transaction hashes. And
+		// so we collect all of them up to the latest block.
+		{
+			hsh = append(hsh, ite.Event.Raw.TxHash)
+		}
+	}
+
+	return hsh, nil
 }
 
 func (c *Claims) Client() *ethclient.Client {
@@ -185,6 +229,20 @@ func (c *Claims) SearchIndices(pro objectid.ID) ([]*big.Int, error) {
 	return []*big.Int{zer, one, two, thr, fou, fiv, six, sev}, nil
 }
 
+func (c *Claims) SearchResolve(pro objectid.ID, ind uint8) (bool, error) {
+	var err error
+
+	var res bool
+	{
+		res, err = c.bin.SearchResolve(nil, big.NewInt(pro.Int()), ind)
+		if err != nil {
+			return false, tracer.Mask(err)
+		}
+	}
+
+	return res, nil
+}
+
 func (c *Claims) SearchSamples(pro objectid.ID, lef *big.Int, rig *big.Int) ([]common.Address, error) {
 	var err error
 
@@ -197,4 +255,33 @@ func (c *Claims) SearchSamples(pro objectid.ID, lef *big.Int, rig *big.Int) ([]c
 	}
 
 	return add, nil
+}
+
+func (c *Claims) SearchVotes(pod objectid.ID) (int64, int64, error) {
+	var err error
+
+	var tru *big.Int
+	var fls *big.Int
+	{
+		tru, fls, err = c.bin.SearchVotes(nil, big.NewInt(pod.Int()))
+		if err != nil {
+			return 0, 0, tracer.Mask(err)
+		}
+	}
+
+	return tru.Int64(), fls.Int64(), nil
+}
+
+func (c *Claims) UpdateBalance(cla objectid.ID, max uint64) (*types.Transaction, error) {
+	var err error
+
+	var txn *types.Transaction
+	{
+		txn, err = c.bin.UpdateBalance(nil, big.NewInt(cla.Int()), big.NewInt(int64(max)))
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	return txn, nil
 }

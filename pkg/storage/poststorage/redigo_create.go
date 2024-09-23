@@ -1,24 +1,16 @@
 package poststorage
 
 import (
+	"time"
+
 	"github.com/uvio-network/apiserver/pkg/format/storageformat"
+	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Redigo) CreateExpiry(inp []*Object) error {
-	var err error
-
-	for i := range inp {
-		if inp[i].Kind == "claim" {
-			err = r.red.Sorted().Create().Score(posExp(inp[i].Lifecycle.Data), inp[i].ID.String(), float64(inp[i].Expiry.UnixNano()))
-			if err != nil {
-				return tracer.Mask(err)
-			}
-		}
-	}
-
-	return nil
-}
+const (
+	oneWeek = time.Hour * 24 * 7
+)
 
 func (r *Redigo) CreatePost(inp []*Object) error {
 	var err error
@@ -72,11 +64,31 @@ func (r *Redigo) CreatePost(inp []*Object) error {
 		}
 
 		if inp[i].Kind == "claim" {
+			var exp time.Time
+			{
+				exp = inp[i].Expiry
+			}
+
+			// Claims of lifecycle phase "resolve" have two stages of expiries. The
+			// first stage is the defined expiry that we track in the post object.
+			// Within this first stage it is possible for voters to cast their votes.
+			// Once the first stage concluded, the second stage begins, which is the
+			// challenge period during which disputes may be created by anyone. When
+			// we expire resolves internally, then we aim to update balances in order
+			// to settle a claim tree. So the resolve expiry tracked in our internal
+			// expiry queue considers the claim's challenge window, which is hard
+			// coded system wide to be 7 standard days. If no dispute has been
+			// proposed within this challenge window, then we can settle the original
+			// claim using our background automation.
+			if inp[i].Lifecycle.Is(objectlabel.LifecycleResolve) {
+				exp = exp.Add(oneWeek)
+			}
+
 			// Regardless the claim lifecycle, we keep track of all claim IDs by their
 			// specified claim expiry. This helps us to automate the progress on claim
 			// trees. For instance we can run background jobs that look for expiring
 			// claims and ensure the creation of claims in their next lifecycle phase.
-			err = r.red.Sorted().Create().Score(posExp(inp[i].Lifecycle.Data), inp[i].ID.String(), float64(inp[i].Expiry.UnixNano()))
+			err = r.red.Sorted().Create().Score(posExp(inp[i].Lifecycle.Data), inp[i].ID.String(), float64(exp.UnixNano()))
 			if err != nil {
 				return tracer.Mask(err)
 			}

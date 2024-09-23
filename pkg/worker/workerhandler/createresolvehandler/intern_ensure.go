@@ -27,9 +27,10 @@ const (
 	// provided task will be revoked. Therefore defining maxWait under 30 seconds
 	// gives us enough time to gracefully process the task given to us.
 	maxWait = 20 * time.Second
-)
 
-const (
+	// oneWeek is the time within which selected stakers can vote on the created
+	// resolves. The resolve expiries start from the associated propose expiry and
+	// last until this 7 standard days later.
 	oneWeek = time.Hour * 24 * 7
 )
 
@@ -176,7 +177,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 	}
 
-	// Once the new post object got updated with the transaction ID and the
+	// Once the new post object got updated with the transaction hash and the
 	// sampled addresses we can remove the paging pointer and all sync state from
 	// the task so that it can be deleted eventually by the rescue engine.
 	{

@@ -107,6 +107,19 @@
       {
         "indexed": false,
         "internalType": "uint256",
+        "name": "pod",
+        "type": "uint256"
+      }
+    ],
+    "name": "BalanceUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
         "name": "cla",
         "type": "uint256"
       },

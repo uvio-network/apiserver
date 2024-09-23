@@ -9,6 +9,13 @@ import (
 )
 
 type Interface interface {
+	// CreateBalance creates a new pending balance for the provided resolve.
+	//
+	//     inp[0] the resolve to create a pending balance for
+	//     out[0] the pending balance as persisted in the underlying storage
+	//
+	CreateBalance(*poststorage.Object) (*poststorage.Object, error)
+
 	// CreatePost prepares the provided post objects so that they can be persisted
 	// in the underlying storage the first time.
 	//
@@ -34,6 +41,17 @@ type Interface interface {
 	//
 	DeletePost(inp []*poststorage.Object) ([]*poststorage.Object, error)
 
+	// UpdateBalance modifies the provided post object of lifecycle phase
+	// "balance" with the given transaction hashes. Once UpdateBalance succeeded,
+	// the provided balance is not considered pending anymore, since the provided
+	// transaction hashes got confirmed onchain.
+	//
+	//     inp[0] the post object of lifecycle phase "balance"
+	//     inp[1] the confirmed onchain transaction hashes to set
+	//     inp[2] the vote summary of the provided balance
+	//
+	UpdateBalance(*poststorage.Object, []common.Hash, []float64) error
+
 	// UpdateHash modifies the transaction hash of the claims as provided by the
 	// given post objects. Note that transaction hashes can only be updated once,
 	// if their prior value was empty.
@@ -57,7 +75,7 @@ type Interface interface {
 	// UpdateResolve succeeded, the provided resolve is not considered pending
 	// anymore, since the provided transaction hash got confirmed onchain.
 	//
-	//     inp[0] the post objects of lifecycle phase "resolve"
+	//     inp[0] the post object of lifecycle phase "resolve"
 	//     inp[1] the confirmed onchain transaction hash to set
 	//     inp[2] the staker addresses to set
 	//

@@ -44,6 +44,27 @@ func (r *Redis) UpdateMeta(pos []*poststorage.Object, met []string) ([]*poststor
 	return pos, nil
 }
 
+func (r *Redis) UpdateBalance(bal *poststorage.Object, hsh []common.Hash, sum []float64) error {
+	var err error
+
+	for _, x := range hsh {
+		bal.Lifecycle.Hash = append(bal.Lifecycle.Hash, x.Hex())
+	}
+
+	{
+		bal.Votes = sum
+	}
+
+	{
+		err = r.sto.Post().UpdatePost([]*poststorage.Object{bal})
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
+	return nil
+}
+
 func (r *Redis) UpdateResolve(res *poststorage.Object, hsh common.Hash, all []common.Address) error {
 	var err error
 

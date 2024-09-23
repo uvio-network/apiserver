@@ -30,7 +30,7 @@ type Object struct {
 	Text      string                `json:"text,omitempty"`
 	Token     string                `json:"token,omitempty"`
 	Tree      objectid.ID           `json:"tree,omitempty"`
-	Votes     []float64             `json:"votes,omitempty"`
+	Votes     []float64             `json:"votes,omitempty"` // TODO rename to Summary
 }
 
 func (o *Object) Verify() error {
@@ -50,19 +50,24 @@ func (o *Object) Verify() error {
 	}
 
 	{
-		if o.Kind == "claim" && o.Expiry.IsZero() {
-			return tracer.Mask(ClaimExpiryEmptyError)
-		}
+		if o.Kind == "claim" && !o.Lifecycle.Is(objectlabel.LifecycleBalance) {
+			// All claim objects must have an expiry, except the internal claim type
+			// "balance". Balance claims are only for us internally to ensure all user
+			// balances get updated once the original propose is settled onchain.
+			if o.Expiry.IsZero() {
+				return tracer.Mask(ClaimExpiryEmptyError)
+			}
 
-		// When creating posts of kind "claim", we want to ensure that claims cannot
-		// be created with expiries that point to the past. During claim creation,
-		// the post IDs are only allocated once the input data got verified. During
-		// claim updates, the post expiry may very well be in the past at the time
-		// of the update being processed. During those update processes we do not
-		// want to run the check below again, assuming nobody from the outside could
-		// change the initial expiry anymore.
-		if o.ID == "" && o.Kind == "claim" && o.Expiry.Compare(time.Now().UTC()) != +1 {
-			return tracer.Maskf(ClaimExpiryPastError, "%d", o.Expiry.Unix())
+			// When creating posts of kind "claim", we want to ensure that claims cannot
+			// be created with expiries that point to the past. During claim creation,
+			// the post IDs are only allocated once the input data got verified. During
+			// claim updates, the post expiry may very well be in the past at the time
+			// of the update being processed. During those update processes we do not
+			// want to run the check below again, assuming nobody from the outside could
+			// change the initial expiry anymore.
+			if o.ID == "" && o.Expiry.Compare(time.Now().UTC()) != +1 {
+				return tracer.Maskf(ClaimExpiryPastError, "%d", o.Expiry.Unix())
+			}
 		}
 	}
 
@@ -91,7 +96,7 @@ func (o *Object) Verify() error {
 	}
 
 	{
-		if o.Kind == "claim" && !o.Lifecycle.Is(objectlabel.LifecycleAdjourn, objectlabel.LifecycleDispute, objectlabel.LifecycleNullify, objectlabel.LifecyclePropose, objectlabel.LifecycleResolve) {
+		if o.Kind == "claim" && !o.Lifecycle.Is(objectlabel.LifecycleBalance, objectlabel.LifecycleDispute, objectlabel.LifecyclePropose, objectlabel.LifecycleResolve) {
 			return tracer.Maskf(ClaimLifecycleInvalidError, string(o.Lifecycle.Data))
 		}
 		if o.Kind == "comment" && !o.Lifecycle.Empty() {
@@ -143,7 +148,7 @@ func (o *Object) Verify() error {
 		tok := strings.TrimSpace(o.Token)
 
 		// Any claim on which you can stake reputation must specify a staking token.
-		if o.Kind == "claim" && o.Lifecycle.Is(objectlabel.LifecycleAdjourn, objectlabel.LifecycleDispute, objectlabel.LifecycleNullify, objectlabel.LifecyclePropose) && tok == "" {
+		if o.Kind == "claim" && o.Lifecycle.Is(objectlabel.LifecycleDispute, objectlabel.LifecyclePropose) && tok == "" {
 			return tracer.Mask(PostTokenEmptyError)
 		}
 		// Any claim on which you cannot stake reputation must not specify a staking
