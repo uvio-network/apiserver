@@ -15,6 +15,43 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
+func (r *Redis) CreateBalance(res *poststorage.Object) (*poststorage.Object, error) {
+	var err error
+
+	var bal *poststorage.Object
+	{
+		bal = &poststorage.Object{
+			Chain:    res.Chain,
+			Contract: res.Contract,
+			Kind:     "claim",
+			Labels:   res.Labels,
+			Lifecycle: objectfield.Lifecycle{
+				Data: objectlabel.LifecycleBalance,
+			},
+			Owner:  objectid.System(),
+			Parent: res.ID,
+			Text:   "# Market Settlement\n\nThe process of updating user balances has begun and is waiting for onchain confirmation.",
+		}
+	}
+
+	var out []*poststorage.Object
+	{
+		out, err = r.CreatePost([]*poststorage.Object{bal})
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	{
+		err = r.sto.Post().CreatePost(out)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	return out[0], nil
+}
+
 func (r *Redis) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, error) {
 	var err error
 

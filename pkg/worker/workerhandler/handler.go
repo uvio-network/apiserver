@@ -11,6 +11,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/storage"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/claimexpiryhandler"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/createresolvehandler"
+	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/updatebalancehandler"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/usercreatehandler"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/uvxminthandler"
 	"github.com/xh3b4sd/locker"
@@ -70,6 +71,13 @@ func New(c Config) *Handler {
 			Log: c.Log,
 			Rec: c.Rec,
 			Sam: c.Sam,
+			Sto: c.Sto,
+		}))
+
+		han = append(han, updatebalancehandler.NewInternHandler(updatebalancehandler.InternHandlerConfig{
+			Con: c.Con,
+			Log: c.Log,
+			Rec: c.Rec,
 			Sto: c.Sto,
 		}))
 
