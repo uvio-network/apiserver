@@ -13,6 +13,37 @@ func (r *run) createWallet(key jwk.Key, use *user.SearchO) (*wallet.SearchO, err
 	var err error
 
 	all := map[string]struct{}{}
+
+	for i := 0; i < len(use.Object); i++ {
+		var nam string
+		{
+			nam = use.Object[i].Public.Name
+		}
+
+		{
+			all[nam] = struct{}{}
+		}
+
+		var inp *wallet.CreateI
+		{
+			inp = r.randomWallet()
+		}
+
+		var ctx context.Context
+		{
+			ctx = newCtx(key, nam)
+		}
+
+		{
+			_, err = r.cli.Wallet.Create(ctx, inp)
+			if err != nil {
+				tracer.Panic(tracer.Mask(err))
+			}
+		}
+	}
+
+	// Do it again randomized, so that some users have multiple wallets.
+
 	for i := 0; i < len(use.Object); i++ {
 		{
 			r.fak.ShuffleAnySlice(use.Object)

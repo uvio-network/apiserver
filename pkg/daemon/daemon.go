@@ -92,6 +92,7 @@ func New(env envvar.Env) *Daemon {
 	{
 		rec = reconciler.New(reconciler.Config{
 			Log: log,
+			Red: red,
 			Sto: sto,
 		})
 	}

@@ -54,19 +54,36 @@ func (r *Redis) CreateVote(inp []*votestorage.Object) ([]*votestorage.Object, er
 			// Votes of kind "stake" must comply with the lifecycle of their
 			// referenced claim object, e.g. you cannot stake on a resolve.
 			if inp[i].Kind == "stake" && !cla.Lifecycle.Is(objectlabel.LifecycleDispute, objectlabel.LifecyclePropose) {
-				return nil, tracer.Maskf(StakeLifecycleInvalidError, string(cla.Lifecycle.Data))
+				return nil, tracer.Maskf(StakeLifecycleInvalidError, "%s", cla.Lifecycle.Data)
 			}
 
 			// Votes of kind "truth" must comply with the lifecycle of their
 			// referenced claim object, e.g. you can only vote on a resolve.
 			if inp[i].Kind == "truth" && !cla.Lifecycle.Is(objectlabel.LifecycleResolve) {
-				return nil, tracer.Mask(TruthLifecycleInvalidError)
+				return nil, tracer.Maskf(TruthLifecycleInvalidError, "%s", cla.Lifecycle.Data)
+			}
+
+			// Ensure no votes can be cast anymore on claims that have already expired.
+			if now.After(cla.Expiry) {
+				return nil, tracer.Maskf(ClaimAlreadyExpiredError, "%d", cla.Expiry.Unix())
 			}
 		}
 
-		// Ensure no votes can be cast anymore on claims that have already expired.
-		if now.After(cla.Expiry) {
-			return nil, tracer.Maskf(ClaimAlreadyExpiredError, "%d", cla.Expiry.Unix())
+		// Prevent multiple votes by the same user on the same claim. For market
+		// resolutions it stands one user one vote. This is also enforced in the
+		// underlying smart contracts.
+		if inp[i].Kind == "truth" {
+			var cou int64
+			{
+				cou, err = r.red.Sorted().Metric().Count(votOwnCla(inp[i].Owner, inp[i].Claim))
+				if err != nil {
+					return nil, tracer.Mask(err)
+				}
+			}
+
+			if cou != 0 {
+				return nil, tracer.Maskf(VoteAlreadyExistsError, "%s", cla.ID)
+			}
 		}
 	}
 

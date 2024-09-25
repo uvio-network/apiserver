@@ -24,6 +24,11 @@ var TruthLifecycleInvalidError = &tracer.Error{
 	Desc: "The request expects the lifecycle of the referenced claim to be one of [resolve]. The lifecycle of the referenced claim was not found to be one of those values. Therefore the request failed.",
 }
 
+var VoteAlreadyExistsError = &tracer.Error{
+	Kind: "VoteAlreadyExistsError",
+	Desc: "The request expects the user to only vote once on this claim. The user was found to have already voted on this claim. Therefore the request failed.",
+}
+
 var VoteClaimNotFoundError = &tracer.Error{
 	Kind: "VoteClaimNotFoundError",
 	Desc: "The request expects the vote claim to exist. The vote claim was not found to exist. Therefore the request failed.",
