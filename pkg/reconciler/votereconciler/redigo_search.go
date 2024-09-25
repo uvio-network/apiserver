@@ -6,7 +6,7 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Redis) searchClaim(cla objectid.ID) (*poststorage.Object, error) {
+func (r *Redigo) searchClaim(cla objectid.ID) (*poststorage.Object, error) {
 	var err error
 
 	var obj []*poststorage.Object

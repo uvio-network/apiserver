@@ -9,7 +9,7 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Redis) CreateWallet(inp []*walletstorage.Object) ([]*walletstorage.Object, error) {
+func (r *Redigo) CreateWallet(inp []*walletstorage.Object) ([]*walletstorage.Object, error) {
 	for i := range inp {
 		{
 			err := inp[i].Verify()

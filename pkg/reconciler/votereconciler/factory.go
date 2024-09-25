@@ -7,7 +7,7 @@ import (
 )
 
 func Fake() Interface {
-	return NewRedis(RedisConfig{
+	return NewRedigo(RedigoConfig{
 		Log: logger.Fake(),
 		Red: redigo.Fake(),
 		Sto: storage.Fake(),

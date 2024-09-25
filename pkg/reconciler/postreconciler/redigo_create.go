@@ -15,7 +15,7 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Redis) CreateBalance(res *poststorage.Object) (*poststorage.Object, error) {
+func (r *Redigo) CreateBalance(res *poststorage.Object) (*poststorage.Object, error) {
 	var err error
 
 	var bal *poststorage.Object
@@ -52,7 +52,7 @@ func (r *Redis) CreateBalance(res *poststorage.Object) (*poststorage.Object, err
 	return out[0], nil
 }
 
-func (r *Redis) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, error) {
+func (r *Redigo) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, error) {
 	var err error
 
 	for i := range inp {
@@ -151,7 +151,7 @@ func (r *Redis) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, er
 	return inp, nil
 }
 
-func (r *Redis) CreateResolve(pro *poststorage.Object, exp time.Time) (*poststorage.Object, error) {
+func (r *Redigo) CreateResolve(pro *poststorage.Object, exp time.Time) (*poststorage.Object, error) {
 	var err error
 
 	var res *poststorage.Object
@@ -189,7 +189,7 @@ func (r *Redis) CreateResolve(pro *poststorage.Object, exp time.Time) (*poststor
 	return out[0], nil
 }
 
-func (r *Redis) verifyParent(par objectid.ID) (*poststorage.Object, error) {
+func (r *Redigo) verifyParent(par objectid.ID) (*poststorage.Object, error) {
 	var err error
 
 	var obj []*poststorage.Object

@@ -38,16 +38,16 @@ func New(c Config) *Reconciler {
 	var r *Reconciler
 	{
 		r = &Reconciler{
-			pos: postreconciler.NewRedis(postreconciler.RedisConfig{
+			pos: postreconciler.NewRedigo(postreconciler.RedigoConfig{
 				Log: c.Log,
 				Sto: c.Sto,
 			}),
-			vot: votereconciler.NewRedis(votereconciler.RedisConfig{
+			vot: votereconciler.NewRedigo(votereconciler.RedigoConfig{
 				Log: c.Log,
 				Red: c.Red,
 				Sto: c.Sto,
 			}),
-			wal: walletreconciler.NewRedis(walletreconciler.RedisConfig{
+			wal: walletreconciler.NewRedigo(walletreconciler.RedigoConfig{
 				Log: c.Log,
 				Sto: c.Sto,
 			}),

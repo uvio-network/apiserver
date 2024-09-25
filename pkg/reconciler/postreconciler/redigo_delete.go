@@ -7,7 +7,7 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Redis) DeletePost(inp []*poststorage.Object) ([]*poststorage.Object, error) {
+func (r *Redigo) DeletePost(inp []*poststorage.Object) ([]*poststorage.Object, error) {
 	for i := range inp {
 		if inp[i].Kind == "claim" {
 			var now time.Time
