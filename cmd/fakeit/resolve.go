@@ -112,9 +112,33 @@ func (r *run) createResolve(wal *wallet.SearchO, cla *post.SearchO) (*post.Searc
 				}
 			}
 
+			var sel int
+			{
+				sel = num[r.fak.Number(0, 5)]
+			}
+
+			see := map[string]struct{}{}
+
 			var add []common.Address
-			for _, x := range wal.Object[:num[r.fak.Number(0, 5)]] {
-				add = append(add, common.HexToAddress(x.Public.Address))
+			for _, x := range wal.Object {
+				{
+					_, exi := see[x.Intern.Owner]
+					if exi {
+						continue
+					}
+				}
+
+				{
+					see[x.Intern.Owner] = struct{}{}
+				}
+
+				{
+					add = append(add, common.HexToAddress(x.Public.Address))
+				}
+
+				if len(add) >= sel {
+					break
+				}
 			}
 
 			{

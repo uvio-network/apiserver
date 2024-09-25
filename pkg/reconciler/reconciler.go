@@ -8,11 +8,13 @@ import (
 	"github.com/uvio-network/apiserver/pkg/reconciler/walletreconciler"
 	"github.com/uvio-network/apiserver/pkg/storage"
 	"github.com/xh3b4sd/logger"
+	"github.com/xh3b4sd/redigo"
 	"github.com/xh3b4sd/tracer"
 )
 
 type Config struct {
 	Log logger.Interface
+	Red redigo.Interface
 	Sto storage.Interface
 }
 
@@ -25,6 +27,9 @@ type Reconciler struct {
 func New(c Config) *Reconciler {
 	if c.Log == nil {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Log must not be empty", c)))
+	}
+	if c.Red == nil {
+		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Red must not be empty", c)))
 	}
 	if c.Sto == nil {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Sto must not be empty", c)))
@@ -39,6 +44,7 @@ func New(c Config) *Reconciler {
 			}),
 			vot: votereconciler.NewRedis(votereconciler.RedisConfig{
 				Log: c.Log,
+				Red: c.Red,
 				Sto: c.Sto,
 			}),
 			wal: walletreconciler.NewRedis(walletreconciler.RedisConfig{
