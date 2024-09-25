@@ -9,7 +9,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/storage/votestorage"
 )
 
-func Test_Reconciler_PostReconciler_updateVotes_claim(t *testing.T) {
+func Test_Reconciler_PostReconciler_updateSummary_claim(t *testing.T) {
 	testCases := []struct {
 		pos []*poststorage.Object
 		vot []*votestorage.Object
@@ -18,7 +18,7 @@ func Test_Reconciler_PostReconciler_updateVotes_claim(t *testing.T) {
 		// Case 000
 		{
 			pos: []*poststorage.Object{
-				{Kind: "claim", Owner: "1", Votes: []float64{0, 0, 0, 0}},
+				{Kind: "claim", Owner: "1", Summary: []float64{0, 0, 0, 0}},
 			},
 			vot: []*votestorage.Object{
 				{Option: true, Owner: "1", Value: 1},
@@ -30,7 +30,7 @@ func Test_Reconciler_PostReconciler_updateVotes_claim(t *testing.T) {
 		// Case 001
 		{
 			pos: []*poststorage.Object{
-				{Kind: "claim", Owner: "1", Votes: []float64{1, 0, 1, 1}},
+				{Kind: "claim", Owner: "1", Summary: []float64{1, 0, 1, 1}},
 			},
 			vot: []*votestorage.Object{
 				{Option: true, Owner: "1", Value: 1},
@@ -42,7 +42,7 @@ func Test_Reconciler_PostReconciler_updateVotes_claim(t *testing.T) {
 		// Case 002
 		{
 			pos: []*poststorage.Object{
-				{Kind: "claim", Owner: "1", Votes: []float64{2, 0, 1, 2}},
+				{Kind: "claim", Owner: "1", Summary: []float64{2, 0, 1, 2}},
 			},
 			vot: []*votestorage.Object{
 				{Option: false, Owner: "2", Value: 3},
@@ -54,7 +54,7 @@ func Test_Reconciler_PostReconciler_updateVotes_claim(t *testing.T) {
 		// Case 003
 		{
 			pos: []*poststorage.Object{
-				{Kind: "claim", Owner: "1", Votes: []float64{2, 3, 1, 2}},
+				{Kind: "claim", Owner: "1", Summary: []float64{2, 3, 1, 2}},
 			},
 			vot: []*votestorage.Object{
 				{Option: true, Owner: "3", Value: 1.5},
@@ -66,10 +66,10 @@ func Test_Reconciler_PostReconciler_updateVotes_claim(t *testing.T) {
 		// Case 004
 		{
 			pos: []*poststorage.Object{
-				{Kind: "claim", Owner: "1", Votes: []float64{0, 0, 0, 0}},
-				{Kind: "claim", Owner: "1", Votes: []float64{1, 0, 1, 1}},
-				{Kind: "claim", Owner: "1", Votes: []float64{2, 0, 1, 2}},
-				{Kind: "claim", Owner: "1", Votes: []float64{2, 3, 1, 2}},
+				{Kind: "claim", Owner: "1", Summary: []float64{0, 0, 0, 0}},
+				{Kind: "claim", Owner: "1", Summary: []float64{1, 0, 1, 1}},
+				{Kind: "claim", Owner: "1", Summary: []float64{2, 0, 1, 2}},
+				{Kind: "claim", Owner: "1", Summary: []float64{2, 3, 1, 2}},
 			},
 			vot: []*votestorage.Object{
 				{Option: true, Owner: "1", Value: 1},
@@ -94,7 +94,7 @@ func Test_Reconciler_PostReconciler_updateVotes_claim(t *testing.T) {
 
 			var out [][]float64
 			for i := range tc.pos {
-				out = append(out, updateVotes(tc.pos[i], tc.vot[i]).Votes)
+				out = append(out, updateSummary(tc.pos[i], tc.vot[i]).Summary)
 			}
 
 			if len(out) != len(tc.out) {
@@ -110,7 +110,7 @@ func Test_Reconciler_PostReconciler_updateVotes_claim(t *testing.T) {
 	}
 }
 
-func Test_Reconciler_PostReconciler_updateVotes_comment(t *testing.T) {
+func Test_Reconciler_PostReconciler_updateSummary_comment(t *testing.T) {
 	testCases := []struct {
 		pos []*poststorage.Object
 		vot []*votestorage.Object
@@ -119,7 +119,7 @@ func Test_Reconciler_PostReconciler_updateVotes_comment(t *testing.T) {
 		// Case 000
 		{
 			pos: []*poststorage.Object{
-				{Kind: "comment", Votes: []float64{0, 0}},
+				{Kind: "comment", Summary: []float64{0, 0}},
 			},
 			vot: []*votestorage.Object{
 				{Option: true, Value: 1},
@@ -131,7 +131,7 @@ func Test_Reconciler_PostReconciler_updateVotes_comment(t *testing.T) {
 		// Case 001
 		{
 			pos: []*poststorage.Object{
-				{Kind: "comment", Votes: []float64{1, 0}},
+				{Kind: "comment", Summary: []float64{1, 0}},
 			},
 			vot: []*votestorage.Object{
 				{Option: true, Value: 1},
@@ -143,7 +143,7 @@ func Test_Reconciler_PostReconciler_updateVotes_comment(t *testing.T) {
 		// Case 002
 		{
 			pos: []*poststorage.Object{
-				{Kind: "comment", Votes: []float64{2, 0}},
+				{Kind: "comment", Summary: []float64{2, 0}},
 			},
 			vot: []*votestorage.Object{
 				{Option: false, Value: 3},
@@ -155,7 +155,7 @@ func Test_Reconciler_PostReconciler_updateVotes_comment(t *testing.T) {
 		// Case 003
 		{
 			pos: []*poststorage.Object{
-				{Kind: "comment", Votes: []float64{2, 3}},
+				{Kind: "comment", Summary: []float64{2, 3}},
 			},
 			vot: []*votestorage.Object{
 				{Option: true, Value: 1.5},
@@ -167,10 +167,10 @@ func Test_Reconciler_PostReconciler_updateVotes_comment(t *testing.T) {
 		// Case 003
 		{
 			pos: []*poststorage.Object{
-				{Kind: "comment", Votes: []float64{0, 0}},
-				{Kind: "comment", Votes: []float64{1, 0}},
-				{Kind: "comment", Votes: []float64{2, 0}},
-				{Kind: "comment", Votes: []float64{2, 3}},
+				{Kind: "comment", Summary: []float64{0, 0}},
+				{Kind: "comment", Summary: []float64{1, 0}},
+				{Kind: "comment", Summary: []float64{2, 0}},
+				{Kind: "comment", Summary: []float64{2, 3}},
 			},
 			vot: []*votestorage.Object{
 				{Option: true, Value: 1},
@@ -195,7 +195,7 @@ func Test_Reconciler_PostReconciler_updateVotes_comment(t *testing.T) {
 
 			var out [][]float64
 			for i := range tc.pos {
-				out = append(out, updateVotes(tc.pos[i], tc.vot[i]).Votes)
+				out = append(out, updateSummary(tc.pos[i], tc.vot[i]).Summary)
 			}
 
 			if len(out) != len(tc.out) {

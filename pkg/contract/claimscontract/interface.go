@@ -20,7 +20,7 @@ type Interface interface {
 	//     inp[1] the ID of the propose or dispute for which the balances got updated
 	//     out[0] the transaction hashes emitting the filtered event, if any
 	//
-	BalanceUpdated(blc uint64, pod uint64) ([]common.Hash, error)
+	BalanceUpdated(uint64, uint64) ([]common.Hash, error)
 
 	// Client is the underlying go-ethereum client interacting with the configured
 	// RPC.

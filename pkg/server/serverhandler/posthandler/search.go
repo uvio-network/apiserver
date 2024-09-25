@@ -283,7 +283,7 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 				Parent:    x.Parent.String(),
 				Text:      x.Text,
 				Token:     x.Token,
-				Votes:     converter.FloatsToString(x.Votes),
+				Summary:   converter.FloatsToString(x.Summary),
 			},
 		})
 	}

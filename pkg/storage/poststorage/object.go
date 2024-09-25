@@ -27,10 +27,10 @@ type Object struct {
 	Owner     objectid.ID           `json:"owner,omitempty"`
 	Parent    objectid.ID           `json:"parent,omitempty"`
 	Samples   map[string]string     `json:"samples,omitempty"`
+	Summary   []float64             `json:"summary,omitempty"`
 	Text      string                `json:"text,omitempty"`
 	Token     string                `json:"token,omitempty"`
 	Tree      objectid.ID           `json:"tree,omitempty"`
-	Votes     []float64             `json:"votes,omitempty"` // TODO rename to Summary
 }
 
 func (o *Object) Verify() error {
@@ -163,12 +163,12 @@ func (o *Object) Verify() error {
 	}
 
 	{
-		if o.Kind == "claim" && len(o.Votes) != 4 {
-			return tracer.Maskf(runtime.ExecutionFailedError, "vote summary for claims must contain 4 parts")
+		if o.Kind == "claim" && len(o.Summary) != 4 {
+			return tracer.Maskf(runtime.ExecutionFailedError, "summary for claims must contain 4 items")
 		}
 
-		if o.Kind == "comment" && len(o.Votes) != 2 {
-			return tracer.Maskf(runtime.ExecutionFailedError, "vote summary for comments must contain 2 parts")
+		if o.Kind == "comment" && len(o.Summary) != 2 {
+			return tracer.Maskf(runtime.ExecutionFailedError, "summary for comments must contain 2 items")
 		}
 	}
 
