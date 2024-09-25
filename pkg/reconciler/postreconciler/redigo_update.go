@@ -18,7 +18,7 @@ const (
 	Creator      = 3
 )
 
-func (r *Redis) UpdateHash(pos []*poststorage.Object, hsh []string) ([]*poststorage.Object, error) {
+func (r *Redigo) UpdateHash(pos []*poststorage.Object, hsh []string) ([]*poststorage.Object, error) {
 	for i := range pos {
 		if pos[i].Kind != "claim" {
 			return nil, tracer.Maskf(ClaimUpdateKindError, "%s=%s", pos[i].ID, pos[i].Kind)
@@ -36,7 +36,7 @@ func (r *Redis) UpdateHash(pos []*poststorage.Object, hsh []string) ([]*poststor
 	return pos, nil
 }
 
-func (r *Redis) UpdateMeta(pos []*poststorage.Object, met []string) ([]*poststorage.Object, error) {
+func (r *Redigo) UpdateMeta(pos []*poststorage.Object, met []string) ([]*poststorage.Object, error) {
 	for i := range pos {
 		pos[i].Meta = met[i]
 	}
@@ -44,7 +44,7 @@ func (r *Redis) UpdateMeta(pos []*poststorage.Object, met []string) ([]*poststor
 	return pos, nil
 }
 
-func (r *Redis) UpdateBalance(bal *poststorage.Object, hsh []common.Hash) error {
+func (r *Redigo) UpdateBalance(bal *poststorage.Object, hsh []common.Hash) error {
 	var err error
 
 	for _, x := range hsh {
@@ -61,7 +61,7 @@ func (r *Redis) UpdateBalance(bal *poststorage.Object, hsh []common.Hash) error 
 	return nil
 }
 
-func (r *Redis) UpdateResolve(res *poststorage.Object, hsh common.Hash, all []common.Address) error {
+func (r *Redigo) UpdateResolve(res *poststorage.Object, hsh common.Hash, all []common.Address) error {
 	var err error
 
 	{
@@ -97,7 +97,7 @@ func (r *Redis) UpdateResolve(res *poststorage.Object, hsh common.Hash, all []co
 	return nil
 }
 
-func (r *Redis) UpdateVotes(vot []*votestorage.Object) ([]*poststorage.Object, error) {
+func (r *Redigo) UpdateVotes(vot []*votestorage.Object) ([]*poststorage.Object, error) {
 	var err error
 	var pos []*poststorage.Object
 
@@ -166,7 +166,7 @@ func (r *Redis) UpdateVotes(vot []*votestorage.Object) ([]*poststorage.Object, e
 	return pos, nil
 }
 
-func (r *Redis) searchAddress(add []common.Address) (map[string]string, error) {
+func (r *Redigo) searchAddress(add []common.Address) (map[string]string, error) {
 	var err error
 
 	var str []string

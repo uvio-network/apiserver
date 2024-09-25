@@ -8,7 +8,7 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Redis) DeleteVote(inp []*votestorage.Object) ([]*votestorage.Object, error) {
+func (r *Redigo) DeleteVote(inp []*votestorage.Object) ([]*votestorage.Object, error) {
 	var err error
 
 	for i := range inp {
