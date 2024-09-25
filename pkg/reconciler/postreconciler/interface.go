@@ -48,9 +48,8 @@ type Interface interface {
 	//
 	//     inp[0] the post object of lifecycle phase "balance"
 	//     inp[1] the confirmed onchain transaction hashes to set
-	//     inp[2] the vote summary of the provided balance
 	//
-	UpdateBalance(*poststorage.Object, []common.Hash, []float64) error
+	UpdateBalance(*poststorage.Object, []common.Hash) error
 
 	// UpdateHash modifies the transaction hash of the claims as provided by the
 	// given post objects. Note that transaction hashes can only be updated once,

@@ -64,11 +64,11 @@ func (r *Redis) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, er
 		{
 			if inp[i].Kind == "claim" {
 				inp[i].Lifecycle.Time = now
-				inp[i].Votes = []float64{0, 0, 0, 0}
+				inp[i].Summary = []float64{0, 0, 0, 0}
 			}
 
 			if inp[i].Kind == "comment" {
-				inp[i].Votes = []float64{0, 0}
+				inp[i].Summary = []float64{0, 0}
 			}
 		}
 
@@ -143,7 +143,7 @@ func (r *Redis) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, er
 
 			// Update the vote summary of the comment according to all existing votes.
 			for _, x := range vot {
-				inp[i] = updateVotes(inp[i], x)
+				inp[i] = updateSummary(inp[i], x)
 			}
 		}
 	}

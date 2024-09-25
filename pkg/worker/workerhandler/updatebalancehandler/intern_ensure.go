@@ -2,7 +2,6 @@ package updatebalancehandler
 
 import (
 	"context"
-	"math/big"
 	"strconv"
 	"time"
 
@@ -164,35 +163,8 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 	}
 
-	var ind []*big.Int
-	{
-		ind, err = cla.SearchIndices(pod.ID)
-		if err != nil {
-			return tracer.Mask(err)
-		}
-	}
-
-	var tru int64
-	var fls int64
-	{
-		tru, fls, err = cla.SearchVotes(pod.ID)
-		if err != nil {
-			return tracer.Mask(err)
-		}
-	}
-
-	var sum []float64
-	{
-		sum = []float64{
-			float64(tru),
-			float64(fls),
-			float64(ind[0].Int64()),
-			float64(ind[7].Int64()),
-		}
-	}
-
 	if bal.Lifecycle.Pending() {
-		err = h.rec.Post().UpdateBalance(bal, hsh, sum)
+		err = h.rec.Post().UpdateBalance(bal, hsh)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -205,8 +177,8 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		tas.Sync = nil
 	}
 
-	// TODO we need to notify the winners somehow so that they know they have won
-	// something
+	// TODO emit Settled event so that we need to notify the winners somehow so
+	// that they know they have won something
 
 	return nil
 }

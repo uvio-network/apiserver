@@ -44,15 +44,11 @@ func (r *Redis) UpdateMeta(pos []*poststorage.Object, met []string) ([]*poststor
 	return pos, nil
 }
 
-func (r *Redis) UpdateBalance(bal *poststorage.Object, hsh []common.Hash, sum []float64) error {
+func (r *Redis) UpdateBalance(bal *poststorage.Object, hsh []common.Hash) error {
 	var err error
 
 	for _, x := range hsh {
 		bal.Lifecycle.Hash = append(bal.Lifecycle.Hash, x.Hex())
-	}
-
-	{
-		bal.Votes = sum
 	}
 
 	{
@@ -139,7 +135,7 @@ func (r *Redis) UpdateVotes(vot []*votestorage.Object) ([]*poststorage.Object, e
 		}
 
 		for i := range vot {
-			pos = append(pos, updateVotes(cla[i], vot[i]))
+			pos = append(pos, updateSummary(cla[i], vot[i]))
 		}
 	}
 
@@ -162,7 +158,7 @@ func (r *Redis) UpdateVotes(vot []*votestorage.Object) ([]*poststorage.Object, e
 			}
 
 			if y != nil {
-				pos = append(pos, updateVotes(y, x))
+				pos = append(pos, updateSummary(y, x))
 			}
 		}
 	}
@@ -212,9 +208,9 @@ func resTxt(num int) string {
 	return fmt.Sprintf("# Market Resolution\n\n%d %s been randomly selected to verify events in the real world for the proposed claim below.", num, use)
 }
 
-// updateVotes is responsible for incrementing the vote summary of the provided
+// updateSummary is responsible for incrementing the vote summary of the provided
 // post objects according to the values provided with the given vote objects.
-func updateVotes(pos *poststorage.Object, vot *votestorage.Object) *poststorage.Object {
+func updateSummary(pos *poststorage.Object, vot *votestorage.Object) *poststorage.Object {
 	{
 		// Whether the post object is of kind "claim" or kind "comment", increment
 		// the "agreement" part of the vote summary by every vote value for which
@@ -224,7 +220,7 @@ func updateVotes(pos *poststorage.Object, vot *votestorage.Object) *poststorage.
 		//     x, 0
 		//
 		if vot.Option {
-			pos.Votes[Agreement] += vot.Value
+			pos.Summary[Agreement] += vot.Value
 		}
 
 		// Whether the post object is of kind "claim" or kind "comment", increment
@@ -235,7 +231,7 @@ func updateVotes(pos *poststorage.Object, vot *votestorage.Object) *poststorage.
 		//     0, x
 		//
 		if !vot.Option {
-			pos.Votes[Disagreement] += vot.Value
+			pos.Summary[Disagreement] += vot.Value
 		}
 	}
 
@@ -247,8 +243,8 @@ func updateVotes(pos *poststorage.Object, vot *votestorage.Object) *poststorage.
 		//
 		//     0, 0, x, 0
 		//
-		if pos.Votes[Minimum] == 0 {
-			pos.Votes[Minimum] += vot.Value
+		if pos.Summary[Minimum] == 0 {
+			pos.Summary[Minimum] += vot.Value
 		}
 
 		// For all claims, increment the "creator" part of the vote summary by the
@@ -257,7 +253,7 @@ func updateVotes(pos *poststorage.Object, vot *votestorage.Object) *poststorage.
 		//     0, 0, 0, x
 		//
 		if pos.Owner == vot.Owner {
-			pos.Votes[Creator] += vot.Value
+			pos.Summary[Creator] += vot.Value
 		}
 	}
 

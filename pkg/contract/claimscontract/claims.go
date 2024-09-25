@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"math/big"
+	"strconv"
 	"time"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -19,7 +20,7 @@ const (
 	// CLAIM_BALANCE_S is the bitmap index to call SearchResolve with. This index
 	// is mapped to a boolean that tracks whether claims got already fully settled
 	// onchain.
-	CLAIM_BALANCE_S uint8 = 2
+	CLAIM_BALANCE_S uint8 = 1
 )
 
 type ClaimsConfig struct {
@@ -109,7 +110,7 @@ func (c *Claims) Client() *ethclient.Client {
 	return c.cli
 }
 
-func (c *Claims) CreateResolve(pro objectid.ID, ind []*big.Int, exp time.Time) (*types.Transaction, error) {
+func (c *Claims) CreateResolve(pod objectid.ID, ind []*big.Int, exp time.Time) (*types.Transaction, error) {
 	var err error
 
 	var opt *bind.TransactOpts
@@ -142,7 +143,7 @@ func (c *Claims) CreateResolve(pro objectid.ID, ind []*big.Int, exp time.Time) (
 
 	var txn *types.Transaction
 	{
-		txn, err = c.bin.CreateResolve(opt, big.NewInt(pro.Int()), ind, uint64(exp.Unix()))
+		txn, err = c.bin.CreateResolve(opt, big.NewInt(pod.Int()), ind, uint64(exp.Unix()))
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -153,7 +154,7 @@ func (c *Claims) CreateResolve(pro objectid.ID, ind []*big.Int, exp time.Time) (
 		"level", "debug",
 		"message", "submitted Claims.createResolve transaction onchain",
 		"signer", c.opt.From.Hex(),
-		"propose", pro.String(),
+		"claim", pod.String(),
 		"expiry", exp.String(),
 		"transaction", txn.Hash().Hex(),
 	)
@@ -161,12 +162,12 @@ func (c *Claims) CreateResolve(pro objectid.ID, ind []*big.Int, exp time.Time) (
 	return txn, nil
 }
 
-func (c *Claims) ExistsResolve(pro objectid.ID) (bool, error) {
+func (c *Claims) ExistsResolve(pod objectid.ID) (bool, error) {
 	var err error
 
 	var res *big.Int
 	{
-		_, res, err = c.bin.SearchExpired(nil, big.NewInt(pro.Int()))
+		_, res, err = c.bin.SearchExpired(nil, big.NewInt(pod.Int()))
 		if err != nil {
 			return false, tracer.Mask(err)
 		}
@@ -175,7 +176,7 @@ func (c *Claims) ExistsResolve(pro objectid.ID) (bool, error) {
 	return res.Uint64() != 0, nil
 }
 
-func (c *Claims) ResolveCreated(blc uint64, pro uint64) (common.Hash, error) {
+func (c *Claims) ResolveCreated(blc uint64, pod uint64) (common.Hash, error) {
 	var err error
 
 	var ite *ClaimsContractBindingResolveCreatedIterator
@@ -196,7 +197,7 @@ func (c *Claims) ResolveCreated(blc uint64, pro uint64) (common.Hash, error) {
 			return common.Hash{}, tracer.Mask(err)
 		}
 
-		if ite.Event.Pro.Uint64() != pro {
+		if ite.Event.Pod.Uint64() != pod {
 			continue
 		}
 
@@ -208,7 +209,7 @@ func (c *Claims) ResolveCreated(blc uint64, pro uint64) (common.Hash, error) {
 	return common.Hash{}, nil
 }
 
-func (c *Claims) SearchIndices(pro objectid.ID) ([]*big.Int, error) {
+func (c *Claims) SearchIndices(pod objectid.ID) ([]*big.Int, error) {
 	var err error
 
 	var zer *big.Int
@@ -220,7 +221,7 @@ func (c *Claims) SearchIndices(pro objectid.ID) ([]*big.Int, error) {
 	var six *big.Int
 	var sev *big.Int
 	{
-		zer, one, two, thr, fou, fiv, six, sev, err = c.bin.SearchIndices(nil, big.NewInt(pro.Int()))
+		zer, one, two, thr, fou, fiv, six, sev, err = c.bin.SearchIndices(nil, big.NewInt(pod.Int()))
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -229,12 +230,12 @@ func (c *Claims) SearchIndices(pro objectid.ID) ([]*big.Int, error) {
 	return []*big.Int{zer, one, two, thr, fou, fiv, six, sev}, nil
 }
 
-func (c *Claims) SearchResolve(pro objectid.ID, ind uint8) (bool, error) {
+func (c *Claims) SearchResolve(pod objectid.ID, ind uint8) (bool, error) {
 	var err error
 
 	var res bool
 	{
-		res, err = c.bin.SearchResolve(nil, big.NewInt(pro.Int()), ind)
+		res, err = c.bin.SearchResolve(nil, big.NewInt(pod.Int()), ind)
 		if err != nil {
 			return false, tracer.Mask(err)
 		}
@@ -243,12 +244,12 @@ func (c *Claims) SearchResolve(pro objectid.ID, ind uint8) (bool, error) {
 	return res, nil
 }
 
-func (c *Claims) SearchSamples(pro objectid.ID, lef *big.Int, rig *big.Int) ([]common.Address, error) {
+func (c *Claims) SearchSamples(pod objectid.ID, lef *big.Int, rig *big.Int) ([]common.Address, error) {
 	var err error
 
 	var add []common.Address
 	{
-		add, err = c.bin.SearchSamples(nil, big.NewInt(pro.Int()), lef, rig)
+		add, err = c.bin.SearchSamples(nil, big.NewInt(pod.Int()), lef, rig)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -272,16 +273,26 @@ func (c *Claims) SearchVotes(pod objectid.ID) (int64, int64, error) {
 	return tru.Int64(), fls.Int64(), nil
 }
 
-func (c *Claims) UpdateBalance(cla objectid.ID, max uint64) (*types.Transaction, error) {
+func (c *Claims) UpdateBalance(pod objectid.ID, max uint64) (*types.Transaction, error) {
 	var err error
 
 	var txn *types.Transaction
 	{
-		txn, err = c.bin.UpdateBalance(nil, big.NewInt(cla.Int()), big.NewInt(int64(max)))
+		txn, err = c.bin.UpdateBalance(nil, big.NewInt(pod.Int()), big.NewInt(int64(max)))
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
 	}
+
+	c.log.Log(
+		context.Background(),
+		"level", "debug",
+		"message", "submitted Claims.updateBalance transaction onchain",
+		"signer", c.opt.From.Hex(),
+		"claim", pod.String(),
+		"maximum", strconv.FormatUint(max, 10),
+		"transaction", txn.Hash().Hex(),
+	)
 
 	return txn, nil
 }
