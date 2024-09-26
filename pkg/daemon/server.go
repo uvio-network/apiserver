@@ -1,6 +1,8 @@
 package daemon
 
 import (
+	"net"
+
 	"github.com/gorilla/mux"
 	"github.com/twitchtv/twirp"
 	"github.com/uvio-network/apiserver/pkg/server"
@@ -9,9 +11,20 @@ import (
 	"github.com/uvio-network/apiserver/pkg/server/middleware/corsmiddleware"
 	"github.com/uvio-network/apiserver/pkg/server/middleware/usermiddleware"
 	"github.com/uvio-network/apiserver/pkg/server/serverhandler"
+	"github.com/xh3b4sd/tracer"
 )
 
 func (d *Daemon) Server() *server.Server {
+	var err error
+
+	var lis net.Listener
+	{
+		lis, err = net.Listen("tcp", net.JoinHostPort(d.env.HttpHost, d.env.HttpPort))
+		if err != nil {
+			tracer.Panic(tracer.Mask(err))
+		}
+	}
+
 	var shn *serverhandler.Handler
 	{
 		shn = serverhandler.New(serverhandler.Config{
@@ -28,7 +41,7 @@ func (d *Daemon) Server() *server.Server {
 		Int: []twirp.Interceptor{
 			failedinterceptor.NewInterceptor(failedinterceptor.InterceptorConfig{Log: d.log}).Interceptor,
 		},
-		Lis: d.lis,
+		Lis: lis,
 		Log: d.log,
 		Mid: []mux.MiddlewareFunc{
 			corsmiddleware.NewMiddleware(corsmiddleware.MiddlewareConfig{Log: d.log}).Handler,

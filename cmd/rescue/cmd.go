@@ -1,11 +1,11 @@
-package redis
+package rescue
 
 import (
 	"github.com/spf13/cobra"
 )
 
 const (
-	use = "redis"
+	use = "rescue"
 	sho = "Manipulate redis data."
 	lon = "Manipulate redis data."
 )

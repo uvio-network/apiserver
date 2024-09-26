@@ -1,4 +1,4 @@
-package redis
+package redigo
 
 import (
 	"time"
@@ -35,7 +35,7 @@ func (r *run) runE(cmd *cobra.Command, arg []string) error {
 	// --------------------------------------------------------------------- //
 
 	//
-	//     ./apiserver redis cla exp
+	//     ./apiserver redigo cla exp
 	//
 
 	var cla objectid.ID
