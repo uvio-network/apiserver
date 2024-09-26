@@ -7,6 +7,7 @@ import (
 	"github.com/uvio-network/apigocode/pkg/post"
 	"github.com/uvio-network/apiserver/pkg/generic"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
+	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/uvio-network/apiserver/pkg/server/context/userid"
 	"github.com/uvio-network/apiserver/pkg/server/converter"
@@ -202,11 +203,10 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 		}
 	}
 
-	//
 	// Search for all the parent claims referenced by comments that we have not
 	// yet fetched. This last step is done to ensure any comment does also return
-	// its referenced parent claim.
-	//
+	// its referenced parent claim, even if a comment is commenting on a resolve,
+	// which in turn requires its parent propose to be present as well.
 
 	var par []objectid.ID
 	{
@@ -223,13 +223,16 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 			out = append(out, lis...)
 		}
 
-		var pro []objectid.ID
+		// Fetching all the missing parents of the resolves in second instance
+		// ensures that we are always able to render 3 contextual post objects
+		// together, e.g. comment -> resolve -> propose.
+		var res []objectid.ID
 		{
-			pro = generic.Select(out.ID(), out.ObjectID(out.ObjectKind("comment").Parent()).Parent())
+			res = generic.Select(out.ID(), out.ObjectLifecycle(objectlabel.LifecycleResolve).Parent())
 		}
 
-		if len(pro) != 0 {
-			sec, err := h.sto.Post().SearchPost(pro)
+		if len(res) != 0 {
+			sec, err := h.sto.Post().SearchPost(res)
 			if err != nil {
 				return nil, tracer.Mask(err)
 			}

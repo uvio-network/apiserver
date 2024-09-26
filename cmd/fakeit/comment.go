@@ -16,7 +16,7 @@ func (r *run) createComment(key jwk.Key, use *user.SearchO, cla *post.SearchO, v
 	var err error
 
 	var ids []string
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 15; i++ {
 		{
 			r.fak.ShuffleAnySlice(vot.Object)
 		}
@@ -24,6 +24,10 @@ func (r *run) createComment(key jwk.Key, use *user.SearchO, cla *post.SearchO, v
 		var inp *post.CreateI
 		{
 			inp = r.randomComment(claVot(cla, vot.Object[0].Public.Claim))
+		}
+
+		if inp == nil {
+			continue
 		}
 
 		var ctx context.Context
@@ -73,6 +77,10 @@ func (r *run) createComment(key jwk.Key, use *user.SearchO, cla *post.SearchO, v
 }
 
 func (r *run) randomComment(cla *post.SearchO_Object) *post.CreateI {
+	if cla == nil {
+		return nil
+	}
+
 	var tit string
 	{
 		tit = r.fak.BookTitle()
@@ -122,6 +130,10 @@ func (r *run) randomComment(cla *post.SearchO_Object) *post.CreateI {
 
 func claVot(cla *post.SearchO, cid string) *post.SearchO_Object {
 	for _, x := range cla.Object {
+		if strings.Contains(x.Public.Lifecycle, "pending") {
+			continue
+		}
+
 		if x.Intern.Id == cid {
 			return x
 		}

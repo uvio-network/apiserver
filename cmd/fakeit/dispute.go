@@ -9,25 +9,55 @@ import (
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/uvio-network/apigocode/pkg/post"
 	"github.com/uvio-network/apigocode/pkg/user"
+	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/server/converter"
+	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
 	"github.com/xh3b4sd/tracer"
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
 )
 
-func (r *run) createPropose(key jwk.Key, use *user.SearchO) (*post.SearchO, error) {
+func (r *run) createDispute(key jwk.Key, use *user.SearchO, cla *post.SearchO) (*post.SearchO, error) {
 	var err error
 
+	var lis *post.SearchO
+	{
+		lis = witLif(cla, objectlabel.LifecycleResolve)
+	}
+
+	{
+		r.fak.ShuffleAnySlice(lis)
+		r.fak.ShuffleAnySlice(use.Object)
+	}
+
+	all := map[string]*post.SearchO_Object{}
+	for _, x := range lis.Object {
+		all[x.Intern.Id] = x
+	}
+
 	var ids []string
-	for i := 0; i < 20; i++ {
+	for i := 0; i < len(lis.Object)/2; i++ {
+		var res *post.SearchO_Object
+
+		for _, v := range all {
+			res = v
+			break
+		}
+
 		{
-			r.fak.ShuffleAnySlice(use.Object)
+			delete(all, res.Intern.Id)
+		}
+
+		var pos []*poststorage.Object
+		{
+			pos, err = r.dae.Sto().Post().SearchPost([]objectid.ID{objectid.ID(res.Public.Parent)})
+			if err != nil {
+				tracer.Panic(tracer.Mask(err))
+			}
 		}
 
 		var inp *post.CreateI
 		{
-			inp = r.randomPropose()
+			inp = r.randomDispute(pos[0], res)
 		}
 
 		var ctx context.Context
@@ -72,7 +102,7 @@ func (r *run) createPropose(key jwk.Key, use *user.SearchO) (*post.SearchO, erro
 	return out, nil
 }
 
-func (r *run) randomPropose() *post.CreateI {
+func (r *run) randomDispute(pro *poststorage.Object, res *post.SearchO_Object) *post.CreateI {
 	var hsh string
 	if r.fak.Float64() > 0.2 {
 		hsh = r.fak.HexUint(256)
@@ -99,7 +129,7 @@ func (r *run) randomPropose() *post.CreateI {
 
 	var tit string
 	{
-		tit = r.fak.BookTitle()
+		tit = r.fak.BeerName()
 	}
 
 	var par string
@@ -132,15 +162,16 @@ func (r *run) randomPropose() *post.CreateI {
 			Object: []*post.CreateI_Object{
 				{
 					Public: &post.CreateI_Object_Public{
-						Chain:     r.cid.String(),
-						Contract:  r.dae.Env().ChainClaimsContract,
+						Chain:     pro.Chain,
+						Contract:  pro.Contract,
 						Expiry:    converter.TimeToString(time.Now().UTC().AddDate(0, r.fak.Number(1, 9), r.fak.Number(10, 30))),
 						Hash:      hsh,
 						Kind:      "claim",
 						Labels:    strings.Join(lab[:r.fak.Number(1, 4)], ","),
-						Lifecycle: string(objectlabel.LifecyclePropose),
+						Lifecycle: string(objectlabel.LifecycleDispute),
+						Parent:    res.Intern.Id,
 						Text:      fmt.Sprintf("# %s\n\n%s\n\n%s", tit, par, strings.Join(lis[:r.fak.Number(2, 5)], "\n")),
-						Token:     r.fak.RandomString([]string{"USDC", "UVX", "WETH"}),
+						Token:     pro.Token,
 					},
 				},
 			},
@@ -148,36 +179,4 @@ func (r *run) randomPropose() *post.CreateI {
 	}
 
 	return obj
-}
-
-func (r *run) ranLin(str string) string {
-	var spl []string
-	{
-		spl = strings.Split(str, " ")
-	}
-
-	var ind int
-	{
-		ind = r.fak.Number(0, len(spl)-1)
-	}
-
-	var txt string
-	{
-		txt = r.fak.PetName()
-	}
-
-	if ind == 0 {
-		txt = cases.Upper(language.English).String(txt)
-	}
-
-	var end string
-	if ind == len(spl)-1 {
-		end = "."
-	}
-
-	{
-		spl[ind] = fmt.Sprintf("[%s](%s)", txt, r.fak.URL())
-	}
-
-	return strings.Join(spl, " ") + end
 }

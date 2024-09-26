@@ -36,7 +36,7 @@ var DisputeChallengeError = &tracer.Error{
 
 var DisputeContractError = &tracer.Error{
 	Kind: "DisputeContractError",
-	Desc: "The request expects the dispute and its referenced resolve to be facilitated by the same smart contract onchain. Either the chain ID or the smart contract address were found to be different. Therefore the request failed.",
+	Desc: "The request expects the dispute and its referenced resolve to be facilitated by the same smart contract onchain. Either the chain ID, the smart contract address or the token symbol were found to be different. Therefore the request failed.",
 }
 
 var DisputeLifecycleError = &tracer.Error{

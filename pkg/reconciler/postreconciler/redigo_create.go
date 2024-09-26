@@ -169,6 +169,21 @@ func (r *Redigo) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, e
 				}
 			}
 
+			var pro []*poststorage.Object
+			{
+				pro = tre.ObjectLifecycle(objectlabel.LifecyclePropose)
+			}
+
+			if len(pro) != 1 {
+				return nil, tracer.Mask(runtime.ExecutionFailedError)
+			}
+
+			// Ensure the dispute that we are creating has the same token definition
+			// as the original propose.
+			if inp[i].Token != pro[0].Token {
+				return nil, tracer.Maskf(DisputeContractError, "%s,%s", inp[i].ID, par.ID)
+			}
+
 			var res []*poststorage.Object
 			{
 				res = tre.ObjectLifecycle(objectlabel.LifecycleResolve)
