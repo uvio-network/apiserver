@@ -1,11 +1,16 @@
 package uvxcontract
 
 import (
+	"math/big"
+
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 
 type Interface interface {
+	// Balance returns the current token balance of the given address.
+	Balance(add string) (*big.Int, error)
+
 	// Client is the underlying go-ethereum client interacting with the configured
 	// RPC.
 	Client() *ethclient.Client

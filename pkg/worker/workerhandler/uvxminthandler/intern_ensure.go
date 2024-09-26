@@ -1,10 +1,11 @@
 package uvxminthandler
 
 import (
-	"context"
+	"math/big"
 	"time"
 
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/uvio-network/apiserver/pkg/contract/uvxcontract"
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/storage/walletstorage"
@@ -38,48 +39,17 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 	}
 
-	// Anyone not having a wallet cannot receive minted UVX tokens. We are not
-	// returning an error here in case no wallet can be found, because that would
-	// produce a deadlock scenario in which tasks would be repeatedly called
-	// forever, only to end up in the same situation. Instead we are using the the
-	// task's sync paging pointer as a delayed retry signal.
+	// Anyone not having a wallet cannot receive minted UVX tokens. It may happen
+	// that users do not have an associated wallet during signup temporarily. In
+	// those cases we return error in order to execute this task again at a later
+	// point in time.
 	if len(wal) == 0 {
-		var cur string
-		{
-			cur = tas.Sync.Get(task.Paging)
-		}
-
-		var des string
-		{
-			des = createPaging(cur)
-		}
-
-		if tas.Sync == nil {
-			tas.Sync = &task.Sync{}
-		}
-
-		{
-			tas.Sync.Set(task.Paging, des)
-		}
-
-		{
-			time.Sleep(1 * time.Second)
-		}
-
-		return nil
+		return tracer.Maskf(WalletNotFoundError, "%s", use)
 	}
 
-	// It may happen that no user wallet could be found intermittently. In such a
-	// case we may have set a paging pointer in order to retry the task. If we
-	// retried and then found a wallet for the user that we are asked to mint
-	// tokens for, then we need to make sure that we only do that once. So just to
-	// make sure that we are not minting tokens again once we got to this point
-	// here, we are ensuring that the paging pointer is removed, by simply setting
-	// the task's sync map to nil, which erases all sync state entirely. That
-	// tells the rescue engine to finally delete the task, unless we return an
-	// error below.
+	var uvx uvxcontract.Interface
 	{
-		tas.Sync = nil
+		uvx = h.con.UVX(h.uvx)
 	}
 
 	var add string
@@ -87,50 +57,36 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		add = wal[0].Address
 	}
 
-	var txn *types.Transaction
+	var bal *big.Int
 	{
-		txn, err = h.con.UVX(h.uvx).Mint(add, 100)
+		bal, err = uvx.Balance(add)
 		if err != nil {
 			return tracer.Mask(err)
 		}
 	}
 
-	// In case we are unable to wait for the minting transaction to be included in
-	// a block onchain, we are not returning an error, since this would
-	// potentially cause a continuous mint for the given user. The safest thing to
-	// do is to stop the process here and allow a human to mint tokens to the
-	// address if the given address has not received any tokens yet. Further, if
-	// we end up logging an error here, the root cause for this error must be
-	// investigated by a human. The spectrum of potential errors can range from
-	// network hickups to funding issues, where the underlying signer may ran out
-	// of ETH used to pay for gas.
+	// Prevent users from getting tokens multiple times. If we are processing a
+	// task for a user who has already a token balance, then we have nothing else
+	// to do here.
+	if bal.Uint64() > 0 {
+		return nil
+	}
+
+	var txn *types.Transaction
+	{
+		txn, err = uvx.Mint(add, 100)
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
+	// In case the minting transaction fails, we are going to retry this task.
 	{
 		err = h.con.Wait(txn, maxWait)
 		if err != nil {
-			h.log.Log(
-				context.Background(),
-				"level", "error",
-				"message", err.Error(),
-				"description", "Waiting for the mint transaction failed. The root cause for this failure needs to be investigated. The given address may not have received UVX tokens as requested.",
-				"address", add,
-				"amount", "100",
-				"transaction", txn.Hash().Hex(),
-				"stack", tracer.Stack(err),
-			)
+			return tracer.Mask(err)
 		}
 	}
 
 	return nil
-}
-
-func createPaging(cur string) string {
-	if cur == "1" {
-		return "2"
-	}
-
-	if cur == "2" {
-		return "0"
-	}
-
-	return "1"
 }

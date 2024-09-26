@@ -11,6 +11,9 @@ func (r *Rescue) Mint(use objectid.ID) error {
 	var tas *task.Task
 	{
 		tas = &task.Task{
+			Core: &task.Core{
+				task.Cancel: "10",
+			},
 			Meta: &task.Meta{
 				objectlabel.UserObject: use.String(),
 				objectlabel.UVXAction:  objectlabel.ActionMint,

@@ -60,6 +60,20 @@ func NewUVX(c UVXConfig) *UVX {
 	}
 }
 
+func (u *UVX) Balance(add string) (*big.Int, error) {
+	var err error
+
+	var bal *big.Int
+	{
+		bal, err = u.bin.BalanceOf(nil, common.HexToAddress(add))
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	return bal, nil
+}
+
 func (u *UVX) Client() *ethclient.Client {
 	return u.cli
 }

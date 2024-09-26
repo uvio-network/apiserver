@@ -11,6 +11,9 @@ func (r *Rescue) Create(cla objectid.ID, lif objectlabel.DesiredLifecycle) error
 	var tas *task.Task
 	{
 		tas = &task.Task{
+			Core: &task.Core{
+				task.Cancel: "10",
+			},
 			Meta: &task.Meta{
 				objectlabel.ClaimAction:    objectlabel.ActionCreate,
 				objectlabel.ClaimLifecycle: string(lif),
