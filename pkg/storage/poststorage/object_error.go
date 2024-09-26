@@ -24,11 +24,6 @@ var ClaimExpiryEmptyError = &tracer.Error{
 	Desc: "The request expects the claim expiry not to be empty. The claim expiry was found to be empty. Therefore the request failed.",
 }
 
-var ClaimExpiryPastError = &tracer.Error{
-	Kind: "ClaimExpiryPastError",
-	Desc: "The request expects the claim expiry not to be in the past. The claim expiry was found to be in the past. Therefore the request failed.",
-}
-
 var ClaimHashFormatError = &tracer.Error{
 	Kind: "ClaimHashFormatError",
 	Desc: "The request expects the claim hash to be in hex format including 0x prefix. The claim hash was not found to comply with that format. Therefore the request failed.",

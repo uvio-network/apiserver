@@ -38,6 +38,9 @@ const (
 func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	var err error
 
+	// cycles
+	// switch
+	// breaker
 	{
 		var cyc uint64
 		{
@@ -157,7 +160,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 			}
 		}
 
-		hsh, err = cla.BalanceUpdated(blc, uint64(pod.ID.Int()))
+		hsh, err = cla.BalanceUpdated(blc, pod.ID)
 		if err != nil {
 			return tracer.Mask(err)
 		}

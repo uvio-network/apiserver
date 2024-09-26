@@ -51,17 +51,17 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 				logCtx(tas),
 				"level", "error",
 				"message", "task cycle limit error",
-				"description", "Creating the resolve onchain failed. The root cause for this failure needs to be investigated. The given propose may still not have a resolve as requested.",
+				"description", "Creating the resolve onchain failed. The root cause for this failure needs to be investigated. The given claim may still not have a resolve as requested.",
 			)
 
 			return nil
 		}
 	}
 
-	var pro *poststorage.Object
+	var pod *poststorage.Object
 	var res *poststorage.Object
 	{
-		pro, res, err = h.searchClaims(tas)
+		pod, res, err = h.searchClaims(tas)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -69,7 +69,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 
 	var cla claimscontract.Interface
 	{
-		cla = h.con.Claims(pro.Contract)
+		cla = h.con.Claims(pod.Contract)
 	}
 
 	{
@@ -95,11 +95,11 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		exp = time.Now().Add(oneWeek)
 	}
 
-	// If the next claim within this tree relative to the provided propose is nil,
+	// If the next claim within this tree relative to the provided claim is nil,
 	// then that means that we have not yet created the required resolve. And so
 	// we can proceed to create the post object for the requested resolve.
 	if res == nil {
-		res, err = h.rec.Post().CreateResolve(pro, exp)
+		res, err = h.rec.Post().CreateResolve(pod, exp)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -107,7 +107,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 
 	var exi bool
 	{
-		exi, err = cla.ExistsResolve(pro.ID)
+		exi, err = cla.ExistsResolve(pod.ID)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -115,7 +115,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 
 	var ind []*big.Int
 	{
-		ind, err = cla.SearchIndices(pro.ID)
+		ind, err = cla.SearchIndices(pod.ID)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -130,7 +130,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 
 		var txn *types.Transaction
 		{
-			txn, err = cla.CreateResolve(pro.ID, sam, exp)
+			txn, err = cla.CreateResolve(pod.ID, sam, exp)
 			if err != nil {
 				return tracer.Mask(err)
 			}
@@ -155,7 +155,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 			}
 		}
 
-		hsh, err = cla.ResolveCreated(blc, uint64(pro.ID.Int()))
+		hsh, err = cla.ResolveCreated(blc, pod.ID)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -164,7 +164,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	var tru []common.Address
 	var fls []common.Address
 	{
-		tru, fls, err = h.searchSamples(cla, pro.ID, ind)
+		tru, fls, err = h.searchSamples(cla, pod.ID, ind)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -193,8 +193,8 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *poststorage.Object, error) {
 	var err error
 
-	// The claim ID obtained here is the ID of the propose that expired when the
-	// task that we are processing right now got emitted.
+	// The claim ID obtained here is the ID of the propose or dispute that expired
+	// when the task that we are processing right now got emitted.
 	var cla objectid.ID
 	{
 		cla = objectid.ID(tas.Meta.Get(objectlabel.ClaimObject))
@@ -208,15 +208,16 @@ func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *post
 		}
 	}
 
-	// This is the claim with lifecycle phase propose that has been expired.
-	var pro *poststorage.Object
+	// This is the claim with lifecycle phase "propose" or "dispute" that has been
+	// expired.
+	var pod *poststorage.Object
 	{
-		pro = pos.IDClaim(cla)
+		pod = pos.IDClaim(cla)
 	}
 
 	var tre poststorage.Slicer
 	{
-		tre, err = h.sto.Post().SearchTree([]objectid.ID{pro.Tree})
+		tre, err = h.sto.Post().SearchTree([]objectid.ID{pod.Tree})
 		if err != nil {
 			return nil, nil, tracer.Mask(err)
 		}
@@ -224,13 +225,13 @@ func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *post
 
 	var res *poststorage.Object
 	{
-		res = tre.NextClaim(pro.ID)
+		res = tre.NextClaim(pod.ID)
 	}
 
-	return pro, res, nil
+	return pod, res, nil
 }
 
-func (h *InternHandler) searchSamples(cla claimscontract.Interface, pro objectid.ID, ind []*big.Int) ([]common.Address, []common.Address, error) {
+func (h *InternHandler) searchSamples(cla claimscontract.Interface, pod objectid.ID, ind []*big.Int) ([]common.Address, []common.Address, error) {
 	var err error
 
 	if len(ind) != 8 {
@@ -245,7 +246,7 @@ func (h *InternHandler) searchSamples(cla claimscontract.Interface, pro objectid
 
 	var tru []common.Address
 	{
-		tru, err = cla.SearchSamples(pro, ind[1], ind[2])
+		tru, err = cla.SearchSamples(pod, ind[1], ind[2])
 		if err != nil {
 			return nil, nil, tracer.Mask(err)
 		}
@@ -253,7 +254,7 @@ func (h *InternHandler) searchSamples(cla claimscontract.Interface, pro objectid
 
 	var fls []common.Address
 	{
-		fls, err = cla.SearchSamples(pro, ind[5], ind[6])
+		fls, err = cla.SearchSamples(pod, ind[5], ind[6])
 		if err != nil {
 			return nil, nil, tracer.Mask(err)
 		}

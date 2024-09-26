@@ -12,6 +12,21 @@ const (
 	oneWeek = time.Hour * 24 * 7
 )
 
+func (r *Redigo) CreateExpiry(inp []*Object) error {
+	var err error
+
+	for i := range inp {
+		if inp[i].Kind == "claim" {
+			err = r.red.Sorted().Create().Score(posExp(inp[i].Lifecycle.Data), inp[i].ID.String(), float64(inp[i].Expiry.UnixNano()))
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
+	}
+
+	return nil
+}
+
 func (r *Redigo) CreatePost(inp []*Object) error {
 	var err error
 
@@ -73,7 +88,7 @@ func (r *Redigo) CreatePost(inp []*Object) error {
 			// first stage is the defined expiry that we track in the post object.
 			// Within this first stage it is possible for voters to cast their votes.
 			// Once the first stage concluded, the second stage begins, which is the
-			// challenge period during which disputes may be created by anyone. When
+			// challenge window during which disputes may be created by anyone. When
 			// we expire resolves internally, then we aim to update balances in order
 			// to settle a claim tree. So the resolve expiry tracked in our internal
 			// expiry queue considers the claim's challenge window, which is hard

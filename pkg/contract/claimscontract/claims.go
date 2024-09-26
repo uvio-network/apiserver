@@ -69,7 +69,7 @@ func NewClaims(c ClaimsConfig) *Claims {
 	}
 }
 
-func (c *Claims) BalanceUpdated(blc uint64, pod uint64) ([]common.Hash, error) {
+func (c *Claims) BalanceUpdated(blc uint64, pod objectid.ID) ([]common.Hash, error) {
 	var err error
 
 	var ite *ClaimsContractBindingBalanceUpdatedIterator
@@ -91,7 +91,7 @@ func (c *Claims) BalanceUpdated(blc uint64, pod uint64) ([]common.Hash, error) {
 			return nil, tracer.Mask(err)
 		}
 
-		if ite.Event.Pod.Uint64() != pod {
+		if ite.Event.Pod.Int64() != pod.Int() {
 			continue
 		}
 
@@ -176,7 +176,7 @@ func (c *Claims) ExistsResolve(pod objectid.ID) (bool, error) {
 	return res.Uint64() != 0, nil
 }
 
-func (c *Claims) ResolveCreated(blc uint64, pod uint64) (common.Hash, error) {
+func (c *Claims) ResolveCreated(blc uint64, pod objectid.ID) (common.Hash, error) {
 	var err error
 
 	var ite *ClaimsContractBindingResolveCreatedIterator
@@ -197,7 +197,7 @@ func (c *Claims) ResolveCreated(blc uint64, pod uint64) (common.Hash, error) {
 			return common.Hash{}, tracer.Mask(err)
 		}
 
-		if ite.Event.Pod.Uint64() != pod {
+		if ite.Event.Pod.Int64() != pod.Int() {
 			continue
 		}
 

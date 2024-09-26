@@ -6,6 +6,13 @@ import (
 )
 
 type Interface interface {
+	// CreateExpiry adds the referenced IDs of the given post objects to the
+	// lifecycle specific PostExpiry index.
+	//
+	//     @inp[0] the post objects to add to the PostExpiry index
+	//
+	CreateExpiry(inp []*Object) error
+
 	// CreatePost persists new post objects in the underlying storage.
 	//
 	//     @inp[0] the post objects to create
@@ -25,14 +32,6 @@ type Interface interface {
 	//     @inp[0] the post objects to delete
 	//
 	DeletePost([]*Object) error
-
-	// InternCreateExpiry is an internal maintenance primitive that adds the
-	// referenced IDs of the given post objects to the lifecycle specific
-	// PostExpiry index. DO NOT USE IN PRODUCTION.
-	//
-	//     @inp[0] the post objects to add to the PostExpiry index
-	//
-	InternCreateExpiry(inp []*Object) error
 
 	// SearchComment returns the post objects that represent market specific
 	// comments. All of the comments on a claim can be fetched using this method.
