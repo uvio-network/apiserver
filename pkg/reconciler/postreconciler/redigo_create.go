@@ -15,6 +15,10 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
+const (
+	oneWeek = time.Hour * 24 * 7
+)
+
 func (r *Redigo) CreateBalance(res *poststorage.Object) (*poststorage.Object, error) {
 	var err error
 
@@ -94,11 +98,10 @@ func (r *Redigo) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, e
 		// object provided in the parent field, and take the existing tree ID from
 		// there. Note that we are indirectly validating here that the given parent
 		// ID does in fact exist.
-		var sel bool
+		var par *poststorage.Object
 		if inp[i].Kind == "claim" && inp[i].Lifecycle.Is(objectlabel.LifecyclePropose) {
 			inp[i].Tree = objectid.Random(objectid.Time(now))
 		} else {
-			var par *poststorage.Object
 			{
 				par, err = r.verifyParent(inp[i].Parent)
 				if err != nil {
@@ -109,15 +112,96 @@ func (r *Redigo) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, e
 			{
 				inp[i].Tree = par.Tree
 			}
+		}
 
-			// Lookup whether the post owner was selected by the truth sampling
-			// process. If the post being created is for instance a comment, and if
-			// that comment is referencing a resolve, then "sel" will be set to true,
-			// which prevents the MarketParticipationError to be returned below.
+		// Lookup whether the post owner was selected by the truth sampling process.
+		// If the post being created is for instance a comment, and if that comment
+		// is referencing a resolve, then "sel" will be set to true, which prevents
+		// the MarketParticipationError to be returned below.
+		var sel bool
+		if par != nil {
 			for _, v := range par.Samples {
 				if v == string(inp[i].Owner) {
 					sel = true
 					break
+				}
+			}
+		}
+
+		// When creating posts of kind "claim", we want to ensure that claims cannot
+		// be created with expiries that point to the past. Claim expiries are only
+		// relevant for claims of lifecycle phase "dispute", "propose" and
+		// "resolve".
+		if inp[i].Kind == "claim" && !inp[i].Lifecycle.Is(objectlabel.LifecycleBalance) && !inp[i].Lifecycle.Is(objectlabel.LifecycleSettled) {
+			if inp[i].Expiry.Before(now) {
+				return nil, tracer.Maskf(ClaimExpiryPastError, "%s=%d", inp[i].ID, inp[i].Expiry.Unix())
+			}
+		}
+
+		if inp[i].Kind == "claim" && inp[i].Lifecycle.Is(objectlabel.LifecycleDispute) {
+			// Ensure that all involved claims are facilitated by the same smart
+			// contract on the same blockchain network.
+			if inp[i].Chain != par.Chain || inp[i].Contract != par.Contract {
+				return nil, tracer.Maskf(DisputeContractError, "%s,%s", inp[i].ID, par.ID)
+			}
+
+			// Verify whether the resolve can still be disputed, which means the
+			// resolve must still be within its challenge window of 7 standard days
+			// from its expiry.
+			if now.After(par.Expiry.Add(oneWeek)) {
+				return nil, tracer.Mask(DisputeChallengeError)
+			}
+
+			// Ensure that disputes can only be created by referencing resolves.
+			if !par.Lifecycle.Is(objectlabel.LifecycleResolve) {
+				return nil, tracer.Mask(DisputeLifecycleError)
+			}
+
+			// Now push back the resolve expiries within this tree, in order to
+			// prevent our queued background jobs to prematurely reconcile system
+			// state.
+
+			var tre poststorage.Slicer
+			{
+				tre, err = r.sto.Post().SearchTree([]objectid.ID{par.Tree})
+				if err != nil {
+					return nil, tracer.Mask(err)
+				}
+			}
+
+			var res []*poststorage.Object
+			{
+				res = tre.ObjectLifecycle(objectlabel.LifecycleResolve)
+			}
+
+			{
+				err = r.sto.Post().DeleteExpiry(res)
+				if err != nil {
+					return nil, tracer.Mask(err)
+				}
+			}
+
+			// Since this here is the reconciliation of dispute creation, we will
+			// either find one or two resolves, both of which should have the same
+			// queued expiry. And since we are just now creating a dispute, those
+			// existing resolves must be deferred again. Their new queued expiries
+			// should be aligned with the expiry of the future resolve, which is not
+			// yet created, but which will be created once this dispute that we create
+			// here expired on its own. And since resolves have a voting period of 7
+			// standard days, and since resolves have a challenge window of 7 standard
+			// days, the existing resolves must be pushed back in the expiry queue by
+			// 2 standard weeks.
+			for j := range res {
+				res[j].Expiry = inp[i].Expiry.Add(2 * oneWeek)
+			}
+
+			// Note that pushing back the queued expiry does not modify the
+			// Post.Expiry field in the resolve objects. All we want to do here is to
+			// defer our background job execution.
+			{
+				err = r.sto.Post().CreateExpiry(res)
+				if err != nil {
+					return nil, tracer.Mask(err)
 				}
 			}
 		}
@@ -151,22 +235,22 @@ func (r *Redigo) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, e
 	return inp, nil
 }
 
-func (r *Redigo) CreateResolve(pro *poststorage.Object, exp time.Time) (*poststorage.Object, error) {
+func (r *Redigo) CreateResolve(pod *poststorage.Object, exp time.Time) (*poststorage.Object, error) {
 	var err error
 
 	var res *poststorage.Object
 	{
 		res = &poststorage.Object{
-			Chain:    pro.Chain,
-			Contract: pro.Contract,
+			Chain:    pod.Chain,
+			Contract: pod.Contract,
 			Expiry:   exp,
 			Kind:     "claim",
-			Labels:   pro.Labels,
+			Labels:   pod.Labels,
 			Lifecycle: objectfield.Lifecycle{
 				Data: objectlabel.LifecycleResolve,
 			},
 			Owner:  objectid.System(),
-			Parent: pro.ID,
+			Parent: pod.ID,
 			Text:   "# Market Resolution\n\nThe random truth sampling process has begun and is waiting for onchain confirmation.",
 		}
 	}
@@ -206,7 +290,12 @@ func (r *Redigo) verifyParent(par objectid.ID) (*poststorage.Object, error) {
 
 	// Here we ensure that comments cannot comment on comments.
 	if obj[0].Kind != "claim" {
-		return nil, tracer.Maskf(PostParentKindError, "%s=%s", obj[0].ID, obj[0].Kind)
+		return nil, tracer.Maskf(ParentKindError, "%s=%s", obj[0].ID, obj[0].Kind)
+	}
+
+	// Here we ensure that posts cannot be created on any pending resources.
+	if obj[0].Lifecycle.Pending() {
+		return nil, tracer.Maskf(ParentPendingError, "%s=%s", obj[0].ID, obj[0].Lifecycle)
 	}
 
 	return obj[0], nil

@@ -82,7 +82,7 @@ func (r *run) createResolve(wal *wallet.SearchO, cla *post.SearchO) (*post.Searc
 		// blockchain node (anvil/hardhat).
 		//
 		// {
-		// 	err = r.dae.Sto().Post().InternCreateExpiry(pos)
+		// 	err = r.dae.Sto().Post().CreateExpiry(pos)
 		// 	if err != nil {
 		// 		tracer.Panic(tracer.Mask(err))
 		// 	}

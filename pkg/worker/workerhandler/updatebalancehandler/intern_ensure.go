@@ -157,7 +157,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 			}
 		}
 
-		hsh, err = cla.BalanceUpdated(blc, uint64(pod.ID.Int()))
+		hsh, err = cla.BalanceUpdated(blc, pod.ID)
 		if err != nil {
 			return tracer.Mask(err)
 		}
