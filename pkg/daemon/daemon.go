@@ -2,7 +2,6 @@ package daemon
 
 import (
 	"crypto/rand"
-	"net"
 	"time"
 
 	"github.com/uvio-network/apiserver/pkg/emitter"
@@ -18,13 +17,11 @@ import (
 	"github.com/xh3b4sd/redigo/pool"
 	"github.com/xh3b4sd/rescue"
 	"github.com/xh3b4sd/rescue/engine"
-	"github.com/xh3b4sd/tracer"
 )
 
 type Daemon struct {
 	emi emitter.Interface
 	env envvar.Env
-	lis net.Listener
 	loc locker.Interface
 	log logger.Interface
 	rec reconciler.Interface
@@ -35,21 +32,11 @@ type Daemon struct {
 }
 
 func New(env envvar.Env) *Daemon {
-	var err error
-
 	var log logger.Interface
 	{
 		log = logger.New(logger.Config{
 			Filter: logger.NewLevelFilter(env.LogLevel),
 		})
-	}
-
-	var lis net.Listener
-	{
-		lis, err = net.Listen("tcp", net.JoinHostPort(env.HttpHost, env.HttpPort))
-		if err != nil {
-			tracer.Panic(tracer.Mask(err))
-		}
 	}
 
 	var red redigo.Interface
@@ -107,7 +94,6 @@ func New(env envvar.Env) *Daemon {
 	return &Daemon{
 		emi: emi,
 		env: env,
-		lis: lis,
 		loc: loc,
 		log: log,
 		rec: rec,
@@ -124,6 +110,10 @@ func (d *Daemon) Env() envvar.Env {
 
 func (d *Daemon) Rec() reconciler.Interface {
 	return d.rec
+}
+
+func (d *Daemon) Res() rescue.Interface {
+	return d.res
 }
 
 func (d *Daemon) Sto() storage.Interface {

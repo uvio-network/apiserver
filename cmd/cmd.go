@@ -4,7 +4,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/uvio-network/apiserver/cmd/daemon"
 	"github.com/uvio-network/apiserver/cmd/fakeit"
-	"github.com/uvio-network/apiserver/cmd/redis"
+	"github.com/uvio-network/apiserver/cmd/redigo"
+	"github.com/uvio-network/apiserver/cmd/rescue"
 	"github.com/uvio-network/apiserver/cmd/version"
 	"github.com/xh3b4sd/tracer"
 )
@@ -42,9 +43,19 @@ func New() (*cobra.Command, error) {
 
 	var red *cobra.Command
 	{
-		c := redis.Config{}
+		c := redigo.Config{}
 
-		red, err = redis.New(c)
+		red, err = redigo.New(c)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	var res *cobra.Command
+	{
+		c := rescue.Config{}
+
+		res, err = rescue.New(c)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -89,6 +100,7 @@ func New() (*cobra.Command, error) {
 		c.AddCommand(dae)
 		c.AddCommand(fak)
 		c.AddCommand(red)
+		c.AddCommand(res)
 		c.AddCommand(ver)
 	}
 
