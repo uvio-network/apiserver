@@ -155,7 +155,6 @@ func (r *run) runE(cmd *cobra.Command, arg []string) error {
 		}
 	}
 
-	// create disputes on resolves
 	// create comments on disputes
 
 	{
