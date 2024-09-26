@@ -41,8 +41,8 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 
 	// Anyone not having a wallet cannot receive minted UVX tokens. It may happen
 	// that users do not have an associated wallet during signup temporarily. In
-	// those cases we return error in order to execute this task again at a later
-	// point in time.
+	// those cases we return an error in order to execute this task again at a
+	// later point in time.
 	if len(wal) == 0 {
 		return tracer.Maskf(WalletNotFoundError, "%s", use)
 	}
