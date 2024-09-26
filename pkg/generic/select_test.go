@@ -149,6 +149,27 @@ func Test_Generic_Select_string(t *testing.T) {
 				"66",
 			},
 		},
+		// Case 009
+		{
+			all: []string{
+				"22",
+				"44",
+				"11",
+				"33",
+				"55",
+			},
+			sub: []string{
+				"66",
+				"44",
+				"11",
+				"11",
+				"66",
+				"66",
+			},
+			lis: []string{
+				"66",
+			},
+		},
 	}
 
 	for i, tc := range testCases {
@@ -306,6 +327,27 @@ func Test_Generic_Select_objectID(t *testing.T) {
 				"66",
 			},
 		},
+		// Case 009
+		{
+			all: []objectid.ID{
+				"22",
+				"44",
+				"11",
+				"33",
+				"55",
+			},
+			sub: []objectid.ID{
+				"66",
+				"44",
+				"11",
+				"11",
+				"66",
+				"66",
+			},
+			lis: []objectid.ID{
+				"66",
+			},
+		},
 	}
 
 	for i, tc := range testCases {
@@ -458,6 +500,27 @@ func Test_Generic_Select_int64(t *testing.T) {
 				55,
 				66,
 				33,
+			},
+			lis: []int64{
+				66,
+			},
+		},
+		// Case 009
+		{
+			all: []int64{
+				22,
+				44,
+				11,
+				33,
+				55,
+			},
+			sub: []int64{
+				66,
+				44,
+				11,
+				11,
+				66,
+				66,
 			},
 			lis: []int64{
 				66,

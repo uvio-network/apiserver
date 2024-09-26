@@ -147,11 +147,23 @@ func (r *run) runE(cmd *cobra.Command, arg []string) error {
 		}
 	}
 
+	var dis *post.SearchO
+	{
+		dis, err = r.createDispute(key, use, res)
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
+	// create disputes on resolves
+	// create comments on disputes
+
 	{
 		fmt.Printf("Generated %d fake users.\n", len(use.Object))
 		fmt.Printf("Generated %d fake wallets.\n", len(wal.Object))
 		fmt.Printf("Generated %d fake claims of lifecycle phase %q.\n", len(pro.Object), "propose")
 		fmt.Printf("Generated %d fake claims of lifecycle phase %q.\n", len(res.Object), "resolve")
+		fmt.Printf("Generated %d fake claims of lifecycle phase %q.\n", len(dis.Object), "dispute")
 		fmt.Printf("Generated %d fake votes.\n", len(pvt.Object)+len(rvt.Object))
 		fmt.Printf("Generated %d fake comments.\n", len(pcm.Object)+len(rcm.Object))
 	}

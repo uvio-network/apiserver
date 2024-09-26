@@ -34,6 +34,7 @@ func (r *run) createResolve(wal *wallet.SearchO, cla *post.SearchO) (*post.Searc
 	var ids []string
 	for i := 0; i < len(cla.Object)/2; i++ {
 		var pro *post.SearchO_Object
+
 		for _, v := range all {
 			pro = v
 			break
