@@ -38,9 +38,6 @@ const (
 func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	var err error
 
-	// cycles
-	// switch
-	// breaker
 	{
 		var cyc uint64
 		{
