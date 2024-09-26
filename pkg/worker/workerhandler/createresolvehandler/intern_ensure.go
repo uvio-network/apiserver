@@ -92,7 +92,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 
 	var exp time.Time
 	{
-		exp = time.Now().Add(oneWeek)
+		exp = pod.Expiry.Add(oneWeek)
 	}
 
 	// If the next claim within this tree relative to the provided claim is nil,

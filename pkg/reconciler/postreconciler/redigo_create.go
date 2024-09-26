@@ -235,22 +235,22 @@ func (r *Redigo) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, e
 	return inp, nil
 }
 
-func (r *Redigo) CreateResolve(pro *poststorage.Object, exp time.Time) (*poststorage.Object, error) {
+func (r *Redigo) CreateResolve(pod *poststorage.Object, exp time.Time) (*poststorage.Object, error) {
 	var err error
 
 	var res *poststorage.Object
 	{
 		res = &poststorage.Object{
-			Chain:    pro.Chain,
-			Contract: pro.Contract,
+			Chain:    pod.Chain,
+			Contract: pod.Contract,
 			Expiry:   exp,
 			Kind:     "claim",
-			Labels:   pro.Labels,
+			Labels:   pod.Labels,
 			Lifecycle: objectfield.Lifecycle{
 				Data: objectlabel.LifecycleResolve,
 			},
 			Owner:  objectid.System(),
-			Parent: pro.ID,
+			Parent: pod.ID,
 			Text:   "# Market Resolution\n\nThe random truth sampling process has begun and is waiting for onchain confirmation.",
 		}
 	}
