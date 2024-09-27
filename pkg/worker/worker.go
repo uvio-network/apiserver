@@ -93,34 +93,51 @@ func (w *Worker) Daemon() {
 func (w *Worker) create() {
 	var err error
 
-	var tas []*task.Task
+	// Ensure any task template that the respective handlers require.
 	for _, x := range w.han {
-		var t *task.Task
+		var tas *task.Task
 		{
-			t = x.Create()
+			tas = x.Create()
 		}
 
-		if t != nil {
-			tas = append(tas, t)
+		if tas == nil {
+			continue
 		}
-	}
 
-	// Ensure any task template the respective handlers require.
-	for _, x := range tas {
-		var exi bool
+		var lis []*task.Task
 		{
-			exi, err = w.res.Exists(x)
+			lis, err = w.res.Lister(&task.Task{Meta: tas.Meta})
 			if err != nil {
 				w.lerror(tracer.Mask(err))
 			}
 		}
 
-		if exi {
+		// If the task that we are looking for is a task template, then there is
+		// only exactly one object for it.
+		if len(lis) != 1 {
+			continue
+		}
+
+		// Skip this task template if it already resembles the desired state.
+		if lis[0].Has(tas) {
 			continue
 		}
 
 		{
-			err := w.res.Create(x)
+			lis[0].Core.Set().Bypass(true)
+		}
+
+		// Delete the existing task template.
+		{
+			err = w.res.Delete(lis[0])
+			if err != nil {
+				w.lerror(tracer.Mask(err))
+			}
+		}
+
+		// Create the new task template.
+		{
+			err = w.res.Create(tas)
 			if err != nil {
 				w.lerror(tracer.Mask(err))
 			}
