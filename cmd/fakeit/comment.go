@@ -88,7 +88,7 @@ func (r *run) randomComment(cla *post.SearchO_Object) *post.CreateI {
 
 	var par string
 	{
-		par = r.fak.Paragraph(r.fak.Number(1, 3), r.fak.Number(2, 5), r.fak.Number(10, 40), "\n\n")
+		par = r.fak.Paragraph(r.fak.Number(1, 3), r.fak.Number(1, 5), r.fak.Number(5, 40), "\n\n")
 	}
 
 	var lis []string
@@ -118,7 +118,7 @@ func (r *run) randomComment(cla *post.SearchO_Object) *post.CreateI {
 					Public: &post.CreateI_Object_Public{
 						Kind:   "comment",
 						Parent: cla.Intern.Id,
-						Text:   fmt.Sprintf("# %s\n\n%s\n\n%s", tit, par, strings.Join(lis[:r.fak.Number(2, 5)], "\n")),
+						Text:   fmt.Sprintf("# %s\n\n%s\n\n%s", tit, par, strings.Join(lis[:r.fak.Number(1, 5)], "\n")),
 					},
 				},
 			},
