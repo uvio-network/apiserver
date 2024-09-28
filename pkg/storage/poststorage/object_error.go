@@ -64,6 +64,11 @@ var ClaimParentInvalidError = &tracer.Error{
 	Desc: "The request expects the claim parent to be empty. The claim parent was not found to be empty. Therefore the request failed.",
 }
 
+var ClaimTextLengthError = &tracer.Error{
+	Kind: "ClaimTextLengthError",
+	Desc: "The request expects the post text to have between 100 and 5000 characters. The post text was not found to have between 100 and 5000 characters. Therefore the request failed.",
+}
+
 var CommentLabelsInvalidError = &tracer.Error{
 	Kind: "CommentLabelsInvalidError",
 	Desc: "The request expects the comment labels to be empty. The comment labels were not found to be empty. Therefore the request failed.",
@@ -79,6 +84,11 @@ var CommentParentEmptyError = &tracer.Error{
 	Desc: "The request expects the comment parent not to be empty. The comment parent was found to be empty. Therefore the request failed.",
 }
 
+var CommentTextLengthError = &tracer.Error{
+	Kind: "CommentTextLengthError",
+	Desc: "The request expects the post text to have between 20 and 5000 characters. The post text was not found to have between 20 and 5000 characters. Therefore the request failed.",
+}
+
 var PostKindInvalidError = &tracer.Error{
 	Kind: "PostKindInvalidError",
 	Desc: "The request expects the post kind to be one of [claim comment]. The post kind was not found to be one of those values. Therefore the request failed.",
@@ -92,11 +102,6 @@ var PostOwnerEmptyError = &tracer.Error{
 var PostTextEmptyError = &tracer.Error{
 	Kind: "PostTextEmptyError",
 	Desc: "The request expects the post text not to be empty. The post text was found to be empty. Therefore the request failed.",
-}
-
-var PostTextLengthError = &tracer.Error{
-	Kind: "PostTextLengthError",
-	Desc: "The request expects the post text to have between 100 and 5000 characters. The post text was not found to have between 100 and 5000 characters. Therefore the request failed.",
 }
 
 var PostTokenEmptyError = &tracer.Error{
