@@ -34,6 +34,13 @@ and debug the maintained state in redis.
 docker run --rm --name redis-stack-apiserver -p 6379:6379 -p 8001:8001 redis/redis-stack:latest
 ```
 
+For standalone redis instances we can run the redis insights dashboard separately and add
+any database there that we want to connect to.
+
+```
+docker run --rm --name redis-insight -p 5540:5540 redis/redisinsight:latest
+```
+
 Running the apiserver locally requires a proper `.env.local` file according to
 the structure of `.env.fake` but with real data, depending on your desired use
 case. For instance, if you want to run the apiserver alongside the webclient,
