@@ -34,8 +34,8 @@ and debug the maintained state in redis.
 docker run --rm --name redis-stack-apiserver -p 6379:6379 -p 8001:8001 redis/redis-stack:latest
 ```
 
-For standalone redis instances we can run the redis insights dashboard separately and add
-any database there that we want to connect to.
+For standalone redis instances we can run the redis insights dashboard
+separately and add any database there that we want to connect to.
 
 ```
 docker run --rm --name redis-insight -p 5540:5540 redis/redisinsight:latest
