@@ -8,9 +8,18 @@ func (r *Redigo) UpdatePost(inp []*Object) error {
 	var err error
 
 	for i := range inp {
-		err = r.red.Simple().Create().Element(posObj(inp[i].ID), musStr(inp[i]))
-		if err != nil {
-			return tracer.Mask(err)
+		{
+			err := inp[i].Verify()
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
+
+		{
+			err = r.red.Simple().Create().Element(posObj(inp[i].ID), musStr(inp[i]))
+			if err != nil {
+				return tracer.Mask(err)
+			}
 		}
 	}
 

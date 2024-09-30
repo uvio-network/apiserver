@@ -9,5 +9,15 @@ var (
 )
 
 func Verify(str string) bool {
-	return regExp.MatchString(str)
+	return regExp.MatchString(str) && !zerHsh(str)
+}
+
+func zerHsh(str string) bool {
+	for _, char := range str[2:] {
+		if char != '0' {
+			return false
+		}
+	}
+
+	return true
 }

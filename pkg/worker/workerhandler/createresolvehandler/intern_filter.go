@@ -13,6 +13,7 @@ func (h *InternHandler) Filter(tas *task.Task) bool {
 	//
 	return tas.Meta.Has(map[string]string{
 		objectlabel.ClaimAction:    objectlabel.ActionCreate,
+		objectlabel.ClaimBlock:     "*",
 		objectlabel.ClaimLifecycle: string(objectlabel.LifecycleResolve),
 		objectlabel.ClaimObject:    "*",
 		objectlabel.ClaimOrigin:    objectlabel.OriginIntern,

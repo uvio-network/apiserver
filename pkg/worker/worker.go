@@ -285,8 +285,46 @@ func (w *Worker) ticker() {
 func logCtx(tas *task.Task) context.Context {
 	ctx := context.Background()
 
-	for k, v := range *tas.Meta {
-		ctx = meta.Add(ctx, k, v)
+	if tas.Core != nil {
+		for k, v := range *tas.Core {
+			ctx = meta.Add(ctx, k, v)
+		}
+	}
+
+	if tas.Cron != nil {
+		for k, v := range *tas.Cron {
+			ctx = meta.Add(ctx, k, v)
+		}
+	}
+
+	if tas.Gate != nil {
+		for k, v := range *tas.Gate {
+			ctx = meta.Add(ctx, k, v)
+		}
+	}
+
+	if tas.Meta != nil {
+		for k, v := range *tas.Meta {
+			ctx = meta.Add(ctx, k, v)
+		}
+	}
+
+	if tas.Node != nil {
+		for k, v := range *tas.Node {
+			ctx = meta.Add(ctx, k, v)
+		}
+	}
+
+	if tas.Root != nil {
+		for k, v := range *tas.Root {
+			ctx = meta.Add(ctx, k, v)
+		}
+	}
+
+	if tas.Sync != nil {
+		for k, v := range *tas.Sync {
+			ctx = meta.Add(ctx, k, v)
+		}
 	}
 
 	return ctx
