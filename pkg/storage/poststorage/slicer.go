@@ -81,6 +81,18 @@ func (s Slicer) ObjectLifecycle(lif objectlabel.DesiredLifecycle) Slicer {
 	return lis
 }
 
+func (s Slicer) ObjectParent(par objectid.ID) Slicer {
+	var lis Slicer
+
+	for _, x := range s {
+		if x.Parent == par {
+			lis = append(lis, x)
+		}
+	}
+
+	return lis
+}
+
 // --------------------------------------------------------------------- //
 
 func (s Slicer) IDClaim(cla objectid.ID) *Object {
@@ -108,14 +120,4 @@ func (s Slicer) LatestClaim() *Object {
 	}
 
 	return las
-}
-
-func (s Slicer) NextClaim(par objectid.ID) *Object {
-	for _, x := range s {
-		if x.Parent == par {
-			return x
-		}
-	}
-
-	return nil
 }

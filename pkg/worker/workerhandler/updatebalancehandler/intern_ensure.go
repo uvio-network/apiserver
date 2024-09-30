@@ -179,10 +179,14 @@ func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *post
 		}
 	}
 
+	if len(pos) != 1 {
+		return nil, nil, nil, tracer.Maskf(runtime.ExecutionFailedError, "expected exactly one post object for ID %s", cla)
+	}
+
 	// This is the claim with lifecycle phase resolve that has been expired.
 	var res *poststorage.Object
 	{
-		res = pos.IDClaim(cla)
+		res = pos[0]
 	}
 
 	var tre poststorage.Slicer
@@ -203,19 +207,35 @@ func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *post
 
 	var bal *poststorage.Object
 	{
-		bal = tre.NextClaim(res.ID)
-	}
-
-	// If the balance object exists and it is not of lifecycle phase "balance",
-	// then something went horribly wrong across the claim reconciliation. The
-	// only possible lifecycle phase imaginable would be "dispute", if something
-	// went wrong with deferring the resolve expiry in the corresponding expiry
-	// queue.
-	if bal != nil && !bal.Lifecycle.Is(objectlabel.LifecycleBalance) {
-		return nil, nil, nil, tracer.Mask(runtime.ExecutionFailedError)
+		bal, err = balTre(res.ID, tre)
+		if err != nil {
+			return nil, nil, nil, tracer.Mask(err)
+		}
 	}
 
 	return pod, res, bal, nil
+}
+
+func balTre(res objectid.ID, tre poststorage.Slicer) (*poststorage.Object, error) {
+	// We want to find the balance given the provided resolve "res". The "res"
+	// here is effectively the parent of the balance that we want to find. The
+	// "res" can also be the parent of comments, disputes and settles. Below we
+	// search for the post objects that define the "res" as parent, while having
+	// the lifecycle phase balance themeselves.
+	var bal poststorage.Slicer
+	{
+		bal = tre.ObjectParent(res).ObjectLifecycle(objectlabel.LifecycleBalance)
+	}
+
+	if len(bal) == 0 {
+		return nil, nil
+	}
+
+	if len(bal) == 1 {
+		return bal[0], nil
+	}
+
+	return nil, tracer.Maskf(runtime.ExecutionFailedError, "too many balances for parent %s", res)
 }
 
 func tasInt(str string) (uint64, error) {

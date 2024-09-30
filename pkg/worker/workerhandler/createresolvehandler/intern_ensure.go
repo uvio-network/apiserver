@@ -186,11 +186,15 @@ func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *post
 		}
 	}
 
+	if len(pos) != 1 {
+		return nil, nil, tracer.Maskf(runtime.ExecutionFailedError, "expected exactly one post object for ID %s", cla)
+	}
+
 	// This is the claim with lifecycle phase "propose" or "dispute" that has been
 	// expired.
 	var pod *poststorage.Object
 	{
-		pod = pos.IDClaim(cla)
+		pod = pos[0]
 	}
 
 	var tre poststorage.Slicer
@@ -203,7 +207,10 @@ func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *post
 
 	var res *poststorage.Object
 	{
-		res = tre.NextClaim(pod.ID)
+		res, err = resTre(pod.ID, tre)
+		if err != nil {
+			return nil, nil, tracer.Mask(err)
+		}
 	}
 
 	return pod, res, nil
@@ -239,6 +246,28 @@ func (h *InternHandler) searchSamples(cla claimscontract.Interface, pod objectid
 	}
 
 	return tru, fls, nil
+}
+
+func resTre(pod objectid.ID, tre poststorage.Slicer) (*poststorage.Object, error) {
+	// We want to find the resolve given the provided propose or dispute "pod".
+	// The "pod" here is effectively the parent of the resolve that we want to
+	// find. The "pod" can also be the parent of comments that commented on the
+	// propose. Below we search for the post objects that define the "pod" as
+	// parent, while having the lifecycle phase resolve themeselves.
+	var res poststorage.Slicer
+	{
+		res = tre.ObjectParent(pod).ObjectLifecycle(objectlabel.LifecycleResolve)
+	}
+
+	if len(res) == 0 {
+		return nil, nil
+	}
+
+	if len(res) == 1 {
+		return res[0], nil
+	}
+
+	return nil, tracer.Maskf(runtime.ExecutionFailedError, "too many resolves for parent %s", pod)
 }
 
 func tasInt(str string) (uint64, error) {
