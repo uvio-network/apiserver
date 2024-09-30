@@ -61,6 +61,7 @@ func New(c Config) *Handler {
 
 	{
 		han = append(han, claimexpiryhandler.NewInternHandler(claimexpiryhandler.InternHandlerConfig{
+			Con: c.Con,
 			Emi: c.Emi,
 			Log: c.Log,
 			Sto: c.Sto,

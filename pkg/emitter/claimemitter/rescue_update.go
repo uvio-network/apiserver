@@ -1,13 +1,15 @@
 package claimemitter
 
 import (
+	"strconv"
+
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/xh3b4sd/rescue/task"
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Rescue) Update(cla objectid.ID, lif objectlabel.DesiredLifecycle) error {
+func (r *Rescue) Update(blc uint64, cla objectid.ID, lif objectlabel.DesiredLifecycle) error {
 	var tas *task.Task
 	{
 		tas = &task.Task{
@@ -16,6 +18,7 @@ func (r *Rescue) Update(cla objectid.ID, lif objectlabel.DesiredLifecycle) error
 			},
 			Meta: &task.Meta{
 				objectlabel.ClaimAction:    objectlabel.ActionUpdate,
+				objectlabel.ClaimBlock:     strconv.FormatUint(blc, 10),
 				objectlabel.ClaimLifecycle: string(lif),
 				objectlabel.ClaimObject:    cla.String(),
 				objectlabel.ClaimOrigin:    objectlabel.OriginIntern,

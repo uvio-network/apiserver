@@ -1,6 +1,8 @@
 package claimexpiryhandler
 
 import (
+	"context"
+
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
 	"github.com/uvio-network/apiserver/pkg/worker/budget"
@@ -11,22 +13,30 @@ import (
 func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	var err error
 
+	var blc uint64
 	{
-		err = h.expirePropose(bud)
+		blc, err = h.con.Client().BlockNumber(context.Background())
 		if err != nil {
 			return tracer.Mask(err)
 		}
 	}
 
 	{
-		err = h.expireResolve(bud)
+		err = h.expirePropose(bud, blc)
 		if err != nil {
 			return tracer.Mask(err)
 		}
 	}
 
 	{
-		err = h.expireDispute(bud)
+		err = h.expireResolve(bud, blc)
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
+	{
+		err = h.expireDispute(bud, blc)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -35,7 +45,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	return nil
 }
 
-func (h *InternHandler) expireDispute(bud *budget.Budget) error {
+func (h *InternHandler) expireDispute(bud *budget.Budget, blc uint64) error {
 	var err error
 
 	var cla []*poststorage.Object
@@ -48,7 +58,7 @@ func (h *InternHandler) expireDispute(bud *budget.Budget) error {
 
 	for _, x := range cla[:bud.Claim(len(cla))] {
 		{
-			err = h.emi.Claim().Create(x.ID, objectlabel.LifecycleResolve)
+			err = h.emi.Claim().Create(blc, x.ID, objectlabel.LifecycleResolve)
 			if err != nil {
 				return tracer.Mask(err)
 			}
@@ -65,7 +75,7 @@ func (h *InternHandler) expireDispute(bud *budget.Budget) error {
 	return nil
 }
 
-func (h *InternHandler) expirePropose(bud *budget.Budget) error {
+func (h *InternHandler) expirePropose(bud *budget.Budget, blc uint64) error {
 	var err error
 
 	var cla []*poststorage.Object
@@ -78,7 +88,7 @@ func (h *InternHandler) expirePropose(bud *budget.Budget) error {
 
 	for _, x := range cla[:bud.Claim(len(cla))] {
 		{
-			err = h.emi.Claim().Create(x.ID, objectlabel.LifecycleResolve)
+			err = h.emi.Claim().Create(blc, x.ID, objectlabel.LifecycleResolve)
 			if err != nil {
 				return tracer.Mask(err)
 			}
@@ -95,7 +105,7 @@ func (h *InternHandler) expirePropose(bud *budget.Budget) error {
 	return nil
 }
 
-func (h *InternHandler) expireResolve(bud *budget.Budget) error {
+func (h *InternHandler) expireResolve(bud *budget.Budget, blc uint64) error {
 	var err error
 
 	var cla []*poststorage.Object
@@ -108,7 +118,7 @@ func (h *InternHandler) expireResolve(bud *budget.Budget) error {
 
 	for _, x := range cla[:bud.Claim(len(cla))] {
 		{
-			err = h.emi.Claim().Update(x.ID, objectlabel.LifecycleBalance)
+			err = h.emi.Claim().Update(blc, x.ID, objectlabel.LifecycleBalance)
 			if err != nil {
 				return tracer.Mask(err)
 			}

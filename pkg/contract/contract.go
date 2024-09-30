@@ -90,6 +90,10 @@ func (c *Contract) Claims(add string) claimscontract.Interface {
 	})
 }
 
+func (c *Contract) Client() *ethclient.Client {
+	return c.cli
+}
+
 func (c *Contract) UVX(add string) uvxcontract.Interface {
 	return uvxcontract.NewUVX(uvxcontract.UVXConfig{
 		Add: common.HexToAddress(add),

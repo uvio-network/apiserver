@@ -1,7 +1,6 @@
 package updatebalancehandler
 
 import (
-	"context"
 	"strconv"
 	"time"
 
@@ -52,22 +51,14 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		cla = h.con.Claims(pod.Contract)
 	}
 
+	if tas.Sync == nil {
+		tas.Sync = &task.Sync{}
+	}
+
+	// We are receiving the block number at the time of task creation and use it
+	// as a paging pointer to retry task execution a couple of times.
 	{
-		var blc uint64
-		{
-			blc, err = cla.Client().BlockNumber(context.Background())
-			if err != nil {
-				return tracer.Mask(err)
-			}
-		}
-
-		if tas.Sync == nil {
-			tas.Sync = &task.Sync{}
-		}
-
-		{
-			tas.Sync.Set(task.Paging, strconv.FormatInt(int64(blc), 10))
-		}
+		tas.Sync.Set(task.Paging, tas.Meta.Get(objectlabel.ClaimBlock))
 	}
 
 	// If the next claim within this tree relative to the provided resolve is nil,
@@ -125,16 +116,16 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 	}
 
+	var blc uint64
+	{
+		blc, err = ensInt(tas.Meta.Get(objectlabel.ClaimBlock))
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
 	var hsh []common.Hash
 	{
-		var blc uint64
-		{
-			blc, err = tasInt(tas.Sync.Get(task.Paging))
-			if err != nil {
-				return tracer.Mask(err)
-			}
-		}
-
 		hsh, err = cla.BalanceUpdated(blc, pod.ID)
 		if err != nil {
 			return tracer.Mask(err)
@@ -238,7 +229,7 @@ func balTre(res objectid.ID, tre poststorage.Slicer) (*poststorage.Object, error
 	return nil, tracer.Maskf(runtime.ExecutionFailedError, "too many balances for parent %s", res)
 }
 
-func tasInt(str string) (uint64, error) {
+func ensInt(str string) (uint64, error) {
 	num, err := strconv.Atoi(zerStr(str))
 	if err != nil {
 		return 0, tracer.Mask(err)
