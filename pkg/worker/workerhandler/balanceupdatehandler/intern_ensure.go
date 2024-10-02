@@ -32,6 +32,9 @@ const (
 	// provided task will be revoked. Therefore defining maxWait under 30 seconds
 	// gives us enough time to gracefully process the task given to us.
 	maxWait = 20 * time.Second
+
+	//
+	oneWeek = time.Hour * 24 * 7
 )
 
 func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
@@ -40,8 +43,9 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	var pod *poststorage.Object
 	var res *poststorage.Object
 	var bal *poststorage.Object
+	var tre poststorage.Slicer
 	{
-		pod, res, bal, err = h.searchClaims(tas)
+		pod, res, bal, tre, err = h.searchClaims(tas)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -60,6 +64,31 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	// as a paging pointer to retry task execution a couple of times.
 	{
 		tas.Sync.Set(task.Paging, tas.Meta.Get(objectlabel.ClaimBlock))
+	}
+
+	var now time.Time
+	{
+		now = time.Now().UTC()
+	}
+
+	var lat *poststorage.Object
+	var fin bool
+	{
+		lat, fin = finTre(now, tre)
+	}
+
+	// If the given tree cannot be finalized, then we cannot go ahead to emit a
+	// task for updating user metrics. Note that the log line below should never
+	// be emitted if the task scheduling for expired resolves works properly.
+	if !fin {
+		h.log.Log(
+			context.Background(),
+			"level", "warning",
+			"message", "tried to update user balances, but claim tree cannot be finalized",
+			"resolve", string(res.ID),
+		)
+
+		return nil
 	}
 
 	// If the next claim within this tree relative to the provided resolve is nil,
@@ -117,15 +146,15 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 	}
 
-	if bal.Lifecycle.Pending() {
-		var blc uint64
-		{
-			blc, err = ensInt(tas.Meta.Get(objectlabel.ClaimBlock))
-			if err != nil {
-				return tracer.Mask(err)
-			}
+	var blc uint64
+	{
+		blc, err = ensInt(tas.Meta.Get(objectlabel.ClaimBlock))
+		if err != nil {
+			return tracer.Mask(err)
 		}
+	}
 
+	if bal.Lifecycle.Pending() {
 		var hsh []common.Hash
 		{
 			hsh, err = cla.BalanceUpdated(blc, pod.ID)
@@ -142,6 +171,26 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 	}
 
+	// Finally emit the Settled events so that we can create notifications and
+	// update user metrics. We want to emit the task for updating user metrics
+	// once, and only once. We do that when we reconcile the very last balance of
+	// any given claim tree that can in fact be finalized.
+	if res.ID == lat.ID {
+		{
+			err = h.emi.Claim().Create(blc, bal.ID, objectlabel.LifecycleSettled)
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
+
+		{
+			err = h.emi.Claim().Update(blc, bal.ID, objectlabel.LifecycleSettled)
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
+	}
+
 	// Once the new post object got updated with all the associated transaction
 	// hashes, we can remove the paging pointer and all sync state from the task
 	// so that it can be deleted eventually by the rescue engine.
@@ -149,35 +198,10 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		tas.Sync = nil
 	}
 
-	var blc uint64
-	{
-		blc, err = h.con.Client().BlockNumber(context.Background())
-		if err != nil {
-			return tracer.Mask(err)
-		}
-	}
-
-	// Finally emit the Settled events so that we can create notifications and
-	// update user metrics.
-
-	{
-		err = h.emi.Claim().Create(blc, bal.ID, objectlabel.LifecycleSettled)
-		if err != nil {
-			return tracer.Mask(err)
-		}
-	}
-
-	{
-		err = h.emi.Claim().Update(blc, bal.ID, objectlabel.LifecycleSettled)
-		if err != nil {
-			return tracer.Mask(err)
-		}
-	}
-
 	return nil
 }
 
-func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *poststorage.Object, *poststorage.Object, error) {
+func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *poststorage.Object, *poststorage.Object, poststorage.Slicer, error) {
 	var err error
 
 	// The claim ID obtained here is the ID of the resolve that expired when the
@@ -191,12 +215,12 @@ func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *post
 	{
 		pos, err = h.sto.Post().SearchPost([]objectid.ID{cla})
 		if err != nil {
-			return nil, nil, nil, tracer.Mask(err)
+			return nil, nil, nil, nil, tracer.Mask(err)
 		}
 	}
 
 	if len(pos) != 1 {
-		return nil, nil, nil, tracer.Maskf(runtime.ExecutionFailedError, "expected exactly one post object for ID %s", cla)
+		return nil, nil, nil, nil, tracer.Maskf(runtime.ExecutionFailedError, "expected exactly one post object for ID %s", cla)
 	}
 
 	// This is the claim with lifecycle phase resolve that has been expired.
@@ -209,7 +233,7 @@ func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *post
 	{
 		tre, err = h.sto.Post().SearchTree([]objectid.ID{res.Tree})
 		if err != nil {
-			return nil, nil, nil, tracer.Mask(err)
+			return nil, nil, nil, nil, tracer.Mask(err)
 		}
 	}
 
@@ -225,11 +249,11 @@ func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *post
 	{
 		bal, err = balTre(res.ID, tre)
 		if err != nil {
-			return nil, nil, nil, tracer.Mask(err)
+			return nil, nil, nil, nil, tracer.Mask(err)
 		}
 	}
 
-	return pod, res, bal, nil
+	return pod, res, bal, tre, nil
 }
 
 func balTre(res objectid.ID, tre poststorage.Slicer) (*poststorage.Object, error) {
@@ -252,6 +276,43 @@ func balTre(res objectid.ID, tre poststorage.Slicer) (*poststorage.Object, error
 	}
 
 	return nil, tracer.Maskf(runtime.ExecutionFailedError, "too many balances for parent %s", res)
+}
+
+func finTre(now time.Time, tre poststorage.Slicer) (*poststorage.Object, bool) {
+	var res poststorage.Slicer
+	{
+		res = tre.ObjectLifecycle(objectlabel.LifecycleResolve)
+	}
+
+	var lat *poststorage.Object
+	{
+		lat = res.LatestClaim()
+	}
+
+	// If there is not a single resolve, then this tree cannot be considered final.
+	if lat == nil {
+		return nil, false
+	}
+
+	// Any given claim tree is considered final if we have the maximum amount of 3
+	// resolves at hand. This is because every originally proposed claim can be
+	// disputed a maximum amount of two times. Then there is one resolve for the
+	// original propose, and two resolves for every dispute after that.
+	if len(res) >= 3 && now.After(lat.Expiry) {
+		return lat, true
+	}
+
+	// Any given claim tree is considered final if the latest resolve is outside
+	// of its challenge window, which is its own expiry plus one additional week.
+	// There can be only a single resolve for any given claim tree. In any event,
+	// after this resolve moved out of its challenge window, no more disputes can
+	// be created, and the latest resolution at hand becomes definitive and
+	// binding.
+	if now.After(lat.Expiry.Add(oneWeek)) {
+		return lat, true
+	}
+
+	return nil, false
 }
 
 func ensInt(str string) (uint64, error) {

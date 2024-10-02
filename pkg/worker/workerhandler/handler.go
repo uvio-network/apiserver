@@ -11,6 +11,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/storage"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/balanceupdatehandler"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/claimexpiryhandler"
+	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/reputationupdatehandler"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/resolvecreatehandler"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/usercreatehandler"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/uvxminthandler"
@@ -60,9 +61,23 @@ func New(c Config) *Handler {
 	var han []Interface
 
 	{
+		han = append(han, balanceupdatehandler.NewInternHandler(balanceupdatehandler.InternHandlerConfig{
+			Con: c.Con,
+			Emi: c.Emi,
+			Log: c.Log,
+			Rec: c.Rec,
+			Sto: c.Sto,
+		}))
+
 		han = append(han, claimexpiryhandler.NewInternHandler(claimexpiryhandler.InternHandlerConfig{
 			Con: c.Con,
 			Emi: c.Emi,
+			Log: c.Log,
+			Sto: c.Sto,
+		}))
+
+		han = append(han, reputationupdatehandler.NewInternHandler(reputationupdatehandler.InternHandlerConfig{
+			Con: c.Con,
 			Log: c.Log,
 			Sto: c.Sto,
 		}))
@@ -72,14 +87,6 @@ func New(c Config) *Handler {
 			Log: c.Log,
 			Rec: c.Rec,
 			Sam: c.Sam,
-			Sto: c.Sto,
-		}))
-
-		han = append(han, balanceupdatehandler.NewInternHandler(balanceupdatehandler.InternHandlerConfig{
-			Con: c.Con,
-			Emi: c.Emi,
-			Log: c.Log,
-			Rec: c.Rec,
 			Sto: c.Sto,
 		}))
 
