@@ -1,4 +1,4 @@
-package postreconciler
+package summary
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/storage/votestorage"
 )
 
-func Test_Reconciler_PostReconciler_updateSummary_claim(t *testing.T) {
+func Test_Summary_Update_claim(t *testing.T) {
 	testCases := []struct {
 		pos []*poststorage.Object
 		vot []*votestorage.Object
@@ -94,7 +94,7 @@ func Test_Reconciler_PostReconciler_updateSummary_claim(t *testing.T) {
 
 			var out [][]float64
 			for i := range tc.pos {
-				out = append(out, updateSummary(tc.pos[i], tc.vot[i]).Summary)
+				out = append(out, Update(tc.pos[i], tc.vot[i]).Summary)
 			}
 
 			if len(out) != len(tc.out) {
@@ -110,7 +110,7 @@ func Test_Reconciler_PostReconciler_updateSummary_claim(t *testing.T) {
 	}
 }
 
-func Test_Reconciler_PostReconciler_updateSummary_comment(t *testing.T) {
+func Test_Summary_Update_comment(t *testing.T) {
 	testCases := []struct {
 		pos []*poststorage.Object
 		vot []*votestorage.Object
@@ -195,7 +195,7 @@ func Test_Reconciler_PostReconciler_updateSummary_comment(t *testing.T) {
 
 			var out [][]float64
 			for i := range tc.pos {
-				out = append(out, updateSummary(tc.pos[i], tc.vot[i]).Summary)
+				out = append(out, Update(tc.pos[i], tc.vot[i]).Summary)
 			}
 
 			if len(out) != len(tc.out) {

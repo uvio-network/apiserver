@@ -12,6 +12,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
 	"github.com/uvio-network/apiserver/pkg/storage/votestorage"
+	"github.com/uvio-network/apiserver/pkg/summary"
 	"github.com/xh3b4sd/tracer"
 )
 
@@ -132,7 +133,7 @@ func (r *Redigo) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, e
 		// be created with expiries that point to the past. Claim expiries are only
 		// relevant for claims of lifecycle phase "dispute", "propose" and
 		// "resolve".
-		if inp[i].Kind == "claim" && !inp[i].Lifecycle.Is(objectlabel.LifecycleBalance) && !inp[i].Lifecycle.Is(objectlabel.LifecycleSettled) {
+		if inp[i].Kind == "claim" && inp[i].Lifecycle.Is(objectlabel.LifecycleDispute, objectlabel.LifecyclePropose, objectlabel.LifecycleResolve) {
 			if inp[i].Expiry.Before(now) {
 				return nil, tracer.Maskf(ClaimExpiryPastError, "%s = %d", inp[i].ID, inp[i].Expiry.Unix())
 			}
@@ -149,17 +150,22 @@ func (r *Redigo) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, e
 			// resolve must still be within its challenge window of 7 standard days
 			// from its expiry.
 			if now.After(par.Expiry.Add(oneWeek)) {
-				return nil, tracer.Mask(DisputeChallengeError)
+				return nil, tracer.Maskf(DisputeChallengeError, "%s", par.ID)
 			}
 
 			// Ensure that disputes can only be created by referencing resolves.
 			if !par.Lifecycle.Is(objectlabel.LifecycleResolve) {
-				return nil, tracer.Mask(DisputeLifecycleError)
+				return nil, tracer.Maskf(DisputeLifecycleError, "%s", par.ID)
 			}
 
-			// Now push back the resolve expiries within this tree, in order to
-			// prevent our queued background jobs to prematurely reconcile system
-			// state.
+			// Ensure disputes can only be created on resolves with valid resolution.
+			// If resolves had no votes, or an equal amount of votes on each side of
+			// the market, then those resolutions are considered invalid. Those
+			// invalid resolutions are considered definitive and binding, and can
+			// therefore not be disputed.
+			if !summary.Verify(par) {
+				return nil, tracer.Maskf(DisputeResolutionError, "%s", par.ID)
+			}
 
 			var tre poststorage.Slicer
 			{
@@ -169,13 +175,23 @@ func (r *Redigo) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, e
 				}
 			}
 
+			var dis []*poststorage.Object
 			var pro []*poststorage.Object
+			var res []*poststorage.Object
 			{
+				dis = tre.ObjectLifecycle(objectlabel.LifecycleDispute)
 				pro = tre.ObjectLifecycle(objectlabel.LifecyclePropose)
+				res = tre.ObjectLifecycle(objectlabel.LifecycleResolve)
 			}
 
 			if len(pro) != 1 {
 				return nil, tracer.Mask(runtime.ExecutionFailedError)
+			}
+
+			// Enforce the max dispute limit for our offchain resources. The same
+			// limitation is enforced in the smart contracts.
+			if len(dis) >= 2 {
+				return nil, tracer.Maskf(DisputeLimitError, "%s / %s", pro[0].ID, par.ID)
 			}
 
 			// Ensure the dispute that we are creating has the same token definition
@@ -184,11 +200,9 @@ func (r *Redigo) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, e
 				return nil, tracer.Maskf(DisputeContractError, "%s / %s", inp[i].ID, par.ID)
 			}
 
-			var res []*poststorage.Object
-			{
-				res = tre.ObjectLifecycle(objectlabel.LifecycleResolve)
-			}
-
+			// Below we push back the resolve expiries within this tree, in order to
+			// prevent our queued background jobs to prematurely reconcile system
+			// state.
 			{
 				err = r.sto.Post().DeleteExpiry(res)
 				if err != nil {
@@ -242,7 +256,7 @@ func (r *Redigo) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, e
 
 			// Update the vote summary of the comment according to all existing votes.
 			for _, x := range vot {
-				inp[i] = updateSummary(inp[i], x)
+				inp[i] = summary.Update(inp[i], x)
 			}
 		}
 	}
