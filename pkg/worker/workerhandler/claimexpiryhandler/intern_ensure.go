@@ -122,6 +122,11 @@ func (h *InternHandler) expireResolve(bud *budget.Budget, blc uint64) error {
 		}
 	}
 
+	var now time.Time
+	{
+		now = time.Now().UTC()
+	}
+
 	for _, x := range cla[:bud.Claim(len(cla))] {
 		var tre poststorage.Slicer
 		{
@@ -134,7 +139,7 @@ func (h *InternHandler) expireResolve(bud *budget.Budget, blc uint64) error {
 		var res *poststorage.Object
 		var fin bool
 		{
-			res, fin = finTre(time.Now().UTC(), tre)
+			res, fin = finTre(now, tre)
 		}
 
 		// If the tree of the given resolve cannot be finalized, then we cannot go
@@ -188,7 +193,7 @@ func finTre(now time.Time, tre poststorage.Slicer) (*poststorage.Object, bool) {
 	// resolves at hand. This is because every originally proposed claim can be
 	// disputed a maximum amount of two times. Then there is one resolve for the
 	// original propose, and two resolves for every dispute after that.
-	if len(res) == 3 && now.After(lat.Expiry) {
+	if len(res) >= 3 && now.After(lat.Expiry) {
 		return lat, true
 	}
 
