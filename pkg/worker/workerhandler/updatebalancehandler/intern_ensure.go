@@ -116,26 +116,28 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 	}
 
-	var blc uint64
-	{
-		blc, err = ensInt(tas.Meta.Get(objectlabel.ClaimBlock))
-		if err != nil {
-			return tracer.Mask(err)
-		}
-	}
-
-	var hsh []common.Hash
-	{
-		hsh, err = cla.BalanceUpdated(blc, pod.ID)
-		if err != nil {
-			return tracer.Mask(err)
-		}
-	}
-
 	if bal.Lifecycle.Pending() {
-		err = h.rec.Post().UpdateBalance(bal, hsh)
-		if err != nil {
-			return tracer.Mask(err)
+		var blc uint64
+		{
+			blc, err = ensInt(tas.Meta.Get(objectlabel.ClaimBlock))
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
+
+		var hsh []common.Hash
+		{
+			hsh, err = cla.BalanceUpdated(blc, pod.ID)
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
+
+		{
+			err = h.rec.Post().UpdateBalance(bal, hsh)
+			if err != nil {
+				return tracer.Mask(err)
+			}
 		}
 	}
 
