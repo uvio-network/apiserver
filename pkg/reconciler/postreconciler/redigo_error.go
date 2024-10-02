@@ -41,7 +41,17 @@ var DisputeContractError = &tracer.Error{
 
 var DisputeLifecycleError = &tracer.Error{
 	Kind: "DisputeLifecycleError",
-	Desc: "The request expects the dispute's parent to reference a resolve. The dispute's parent was not found to reference a resolve. Therefore the request failed.",
+	Desc: "The request expects disputes to be created on claims with lifecycle phase resolve. The dispute's referenced parent was not found to be of lifecycle phase resolve. Therefore the request failed.",
+}
+
+var DisputeLimitError = &tracer.Error{
+	Kind: "DisputeLimitError",
+	Desc: "The request expects no more than 2 disputes to be created on the originally proposed claim. The originally proposed claim was found to have been disputed twice already. Therefore the request failed.",
+}
+
+var DisputeResolutionError = &tracer.Error{
+	Kind: "DisputeResolutionError",
+	Desc: "The request expects disputes to be created on claims with valid resolutions. The dispute's referenced parent was not found to have a valid resolution. Therefore the request failed.",
 }
 
 var MarketParticipationError = &tracer.Error{
