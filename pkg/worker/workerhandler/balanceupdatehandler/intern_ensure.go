@@ -242,7 +242,7 @@ func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *post
 	// settle.
 	var pod *poststorage.Object
 	{
-		pod = tre.IDClaim(res.Parent)
+		pod = tre.IDObject(res.Parent)
 	}
 
 	var bal *poststorage.Object
@@ -286,7 +286,7 @@ func finTre(now time.Time, tre poststorage.Slicer) (*poststorage.Object, bool) {
 
 	var lat *poststorage.Object
 	{
-		lat = res.LatestClaim()
+		lat = res.LatestObject()
 	}
 
 	// If there is not a single resolve, then this tree cannot be considered final.

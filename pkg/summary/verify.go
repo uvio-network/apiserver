@@ -2,10 +2,10 @@ package summary
 
 import "github.com/uvio-network/apiserver/pkg/storage/poststorage"
 
-func Verify(pos *poststorage.Object) bool {
-	if len(pos.Summary) < 2 {
+func Verify(res *poststorage.Object) bool {
+	if len(res.Summary) < 2 {
 		return false
 	}
 
-	return pos.Summary[Agreement] != pos.Summary[Disagreement]
+	return res.Summary[Agreement] != res.Summary[Disagreement]
 }
