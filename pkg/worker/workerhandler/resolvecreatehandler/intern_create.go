@@ -1,4 +1,4 @@
-package createresolvehandler
+package resolvecreatehandler
 
 import (
 	"github.com/xh3b4sd/rescue/task"

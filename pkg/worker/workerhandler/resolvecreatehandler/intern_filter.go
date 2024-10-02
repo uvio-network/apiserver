@@ -1,4 +1,4 @@
-package createresolvehandler
+package resolvecreatehandler
 
 import (
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"

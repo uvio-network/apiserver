@@ -1,10 +1,11 @@
-package updatebalancehandler
+package resolvecreatehandler
 
 import (
 	"fmt"
 
 	"github.com/uvio-network/apiserver/pkg/contract"
 	"github.com/uvio-network/apiserver/pkg/reconciler"
+	"github.com/uvio-network/apiserver/pkg/sample"
 	"github.com/uvio-network/apiserver/pkg/storage"
 	"github.com/xh3b4sd/logger"
 	"github.com/xh3b4sd/tracer"
@@ -14,6 +15,7 @@ type InternHandlerConfig struct {
 	Con contract.Interface
 	Log logger.Interface
 	Rec reconciler.Interface
+	Sam *sample.Sample
 	Sto storage.Interface
 }
 
@@ -21,6 +23,7 @@ type InternHandler struct {
 	con contract.Interface
 	log logger.Interface
 	rec reconciler.Interface
+	sam *sample.Sample
 	sto storage.Interface
 }
 
@@ -34,6 +37,9 @@ func NewInternHandler(c InternHandlerConfig) *InternHandler {
 	if c.Rec == nil {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Rec must not be empty", c)))
 	}
+	if c.Sam == nil {
+		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Sam must not be empty", c)))
+	}
 	if c.Sto == nil {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Sto must not be empty", c)))
 	}
@@ -42,6 +48,7 @@ func NewInternHandler(c InternHandlerConfig) *InternHandler {
 		con: c.Con,
 		log: c.Log,
 		rec: c.Rec,
+		sam: c.Sam,
 		sto: c.Sto,
 	}
 }

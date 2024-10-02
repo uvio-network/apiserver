@@ -1,6 +1,7 @@
-package updatebalancehandler
+package balanceupdatehandler
 
 import (
+	"context"
 	"strconv"
 	"time"
 
@@ -148,8 +149,30 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		tas.Sync = nil
 	}
 
-	// TODO emit Settled event so that we need to notify the winners somehow so
-	// that they know they have won something
+	var blc uint64
+	{
+		blc, err = h.con.Client().BlockNumber(context.Background())
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
+	// Finally emit the Settled events so that we can create notifications and
+	// update user metrics.
+
+	{
+		err = h.emi.Claim().Create(blc, bal.ID, objectlabel.LifecycleSettled)
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
+	{
+		err = h.emi.Claim().Update(blc, bal.ID, objectlabel.LifecycleSettled)
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
 
 	return nil
 }
