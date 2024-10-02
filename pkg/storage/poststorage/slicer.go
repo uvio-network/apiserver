@@ -1,8 +1,6 @@
 package poststorage
 
 import (
-	"slices"
-
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 )
@@ -110,14 +108,16 @@ func (s Slicer) LatestClaim() *Object {
 		return nil
 	}
 
-	slices.SortFunc(s, func(a, b *Object) int {
-		return int(a.Expiry.Unix() - b.Expiry.Unix())
-	})
-
-	var las *Object
+	var lat *Object
 	{
-		las = s[len(s)-1]
+		lat = s[0]
 	}
 
-	return las
+	for _, x := range s[1:] {
+		if x.Expiry.After(lat.Expiry) {
+			lat = x
+		}
+	}
+
+	return lat
 }
