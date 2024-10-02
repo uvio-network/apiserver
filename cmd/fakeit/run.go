@@ -16,6 +16,7 @@ import (
 	"github.com/uvio-network/apigocode/pkg/wallet"
 	"github.com/uvio-network/apiserver/pkg/daemon"
 	"github.com/uvio-network/apiserver/pkg/envvar"
+	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/xh3b4sd/tracer"
 )
 
@@ -109,7 +110,7 @@ func (r *run) runE(cmd *cobra.Command, arg []string) error {
 
 	var pvt *vote.SearchO
 	{
-		pvt, err = r.createVotePropose(key, use, pro)
+		pvt, err = r.createVotePoD(key, use, pro)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -155,6 +156,14 @@ func (r *run) runE(cmd *cobra.Command, arg []string) error {
 		}
 	}
 
+	var dvt *vote.SearchO
+	{
+		dvt, err = r.createVotePoD(key, use, dis)
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
 	// create comments on disputes
 
 	{
@@ -163,9 +172,24 @@ func (r *run) runE(cmd *cobra.Command, arg []string) error {
 		fmt.Printf("Generated %d fake claims of lifecycle phase %q.\n", len(pro.Object), "propose")
 		fmt.Printf("Generated %d fake claims of lifecycle phase %q.\n", len(res.Object), "resolve")
 		fmt.Printf("Generated %d fake claims of lifecycle phase %q.\n", len(dis.Object), "dispute")
-		fmt.Printf("Generated %d fake votes.\n", len(pvt.Object)+len(rvt.Object))
+		fmt.Printf("Generated %d fake votes.\n", len(pvt.Object)+len(rvt.Object)+len(dvt.Object))
 		fmt.Printf("Generated %d fake comments.\n", len(pcm.Object)+len(rcm.Object))
 	}
 
 	return nil
+}
+
+func witLif(pos *post.SearchO, lif objectlabel.DesiredLifecycle) *post.SearchO {
+	var lis *post.SearchO
+	{
+		lis = &post.SearchO{}
+	}
+
+	for _, x := range pos.Object {
+		if x.Public.Lifecycle == string(lif)+":"+string(objectlabel.LifecycleOnchain) {
+			lis.Object = append(lis.Object, x)
+		}
+	}
+
+	return lis
 }

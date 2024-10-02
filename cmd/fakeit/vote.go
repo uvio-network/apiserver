@@ -13,7 +13,7 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *run) createVotePropose(key jwk.Key, use *user.SearchO, cla *post.SearchO) (*vote.SearchO, error) {
+func (r *run) createVotePoD(key jwk.Key, use *user.SearchO, cla *post.SearchO) (*vote.SearchO, error) {
 	var err error
 
 	var ids []string
@@ -160,9 +160,9 @@ func (r *run) createVoteResolve(key jwk.Key, use *user.SearchO, cla *post.Search
 }
 
 func (r *run) randomVote(cla *post.SearchO_Object) *vote.CreateI {
-	var pro bool
-	if strings.HasPrefix(cla.Public.Lifecycle, "propose") {
-		pro = true
+	var pod bool
+	if strings.HasPrefix(cla.Public.Lifecycle, "propose") || strings.HasPrefix(cla.Public.Lifecycle, "dispute") {
+		pod = true
 	}
 
 	var res bool
@@ -176,7 +176,7 @@ func (r *run) randomVote(cla *post.SearchO_Object) *vote.CreateI {
 	}
 
 	var kin string
-	if pro {
+	if pod {
 		kin = "stake"
 	} else if res {
 		kin = "truth"
@@ -191,7 +191,7 @@ func (r *run) randomVote(cla *post.SearchO_Object) *vote.CreateI {
 	}
 
 	var val string
-	if pro {
+	if pod {
 		val = limStr(converter.FloatToString(r.fak.Float64Range(0.0001, 2.5)), 6)
 	} else if res {
 		val = "1"

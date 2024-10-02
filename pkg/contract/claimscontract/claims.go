@@ -127,7 +127,7 @@ func (c *Claims) CreateResolve(pod objectid.ID, ind []*big.Int, exp time.Time) (
 			// Below is a testnet transaction providing some real world insight into
 			// effective gas usage.
 			//
-			//     https://sepolia.basescan.org/tx/TODO
+			//     https://sepolia.basescan.org/tx/0x89688b4baf0efa24ff3fa56b4b01aab04ce303934f0747e38c06adc9c1bea099
 			//
 			// Below is a dune dashboard to show current and historical gas metrics on
 			// the Base L2.

@@ -48,24 +48,24 @@ func (r *Redigo) CreateVote(inp []*votestorage.Object) ([]*votestorage.Object, e
 			// Here we make sure that users can propose claims on the platform without
 			// having the onchain confirmation right away.
 			if inp[i].Kind == "stake" && cla.Lifecycle.Pending() && inp[i].Owner != cla.Owner {
-				return nil, tracer.Maskf(StakeLifecyclePendingError, "%s", inp[i].Owner)
+				return nil, tracer.Maskf(StakeLifecyclePendingError, "%s != %s", inp[i].Owner, cla.Owner)
 			}
 
 			// Votes of kind "stake" must comply with the lifecycle of their
 			// referenced claim object, e.g. you cannot stake on a resolve.
 			if inp[i].Kind == "stake" && !cla.Lifecycle.Is(objectlabel.LifecycleDispute, objectlabel.LifecyclePropose) {
-				return nil, tracer.Maskf(StakeLifecycleInvalidError, "%s", cla.Lifecycle.Data)
+				return nil, tracer.Maskf(StakeLifecycleInvalidError, "%s = %s", cla.ID, cla.Lifecycle.Data)
 			}
 
 			// Votes of kind "truth" must comply with the lifecycle of their
 			// referenced claim object, e.g. you can only vote on a resolve.
 			if inp[i].Kind == "truth" && !cla.Lifecycle.Is(objectlabel.LifecycleResolve) {
-				return nil, tracer.Maskf(TruthLifecycleInvalidError, "%s", cla.Lifecycle.Data)
+				return nil, tracer.Maskf(TruthLifecycleInvalidError, "%s = %s", cla.ID, cla.Lifecycle.Data)
 			}
 
 			// Ensure no votes can be cast anymore on claims that have already expired.
 			if now.After(cla.Expiry) {
-				return nil, tracer.Maskf(ClaimAlreadyExpiredError, "%d", cla.Expiry.Unix())
+				return nil, tracer.Maskf(ClaimAlreadyExpiredError, "%s = %d", cla.ID, cla.Expiry.Unix())
 			}
 		}
 

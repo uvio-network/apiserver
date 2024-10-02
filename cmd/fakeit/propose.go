@@ -69,7 +69,7 @@ func (r *run) createPropose(key jwk.Key, use *user.SearchO) (*post.SearchO, erro
 		}
 	}
 
-	return out, nil
+	return witLif(out, objectlabel.LifecyclePropose), nil
 }
 
 func (r *run) randomPropose() *post.CreateI {
@@ -134,7 +134,7 @@ func (r *run) randomPropose() *post.CreateI {
 					Public: &post.CreateI_Object_Public{
 						Chain:     r.cid.String(),
 						Contract:  r.dae.Env().ChainClaimsContract,
-						Expiry:    converter.TimeToString(time.Now().UTC().AddDate(0, r.fak.Number(1, 9), r.fak.Number(10, 30))),
+						Expiry:    converter.TimeToString(time.Now().UTC().AddDate(0, r.fak.Number(0, 9), r.fak.Number(1, 30))),
 						Hash:      hsh,
 						Kind:      "claim",
 						Labels:    strings.Join(lab[:r.fak.Number(1, 4)], ","),

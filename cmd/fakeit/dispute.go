@@ -99,7 +99,7 @@ func (r *run) createDispute(key jwk.Key, use *user.SearchO, cla *post.SearchO) (
 		}
 	}
 
-	return out, nil
+	return witLif(out, objectlabel.LifecycleDispute), nil
 }
 
 func (r *run) randomDispute(pro *poststorage.Object, res *post.SearchO_Object) *post.CreateI {

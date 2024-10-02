@@ -53,8 +53,13 @@ func (r *run) createResolve(wal *wallet.SearchO, cla *post.SearchO) (*post.Searc
 		}
 
 		var exp time.Time
-		{
-			exp = pos[0].Expiry.AddDate(0, 0, r.fak.Number(3, 30))
+		if r.fak.Float64() > 0.5 {
+			// Resolves have a standard expiry of one week. For testing purposes we
+			// expire half of the resolves early so that we can render resolves as if
+			// they are within their challenge window.
+			exp = time.Now().UTC().Add(5 * time.Second)
+		} else {
+			exp = pos[0].Expiry.AddDate(0, 0, 7)
 		}
 
 		var res *poststorage.Object
@@ -172,20 +177,5 @@ func (r *run) createResolve(wal *wallet.SearchO, cla *post.SearchO) (*post.Searc
 		}
 	}
 
-	return out, nil
-}
-
-func witLif(pos *post.SearchO, lif objectlabel.DesiredLifecycle) *post.SearchO {
-	var lis *post.SearchO
-	{
-		lis = &post.SearchO{}
-	}
-
-	for _, x := range pos.Object {
-		if x.Public.Lifecycle == string(lif)+":"+string(objectlabel.LifecycleOnchain) {
-			lis.Object = append(lis.Object, x)
-		}
-	}
-
-	return lis
+	return witLif(out, objectlabel.LifecycleResolve), nil
 }

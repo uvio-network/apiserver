@@ -70,7 +70,7 @@ func (r *run) createComment(key jwk.Key, use *user.SearchO, cla *post.SearchO, v
 	}
 
 	{
-		out = remPar(out)
+		out = remCla(out)
 	}
 
 	return out, nil
@@ -142,7 +142,7 @@ func claVot(cla *post.SearchO, cid string) *post.SearchO_Object {
 	return nil
 }
 
-func remPar(pos *post.SearchO) *post.SearchO {
+func remCla(pos *post.SearchO) *post.SearchO {
 	var lis *post.SearchO
 	{
 		lis = &post.SearchO{}
