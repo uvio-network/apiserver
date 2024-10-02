@@ -158,11 +158,11 @@ func (r *Redigo) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, e
 				return nil, tracer.Maskf(DisputeLifecycleError, "%s", par.ID)
 			}
 
-			// Ensure disputes can only be created on resolves with valid resolution.
-			// If resolves had no votes, or an equal amount of votes on each side of
-			// the market, then those resolutions are considered invalid. Those
-			// invalid resolutions are considered definitive and binding, and can
-			// therefore not be disputed.
+			// Ensure disputes can only be created on resolves with valid resolutions.
+			// Any resolve that has either no votes, or an equal amount of votes on
+			// each side of the market, then this resolve is considered invalid. Those
+			// kinds of invalid resolutions are considered definitive and binding, and
+			// can therefore not be disputed.
 			if !summary.Verify(par) {
 				return nil, tracer.Maskf(DisputeResolutionError, "%s", par.ID)
 			}

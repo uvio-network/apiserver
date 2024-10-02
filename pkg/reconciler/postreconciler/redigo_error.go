@@ -46,7 +46,7 @@ var DisputeLifecycleError = &tracer.Error{
 
 var DisputeLimitError = &tracer.Error{
 	Kind: "DisputeLimitError",
-	Desc: "The request expects the no more than 2 disputes to be created for the originally proposed claim. The originally proposed claim was found to be disputed twice already. Therefore the request failed.",
+	Desc: "The request expects no more than 2 disputes to be created on the originally proposed claim. The originally proposed claim was found to have been disputed twice already. Therefore the request failed.",
 }
 
 var DisputeResolutionError = &tracer.Error{
