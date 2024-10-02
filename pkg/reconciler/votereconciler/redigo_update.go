@@ -8,7 +8,7 @@ import (
 func (r *Redigo) UpdateHash(vot []*votestorage.Object, hsh []string) ([]*votestorage.Object, error) {
 	for i := range vot {
 		if !vot[i].Lifecycle.Pending() {
-			return nil, tracer.Maskf(VoteUpdateHashError, "%s=%s", vot[i].ID, vot[i].Lifecycle.Hash)
+			return nil, tracer.Maskf(VoteUpdateHashError, "%s = %s", vot[i].ID, vot[i].Lifecycle.Hash)
 		}
 
 		{

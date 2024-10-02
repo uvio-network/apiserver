@@ -21,11 +21,11 @@ const (
 func (r *Redigo) UpdateHash(pos []*poststorage.Object, hsh []string) ([]*poststorage.Object, error) {
 	for i := range pos {
 		if pos[i].Kind != "claim" {
-			return nil, tracer.Maskf(ClaimUpdateKindError, "%s=%s", pos[i].ID, pos[i].Kind)
+			return nil, tracer.Maskf(ClaimUpdateKindError, "%s = %s", pos[i].ID, pos[i].Kind)
 		}
 
 		if !pos[i].Lifecycle.Pending() {
-			return nil, tracer.Maskf(ClaimUpdateHashError, "%s=%s", pos[i].ID, pos[i].Lifecycle.Hash)
+			return nil, tracer.Maskf(ClaimUpdateHashError, "%s = %s", pos[i].ID, pos[i].Lifecycle.Hash)
 		}
 
 		{

@@ -134,7 +134,7 @@ func (r *Redigo) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, e
 		// "resolve".
 		if inp[i].Kind == "claim" && !inp[i].Lifecycle.Is(objectlabel.LifecycleBalance) && !inp[i].Lifecycle.Is(objectlabel.LifecycleSettled) {
 			if inp[i].Expiry.Before(now) {
-				return nil, tracer.Maskf(ClaimExpiryPastError, "%s=%d", inp[i].ID, inp[i].Expiry.Unix())
+				return nil, tracer.Maskf(ClaimExpiryPastError, "%s = %d", inp[i].ID, inp[i].Expiry.Unix())
 			}
 		}
 
@@ -142,7 +142,7 @@ func (r *Redigo) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, e
 			// Ensure that all involved claims are facilitated by the same smart
 			// contract on the same blockchain network.
 			if inp[i].Chain != par.Chain || inp[i].Contract != par.Contract {
-				return nil, tracer.Maskf(DisputeContractError, "%s,%s", inp[i].ID, par.ID)
+				return nil, tracer.Maskf(DisputeContractError, "%s / %s", inp[i].ID, par.ID)
 			}
 
 			// Verify whether the resolve can still be disputed, which means the
@@ -181,7 +181,7 @@ func (r *Redigo) CreatePost(inp []*poststorage.Object) ([]*poststorage.Object, e
 			// Ensure the dispute that we are creating has the same token definition
 			// as the original propose.
 			if inp[i].Token != pro[0].Token {
-				return nil, tracer.Maskf(DisputeContractError, "%s,%s", inp[i].ID, par.ID)
+				return nil, tracer.Maskf(DisputeContractError, "%s / %s", inp[i].ID, par.ID)
 			}
 
 			var res []*poststorage.Object
@@ -305,12 +305,12 @@ func (r *Redigo) verifyParent(par objectid.ID) (*poststorage.Object, error) {
 
 	// Here we ensure that comments cannot comment on comments.
 	if obj[0].Kind != "claim" {
-		return nil, tracer.Maskf(ParentKindError, "%s=%s", obj[0].ID, obj[0].Kind)
+		return nil, tracer.Maskf(ParentKindError, "%s = %s", obj[0].ID, obj[0].Kind)
 	}
 
 	// Here we ensure that posts cannot be created on any pending resources.
 	if obj[0].Lifecycle.Pending() {
-		return nil, tracer.Maskf(ParentPendingError, "%s=%s", obj[0].ID, obj[0].Lifecycle)
+		return nil, tracer.Maskf(ParentPendingError, "%s = %s", obj[0].ID, obj[0].Lifecycle)
 	}
 
 	return obj[0], nil
