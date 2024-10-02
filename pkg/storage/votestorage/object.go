@@ -17,7 +17,7 @@ type Object struct {
 	Kind      string                `json:"kind,omitempty"`
 	Lifecycle objectfield.Lifecycle `json:"lifecycle,omitempty"`
 	Meta      string                `json:"meta,omitempty"`
-	Option    bool                  `json:"option,omitempty"`
+	Option    bool                  `json:"option"` // no omitempty because we want to see "false" in the JSON
 	Owner     objectid.ID           `json:"owner,omitempty"`
 	Value     float64               `json:"value,omitempty"`
 }

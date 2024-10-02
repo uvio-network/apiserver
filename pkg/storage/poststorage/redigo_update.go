@@ -9,7 +9,7 @@ func (r *Redigo) UpdatePost(inp []*Object) error {
 
 	for i := range inp {
 		{
-			err := inp[i].Verify()
+			err = inp[i].Verify()
 			if err != nil {
 				return tracer.Mask(err)
 			}

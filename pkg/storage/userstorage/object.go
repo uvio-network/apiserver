@@ -20,6 +20,15 @@ type Object struct {
 	// Subject is the list of external subject claims mapped to the user being
 	// created.
 	Subject []string `json:"subject,omitempty"`
+	// Summary is the collection of user specific metrics on competence and
+	// integrity.
+	//
+	//     [0] the number of times this user has been right
+	//     [1] the number of times this user has been wrong
+	//     [2] the number of times this user has been honest
+	//     [3] the number of times this user has been dishonest
+	//
+	Summary []int64 `json:"summary,omitempty"`
 }
 
 func (o *Object) Verify() error {
