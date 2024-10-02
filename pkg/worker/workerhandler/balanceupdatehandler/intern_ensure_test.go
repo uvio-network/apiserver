@@ -1,4 +1,4 @@
-package updatebalancehandler
+package balanceupdatehandler
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
 )
 
-func Test_Worker_WorkerHandler_UpdateBalanceHandler_InternEnsure_balTre(t *testing.T) {
+func Test_Worker_WorkerHandler_balanceupdatehandler_InternEnsure_balTre(t *testing.T) {
 	testCases := []struct {
 		res objectid.ID
 		tre []*poststorage.Object

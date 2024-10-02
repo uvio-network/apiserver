@@ -1,4 +1,4 @@
-package updatebalancehandler
+package balanceupdatehandler
 
 import (
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"

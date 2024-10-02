@@ -1,4 +1,4 @@
-package createresolvehandler
+package resolvecreatehandler
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
 )
 
-func Test_Worker_WorkerHandler_CreateResolveHandler_InternEnsure_resTre(t *testing.T) {
+func Test_Worker_WorkerHandler_resolvecreatehandler_InternEnsure_resTre(t *testing.T) {
 	testCases := []struct {
 		pod objectid.ID
 		tre []*poststorage.Object

@@ -9,9 +9,9 @@ import (
 	"github.com/uvio-network/apiserver/pkg/reconciler"
 	"github.com/uvio-network/apiserver/pkg/sample"
 	"github.com/uvio-network/apiserver/pkg/storage"
+	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/balanceupdatehandler"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/claimexpiryhandler"
-	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/createresolvehandler"
-	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/updatebalancehandler"
+	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/resolvecreatehandler"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/usercreatehandler"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/uvxminthandler"
 	"github.com/xh3b4sd/locker"
@@ -67,7 +67,7 @@ func New(c Config) *Handler {
 			Sto: c.Sto,
 		}))
 
-		han = append(han, createresolvehandler.NewInternHandler(createresolvehandler.InternHandlerConfig{
+		han = append(han, resolvecreatehandler.NewInternHandler(resolvecreatehandler.InternHandlerConfig{
 			Con: c.Con,
 			Log: c.Log,
 			Rec: c.Rec,
@@ -75,8 +75,9 @@ func New(c Config) *Handler {
 			Sto: c.Sto,
 		}))
 
-		han = append(han, updatebalancehandler.NewInternHandler(updatebalancehandler.InternHandlerConfig{
+		han = append(han, balanceupdatehandler.NewInternHandler(balanceupdatehandler.InternHandlerConfig{
 			Con: c.Con,
+			Emi: c.Emi,
 			Log: c.Log,
 			Rec: c.Rec,
 			Sto: c.Sto,
