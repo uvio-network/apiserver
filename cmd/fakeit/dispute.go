@@ -13,6 +13,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/server/converter"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
+	"github.com/uvio-network/apiserver/pkg/summary"
 	"github.com/xh3b4sd/tracer"
 )
 
@@ -35,7 +36,7 @@ func (r *run) createDispute(key jwk.Key, use *user.SearchO, cla *post.SearchO) (
 	}
 
 	var ids []string
-	for i := 0; i < len(lis.Object)/2; i++ {
+	for i := 0; i < len(lis.Object); i++ {
 		var res *post.SearchO_Object
 
 		for _, v := range all {
@@ -47,12 +48,26 @@ func (r *run) createDispute(key jwk.Key, use *user.SearchO, cla *post.SearchO) (
 			delete(all, res.Intern.Id)
 		}
 
+		var oid []objectid.ID
+		{
+			oid = []objectid.ID{
+				objectid.ID(res.Public.Parent),
+				objectid.ID(res.Intern.Id),
+			}
+		}
+
 		var pos []*poststorage.Object
 		{
-			pos, err = r.dae.Sto().Post().SearchPost([]objectid.ID{objectid.ID(res.Public.Parent)})
+			pos, err = r.dae.Sto().Post().SearchPost(oid)
 			if err != nil {
 				tracer.Panic(tracer.Mask(err))
 			}
+		}
+
+		// The second post object here is the resolve. We can only go ahead and
+		// create a dispute for it if this resolve has a valid resolution.
+		if !summary.Verify(pos[1]) {
+			continue
 		}
 
 		var inp *post.CreateI

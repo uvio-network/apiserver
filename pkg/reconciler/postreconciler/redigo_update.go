@@ -1,7 +1,6 @@
 package postreconciler
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -98,19 +97,13 @@ func (r *Redigo) UpdateVotes(vot []*votestorage.Object) ([]*poststorage.Object, 
 
 	var sli votestorage.Slicer
 	{
-		sli = votestorage.Slicer(vot)
+		sli = votestorage.Slicer(vot).LifecycleConfirmed()
 	}
 
 	// Ensure that we do only update vote summaries for vote objects that have
 	// already been confirmed onchain. Any pending votes will be ignored.
-	{
-		{
-			sli = sli.LifecycleConfirmed()
-		}
-
-		if len(sli) == 0 {
-			return nil, nil
-		}
+	if len(sli) == 0 {
+		return nil, nil
 	}
 
 	// Here we update the vote summary for the claims on which the provided votes
@@ -125,18 +118,21 @@ func (r *Redigo) UpdateVotes(vot []*votestorage.Object) ([]*poststorage.Object, 
 			}
 		}
 
-		if len(cla) != len(vot) {
-			return nil, tracer.Maskf(runtime.ExecutionFailedError, "%d != %d", len(cla), len(vot))
+		if len(cla) != len(sli) {
+			return nil, tracer.Maskf(runtime.ExecutionFailedError, "%d != %d", len(cla), len(sli))
 		}
 
-		for i := range vot {
-			pos = append(pos, summary.Update(cla[i], vot[i]))
+		for i := range sli {
+			pos = append(pos, summary.Update(cla[i], sli[i]))
 		}
 	}
 
 	// Here we update the vote summary for the comments made on the claims that
 	// votes have been cast on. The comments we update here are defined by the
-	// owner of the given votes and their referenced parent claim.
+	// owner of the given votes and their referenced parent claim. In other words,
+	// if I have two comments on a claim already, and I stake some more tokens on
+	// that claim again, then my two comments need to get updated in order to
+	// reflect the total amount of skin in the game that I have in this market.
 	{
 		var com poststorage.Slicer
 		{
@@ -146,22 +142,12 @@ func (r *Redigo) UpdateVotes(vot []*votestorage.Object) ([]*poststorage.Object, 
 			}
 		}
 
-		for _, x := range vot {
-			var y *poststorage.Object
-			{
-				y = com.IDClaim(x.Claim)
-			}
-
-			if y != nil {
+		// Find the comments that have the same parent as the votes that we are
+		// processing here, because those votes carry the values that we need to add
+		// to the comments' vote summaries.
+		for _, x := range sli {
+			for _, y := range com.ObjectParent(x.Claim) {
 				pos = append(pos, summary.Update(y, x))
-			} else {
-				r.log.Log(
-					context.Background(),
-					"level", "warning",
-					"message", "vote has no parent claim",
-					"vote", string(x.ID),
-					"claim", string(x.Claim),
-				)
 			}
 		}
 	}

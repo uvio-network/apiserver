@@ -93,7 +93,7 @@ func (s Slicer) ObjectParent(par objectid.ID) Slicer {
 
 // --------------------------------------------------------------------- //
 
-func (s Slicer) IDClaim(cla objectid.ID) *Object {
+func (s Slicer) IDObject(cla objectid.ID) *Object {
 	for _, x := range s {
 		if cla == x.ID {
 			return x
@@ -103,7 +103,7 @@ func (s Slicer) IDClaim(cla objectid.ID) *Object {
 	return nil
 }
 
-func (s Slicer) LatestClaim() *Object {
+func (s Slicer) LatestObject() *Object {
 	if len(s) == 0 {
 		return nil
 	}
