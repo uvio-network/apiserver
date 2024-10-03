@@ -1,10 +1,8 @@
 package claimscontract
 
 import (
-	"context"
 	"fmt"
 	"math/big"
-	"strconv"
 	"time"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -24,25 +22,27 @@ const (
 )
 
 type ClaimsConfig struct {
-	Add common.Address
 	Cli *ethclient.Client
+	Con *Contract
 	Log logger.Interface
 	Opt *bind.TransactOpts
 }
 
 type Claims struct {
-	bin *ClaimsContractBinding
 	cli *ethclient.Client
+	con *Contract
 	log logger.Interface
 	opt *bind.TransactOpts
+	v40 *ClaimsV040
+	v50 *ClaimsV050
 }
 
 func NewClaims(c ClaimsConfig) *Claims {
-	if len(c.Add) == 0 {
-		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Add must not be empty", c)))
-	}
 	if c.Cli == nil {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Cli must not be empty", c)))
+	}
+	if c.Con == nil {
+		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Con must not be empty", c)))
 	}
 	if c.Log == nil {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Log must not be empty", c)))
@@ -51,55 +51,52 @@ func NewClaims(c ClaimsConfig) *Claims {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Opt must not be empty", c)))
 	}
 
-	var err error
+	var v40 *ClaimsV040
+	if c.Con.Version == "v0.4.0" {
+		v40 = NewClaimsV040(ClaimsConfigV040{
+			Add: c.Con.Address,
+			Cli: c.Cli,
+			Log: c.Log,
+			Opt: c.Opt,
+		})
+	}
 
-	var bin *ClaimsContractBinding
-	{
-		bin, err = NewClaimsContractBinding(c.Add, c.Cli)
-		if err != nil {
-			tracer.Panic(err)
-		}
+	var v50 *ClaimsV050
+	if c.Con.Version == "v0.5.0" {
+		v50 = NewClaimsV050(ClaimsConfigV050{
+			Add: c.Con.Address,
+			Cli: c.Cli,
+			Log: c.Log,
+			Opt: c.Opt,
+		})
 	}
 
 	return &Claims{
-		bin: bin,
 		cli: c.Cli,
+		con: c.Con,
 		log: c.Log,
 		opt: c.Opt,
+		v40: v40,
+		v50: v50,
 	}
 }
 
 func (c *Claims) BalanceUpdated(blc uint64, pod objectid.ID) ([]common.Hash, error) {
 	var err error
 
-	var ite *ClaimsContractBindingBalanceUpdatedIterator
-	{
-		ite, err = c.bin.FilterBalanceUpdated(&bind.FilterOpts{Start: blc})
-		if err != nil {
-			return nil, tracer.Mask(err)
-		}
-	}
-
-	{
-		defer ite.Close()
-	}
-
 	var hsh []common.Hash
-	for ite.Next() {
-		err := ite.Error()
+
+	if c.v40 != nil {
+		hsh, err = c.v40.BalanceUpdated(blc, pod)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
+	}
 
-		if ite.Event.Pod.Int64() != pod.Int() {
-			continue
-		}
-
-		// Since there are potentially multiple calls to updateBalance, there are
-		// potentially multiple events emitted for multiple transaction hashes. And
-		// so we collect all of them up to the latest block.
-		{
-			hsh = append(hsh, ite.Event.Raw.TxHash)
+	if c.v50 != nil {
+		hsh, err = c.v50.BalanceUpdated(blc, pod)
+		if err != nil {
+			return nil, tracer.Mask(err)
 		}
 	}
 
@@ -113,51 +110,21 @@ func (c *Claims) Client() *ethclient.Client {
 func (c *Claims) CreateResolve(pod objectid.ID, ind []*big.Int, exp time.Time) (*types.Transaction, error) {
 	var err error
 
-	var opt *bind.TransactOpts
-	{
-		opt = &bind.TransactOpts{
-			From: c.opt.From,
-
-			// Here we are trying to set some reasonable gas limits, specifically for
-			// the EIP-1559 enabled minting transaction.
-			//
-			//     GasFeeCap is the max gas fee we are willing to pay
-			//     GasTipCap is the max priority fee we are willing to pay
-			//
-			// Below is a testnet transaction providing some real world insight into
-			// effective gas usage.
-			//
-			//     https://sepolia.basescan.org/tx/0x89688b4baf0efa24ff3fa56b4b01aab04ce303934f0747e38c06adc9c1bea099
-			//
-			// Below is a dune dashboard to show current and historical gas metrics on
-			// the Base L2.
-			//
-			//     https://dune.com/payton/base-l2-gas-price-tracker
-			//
-			GasFeeCap: big.NewInt(600_000_000), // 0.60 gwei
-			GasTipCap: big.NewInt(30_000_000),  // 0.03 gwei
-
-			Signer: c.opt.Signer,
-		}
-	}
-
 	var txn *types.Transaction
-	{
-		txn, err = c.bin.CreateResolve(opt, big.NewInt(pod.Int()), ind, uint64(exp.Unix()))
+
+	if c.v40 != nil {
+		txn, err = c.v40.CreateResolve(pod, ind, exp)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
 	}
 
-	c.log.Log(
-		context.Background(),
-		"level", "debug",
-		"message", "submitted Claims.createResolve transaction onchain",
-		"signer", c.opt.From.Hex(),
-		"claim", pod.String(),
-		"expiry", exp.String(),
-		"transaction", txn.Hash().Hex(),
-	)
+	if c.v50 != nil {
+		txn, err = c.v50.CreateResolve(pod, ind, exp)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
 
 	return txn, nil
 }
@@ -165,91 +132,141 @@ func (c *Claims) CreateResolve(pod objectid.ID, ind []*big.Int, exp time.Time) (
 func (c *Claims) ExistsResolve(pod objectid.ID) (bool, error) {
 	var err error
 
-	var res *big.Int
-	{
-		_, res, err = c.bin.SearchExpired(nil, big.NewInt(pod.Int()))
+	var exi bool
+
+	if c.v40 != nil {
+		exi, err = c.v40.ExistsResolve(pod)
 		if err != nil {
 			return false, tracer.Mask(err)
 		}
 	}
 
-	return res.Uint64() != 0, nil
+	if c.v50 != nil {
+		exi, err = c.v50.ExistsResolve(pod)
+		if err != nil {
+			return false, tracer.Mask(err)
+		}
+	}
+
+	return exi, nil
 }
 
 func (c *Claims) ResolveCreated(blc uint64, pod objectid.ID) (common.Hash, error) {
 	var err error
 
-	var ite *ClaimsContractBindingResolveCreatedIterator
-	{
-		ite, err = c.bin.FilterResolveCreated(&bind.FilterOpts{Start: blc})
+	var hsh common.Hash
+
+	if c.v40 != nil {
+		hsh, err = c.v40.ResolveCreated(blc, pod)
 		if err != nil {
 			return common.Hash{}, tracer.Mask(err)
 		}
 	}
 
-	{
-		defer ite.Close()
-	}
-
-	for ite.Next() {
-		err := ite.Error()
+	if c.v50 != nil {
+		hsh, err = c.v50.ResolveCreated(blc, pod)
 		if err != nil {
 			return common.Hash{}, tracer.Mask(err)
 		}
-
-		if ite.Event.Pod.Int64() != pod.Int() {
-			continue
-		}
-
-		{
-			return ite.Event.Raw.TxHash, nil
-		}
 	}
 
-	return common.Hash{}, nil
+	return hsh, nil
 }
 
-func (c *Claims) SearchIndices(pod objectid.ID) ([]*big.Int, error) {
+func (c *Claims) SearchHistory(pod objectid.ID, lef *big.Int, rig *big.Int) ([]*big.Int, error) {
 	var err error
 
-	var zer *big.Int
-	var one *big.Int
-	var two *big.Int
-	var thr *big.Int
-	var fou *big.Int
-	var fiv *big.Int
-	var six *big.Int
-	var sev *big.Int
-	{
-		zer, one, two, thr, fou, fiv, six, sev, err = c.bin.SearchIndices(nil, big.NewInt(pod.Int()))
+	var his []*big.Int
+
+	if c.v40 != nil {
+		his, err = c.v40.SearchHistory(pod, lef, rig)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
 	}
 
-	return []*big.Int{zer, one, two, thr, fou, fiv, six, sev}, nil
+	if c.v50 != nil {
+		his, err = c.v50.SearchHistory(pod, lef, rig)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	return his, nil
+}
+
+func (c *Claims) SearchIndices(pod objectid.ID) ([8]*big.Int, error) {
+	var err error
+
+	var ind [8]*big.Int
+
+	if c.v50 != nil {
+		ind, err = c.v50.SearchIndices(pod)
+		if err != nil {
+			return [8]*big.Int{}, tracer.Mask(err)
+		}
+	}
+
+	return ind, nil
+}
+
+func (c *Claims) SearchIndicesDeprecated(pod objectid.ID) ([]*big.Int, error) {
+	var err error
+
+	var ind []*big.Int
+
+	if c.v40 != nil {
+		ind, err = c.v40.SearchIndices(pod)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	return ind, nil
 }
 
 func (c *Claims) SearchResolve(pod objectid.ID, ind uint8) (bool, error) {
 	var err error
 
-	var res bool
-	{
-		res, err = c.bin.SearchResolve(nil, big.NewInt(pod.Int()), ind)
+	var flg bool
+
+	if c.v40 != nil {
+		flg, err = c.v40.SearchResolve(pod, ind)
 		if err != nil {
 			return false, tracer.Mask(err)
 		}
 	}
 
-	return res, nil
+	if c.v50 != nil {
+		flg, err = c.v50.SearchResolve(pod, ind)
+		if err != nil {
+			return false, tracer.Mask(err)
+		}
+	}
+
+	return flg, nil
 }
 
-func (c *Claims) SearchSamples(pod objectid.ID, lef *big.Int, rig *big.Int) ([]common.Address, error) {
+func (c *Claims) SearchSamples(pod objectid.ID, lef *big.Int, rig *big.Int) ([]uint8, error) {
+	var err error
+
+	var sam []uint8
+	if c.v50 != nil {
+		sam, err = c.v50.SearchSamples(pod, lef, rig)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	return sam, nil
+}
+
+func (c *Claims) SearchSamplesDeprecated(pod objectid.ID, lef *big.Int, rig *big.Int) ([]common.Address, error) {
 	var err error
 
 	var add []common.Address
-	{
-		add, err = c.bin.SearchSamples(nil, big.NewInt(pod.Int()), lef, rig)
+	if c.v40 != nil {
+		add, err = c.v40.SearchSamples(pod, lef, rig)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -258,41 +275,79 @@ func (c *Claims) SearchSamples(pod objectid.ID, lef *big.Int, rig *big.Int) ([]c
 	return add, nil
 }
 
-func (c *Claims) SearchVotes(pod objectid.ID) (int64, int64, error) {
+func (c *Claims) SearchStakers(pod objectid.ID, lef *big.Int, rig *big.Int) ([]common.Address, error) {
 	var err error
 
-	var tru *big.Int
-	var fls *big.Int
-	{
-		tru, fls, err = c.bin.SearchVotes(nil, big.NewInt(pod.Int()))
+	var sta []common.Address
+
+	if c.v40 != nil {
+		sta, err = c.v40.SearchStakers(pod, lef, rig)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	if c.v50 != nil {
+		sta, err = c.v50.SearchStakers(pod, lef, rig)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	return sta, nil
+}
+
+func (c *Claims) SearchVotesDeprecated(pod objectid.ID) (int64, int64, error) {
+	var err error
+
+	var yay int64
+	var nah int64
+	if c.v40 != nil {
+		yay, nah, err = c.v40.SearchVotes(pod)
 		if err != nil {
 			return 0, 0, tracer.Mask(err)
 		}
 	}
 
-	return tru.Int64(), fls.Int64(), nil
+	return yay, nah, nil
+}
+
+func (c *Claims) SearchVoters(pod objectid.ID, lef *big.Int, rig *big.Int) ([]common.Address, error) {
+	var err error
+
+	var vot []common.Address
+	if c.v50 != nil {
+		vot, err = c.v50.SearchVoters(pod, lef, rig)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	return vot, nil
 }
 
 func (c *Claims) UpdateBalance(pod objectid.ID, max uint64) (*types.Transaction, error) {
 	var err error
 
 	var txn *types.Transaction
-	{
-		txn, err = c.bin.UpdateBalance(nil, big.NewInt(pod.Int()), big.NewInt(int64(max)))
+
+	if c.v40 != nil {
+		txn, err = c.v40.UpdateBalance(pod, max)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
 	}
 
-	c.log.Log(
-		context.Background(),
-		"level", "debug",
-		"message", "submitted Claims.updateBalance transaction onchain",
-		"signer", c.opt.From.Hex(),
-		"claim", pod.String(),
-		"maximum", strconv.FormatUint(max, 10),
-		"transaction", txn.Hash().Hex(),
-	)
+	if c.v50 != nil {
+		txn, err = c.v50.UpdateBalance(pod, max)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
 
 	return txn, nil
+}
+
+func (c *Claims) Version() string {
+	return c.con.Version
 }

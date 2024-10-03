@@ -82,8 +82,18 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 	}
 
-	var ind []*big.Int
-	{
+	var ind [8]*big.Int
+
+	if cla.Version() == "v0.4.0" {
+		lis, err := cla.SearchIndicesDeprecated(pod.ID)
+		if err != nil {
+			return tracer.Mask(err)
+		}
+
+		copy(ind[:], lis)
+	}
+
+	if cla.Version() == "v0.5.0" {
 		ind, err = cla.SearchIndices(pod.ID)
 		if err != nil {
 			return tracer.Mask(err)
@@ -130,17 +140,16 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 	}
 
-	var tru []common.Address
-	var fls []common.Address
+	var vot []common.Address
 	{
-		tru, fls, err = h.searchSamples(cla, pod.ID, ind)
+		vot, err = h.searchVoters(cla, pod.ID, ind)
 		if err != nil {
 			return tracer.Mask(err)
 		}
 	}
 
 	if res.Lifecycle.Pending() {
-		err = h.rec.Post().UpdateResolve(res, hsh, append(tru, fls...))
+		err = h.rec.Post().UpdateResolve(res, hsh, vot)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -207,36 +216,56 @@ func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *post
 	return pod, res, nil
 }
 
-func (h *InternHandler) searchSamples(cla claimscontract.Interface, pod objectid.ID, ind []*big.Int) ([]common.Address, []common.Address, error) {
-	var err error
-
-	if len(ind) != 8 {
-		return nil, nil, tracer.Maskf(runtime.ExecutionFailedError, "onchain indices invalid")
-	}
-
-	// Searching for the sampled addresses works according to the indices [1, 2]
-	// and [5, 6] according to the Claims contract documentation linked below.
+func (h *InternHandler) searchVoters(cla claimscontract.Interface, pod objectid.ID, ind [8]*big.Int) ([]common.Address, error) {
+	// Searching for the voter addresses works using the indices [1, 2] and [5, 6]
+	// according to the Claims contract documentation linked below.
 	//
 	//     https://github.com/uvio-network/contracts/blob/v0.2.0/contracts/Claims.sol#L1721-L1728
 	//
 
-	var tru []common.Address
-	{
-		tru, err = cla.SearchSamples(pod, ind[1], ind[2])
-		if err != nil {
-			return nil, nil, tracer.Mask(err)
+	var vot []common.Address
+
+	if cla.Version() == "v0.4.0" {
+		{
+			lis, err := cla.SearchSamplesDeprecated(pod, ind[1], ind[2])
+			if err != nil {
+				return nil, tracer.Mask(err)
+			}
+
+			vot = append(vot, lis...)
+		}
+
+		{
+			lis, err := cla.SearchSamplesDeprecated(pod, ind[5], ind[6])
+			if err != nil {
+				return nil, tracer.Mask(err)
+			}
+
+			vot = append(vot, lis...)
 		}
 	}
 
-	var fls []common.Address
-	{
-		fls, err = cla.SearchSamples(pod, ind[5], ind[6])
-		if err != nil {
-			return nil, nil, tracer.Mask(err)
+	if cla.Version() == "v0.5.0" {
+		{
+			lis, err := cla.SearchVoters(pod, ind[1], ind[2])
+			if err != nil {
+				return nil, tracer.Mask(err)
+			}
+
+			vot = append(vot, lis...)
+		}
+
+		{
+			lis, err := cla.SearchVoters(pod, ind[5], ind[6])
+			if err != nil {
+				return nil, tracer.Mask(err)
+			}
+
+			vot = append(vot, lis...)
 		}
 	}
 
-	return tru, fls, nil
+	return vot, nil
 }
 
 func resTre(pod objectid.ID, tre poststorage.Slicer) (*poststorage.Object, error) {
