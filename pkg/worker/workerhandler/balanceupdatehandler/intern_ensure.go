@@ -1,7 +1,6 @@
 package balanceupdatehandler
 
 import (
-	"context"
 	"strconv"
 	"time"
 
@@ -43,9 +42,8 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	var pod *poststorage.Object
 	var res *poststorage.Object
 	var bal *poststorage.Object
-	var tre poststorage.Slicer
 	{
-		pod, res, bal, tre, err = h.searchClaims(tas)
+		pod, res, bal, err = h.searchClaims(tas)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -64,31 +62,6 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	// as a paging pointer to retry task execution a couple of times.
 	{
 		tas.Sync.Set(task.Paging, tas.Meta.Get(objectlabel.ClaimBlock))
-	}
-
-	var now time.Time
-	{
-		now = time.Now().UTC()
-	}
-
-	var lat *poststorage.Object
-	var fin bool
-	{
-		lat, fin = finTre(now, tre)
-	}
-
-	// If the given tree cannot be finalized, then we cannot go ahead to emit a
-	// task for updating user metrics. Note that the log line below should never
-	// be emitted if the task scheduling for expired resolves works properly.
-	if !fin {
-		h.log.Log(
-			context.Background(),
-			"level", "warning",
-			"message", "tried to update user balances, but claim tree cannot be finalized",
-			"resolve", string(res.ID),
-		)
-
-		return nil
 	}
 
 	// If the next claim within this tree relative to the provided resolve is nil,
@@ -172,22 +145,19 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	}
 
 	// Finally emit the Settled events so that we can create notifications and
-	// update user metrics. We want to emit the task for updating user metrics
-	// once, and only once. We do that when we reconcile the very last balance of
-	// any given claim tree that can in fact be finalized.
-	if res.ID == lat.ID {
-		{
-			err = h.emi.Claim().Create(blc, bal.ID, objectlabel.LifecycleSettled)
-			if err != nil {
-				return tracer.Mask(err)
-			}
-		}
+	// update user metrics.
 
-		{
-			err = h.emi.Claim().Update(blc, bal.ID, objectlabel.LifecycleSettled)
-			if err != nil {
-				return tracer.Mask(err)
-			}
+	{
+		err = h.emi.Claim().Create(blc, bal.ID, objectlabel.LifecycleSettled)
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
+	{
+		err = h.emi.Claim().Update(blc, bal.ID, objectlabel.LifecycleSettled)
+		if err != nil {
+			return tracer.Mask(err)
 		}
 	}
 
@@ -201,7 +171,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	return nil
 }
 
-func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *poststorage.Object, *poststorage.Object, poststorage.Slicer, error) {
+func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *poststorage.Object, *poststorage.Object, error) {
 	var err error
 
 	// The claim ID obtained here is the ID of the resolve that expired when the
@@ -215,12 +185,12 @@ func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *post
 	{
 		pos, err = h.sto.Post().SearchPost([]objectid.ID{cla})
 		if err != nil {
-			return nil, nil, nil, nil, tracer.Mask(err)
+			return nil, nil, nil, tracer.Mask(err)
 		}
 	}
 
 	if len(pos) != 1 {
-		return nil, nil, nil, nil, tracer.Maskf(runtime.ExecutionFailedError, "expected exactly one post object for ID %s", cla)
+		return nil, nil, nil, tracer.Maskf(runtime.ExecutionFailedError, "expected exactly one post object for ID %s", cla)
 	}
 
 	// This is the claim with lifecycle phase resolve that has been expired.
@@ -233,7 +203,7 @@ func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *post
 	{
 		tre, err = h.sto.Post().SearchTree([]objectid.ID{res.Tree})
 		if err != nil {
-			return nil, nil, nil, nil, tracer.Mask(err)
+			return nil, nil, nil, tracer.Mask(err)
 		}
 	}
 
@@ -249,11 +219,11 @@ func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *post
 	{
 		bal, err = balTre(res.ID, tre)
 		if err != nil {
-			return nil, nil, nil, nil, tracer.Mask(err)
+			return nil, nil, nil, tracer.Mask(err)
 		}
 	}
 
-	return pod, res, bal, tre, nil
+	return pod, res, bal, nil
 }
 
 func balTre(res objectid.ID, tre poststorage.Slicer) (*poststorage.Object, error) {

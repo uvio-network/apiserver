@@ -11,6 +11,45 @@ import (
 )
 
 type Interface interface {
+	V_0_4_0
+	V_0_5_0
+}
+
+type V_0_4_0 interface {
+	// SearchIndices returns the the total amount of stakers on either side of the
+	// market.
+	//
+	//     inp[0] the propose ID to search indices for
+	//     out[0][0] the total amount of first stakers in agreement
+	//     out[0][1] the left handside index for addresses on the agreeing side
+	//     out[0][2] the right handside index for addresses on the agreeing side
+	//     out[0][3] the left handside index of the proposer address
+	//     out[0][4] the right handside index of the proposer address
+	//     out[0][5] the left handside index for addresses on the disagreeing side
+	//     out[0][6] the right handside index for addresses on the disagreeing side
+	//     out[0][7] the total amount of first stakers in disagreement
+	//
+	SearchIndicesDeprecated(objectid.ID) ([]*big.Int, error)
+
+	// SearchSamples returns the registered voters of the given claim, according
+	// to the provided cursors. If a propose has not reached the resolution phase
+	// yet, then an empty list is returned.
+	SearchSamplesDeprecated(objectid.ID, *big.Int, *big.Int) ([]common.Address, error)
+
+	// SearchVotes returns the number of votes that voted true or false
+	// respectively. The returned number of votes can only be considered final if
+	// the provided claim has already been settled onchain.
+	//
+	//     inp[0] the ID of the propose or dispute
+	//     out[1] the number of votes cast for true
+	//     out[2] the number of votes cast for false
+	//
+	SearchVotesDeprecated(objectid.ID) (int64, int64, error)
+}
+
+// V_0_5_0 is the latest interface with version v0.5.0 that will eventually
+// supersede all priors.
+type V_0_5_0 interface {
 	// BalanceUpdated searches for all the transaction hashes of the transactions
 	// that emitted the event BalanceUpdated. The underlying log filter iterates
 	// through all blocks since blc. If no matching event could be found the
@@ -54,20 +93,23 @@ type Interface interface {
 	//
 	ResolveCreated(uint64, objectid.ID) (common.Hash, error)
 
+	//
+	SearchHistory(pod objectid.ID, lef *big.Int, rig *big.Int) ([]*big.Int, error)
+
 	// SearchIndices returns the the total amount of stakers on either side of the
 	// market.
 	//
 	//     inp[0] the propose ID to search indices for
-	//     out[0][0] the total amount of first stakers in agreement
-	//     out[0][1] the left handside index for addresses on the agreeing side
-	//     out[0][2] the right handside index for addresses on the agreeing side
-	//     out[0][3] the left handside index of the proposer address
-	//     out[0][4] the right handside index of the proposer address
-	//     out[0][5] the left handside index for addresses on the disagreeing side
-	//     out[0][6] the right handside index for addresses on the disagreeing side
-	//     out[0][7] the total amount of first stakers in disagreement
+	//     out[0] the total amount of first stakers in agreement
+	//     out[1] the left handside index for addresses on the agreeing side
+	//     out[2] the right handside index for addresses on the agreeing side
+	//     out[3] the left handside index of the proposer address
+	//     out[4] the right handside index of the proposer address
+	//     out[5] the left handside index for addresses on the disagreeing side
+	//     out[6] the right handside index for addresses on the disagreeing side
+	//     out[7] the total amount of first stakers in disagreement
 	//
-	SearchIndices(objectid.ID) ([]*big.Int, error)
+	SearchIndices(pod objectid.ID) ([8]*big.Int, error)
 
 	// SearchResolve returns several boolean flags of claim states. With this
 	// method it is possible to figure out whether the given claim has already
@@ -79,20 +121,28 @@ type Interface interface {
 	//
 	SearchResolve(objectid.ID, uint8) (bool, error)
 
-	// SearchSamples returns the registered voters of the given claim, according
-	// to the provided cursors. If a propose has not reached the resolution phase
-	// yet, then an empty list is returned.
-	SearchSamples(objectid.ID, *big.Int, *big.Int) ([]common.Address, error)
-
-	// SearchVotes returns the number of votes that voted true or false
-	// respectively. The returned number of votes can only be considered final if
-	// the provided claim has already been settled onchain.
+	// SearchSamples returns the votes cast per voter according to the addresses
+	// returned by SearchVoters. Should only be called on finalized claim trees.
 	//
 	//     inp[0] the ID of the propose or dispute
-	//     out[1] the number of votes cast for true
-	//     out[2] the number of votes cast for false
+	//     inp[1] the left handside index for cast votes to lookup
+	//     inp[2] the right handside index for cast votes to lookup
+	//     out[0] the cast votes, 0=false, 1=true, 2=abstain
 	//
-	SearchVotes(objectid.ID) (int64, int64, error)
+	SearchSamples(objectid.ID, *big.Int, *big.Int) ([]uint8, error)
+
+	//
+	SearchStakers(pod objectid.ID, lef *big.Int, rig *big.Int) ([]common.Address, error)
+
+	// SearchVoters returns the registered voter addresses of any given claim,
+	// according to the provided cursors. Should only be called on claims with
+	// confirmed onchain resolves.
+	//
+	//     inp[0] the ID of the propose or dispute
+	//     inp[1] the left handside index for voter addresses to lookup
+	//     inp[2] the right handside index for voter addresses to lookup
+	//
+	SearchVoters(objectid.ID, *big.Int, *big.Int) ([]common.Address, error)
 
 	// UpdateBalance allows anyone to update user balances in order to settle the
 	// originally proposed claim.
@@ -101,4 +151,8 @@ type Interface interface {
 	//     inp[1] the maximum amount of users to update during this call
 	//
 	UpdateBalance(objectid.ID, uint64) (*types.Transaction, error)
+
+	// Version returns the version of this contract binding and the underlying
+	// compatible smart contract.
+	Version() string
 }

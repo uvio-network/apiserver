@@ -27,6 +27,7 @@ type Object struct {
 	//     [1] the number of times this user has been wrong
 	//     [2] the number of times this user has been honest
 	//     [3] the number of times this user has been dishonest
+	//     [4] the number of times this user has denied to vote
 	//
 	Summary []int64 `json:"summary,omitempty"`
 }

@@ -30,6 +30,7 @@ type Config struct {
 }
 
 type Contract struct {
+	cid *big.Int
 	cli *ethclient.Client
 	log logger.Interface
 	opt *bind.TransactOpts
@@ -75,6 +76,7 @@ func New(c Config) *Contract {
 	}
 
 	return &Contract{
+		cid: cid,
 		cli: cli,
 		log: c.Log,
 		opt: opt,
@@ -83,8 +85,8 @@ func New(c Config) *Contract {
 
 func (c *Contract) Claims(add string) claimscontract.Interface {
 	return claimscontract.NewClaims(claimscontract.ClaimsConfig{
-		Add: common.HexToAddress(add),
 		Cli: c.cli,
+		Con: claimscontract.NewContract(int(c.cid.Int64()), add),
 		Log: c.log,
 		Opt: c.opt,
 	})
