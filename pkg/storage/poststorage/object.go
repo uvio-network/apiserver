@@ -126,7 +126,7 @@ func (o *Object) Verify() error {
 		if txt == "" {
 			return tracer.Mask(PostTextEmptyError)
 		}
-		if o.Kind == "claim" && (len(txt) < 100 || len(txt) > 5000) {
+		if o.Kind == "claim" && (len(txt) < 20 || len(txt) > 5000) {
 			return tracer.Maskf(ClaimTextLengthError, "%d", len(txt))
 		}
 		if o.Kind == "comment" && (len(txt) < 20 || len(txt) > 5000) {

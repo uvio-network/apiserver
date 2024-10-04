@@ -66,7 +66,7 @@ var ClaimParentInvalidError = &tracer.Error{
 
 var ClaimTextLengthError = &tracer.Error{
 	Kind: "ClaimTextLengthError",
-	Desc: "The request expects the claim text to have between 100 and 5000 characters. The claim text was not found to have between 100 and 5000 characters. Therefore the request failed.",
+	Desc: "The request expects the claim text to have between 20 and 5000 characters. The claim text was found to be outside of that range of characters. Therefore the request failed.",
 }
 
 var CommentLabelsInvalidError = &tracer.Error{
@@ -86,7 +86,7 @@ var CommentParentEmptyError = &tracer.Error{
 
 var CommentTextLengthError = &tracer.Error{
 	Kind: "CommentTextLengthError",
-	Desc: "The request expects the comment text to have between 20 and 5000 characters. The comment text was not found to have between 20 and 5000 characters. Therefore the request failed.",
+	Desc: "The request expects the comment text to have between 20 and 5000 characters. The comment text was found to be outside of that range of characters. Therefore the request failed.",
 }
 
 var PostKindInvalidError = &tracer.Error{
