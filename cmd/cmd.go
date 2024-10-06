@@ -5,6 +5,7 @@ import (
 	"github.com/uvio-network/apiserver/cmd/daemon"
 	"github.com/uvio-network/apiserver/cmd/fakeit"
 	"github.com/uvio-network/apiserver/cmd/redigo"
+	"github.com/uvio-network/apiserver/cmd/replicate"
 	"github.com/uvio-network/apiserver/cmd/rescue"
 	"github.com/uvio-network/apiserver/cmd/version"
 	"github.com/uvio-network/apiserver/cmd/wallet"
@@ -47,6 +48,16 @@ func New() (*cobra.Command, error) {
 		c := redigo.Config{}
 
 		red, err = redigo.New(c)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	var rep *cobra.Command
+	{
+		c := replicate.Config{}
+
+		rep, err = replicate.New(c)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -111,6 +122,7 @@ func New() (*cobra.Command, error) {
 		c.AddCommand(dae)
 		c.AddCommand(fak)
 		c.AddCommand(red)
+		c.AddCommand(rep)
 		c.AddCommand(res)
 		c.AddCommand(ver)
 		c.AddCommand(wal)

@@ -18,6 +18,9 @@ type Env struct {
 	HttpHost            string `split_words:"true" required:"true"`
 	HttpPort            string `split_words:"true" required:"true"`
 	LogLevel            string `split_words:"true" default:"debug"`
+	RedisHost           string `split_words:"true" required:"false"`
+	RedisPass           string `split_words:"true" required:"false"`
+	RedisUser           string `split_words:"true" required:"false"`
 	SignerPrivateKey    string `split_words:"true" required:"true"`
 }
 

@@ -93,6 +93,10 @@ func (r *run) createDispute(key jwk.Key, use *user.SearchO, cla *post.SearchO) (
 		}
 	}
 
+	if len(ids) == 0 {
+		return r.createDispute(key, use, cla)
+	}
+
 	var inp *post.SearchI
 	{
 		inp = &post.SearchI{}
