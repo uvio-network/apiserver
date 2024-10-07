@@ -1,4 +1,4 @@
-package reputationupdatehandler
+package integrityupdatehandler
 
 import (
 	"fmt"

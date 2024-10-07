@@ -12,10 +12,9 @@ func (h *InternHandler) Filter(tas *task.Task) bool {
 	//     pkg/worker/workerhandler/claimexpiryhandler/intern_ensure.go
 	//
 	return tas.Meta.Has(map[string]string{
-		objectlabel.ClaimAction:    objectlabel.ActionCreate,
-		objectlabel.ClaimBlock:     "*",
-		objectlabel.ClaimLifecycle: string(objectlabel.LifecycleResolve),
-		objectlabel.ClaimObject:    "*",
-		objectlabel.ClaimOrigin:    objectlabel.OriginIntern,
+		objectlabel.ClaimBlock:  "*",
+		objectlabel.ClaimObject: "*",
+		objectlabel.TaskOrigin:  objectlabel.OriginIntern,
+		objectlabel.TaskWorker:  "resolvecreatehandler",
 	})
 }

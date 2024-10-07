@@ -8,7 +8,7 @@ import (
 func (h *InternHandler) Filter(tas *task.Task) bool {
 	return tas.Meta.Has(map[string]string{
 		objectlabel.UserObject: "*",
-		objectlabel.UVXAction:  objectlabel.ActionMint,
-		objectlabel.UVXOrigin:  objectlabel.OriginIntern,
+		objectlabel.TaskOrigin: objectlabel.OriginIntern,
+		objectlabel.TaskWorker: "uvxminthandler",
 	})
 }

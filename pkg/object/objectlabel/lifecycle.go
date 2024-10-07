@@ -13,5 +13,4 @@ const (
 	LifecycleDispute DesiredLifecycle = "dispute"
 	LifecyclePropose DesiredLifecycle = "propose"
 	LifecycleResolve DesiredLifecycle = "resolve"
-	LifecycleSettled DesiredLifecycle = "settled"
 )

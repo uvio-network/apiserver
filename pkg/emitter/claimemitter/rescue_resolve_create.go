@@ -9,7 +9,7 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Rescue) Create(blc uint64, cla objectid.ID, lif objectlabel.DesiredLifecycle) error {
+func (r *Rescue) ResolveCreate(blc uint64, pod objectid.ID) error {
 	var tas *task.Task
 	{
 		tas = &task.Task{
@@ -17,11 +17,10 @@ func (r *Rescue) Create(blc uint64, cla objectid.ID, lif objectlabel.DesiredLife
 				task.Cancel: "10",
 			},
 			Meta: &task.Meta{
-				objectlabel.ClaimAction:    objectlabel.ActionCreate,
-				objectlabel.ClaimBlock:     strconv.FormatUint(blc, 10),
-				objectlabel.ClaimLifecycle: string(lif),
-				objectlabel.ClaimObject:    cla.String(),
-				objectlabel.ClaimOrigin:    objectlabel.OriginIntern,
+				objectlabel.ClaimBlock:  strconv.FormatUint(blc, 10),
+				objectlabel.ClaimObject: pod.String(),
+				objectlabel.TaskOrigin:  objectlabel.OriginIntern,
+				objectlabel.TaskWorker:  "resolvecreatehandler",
 			},
 		}
 	}

@@ -1,13 +1,15 @@
-package uvxemitter
+package claimemitter
 
 import (
+	"strconv"
+
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/xh3b4sd/rescue/task"
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Rescue) Mint(use objectid.ID) error {
+func (r *Rescue) BalanceUpdate(blc uint64, res objectid.ID) error {
 	var tas *task.Task
 	{
 		tas = &task.Task{
@@ -15,9 +17,10 @@ func (r *Rescue) Mint(use objectid.ID) error {
 				task.Cancel: "10",
 			},
 			Meta: &task.Meta{
-				objectlabel.UserObject: use.String(),
-				objectlabel.UVXAction:  objectlabel.ActionMint,
-				objectlabel.UVXOrigin:  objectlabel.OriginIntern,
+				objectlabel.ClaimBlock:  strconv.FormatUint(blc, 10),
+				objectlabel.ClaimObject: res.String(),
+				objectlabel.TaskOrigin:  objectlabel.OriginIntern,
+				objectlabel.TaskWorker:  "balanceupdatehandler",
 			},
 		}
 	}

@@ -247,6 +247,22 @@ func (c *Claims) SearchResolve(pod objectid.ID, ind uint8) (bool, error) {
 	return flg, nil
 }
 
+func (c *Claims) SearchResults(pod objectid.ID) (bool, bool, bool, error) {
+	var err error
+
+	var val bool
+	var sid bool
+	var fin bool
+	if c.v50 != nil {
+		val, sid, fin, err = c.v50.SearchResults(pod)
+		if err != nil {
+			return false, false, false, tracer.Mask(err)
+		}
+	}
+
+	return val, sid, fin, nil
+}
+
 func (c *Claims) SearchSamples(pod objectid.ID, lef *big.Int, rig *big.Int) ([]uint8, error) {
 	var err error
 

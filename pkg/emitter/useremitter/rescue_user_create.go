@@ -7,14 +7,14 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Rescue) Create(use objectid.ID) error {
+func (r *Rescue) UserCreate(use objectid.ID) error {
 	var tas *task.Task
 	{
 		tas = &task.Task{
 			Meta: &task.Meta{
-				objectlabel.UserAction: objectlabel.ActionCreate,
 				objectlabel.UserObject: use.String(),
-				objectlabel.UserOrigin: objectlabel.OriginExtern,
+				objectlabel.TaskOrigin: objectlabel.OriginExtern,
+				objectlabel.TaskWorker: "usercreatehandler",
 			},
 		}
 	}
