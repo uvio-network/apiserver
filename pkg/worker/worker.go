@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/uvio-network/apiserver/pkg/object"
-	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/worker/budget"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler"
 	"github.com/xh3b4sd/logger"
@@ -221,7 +219,6 @@ func (w *Worker) search() {
 				logCtx(tas),
 				"level", "info",
 				"message", "processing worker task",
-				objectlabel.WorkerObject, object.String(x),
 			)
 		}
 

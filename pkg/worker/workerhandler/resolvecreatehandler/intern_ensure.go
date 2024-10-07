@@ -220,7 +220,7 @@ func (h *InternHandler) searchVoters(cla claimscontract.Interface, pod objectid.
 	// Searching for the voter addresses works using the indices [1, 2] and [5, 6]
 	// according to the Claims contract documentation linked below.
 	//
-	//     https://github.com/uvio-network/contracts/blob/v0.2.0/contracts/Claims.sol#L1721-L1728
+	//     https://github.com/uvio-network/contracts/blob/v0.5.0/contracts/Claims.sol#L1826-L1882
 	//
 
 	var vot []common.Address

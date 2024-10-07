@@ -148,17 +148,19 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	// update user metrics.
 
 	{
-		err = h.emi.Claim().Create(blc, bal.ID, objectlabel.LifecycleSettled)
+		err = h.emi.Reputation().CompetenceUpdate(blc, bal.ID)
 		if err != nil {
 			return tracer.Mask(err)
 		}
-	}
-
-	{
-		err = h.emi.Claim().Update(blc, bal.ID, objectlabel.LifecycleSettled)
+		err = h.emi.Reputation().IntegrityUpdate(blc, bal.ID)
 		if err != nil {
 			return tracer.Mask(err)
 		}
+		// TODO emit event to notifiy users
+		// err = h.emi.Claim().NotificationCreate(bal.ID)
+		// if err != nil {
+		// 	return tracer.Mask(err)
+		// }
 	}
 
 	// Once the new post object got updated with all the associated transaction
@@ -207,7 +209,7 @@ func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *post
 		}
 	}
 
-	// This is the claim here is either a propose or a dispute in first or second
+	// This claim here is either a propose or a dispute in first or second
 	// instance. In either case, those are the claims that we are tasked to
 	// settle.
 	var pod *poststorage.Object

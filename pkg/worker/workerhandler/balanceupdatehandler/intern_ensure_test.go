@@ -107,7 +107,7 @@ func Test_Worker_WorkerHandler_BalanceUpdateHandler_InternEnsure_balTre(t *testi
 				{ID: "17", Kind: "comment", Lifecycle: objectfield.Lifecycle{}, Parent: "15"},
 				{ID: "18", Kind: "comment", Lifecycle: objectfield.Lifecycle{}, Parent: "15"},
 				{ID: "19", Kind: "claim", Lifecycle: objectfield.Lifecycle{Data: objectlabel.LifecycleResolve}, Parent: "15"},
-				{ID: "20", Kind: "claim", Lifecycle: objectfield.Lifecycle{Data: objectlabel.LifecycleSettled}, Parent: "19"},
+				{ID: "20", Kind: "claim", Lifecycle: objectfield.Lifecycle{Data: objectlabel.LifecycleBalance}, Parent: "19"},
 			},
 			bal: &poststorage.Object{
 				ID: "14", Kind: "claim", Lifecycle: objectfield.Lifecycle{Data: objectlabel.LifecycleBalance}, Parent: "11",

@@ -11,9 +11,9 @@ func (h *InternHandler) Create() *task.Task {
 			task.Aevery: "hour",
 		},
 		Meta: &task.Meta{
-			objectlabel.ClaimAction: objectlabel.ActionExpiry,
 			objectlabel.ClaimObject: "*",
-			objectlabel.ClaimOrigin: objectlabel.OriginIntern,
+			objectlabel.TaskOrigin:  objectlabel.OriginIntern,
+			objectlabel.TaskWorker:  "claimexpiryhandler",
 		},
 	}
 }

@@ -7,8 +7,8 @@ import (
 
 func (h *ExternHandler) Filter(tas *task.Task) bool {
 	return tas.Meta.Has(map[string]string{
-		objectlabel.UserAction: objectlabel.ActionCreate,
 		objectlabel.UserObject: "*",
-		objectlabel.UserOrigin: objectlabel.OriginExtern,
+		objectlabel.TaskOrigin: objectlabel.OriginExtern,
+		objectlabel.TaskWorker: "usercreatehandler",
 	})
 }

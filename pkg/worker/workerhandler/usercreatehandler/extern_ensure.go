@@ -17,7 +17,7 @@ func (h *ExternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	}
 
 	{
-		err = h.emi.UVX().Mint(use)
+		err = h.emi.UVX().UvxMint(use)
 		if err != nil {
 			return tracer.Mask(err)
 		}

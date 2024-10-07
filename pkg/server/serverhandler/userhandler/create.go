@@ -52,7 +52,7 @@ func (h *Handler) Create(ctx context.Context, req *user.CreateI) (*user.CreateO,
 	//
 
 	if usercreated.FromContext(ctx) {
-		err = h.emi.User().Create(out.ID)
+		err = h.emi.User().UserCreate(out.ID)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}

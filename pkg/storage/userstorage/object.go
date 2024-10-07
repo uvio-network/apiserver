@@ -8,6 +8,14 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
+const (
+	Right     = 0
+	Wrong     = 1
+	Honest    = 2
+	Dishonest = 3
+	Abstained = 4
+)
+
 type Object struct {
 	// Created is the time at which the user got created.
 	Created time.Time `json:"created,omitempty"`

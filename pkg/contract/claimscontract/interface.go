@@ -121,6 +121,16 @@ type V_0_5_0 interface {
 	//
 	SearchResolve(objectid.ID, uint8) (bool, error)
 
+	// SearchResults returns some structural insights that have been relevant to
+	// reconciling any given claim towards settlement.
+	//
+	//     inp[0] the ID of the propose or dispute
+	//     out[1] whether the market resolution was valid
+	//     out[2] the side of the market used for settlement
+	//     out[3] whether the entire claim tree is considered final
+	//
+	SearchResults(pod objectid.ID) (bool, bool, bool, error)
+
 	// SearchSamples returns the votes cast per voter according to the addresses
 	// returned by SearchVoters. Should only be called on finalized claim trees.
 	//

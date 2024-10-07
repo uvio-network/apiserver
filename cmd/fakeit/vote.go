@@ -46,7 +46,11 @@ func (r *run) createVotePoD(key jwk.Key, use *user.SearchO, cla *post.SearchO) (
 		var out *vote.CreateO
 		{
 			out, err = r.cli.Vote.Create(ctx, inp)
-			if err != nil {
+			if err != nil && strings.Contains(err.Error(), "stake lifecycle pending") {
+				// StakeLifecyclePendingError may happen if this user created a pending
+				// vote already. Ignore the error and continue creating more fake data.
+				continue
+			} else if err != nil {
 				tracer.Panic(tracer.Mask(err))
 			}
 		}

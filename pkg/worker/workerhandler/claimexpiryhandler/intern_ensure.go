@@ -81,7 +81,7 @@ func (h *InternHandler) expireDispute(dis []*poststorage.Object, blc uint64, bud
 
 	for _, x := range dis[:bud.Claim(len(dis))] {
 		{
-			err = h.emi.Claim().Create(blc, x.ID, objectlabel.LifecycleResolve)
+			err = h.emi.Claim().ResolveCreate(blc, x.ID)
 			if err != nil {
 				return tracer.Mask(err)
 			}
@@ -103,7 +103,7 @@ func (h *InternHandler) expirePropose(pro []*poststorage.Object, blc uint64, bud
 
 	for _, x := range pro[:bud.Claim(len(pro))] {
 		{
-			err = h.emi.Claim().Create(blc, x.ID, objectlabel.LifecycleResolve)
+			err = h.emi.Claim().ResolveCreate(blc, x.ID)
 			if err != nil {
 				return tracer.Mask(err)
 			}
@@ -125,7 +125,7 @@ func (h *InternHandler) expireResolve(res []*poststorage.Object, blc uint64, bud
 
 	for _, x := range res[:bud.Claim(len(res))] {
 		{
-			err = h.emi.Claim().Update(blc, x.ID, objectlabel.LifecycleBalance)
+			err = h.emi.Claim().BalanceUpdate(blc, x.ID)
 			if err != nil {
 				return tracer.Mask(err)
 			}

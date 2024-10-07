@@ -2,25 +2,23 @@ package claimemitter
 
 import (
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
-	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 )
 
 type Interface interface {
-	// Create emits an event that intends to trigger the creation of a claim with
-	// the given lifecycle phase.
+	// BalanceUpdate emits an event that intends to trigger the update of a
+	// claim's user balances.
 	//
-	//     inp[0] the block number at which the call to Create was made
-	//     inp[1] the latest claim ID within a tree from which to create the next claim
-	//     inp[2] the desired lifecycle phase of the claim to create
+	//     inp[0] the block number at which the call to BalanceUpdate was made
+	//     inp[1] the claim ID of the expired resolve
 	//
-	Create(uint64, objectid.ID, objectlabel.DesiredLifecycle) error
+	BalanceUpdate(uint64, objectid.ID) error
 
-	// Update emits an event that intends to trigger the update of a claim's
-	// lifecycle phase.
+	// ResolveCreate emits an event that intends to trigger the creation of a
+	// resolve using the given claim ID, which is from either a propose or
+	// dispute.
 	//
-	//     inp[0] the block number at which the call to Update was made
-	//     inp[1] the propose ID for which to update the lifecycle phase
-	//     inp[2] the lifecycle phase to update
+	//     inp[0] the block number at which the call to ResolveCreate was made
+	//     inp[1] the claim ID of either the expired propose or dispute
 	//
-	Update(uint64, objectid.ID, objectlabel.DesiredLifecycle) error
+	ResolveCreate(uint64, objectid.ID) error
 }

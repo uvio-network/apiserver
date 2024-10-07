@@ -5,5 +5,4 @@ const (
 	ClaimBlock     string = "claim.uvio.network/block"
 	ClaimLifecycle string = "claim.uvio.network/lifecycle"
 	ClaimObject    string = "claim.uvio.network/object"
-	ClaimOrigin    string = "claim.uvio.network/origin"
 )
