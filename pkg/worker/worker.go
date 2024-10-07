@@ -110,9 +110,22 @@ func (w *Worker) create() {
 			}
 		}
 
+		// If the task that our worker handler wants to see created does not exist
+		// at all, we simply create it here.
+		if len(lis) == 0 {
+			err = w.res.Create(tas)
+			if err != nil {
+				w.lerror(tracer.Mask(err))
+			}
+
+			continue
+		}
+
 		// If the task that we are looking for is a task template, then there is
-		// only exactly one object for it.
-		if len(lis) != 1 {
+		// only exactly one object for it. So if there are more than exactly one
+		// task object, then it might mean that we found tasks with other
+		// specificcations which we should not touch, and so we ignore them.
+		if len(lis) > 1 {
 			continue
 		}
 
@@ -133,7 +146,7 @@ func (w *Worker) create() {
 			}
 		}
 
-		// Create the new task template.
+		// Update to the new task template.
 		{
 			err = w.res.Create(tas)
 			if err != nil {
