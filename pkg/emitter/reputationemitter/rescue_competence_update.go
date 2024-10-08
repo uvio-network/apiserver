@@ -1,15 +1,13 @@
 package reputationemitter
 
 import (
-	"strconv"
-
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/xh3b4sd/rescue/task"
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Rescue) CompetenceUpdate(blc uint64, bal objectid.ID) error {
+func (r *Rescue) CompetenceUpdate(bal objectid.ID) error {
 	var tas *task.Task
 	{
 		tas = &task.Task{
@@ -17,7 +15,6 @@ func (r *Rescue) CompetenceUpdate(blc uint64, bal objectid.ID) error {
 				task.Cancel: "10",
 			},
 			Meta: &task.Meta{
-				objectlabel.ClaimBlock:  strconv.FormatUint(blc, 10),
 				objectlabel.ClaimObject: bal.String(),
 				objectlabel.TaskOrigin:  objectlabel.OriginIntern,
 				objectlabel.TaskWorker:  "competenceupdatehandler",
