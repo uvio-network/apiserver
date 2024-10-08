@@ -119,15 +119,15 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 	}
 
-	var blc uint64
-	{
-		blc, err = ensInt(tas.Meta.Get(objectlabel.ClaimBlock))
-		if err != nil {
-			return tracer.Mask(err)
-		}
-	}
-
 	if bal.Lifecycle.Pending() {
+		var blc uint64
+		{
+			blc, err = ensInt(tas.Meta.Get(objectlabel.ClaimBlock))
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
+
 		var hsh []common.Hash
 		{
 			hsh, err = cla.BalanceUpdated(blc, pod.ID)
@@ -148,11 +148,11 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	// update user metrics.
 
 	{
-		err = h.emi.Reputation().CompetenceUpdate(blc, bal.ID)
+		err = h.emi.Reputation().CompetenceUpdate(bal.ID)
 		if err != nil {
 			return tracer.Mask(err)
 		}
-		err = h.emi.Reputation().IntegrityUpdate(blc, bal.ID)
+		err = h.emi.Reputation().IntegrityUpdate(bal.ID)
 		if err != nil {
 			return tracer.Mask(err)
 		}

@@ -8,7 +8,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/runtime"
-	"github.com/uvio-network/apiserver/pkg/storage"
+	"github.com/uvio-network/apiserver/pkg/sample"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
 	"github.com/uvio-network/apiserver/pkg/storage/userstorage"
 	"github.com/uvio-network/apiserver/pkg/worker/budget"
@@ -87,9 +87,31 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 	}
 
+	if tas.Sync == nil {
+		tas.Sync = &task.Sync{}
+	}
+
+	var cur *big.Int
+	{
+		cur, err = ensBig(tas.Sync.Get(task.Paging))
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
+	var lef *big.Int
+	var rig *big.Int
+	var end bool
+	{
+		lef, rig, end, err = sample.Paging(ind, cur)
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
 	var vot []common.Address
 	{
-		vot, err = h.searchVoters(cla, pod.ID, ind)
+		vot, err = cla.SearchVoters(pod.ID, lef, rig)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -97,7 +119,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 
 	var sam []uint8
 	{
-		sam, err = h.searchSamples(cla, pod.ID, ind)
+		sam, err = cla.SearchSamples(pod.ID, lef, rig)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -107,9 +129,12 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		return tracer.Maskf(runtime.ExecutionFailedError, "%d != %d", len(vot), len(sam))
 	}
 
+	// For every key, which is the address of a voter, we want to update the
+	// respective user object according to the integrity metrics that we are going
+	// to calculate below.
 	var use map[string]*userstorage.Object
 	{
-		use, err = h.searchUsers(h.sto, res)
+		use, err = h.searchUsers(res, vot)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -118,9 +143,6 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	if len(vot) != len(use) {
 		return tracer.Maskf(runtime.ExecutionFailedError, "%d != %d", len(vot), len(use))
 	}
-
-	// For every key, which is the address of a voter, we update the respective
-	// user object according to the found integrity metrics.
 
 	for i := range vot {
 		var v uint8
@@ -172,6 +194,16 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 				return tracer.Mask(err)
 			}
 		}
+
+		// After each iteration, increment the current paging pointer to track our
+		// progress.
+		{
+			tas.Sync.Set(task.Paging, lef.Add(lef, big.NewInt(1)).String())
+		}
+	}
+
+	if end {
+		tas.Sync = nil
 	}
 
 	return nil
@@ -238,47 +270,34 @@ func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *post
 	return pod, res, nil
 }
 
-func (h *InternHandler) searchSamples(cla claimscontract.Interface, pod objectid.ID, ind [8]*big.Int) ([]uint8, error) {
+func (h *InternHandler) searchUsers(res *poststorage.Object, vot []common.Address) (map[string]*userstorage.Object, error) {
 	var err error
 
-	// Searching for the voter outcomes works using the indices [1, 2] and [5, 6]
-	// according to the Claims contract documentation linked below.
-	//
-	//     https://github.com/uvio-network/contracts/blob/v0.5.0/contracts/Claims.sol#L1826-L1882
-	//
-
-	var yay []uint8
-	{
-		yay, err = cla.SearchSamples(pod, ind[1], ind[2])
-		if err != nil {
-			return nil, tracer.Mask(err)
-		}
+	// We potentially limit the amount of user objects that we lookup, so that we
+	// only fetch the data that is required to process the current batch of voter
+	// addresses.
+	sel := map[string]struct{}{}
+	for _, x := range vot {
+		sel[x.Hex()] = struct{}{}
 	}
-
-	var nah []uint8
-	{
-		nah, err = cla.SearchSamples(pod, ind[5], ind[6])
-		if err != nil {
-			return nil, tracer.Mask(err)
-		}
-	}
-
-	return append(yay, nah...), nil
-}
-
-func (h *InternHandler) searchUsers(sto storage.Interface, res *poststorage.Object) (map[string]*userstorage.Object, error) {
-	var err error
 
 	var add []string
 	var uid []objectid.ID
 	for k, v := range res.Samples {
-		add = append(add, k)
-		uid = append(uid, objectid.ID(v))
+		var exi bool
+		{
+			_, exi = sel[k]
+		}
+
+		if exi {
+			add = append(add, k)
+			uid = append(uid, objectid.ID(v))
+		}
 	}
 
 	var use []*userstorage.Object
 	{
-		use, err = sto.User().SearchUser(uid)
+		use, err = h.sto.User().SearchUser(uid)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -296,30 +315,19 @@ func (h *InternHandler) searchUsers(sto storage.Interface, res *poststorage.Obje
 	return dic, nil
 }
 
-func (h *InternHandler) searchVoters(cla claimscontract.Interface, pod objectid.ID, ind [8]*big.Int) ([]common.Address, error) {
-	var err error
-
-	// Searching for the voter addresses works using the indices [1, 2] and [5, 6]
-	// according to the Claims contract documentation linked below.
-	//
-	//     https://github.com/uvio-network/contracts/blob/v0.5.0/contracts/Claims.sol#L1826-L1882
-	//
-
-	var yay []common.Address
-	{
-		yay, err = cla.SearchVoters(pod, ind[1], ind[2])
-		if err != nil {
-			return nil, tracer.Mask(err)
-		}
+func ensBig(str string) (*big.Int, error) {
+	val, ok := new(big.Int).SetString(zerStr(str), 10)
+	if !ok {
+		return nil, tracer.Maskf(runtime.ExecutionFailedError, "cannot convert %s to *big.Int", str)
 	}
 
-	var nah []common.Address
-	{
-		nah, err = cla.SearchVoters(pod, ind[5], ind[6])
-		if err != nil {
-			return nil, tracer.Mask(err)
-		}
+	return val, nil
+}
+
+func zerStr(str string) string {
+	if str == "" {
+		str = "0"
 	}
 
-	return append(yay, nah...), nil
+	return str
 }
