@@ -41,7 +41,7 @@ func Paging(ind [8]*big.Int, cur *big.Int) (*big.Int, *big.Int, bool, error) {
 
 	{
 		if bigEql(ind[0], big.NewInt(0)) && bigEql(ind[7], big.NewInt(0)) {
-			return nil, nil, false, tracer.Mask(IndexNilError)
+			return nil, nil, false, tracer.Mask(IndexZeroError)
 		}
 		if bigLss(cur, big.NewInt(0)) {
 			return nil, nil, false, tracer.Mask(IndexOutOfRangeError)
