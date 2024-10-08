@@ -5,140 +5,9 @@ import (
 	"math/big"
 	"testing"
 
+	fuzz "github.com/google/gofuzz"
 	"github.com/uvio-network/apiserver/pkg/runtime"
 )
-
-func Test_Sample_Paging_Side_Both(t *testing.T) {
-	testCases := []struct {
-		ind [8]*big.Int
-		cur *big.Int
-		lef *big.Int
-		rig *big.Int
-		end bool
-	}{
-		// Case 000
-		{
-			ind: [8]*big.Int{
-				big.NewInt(1), // 1 staker in agreement
-				big.NewInt(0),
-				big.NewInt(0),
-				runtime.MidUint256(),
-				runtime.MidUint256(),
-				runtime.MaxUint256(),
-				runtime.MaxUint256(),
-				big.NewInt(1), // 1 staker in disagreement
-			},
-			cur: big.NewInt(0),
-			lef: big.NewInt(0),
-			rig: big.NewInt(0),
-			end: false,
-		},
-		// Case 001
-		{
-			ind: [8]*big.Int{
-				big.NewInt(1), // 1 staker in agreement
-				big.NewInt(0),
-				big.NewInt(0),
-				runtime.MidUint256(),
-				runtime.MidUint256(),
-				runtime.MaxUint256(),
-				runtime.MaxUint256(),
-				big.NewInt(1), // 1 staker in disagreement
-			},
-			cur: big.NewInt(1),
-			lef: runtime.MaxUint256(),
-			rig: runtime.MaxUint256(),
-			end: true,
-		},
-		// Case 002
-		{
-			ind: [8]*big.Int{
-				big.NewInt(1), // 1 staker in agreement
-				big.NewInt(0),
-				big.NewInt(0),
-				runtime.MidUint256(),
-				runtime.MidUint256(),
-				big.NewInt(0).Sub(runtime.MaxUint256(), big.NewInt(13)),
-				runtime.MaxUint256(),
-				big.NewInt(14), // 14 staker in disagreement
-			},
-			cur: big.NewInt(0),
-			lef: big.NewInt(0),
-			rig: big.NewInt(0),
-			end: false,
-		},
-		// Case 003
-		{
-			ind: [8]*big.Int{
-				big.NewInt(1), // 1 staker in agreement
-				big.NewInt(0),
-				big.NewInt(0),
-				runtime.MidUint256(),
-				runtime.MidUint256(),
-				big.NewInt(0).Sub(runtime.MaxUint256(), big.NewInt(13)),
-				runtime.MaxUint256(),
-				big.NewInt(14), // 14 staker in disagreement
-			},
-			cur: big.NewInt(1),
-			lef: big.NewInt(0).Sub(runtime.MaxUint256(), big.NewInt(13)),
-			rig: runtime.MaxUint256(),
-			end: true,
-		},
-		// Case 004
-		{
-			ind: [8]*big.Int{
-				big.NewInt(14), // 14 staker in agreement
-				big.NewInt(0),
-				big.NewInt(13),
-				runtime.MidUint256(),
-				runtime.MidUint256(),
-				big.NewInt(0).Sub(runtime.MaxUint256(), big.NewInt(13)),
-				runtime.MaxUint256(),
-				big.NewInt(14), // 14 staker in disagreement
-			},
-			cur: big.NewInt(0),
-			lef: big.NewInt(0),
-			rig: big.NewInt(13),
-			end: false,
-		},
-		// Case 005
-		{
-			ind: [8]*big.Int{
-				big.NewInt(14), // 14 staker in agreement
-				big.NewInt(0),
-				big.NewInt(13),
-				runtime.MidUint256(),
-				runtime.MidUint256(),
-				big.NewInt(0).Sub(runtime.MaxUint256(), big.NewInt(13)),
-				runtime.MaxUint256(),
-				big.NewInt(14), // 14 staker in disagreement
-			},
-			cur: big.NewInt(14),
-			lef: big.NewInt(0).Sub(runtime.MaxUint256(), big.NewInt(13)),
-			rig: runtime.MaxUint256(),
-			end: true,
-		},
-	}
-
-	for i, tc := range testCases {
-		t.Run(fmt.Sprintf("%03d", i), func(t *testing.T) {
-			lef, rig, end, err := Paging(tc.ind, tc.cur)
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			if lef.Cmp(tc.lef) != 0 {
-				t.Fatalf("expected %#v got %#v", tc.lef.String(), lef.String())
-			}
-			if rig.Cmp(tc.rig) != 0 {
-				t.Fatalf("expected %#v got %#v", tc.rig.String(), rig.String())
-			}
-			if end != tc.end {
-				t.Fatalf("expected %#v got %#v", tc.end, end)
-			}
-		})
-	}
-}
 
 func Test_Sample_Paging_Error(t *testing.T) {
 	testCases := []struct {
@@ -286,6 +155,39 @@ func Test_Sample_Paging_Error(t *testing.T) {
 				t.Fatalf("expected error got nil")
 			}
 		})
+	}
+}
+
+func Test_Sample_Paging_Fuzz(t *testing.T) {
+	var fzi *fuzz.Fuzzer
+	var fzc *fuzz.Fuzzer
+	{
+		fzi = fuzz.New()
+		fzc = fuzz.New()
+	}
+
+	for i := 0; i < 1000; i++ {
+		var ind [8]*big.Int
+		var cur *big.Int
+		{
+			ind = [8]*big.Int{}
+			cur = &big.Int{}
+		}
+
+		{
+			fzi.Fuzz(&ind)
+			fzc.Fuzz(cur)
+		}
+
+		{
+			lef, rig, _, err := Paging(ind, cur)
+			if err == nil && lef == nil {
+				t.Fatal("lef must not be nil")
+			}
+			if err == nil && rig == nil {
+				t.Fatal("lef must not be nil")
+			}
+		}
 	}
 }
 
@@ -631,6 +533,138 @@ func Test_Sample_Paging_Side_True(t *testing.T) {
 			cur: big.NewInt(49),
 			lef: big.NewInt(49),
 			rig: big.NewInt(66),
+			end: true,
+		},
+	}
+
+	for i, tc := range testCases {
+		t.Run(fmt.Sprintf("%03d", i), func(t *testing.T) {
+			lef, rig, end, err := Paging(tc.ind, tc.cur)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if lef.Cmp(tc.lef) != 0 {
+				t.Fatalf("expected %#v got %#v", tc.lef.String(), lef.String())
+			}
+			if rig.Cmp(tc.rig) != 0 {
+				t.Fatalf("expected %#v got %#v", tc.rig.String(), rig.String())
+			}
+			if end != tc.end {
+				t.Fatalf("expected %#v got %#v", tc.end, end)
+			}
+		})
+	}
+}
+
+func Test_Sample_Paging_Side_Both(t *testing.T) {
+	testCases := []struct {
+		ind [8]*big.Int
+		cur *big.Int
+		lef *big.Int
+		rig *big.Int
+		end bool
+	}{
+		// Case 000
+		{
+			ind: [8]*big.Int{
+				big.NewInt(1), // 1 staker in agreement
+				big.NewInt(0),
+				big.NewInt(0),
+				runtime.MidUint256(),
+				runtime.MidUint256(),
+				runtime.MaxUint256(),
+				runtime.MaxUint256(),
+				big.NewInt(1), // 1 staker in disagreement
+			},
+			cur: big.NewInt(0),
+			lef: big.NewInt(0),
+			rig: big.NewInt(0),
+			end: false,
+		},
+		// Case 001
+		{
+			ind: [8]*big.Int{
+				big.NewInt(1), // 1 staker in agreement
+				big.NewInt(0),
+				big.NewInt(0),
+				runtime.MidUint256(),
+				runtime.MidUint256(),
+				runtime.MaxUint256(),
+				runtime.MaxUint256(),
+				big.NewInt(1), // 1 staker in disagreement
+			},
+			cur: big.NewInt(1),
+			lef: runtime.MaxUint256(),
+			rig: runtime.MaxUint256(),
+			end: true,
+		},
+		// Case 002
+		{
+			ind: [8]*big.Int{
+				big.NewInt(1), // 1 staker in agreement
+				big.NewInt(0),
+				big.NewInt(0),
+				runtime.MidUint256(),
+				runtime.MidUint256(),
+				big.NewInt(0).Sub(runtime.MaxUint256(), big.NewInt(13)),
+				runtime.MaxUint256(),
+				big.NewInt(14), // 14 staker in disagreement
+			},
+			cur: big.NewInt(0),
+			lef: big.NewInt(0),
+			rig: big.NewInt(0),
+			end: false,
+		},
+		// Case 003
+		{
+			ind: [8]*big.Int{
+				big.NewInt(1), // 1 staker in agreement
+				big.NewInt(0),
+				big.NewInt(0),
+				runtime.MidUint256(),
+				runtime.MidUint256(),
+				big.NewInt(0).Sub(runtime.MaxUint256(), big.NewInt(13)),
+				runtime.MaxUint256(),
+				big.NewInt(14), // 14 staker in disagreement
+			},
+			cur: big.NewInt(1),
+			lef: big.NewInt(0).Sub(runtime.MaxUint256(), big.NewInt(13)),
+			rig: runtime.MaxUint256(),
+			end: true,
+		},
+		// Case 004
+		{
+			ind: [8]*big.Int{
+				big.NewInt(14), // 14 staker in agreement
+				big.NewInt(0),
+				big.NewInt(13),
+				runtime.MidUint256(),
+				runtime.MidUint256(),
+				big.NewInt(0).Sub(runtime.MaxUint256(), big.NewInt(13)),
+				runtime.MaxUint256(),
+				big.NewInt(14), // 14 staker in disagreement
+			},
+			cur: big.NewInt(0),
+			lef: big.NewInt(0),
+			rig: big.NewInt(13),
+			end: false,
+		},
+		// Case 005
+		{
+			ind: [8]*big.Int{
+				big.NewInt(14), // 14 staker in agreement
+				big.NewInt(0),
+				big.NewInt(13),
+				runtime.MidUint256(),
+				runtime.MidUint256(),
+				big.NewInt(0).Sub(runtime.MaxUint256(), big.NewInt(13)),
+				runtime.MaxUint256(),
+				big.NewInt(14), // 14 staker in disagreement
+			},
+			cur: big.NewInt(14),
+			lef: big.NewInt(0).Sub(runtime.MaxUint256(), big.NewInt(13)),
+			rig: runtime.MaxUint256(),
 			end: true,
 		},
 	}
