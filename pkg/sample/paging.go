@@ -3,6 +3,7 @@ package sample
 import (
 	"math/big"
 
+	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/xh3b4sd/tracer"
 )
 
@@ -30,13 +31,19 @@ func Paging(ind [8]*big.Int, cur *big.Int) (*big.Int, *big.Int, bool, error) {
 		if ind[i] == nil {
 			return nil, nil, false, tracer.Mask(IndexNilError)
 		}
+		if bigLss(ind[i], big.NewInt(0)) {
+			return nil, nil, false, tracer.Mask(IndexOutOfRangeError)
+		}
+		if bigGrt(ind[i], runtime.MaxUint256()) {
+			return nil, nil, false, tracer.Mask(IndexOutOfRangeError)
+		}
 	}
 
 	{
-		if bigLss(cur, ind[1]) {
+		if bigLss(cur, big.NewInt(0)) {
 			return nil, nil, false, tracer.Mask(IndexOutOfRangeError)
 		}
-		if bigGrt(cur, ind[6]) {
+		if bigGrt(cur, runtime.MaxUint256()) {
 			return nil, nil, false, tracer.Mask(IndexOutOfRangeError)
 		}
 	}

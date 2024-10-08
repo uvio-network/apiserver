@@ -234,6 +234,48 @@ func Test_Sample_Paging_Error(t *testing.T) {
 			},
 			cur: big.NewInt(0).Add(runtime.MaxUint256(), big.NewInt(1)),
 		},
+		// Case 007
+		{
+			ind: [8]*big.Int{
+				big.NewInt(0),
+				big.NewInt(0).Add(runtime.MaxUint256(), big.NewInt(1)),
+				big.NewInt(0),
+				runtime.MidUint256(),
+				runtime.MidUint256(),
+				runtime.MaxUint256(),
+				runtime.MaxUint256(),
+				big.NewInt(1),
+			},
+			cur: big.NewInt(0),
+		},
+		// Case 008
+		{
+			ind: [8]*big.Int{
+				big.NewInt(0),
+				big.NewInt(0),
+				big.NewInt(0),
+				runtime.MidUint256(),
+				runtime.MidUint256(),
+				big.NewInt(0).Add(runtime.MaxUint256(), big.NewInt(1)),
+				runtime.MaxUint256(),
+				big.NewInt(1),
+			},
+			cur: big.NewInt(0),
+		},
+		// Case 9
+		{
+			ind: [8]*big.Int{
+				big.NewInt(0).Sub(runtime.MaxUint256(), big.NewInt(1)),
+				big.NewInt(0),
+				big.NewInt(0),
+				big.NewInt(0).Add(runtime.MaxUint256(), big.NewInt(1)),
+				runtime.MidUint256(),
+				big.NewInt(0).Sub(runtime.MaxUint256(), big.NewInt(1)),
+				runtime.MaxUint256(),
+				big.NewInt(1),
+			},
+			cur: big.NewInt(0),
+		},
 	}
 
 	for i, tc := range testCases {
