@@ -322,6 +322,8 @@ func updUse(i int, val bool, sid bool, vot []common.Address, sam []uint8, use ma
 				// honest value.
 				if v == 1 {
 					u.Summary[userstorage.Honest]++
+				} else {
+					u.Summary[userstorage.Dishonest]++
 				}
 			} else {
 				// If the market settled with a valid resolution, and if the community
@@ -329,11 +331,13 @@ func updUse(i int, val bool, sid bool, vot []common.Address, sam []uint8, use ma
 				// honest value.
 				if v == 0 {
 					u.Summary[userstorage.Honest]++
+				} else {
+					u.Summary[userstorage.Dishonest]++
 				}
 			}
 		} else {
 			// If the market settled with an invalid resolution, then increment the
-			// dishonest value.
+			// dishonest value for everyone.
 			u.Summary[userstorage.Dishonest]++
 		}
 	}
