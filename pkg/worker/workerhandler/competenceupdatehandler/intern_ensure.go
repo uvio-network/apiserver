@@ -1,4 +1,4 @@
-package integrityupdatehandler
+package competenceupdatehandler
 
 import (
 	"math/big"
@@ -11,6 +11,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/sample"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
 	"github.com/uvio-network/apiserver/pkg/storage/userstorage"
+	"github.com/uvio-network/apiserver/pkg/storage/walletstorage"
 	"github.com/uvio-network/apiserver/pkg/worker/budget"
 	"github.com/xh3b4sd/rescue/task"
 	"github.com/xh3b4sd/tracer"
@@ -21,9 +22,8 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	var err error
 
 	var pod *poststorage.Object
-	var res *poststorage.Object
 	{
-		pod, res, err = h.searchClaims(tas)
+		pod, err = h.searchClaims(tas)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -109,52 +109,41 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 	}
 
-	var vot []common.Address
+	var sta []common.Address
 	{
-		vot, err = cla.SearchVoters(pod.ID, lef, rig)
+		sta, err = cla.SearchStakers(pod.ID, lef, rig)
 		if err != nil {
 			return tracer.Mask(err)
 		}
 	}
 
-	// It may very well happen that there are no voters in the current batch that
-	// we are processing right now. In such a case we need to increment the right
-	// handside cursor and wait for the next execution of this task.
-	if len(vot) == 0 {
-		{
-			tas.Sync.Set(task.Paging, rig.Add(rig, big.NewInt(1)).String())
-		}
-
-		return nil
-	}
-
-	var sam []uint8
+	var his []*big.Int
 	{
-		sam, err = cla.SearchSamples(pod.ID, lef, rig)
+		his, err = cla.SearchHistory(pod.ID, lef, rig)
 		if err != nil {
 			return tracer.Mask(err)
 		}
 	}
 
-	if len(vot) != len(sam) {
-		return tracer.Maskf(runtime.ExecutionFailedError, "%d != %d", len(vot), len(sam))
-	}
-
-	// For every key, which is the address of a voter, we want to update the
-	// respective user object according to the integrity metrics that we are going
-	// to calculate below.
+	// For every key, which is the address of a staker, we want to update the
+	// respective user object according to the competence metrics that we are
+	// going to calculate below.
 	var use map[string]*userstorage.Object
 	{
-		use, err = h.searchUsers(res, vot)
+		use, err = h.searchUsers(sta)
 		if err != nil {
 			return tracer.Mask(err)
 		}
 	}
 
-	for i := range vot {
+	if len(sta)*5 != len(use) {
+		return tracer.Maskf(runtime.ExecutionFailedError, "%d != %d", len(sta)*5, len(use))
+	}
+
+	for i := range sta {
 		var u *userstorage.Object
 		{
-			u = updUse(i, val, sid, vot, sam, use)
+			u = updUse(i, val, sid, sta, his, use)
 		}
 
 		{
@@ -178,7 +167,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	return nil
 }
 
-func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *poststorage.Object, error) {
+func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, error) {
 	var err error
 
 	// The claim ID obtained here is the ID of the balance that finalized when the
@@ -192,12 +181,12 @@ func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *post
 	{
 		pos, err = h.sto.Post().SearchPost([]objectid.ID{cla})
 		if err != nil {
-			return nil, nil, tracer.Mask(err)
+			return nil, tracer.Mask(err)
 		}
 	}
 
 	if len(pos) != 1 {
-		return nil, nil, tracer.Maskf(runtime.ExecutionFailedError, "expected exactly one post object for ID %s", cla)
+		return nil, tracer.Maskf(runtime.ExecutionFailedError, "expected exactly one post object for ID %s", cla)
 	}
 
 	// This is the claim with lifecycle phase balance that has been finalized.
@@ -210,7 +199,7 @@ func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *post
 	{
 		tre, err = h.sto.Post().SearchTree([]objectid.ID{bal.Tree})
 		if err != nil {
-			return nil, nil, tracer.Mask(err)
+			return nil, tracer.Mask(err)
 		}
 	}
 
@@ -221,7 +210,7 @@ func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *post
 	}
 
 	if res == nil {
-		return nil, nil, tracer.Maskf(runtime.ExecutionFailedError, "expected exactly one resolve for ID %s", bal.Parent)
+		return nil, tracer.Maskf(runtime.ExecutionFailedError, "expected exactly one resolve for ID %s", bal.Parent)
 	}
 
 	// This claim here is either a propose or a dispute in first or second
@@ -233,40 +222,31 @@ func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *post
 	}
 
 	if pod == nil {
-		return nil, nil, tracer.Maskf(runtime.ExecutionFailedError, "expected exactly one propose for ID %s", res.Parent)
+		return nil, tracer.Maskf(runtime.ExecutionFailedError, "expected exactly one propose for ID %s", res.Parent)
 	}
 
-	return pod, res, nil
+	return pod, nil
 }
 
-func (h *InternHandler) searchUsers(res *poststorage.Object, vot []common.Address) (map[string]*userstorage.Object, error) {
+func (h *InternHandler) searchUsers(sta []common.Address) (map[string]*userstorage.Object, error) {
 	var err error
 
-	// We potentially limit the amount of user objects that we lookup, so that we
-	// only fetch the data that is required to process the current batch of voter
-	// addresses.
-	sel := map[string]struct{}{}
-	for _, x := range vot {
-		sel[x.Hex()] = struct{}{}
+	var add []string
+	for _, x := range sta {
+		add = append(add, x.Hex())
 	}
 
-	var add []string
-	var uid []objectid.ID
-	for k, v := range res.Samples {
-		var exi bool
-		{
-			_, exi = sel[k]
-		}
-
-		if exi {
-			add = append(add, k)
-			uid = append(uid, objectid.ID(v))
+	var sli walletstorage.Slicer
+	{
+		sli, err = h.sto.Wallet().SearchAddress(add)
+		if err != nil {
+			return nil, tracer.Mask(err)
 		}
 	}
 
 	var use []*userstorage.Object
 	{
-		use, err = h.sto.User().SearchUser(uid)
+		use, err = h.sto.User().SearchUser(sli.Owner())
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -277,11 +257,23 @@ func (h *InternHandler) searchUsers(res *poststorage.Object, vot []common.Addres
 		dic[add[i]] = use[i]
 	}
 
-	if len(vot) != len(dic) {
-		return nil, tracer.Maskf(runtime.ExecutionFailedError, "%d != %d", len(vot), len(dic))
+	if len(sta) != len(dic) {
+		return nil, tracer.Maskf(runtime.ExecutionFailedError, "%d != %d", len(sta), len(dic))
 	}
 
 	return dic, nil
+}
+
+func bigEql(a *big.Int, b *big.Int) bool {
+	return a.Cmp(b) == 0
+}
+
+func bigGrt(a *big.Int, b *big.Int) bool {
+	return a.Cmp(b) == +1
+}
+
+func bigNot(a *big.Int, b *big.Int) bool {
+	return a.Cmp(b) != 0
 }
 
 func ensBig(str string) (*big.Int, error) {
@@ -293,15 +285,20 @@ func ensBig(str string) (*big.Int, error) {
 	return val, nil
 }
 
-func updUse(i int, val bool, sid bool, vot []common.Address, sam []uint8, use map[string]*userstorage.Object) *userstorage.Object {
-	var v uint8
+func updUse(i int, val bool, sid bool, sta []common.Address, his []*big.Int, use map[string]*userstorage.Object) *userstorage.Object {
+	//
+	//     [        before        |         after        |   ]
+	//
+	//     "agreement,disagreement,agreement,disagreement,fee"
+	//
+	var b []*big.Int
 	{
-		v = sam[i]
+		b = his[i*5 : (i+1)*5]
 	}
 
 	var a string
 	{
-		a = vot[i].Hex()
+		a = sta[i].Hex()
 	}
 
 	var u *userstorage.Object
@@ -309,36 +306,25 @@ func updUse(i int, val bool, sid bool, vot []common.Address, sam []uint8, use ma
 		u = use[a]
 	}
 
-	// If the user denied to vote for whatever reason, then increment the
-	// abstained value. If the user did their duty by voting, check the outcome
-	// and calculate integrity metrics accordingly.
-	if v == 2 {
-		u.Summary[userstorage.Abstained]++
-	} else {
-		if val {
-			if sid {
-				// If the market settled with a valid resolution, and if the community
-				// consensus was true, and if the user voted true, then increment the
-				// honest value.
-				if v == 1 {
-					u.Summary[userstorage.Honest]++
-				} else {
-					u.Summary[userstorage.Dishonest]++
-				}
+	if val {
+		if sid {
+			// If the market settled with a valid resolution, and if the community
+			// consensus was true, and if the user staked true while not staking
+			// false, then increment the right value.
+			if bigNot(b[0], big.NewInt(0)) && bigEql(b[1], big.NewInt(0)) && bigGrt(b[2], b[0]) {
+				u.Summary[userstorage.Right]++
 			} else {
-				// If the market settled with a valid resolution, and if the community
-				// consensus was false, and if the user voted false, then increment the
-				// honest value.
-				if v == 0 {
-					u.Summary[userstorage.Honest]++
-				} else {
-					u.Summary[userstorage.Dishonest]++
-				}
+				u.Summary[userstorage.Wrong]++
 			}
 		} else {
-			// If the market settled with an invalid resolution, then increment the
-			// dishonest value for everyone.
-			u.Summary[userstorage.Dishonest]++
+			// If the market settled with a valid resolution, and if the community
+			// consensus was false, and if the user staked false while not staking
+			// true, then increment the honest value.
+			if bigNot(b[1], big.NewInt(0)) && bigEql(b[0], big.NewInt(0)) && bigGrt(b[3], b[1]) {
+				u.Summary[userstorage.Right]++
+			} else {
+				u.Summary[userstorage.Wrong]++
+			}
 		}
 	}
 

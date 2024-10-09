@@ -51,24 +51,17 @@ func NewClaims(c ClaimsConfig) *Claims {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Opt must not be empty", c)))
 	}
 
+	// Only one of the contract implementations can be used at a time based on the
+	// configured contract address. All other implementations must be nil.
+
 	var v40 *ClaimsV040
 	if c.Con.Version == "v0.4.0" {
-		v40 = NewClaimsV040(ClaimsConfigV040{
-			Add: c.Con.Address,
-			Cli: c.Cli,
-			Log: c.Log,
-			Opt: c.Opt,
-		})
+		v40 = NewClaimsV040(ClaimsConfigV040(c))
 	}
 
 	var v50 *ClaimsV050
 	if c.Con.Version == "v0.5.0" {
-		v50 = NewClaimsV050(ClaimsConfigV050{
-			Add: c.Con.Address,
-			Cli: c.Cli,
-			Log: c.Log,
-			Opt: c.Opt,
-		})
+		v50 = NewClaimsV050(ClaimsConfigV050(c))
 	}
 
 	return &Claims{
