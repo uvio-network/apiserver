@@ -17,8 +17,8 @@ import (
 )
 
 type ClaimsConfigV040 struct {
-	Add common.Address
 	Cli *ethclient.Client
+	Con *Contract
 	Log logger.Interface
 	Opt *bind.TransactOpts
 }
@@ -26,16 +26,17 @@ type ClaimsConfigV040 struct {
 type ClaimsV040 struct {
 	bin *ClaimsContractBindingV040
 	cli *ethclient.Client
+	con *Contract
 	log logger.Interface
 	opt *bind.TransactOpts
 }
 
 func NewClaimsV040(c ClaimsConfigV040) *ClaimsV040 {
-	if len(c.Add) == 0 {
-		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Add must not be empty", c)))
-	}
 	if c.Cli == nil {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Cli must not be empty", c)))
+	}
+	if c.Con == nil {
+		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Con must not be empty", c)))
 	}
 	if c.Log == nil {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Log must not be empty", c)))
@@ -48,7 +49,7 @@ func NewClaimsV040(c ClaimsConfigV040) *ClaimsV040 {
 
 	var bin *ClaimsContractBindingV040
 	{
-		bin, err = NewClaimsContractBindingV040(c.Add, c.Cli)
+		bin, err = NewClaimsContractBindingV040(c.Con.Address, c.Cli)
 		if err != nil {
 			tracer.Panic(err)
 		}
@@ -57,6 +58,7 @@ func NewClaimsV040(c ClaimsConfigV040) *ClaimsV040 {
 	return &ClaimsV040{
 		bin: bin,
 		cli: c.Cli,
+		con: c.Con,
 		log: c.Log,
 		opt: c.Opt,
 	}
@@ -146,6 +148,7 @@ func (c *ClaimsV040) CreateResolve(pod objectid.ID, ind []*big.Int, exp time.Tim
 		"claim", pod.String(),
 		"expiry", exp.String(),
 		"transaction", txn.Hash().Hex(),
+		"version", c.con.Version,
 	)
 
 	return txn, nil
@@ -309,6 +312,7 @@ func (c *ClaimsV040) UpdateBalance(pod objectid.ID, max uint64) (*types.Transact
 		"claim", pod.String(),
 		"maximum", strconv.FormatUint(max, 10),
 		"transaction", txn.Hash().Hex(),
+		"version", c.con.Version,
 	)
 
 	return txn, nil

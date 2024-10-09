@@ -1,4 +1,4 @@
-package integrityupdatehandler
+package competenceupdatehandler
 
 import (
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
@@ -14,6 +14,6 @@ func (h *InternHandler) Filter(tas *task.Task) bool {
 	return tas.Meta.Has(map[string]string{
 		objectlabel.ClaimObject: "*",
 		objectlabel.TaskOrigin:  objectlabel.OriginIntern,
-		objectlabel.TaskWorker:  "integrityupdatehandler",
+		objectlabel.TaskWorker:  "competenceupdatehandler",
 	})
 }
