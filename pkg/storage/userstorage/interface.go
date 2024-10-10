@@ -3,22 +3,6 @@ package userstorage
 import "github.com/uvio-network/apiserver/pkg/object/objectid"
 
 type Interface interface {
-	// UpdateCompetence adds the referenced IDs of the given user objects to the
-	// reputation specific UserCompetence index. This form of indexing enables us
-	// to search for the users with the most competence on the Uvio platform.
-	//
-	//     @inp[0] the user objects to add to the UserCompetence index
-	//
-	UpdateCompetence(inp []*Object) error
-
-	// UpdateIntegrity adds the referenced IDs of the given user objects to the
-	// reputation specific UserIntegrity index. This form of indexing enables us
-	// to search for the users with the most integrity on the Uvio platform.
-	//
-	//     @inp[0] the user objects to add to the UserIntegrity index
-	//
-	UpdateIntegrity(inp []*Object) error
-
 	// CreateUser persists a new user object given the provided subject claim, if
 	// none does exist already. Create is therefore idempotent and yields the same
 	// persisted user object given the same provided subject claim.
@@ -62,6 +46,22 @@ type Interface interface {
 	//     @out[0] the list of user objects matching the given user IDs
 	//
 	SearchUser([]objectid.ID) ([]*Object, error)
+
+	// UpdateCompetence adds the referenced IDs of the given user objects to the
+	// reputation specific UserCompetence index. This form of indexing enables us
+	// to search for the users with the most competence on the Uvio platform.
+	//
+	//     @inp[0] the user objects to add to the UserCompetence index
+	//
+	UpdateCompetence(inp []*Object) error
+
+	// UpdateIntegrity adds the referenced IDs of the given user objects to the
+	// reputation specific UserIntegrity index. This form of indexing enables us
+	// to search for the users with the most integrity on the Uvio platform.
+	//
+	//     @inp[0] the user objects to add to the UserIntegrity index
+	//
+	UpdateIntegrity(inp []*Object) error
 
 	// UpdateUser modifies the given user objects in the underlying storage.
 	//
