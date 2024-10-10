@@ -134,7 +134,7 @@ func (c *ClaimsV050) CreateResolve(pod objectid.ID, ind []*big.Int, exp time.Tim
 
 	var txn *types.Transaction
 	{
-		txn, err = c.bin.CreateResolve(opt, big.NewInt(pod.Int()), ind, uint64(exp.Unix()))
+		txn, err = c.bin.CreateResolve(opt, pod.Big(), ind, uint64(exp.Unix()))
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -159,7 +159,7 @@ func (c *ClaimsV050) ExistsResolve(pod objectid.ID) (bool, error) {
 
 	var exp *big.Int
 	{
-		_, exp, err = c.bin.SearchExpired(nil, big.NewInt(pod.Int()))
+		_, exp, err = c.bin.SearchExpired(nil, pod.Big())
 		if err != nil {
 			return false, tracer.Mask(err)
 		}
@@ -206,7 +206,7 @@ func (c *ClaimsV050) SearchHistory(pod objectid.ID, lef *big.Int, rig *big.Int) 
 
 	var his []*big.Int
 	{
-		his, err = c.bin.SearchHistory(nil, big.NewInt(pod.Int()), lef, rig)
+		his, err = c.bin.SearchHistory(nil, pod.Big(), lef, rig)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -220,7 +220,7 @@ func (c *ClaimsV050) SearchIndices(pod objectid.ID) ([8]*big.Int, error) {
 
 	var ind [8]*big.Int
 	{
-		ind, err = c.bin.SearchIndices(nil, big.NewInt(pod.Int()))
+		ind, err = c.bin.SearchIndices(nil, pod.Big())
 		if err != nil {
 			return [8]*big.Int{}, tracer.Mask(err)
 		}
@@ -229,12 +229,26 @@ func (c *ClaimsV050) SearchIndices(pod objectid.ID) ([8]*big.Int, error) {
 	return ind, nil
 }
 
+func (c *ClaimsV050) SearchLatest(pod objectid.ID) (objectid.ID, error) {
+	var err error
+
+	var lat *big.Int
+	{
+		_, lat, _, err = c.bin.SearchLatest(nil, pod.Big())
+		if err != nil {
+			return "", tracer.Mask(err)
+		}
+	}
+
+	return objectid.ID(lat.String()), nil
+}
+
 func (c *ClaimsV050) SearchResolve(pod objectid.ID, ind uint8) (bool, error) {
 	var err error
 
 	var flg bool
 	{
-		flg, err = c.bin.SearchResolve(nil, big.NewInt(pod.Int()), ind)
+		flg, err = c.bin.SearchResolve(nil, pod.Big(), ind)
 		if err != nil {
 			return false, tracer.Mask(err)
 		}
@@ -250,7 +264,7 @@ func (c *ClaimsV050) SearchResults(pod objectid.ID) (bool, bool, bool, error) {
 	var sid bool
 	var fin bool
 	{
-		_, val, sid, fin, err = c.bin.SearchResults(nil, big.NewInt(pod.Int()))
+		_, val, sid, fin, err = c.bin.SearchResults(nil, pod.Big())
 		if err != nil {
 			return false, false, false, tracer.Mask(err)
 		}
@@ -264,7 +278,7 @@ func (c *ClaimsV050) SearchSamples(pod objectid.ID, lef *big.Int, rig *big.Int) 
 
 	var sam []uint8
 	{
-		sam, err = c.bin.SearchSamples(nil, big.NewInt(pod.Int()), lef, rig)
+		sam, err = c.bin.SearchSamples(nil, pod.Big(), lef, rig)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -278,7 +292,7 @@ func (c *ClaimsV050) SearchStakers(pod objectid.ID, lef *big.Int, rig *big.Int) 
 
 	var sta []common.Address
 	{
-		sta, err = c.bin.SearchStakers(nil, big.NewInt(pod.Int()), lef, rig)
+		sta, err = c.bin.SearchStakers(nil, pod.Big(), lef, rig)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -292,7 +306,7 @@ func (c *ClaimsV050) SearchVoters(pod objectid.ID, lef *big.Int, rig *big.Int) (
 
 	var vot []common.Address
 	{
-		vot, err = c.bin.SearchVoters(nil, big.NewInt(pod.Int()), lef, rig)
+		vot, err = c.bin.SearchVoters(nil, pod.Big(), lef, rig)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -306,7 +320,7 @@ func (c *ClaimsV050) UpdateBalance(pod objectid.ID, max uint64) (*types.Transact
 
 	var txn *types.Transaction
 	{
-		txn, err = c.bin.UpdateBalance(nil, big.NewInt(pod.Int()), big.NewInt(int64(max)))
+		txn, err = c.bin.UpdateBalance(nil, pod.Big(), big.NewInt(int64(max)))
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}

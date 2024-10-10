@@ -31,9 +31,6 @@ const (
 	// provided task will be revoked. Therefore defining maxWait under 30 seconds
 	// gives us enough time to gracefully process the task given to us.
 	maxWait = 20 * time.Second
-
-	//
-	oneWeek = time.Hour * 24 * 7
 )
 
 func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
@@ -148,11 +145,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	// update user metrics.
 
 	{
-		err = h.emi.Reputation().CompetenceUpdate(bal.ID)
-		if err != nil {
-			return tracer.Mask(err)
-		}
-		err = h.emi.Reputation().IntegrityUpdate(bal.ID)
+		err = h.emi.User().CompetenceUpdate(bal.ID)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -248,43 +241,6 @@ func balTre(res objectid.ID, tre poststorage.Slicer) (*poststorage.Object, error
 	}
 
 	return nil, tracer.Maskf(runtime.ExecutionFailedError, "too many balances for parent %s", res)
-}
-
-func finTre(now time.Time, tre poststorage.Slicer) (*poststorage.Object, bool) {
-	var res poststorage.Slicer
-	{
-		res = tre.ObjectLifecycle(objectlabel.LifecycleResolve)
-	}
-
-	var lat *poststorage.Object
-	{
-		lat = res.LatestObject()
-	}
-
-	// If there is not a single resolve, then this tree cannot be considered final.
-	if lat == nil {
-		return nil, false
-	}
-
-	// Any given claim tree is considered final if we have the maximum amount of 3
-	// resolves at hand. This is because every originally proposed claim can be
-	// disputed a maximum amount of two times. Then there is one resolve for the
-	// original propose, and two resolves for every dispute after that.
-	if len(res) >= 3 && now.After(lat.Expiry) {
-		return lat, true
-	}
-
-	// Any given claim tree is considered final if the latest resolve is outside
-	// of its challenge window, which is its own expiry plus one additional week.
-	// There can be only a single resolve for any given claim tree. In any event,
-	// after this resolve moved out of its challenge window, no more disputes can
-	// be created, and the latest resolution at hand becomes definitive and
-	// binding.
-	if now.After(lat.Expiry.Add(oneWeek)) {
-		return lat, true
-	}
-
-	return nil, false
 }
 
 func ensInt(str string) (uint64, error) {

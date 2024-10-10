@@ -1,4 +1,4 @@
-package competenceupdatehandler
+package reputationsearchhandler
 
 import (
 	"fmt"

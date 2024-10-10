@@ -236,6 +236,20 @@ func (c *ClaimsV040) SearchIndices(pod objectid.ID) ([]*big.Int, error) {
 	return []*big.Int{zer, one, two, thr, fou, fiv, six, sev}, nil
 }
 
+func (c *ClaimsV040) SearchLatest(pod objectid.ID) (objectid.ID, error) {
+	var err error
+
+	var lat *big.Int
+	{
+		_, lat, _, err = c.bin.SearchLatest(nil, pod.Big())
+		if err != nil {
+			return "", tracer.Mask(err)
+		}
+	}
+
+	return objectid.ID(lat.String()), nil
+}
+
 func (c *ClaimsV040) SearchResolve(pod objectid.ID, ind uint8) (bool, error) {
 	var err error
 

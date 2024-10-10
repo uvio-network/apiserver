@@ -1,4 +1,4 @@
-package reputationemitter
+package useremitter
 
 import (
 	"github.com/uvio-network/apiserver/pkg/object/objectid"

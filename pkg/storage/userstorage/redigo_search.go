@@ -11,6 +11,12 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
+// TODO find the page of users sorted by highest reputation
+func (r *Redigo) SearchReputation(int, int) ([]*Object, error) {
+	// var err error
+	return nil, nil
+}
+
 func (r *Redigo) SearchSubject(sub string) (*Object, error) {
 	var err error
 

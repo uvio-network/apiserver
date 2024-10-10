@@ -4,6 +4,18 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
+// TODO add the given user IDs to the competence index
+func (r *Redigo) UpdateCompetence(inp []*Object) error {
+	// var err error
+	return nil
+}
+
+// TODO add the given user IDs to the integrity index
+func (r *Redigo) UpdateIntegrity(inp []*Object) error {
+	// var err error
+	return nil
+}
+
 func (r *Redigo) UpdateUser(inp []*Object) error {
 	var err error
 

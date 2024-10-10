@@ -7,7 +7,7 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Rescue) UserCreate(use objectid.ID) error {
+func (r *Rescue) CompetenceUpdate(bal objectid.ID) error {
 	var tas *task.Task
 	{
 		tas = &task.Task{
@@ -15,9 +15,9 @@ func (r *Rescue) UserCreate(use objectid.ID) error {
 				task.Cancel: "10",
 			},
 			Meta: &task.Meta{
-				objectlabel.UserObject: use.String(),
-				objectlabel.TaskOrigin: objectlabel.OriginExtern,
-				objectlabel.TaskWorker: "usercreatehandler",
+				objectlabel.ClaimObject: bal.String(),
+				objectlabel.TaskOrigin:  objectlabel.OriginIntern,
+				objectlabel.TaskWorker:  "competenceupdatehandler",
 			},
 		}
 	}

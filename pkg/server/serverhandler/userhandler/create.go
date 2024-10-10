@@ -41,7 +41,7 @@ func (h *Handler) Create(ctx context.Context, req *user.CreateI) (*user.CreateO,
 
 	var out *userstorage.Object
 	{
-		out, err = h.sto.User().Create(inp)
+		out, err = h.sto.User().CreateUser(inp)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}

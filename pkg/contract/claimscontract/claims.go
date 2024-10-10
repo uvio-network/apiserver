@@ -218,6 +218,28 @@ func (c *Claims) SearchIndicesDeprecated(pod objectid.ID) ([]*big.Int, error) {
 	return ind, nil
 }
 
+func (c *Claims) SearchLatest(pod objectid.ID) (objectid.ID, error) {
+	var err error
+
+	var lat objectid.ID
+
+	if c.v40 != nil {
+		lat, err = c.v40.SearchLatest(pod)
+		if err != nil {
+			return "", tracer.Mask(err)
+		}
+	}
+
+	if c.v50 != nil {
+		lat, err = c.v50.SearchLatest(pod)
+		if err != nil {
+			return "", tracer.Mask(err)
+		}
+	}
+
+	return lat, nil
+}
+
 func (c *Claims) SearchResolve(pod objectid.ID, ind uint8) (bool, error) {
 	var err error
 

@@ -8,7 +8,7 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Redigo) Create(inp *Object) (*Object, error) {
+func (r *Redigo) CreateUser(inp *Object) (*Object, error) {
 	var err error
 
 	{
