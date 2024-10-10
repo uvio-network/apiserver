@@ -2,6 +2,7 @@ package objectid
 
 import (
 	"fmt"
+	"math/big"
 	"math/rand"
 	"strconv"
 
@@ -16,6 +17,15 @@ func Random(num int64) ID {
 
 func System() ID {
 	return ID("1")
+}
+
+func (i ID) Big() *big.Int {
+	b, ok := big.NewInt(0).SetString(string(i), 10)
+	if !ok {
+		tracer.Panic(fmt.Errorf("cannot convert %s to *big.Int", i))
+	}
+
+	return b
 }
 
 func (i ID) Float() float64 {

@@ -1,4 +1,4 @@
-package reputationemitter
+package useremitter
 
 import (
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
@@ -7,7 +7,7 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Rescue) CompetenceUpdate(bal objectid.ID) error {
+func (r *Rescue) ReputationSearch(dis objectid.ID) error {
 	var tas *task.Task
 	{
 		tas = &task.Task{
@@ -15,9 +15,9 @@ func (r *Rescue) CompetenceUpdate(bal objectid.ID) error {
 				task.Cancel: "10",
 			},
 			Meta: &task.Meta{
-				objectlabel.ClaimObject: bal.String(),
+				objectlabel.ClaimObject: dis.String(),
 				objectlabel.TaskOrigin:  objectlabel.OriginIntern,
-				objectlabel.TaskWorker:  "competenceupdatehandler",
+				objectlabel.TaskWorker:  "reputationsearchhandler",
 			},
 		}
 	}

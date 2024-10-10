@@ -82,6 +82,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 	}
 
+	// TODO use the privileged indices in Task.Sync if available
 	var ind [8]*big.Int
 
 	if cla.Version() == "v0.4.0" {

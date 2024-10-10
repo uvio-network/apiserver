@@ -12,6 +12,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/balanceupdatehandler"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/claimexpiryhandler"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/integrityupdatehandler"
+	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/reputationsearchhandler"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/resolvecreatehandler"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/usercreatehandler"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/uvxminthandler"
@@ -78,6 +79,13 @@ func New(c Config) *Handler {
 
 		han = append(han, integrityupdatehandler.NewInternHandler(integrityupdatehandler.InternHandlerConfig{
 			Con: c.Con,
+			Log: c.Log,
+			Sto: c.Sto,
+		}))
+
+		han = append(han, reputationsearchhandler.NewInternHandler(reputationsearchhandler.InternHandlerConfig{
+			Con: c.Con,
+			Emi: c.Emi,
 			Log: c.Log,
 			Sto: c.Sto,
 		}))

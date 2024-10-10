@@ -111,6 +111,14 @@ type V_0_5_0 interface {
 	//
 	SearchIndices(pod objectid.ID) ([8]*big.Int, error)
 
+	// SearchLatest returns the claim ID of the propose or dispute that represents
+	// the last resolvable claim of any given claim tree.
+	//
+	//     inp[0] the propose or dispute of any given claim tree
+	//     out[0] the latest claim ID in the given tree
+	//
+	SearchLatest(pod objectid.ID) (objectid.ID, error)
+
 	// SearchResolve returns several boolean flags of claim states. With this
 	// method it is possible to figure out whether the given claim has already
 	// been fully settled onchain.

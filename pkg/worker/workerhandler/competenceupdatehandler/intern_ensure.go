@@ -160,6 +160,29 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 	}
 
+	// Once all user objects got updated for this batch, we update the competence
+	// index and ensure that the now least competent users get removed from the
+	// index. Note that in theory we can miss to update competence metrics for a
+	// few users of any given batch, if the updating of user objects above breaks
+	// unexpectedly in the middle of the loop. We rely on eventual consistency to
+	// get those "lost" users updated once another claim is being resolved in
+	// which those "lost" users participated in as well. The aspect of eventual
+	// consistency is good enough for us now in the offchain setting because only
+	// high reputation users are processed here to begin with. And those high
+	// reputation users do either have a high reputation already, or will gain it
+	// eventually anyway. In this particular case we prefer the benefit of
+	// updating Redis only once per batch instead of per user in the loop above.
+	{
+		err = h.sto.User().CreateCompetence(useLis(use))
+		if err != nil {
+			return tracer.Mask(err)
+		}
+		err = h.sto.User().DeleteCompetence()
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
 	if end {
 		tas.Sync = nil
 	}
@@ -329,6 +352,16 @@ func updUse(i int, val bool, sid bool, sta []common.Address, his []*big.Int, use
 	}
 
 	return u
+}
+
+func useLis(use map[string]*userstorage.Object) []*userstorage.Object {
+	var lis []*userstorage.Object
+
+	for _, v := range use {
+		lis = append(lis, v)
+	}
+
+	return lis
 }
 
 func zerStr(str string) string {
