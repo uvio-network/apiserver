@@ -149,10 +149,6 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		if err != nil {
 			return tracer.Mask(err)
 		}
-		err = h.emi.User().IntegrityUpdate(bal.ID)
-		if err != nil {
-			return tracer.Mask(err)
-		}
 		// TODO emit event to notifiy users
 		// err = h.emi.Claim().NotificationCreate(bal.ID)
 		// if err != nil {

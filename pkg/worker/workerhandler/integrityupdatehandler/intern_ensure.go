@@ -184,18 +184,23 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	// eventually anyway. In this particular case we prefer the benefit of
 	// updating Redis only once per batch instead of per user in the loop above.
 	{
-		err = h.sto.User().CreateIntegrity(useLis(use))
-		if err != nil {
-			return tracer.Mask(err)
-		}
-		err = h.sto.User().DeleteIntegrity()
+		err = h.sto.User().UpdateIntegrity(useLis(use))
 		if err != nil {
 			return tracer.Mask(err)
 		}
 	}
 
 	if end {
-		tas.Sync = nil
+		{
+			err = h.sto.User().DeleteIntegrity()
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
+
+		{
+			tas.Sync = nil
+		}
 	}
 
 	return nil

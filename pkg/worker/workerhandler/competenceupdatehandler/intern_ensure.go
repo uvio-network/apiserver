@@ -22,8 +22,9 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	var err error
 
 	var pod *poststorage.Object
+	var bal *poststorage.Object
 	{
-		pod, err = h.searchClaims(tas)
+		pod, bal, err = h.searchClaims(tas)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -173,24 +174,36 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	// eventually anyway. In this particular case we prefer the benefit of
 	// updating Redis only once per batch instead of per user in the loop above.
 	{
-		err = h.sto.User().CreateCompetence(useLis(use))
-		if err != nil {
-			return tracer.Mask(err)
-		}
-		err = h.sto.User().DeleteCompetence()
+		err = h.sto.User().UpdateCompetence(useLis(use))
 		if err != nil {
 			return tracer.Mask(err)
 		}
 	}
 
 	if end {
-		tas.Sync = nil
+		{
+			err = h.sto.User().DeleteCompetence()
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
+
+		{
+			err = h.emi.User().IntegrityUpdate(bal.ID)
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
+
+		{
+			tas.Sync = nil
+		}
 	}
 
 	return nil
 }
 
-func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, error) {
+func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *poststorage.Object, error) {
 	var err error
 
 	// The claim ID obtained here is the ID of the balance that finalized when the
@@ -204,12 +217,12 @@ func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, error
 	{
 		pos, err = h.sto.Post().SearchPost([]objectid.ID{cla})
 		if err != nil {
-			return nil, tracer.Mask(err)
+			return nil, nil, tracer.Mask(err)
 		}
 	}
 
 	if len(pos) != 1 {
-		return nil, tracer.Maskf(runtime.ExecutionFailedError, "expected exactly one post object for ID %s", cla)
+		return nil, nil, tracer.Maskf(runtime.ExecutionFailedError, "expected exactly one post object for ID %s", cla)
 	}
 
 	// This is the claim with lifecycle phase balance that has been finalized.
@@ -222,7 +235,7 @@ func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, error
 	{
 		tre, err = h.sto.Post().SearchTree([]objectid.ID{bal.Tree})
 		if err != nil {
-			return nil, tracer.Mask(err)
+			return nil, nil, tracer.Mask(err)
 		}
 	}
 
@@ -233,7 +246,7 @@ func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, error
 	}
 
 	if res == nil {
-		return nil, tracer.Maskf(runtime.ExecutionFailedError, "expected exactly one resolve for ID %s", bal.Parent)
+		return nil, nil, tracer.Maskf(runtime.ExecutionFailedError, "expected exactly one resolve for ID %s", bal.Parent)
 	}
 
 	// This claim here is either a propose or a dispute in first or second
@@ -245,10 +258,10 @@ func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, error
 	}
 
 	if pod == nil {
-		return nil, tracer.Maskf(runtime.ExecutionFailedError, "expected exactly one propose for ID %s", res.Parent)
+		return nil, nil, tracer.Maskf(runtime.ExecutionFailedError, "expected exactly one propose for ID %s", res.Parent)
 	}
 
-	return pod, nil
+	return pod, bal, nil
 }
 
 func (h *InternHandler) searchUsers(sta []common.Address) (map[string]*userstorage.Object, error) {

@@ -3,21 +3,21 @@ package userstorage
 import "github.com/uvio-network/apiserver/pkg/object/objectid"
 
 type Interface interface {
-	// CreateCompetence adds the referenced IDs of the given user objects to the
+	// UpdateCompetence adds the referenced IDs of the given user objects to the
 	// reputation specific UserCompetence index. This form of indexing enables us
 	// to search for the users with the most competence on the Uvio platform.
 	//
 	//     @inp[0] the user objects to add to the UserCompetence index
 	//
-	CreateCompetence(inp []*Object) error
+	UpdateCompetence(inp []*Object) error
 
-	// CreateIntegrity adds the referenced IDs of the given user objects to the
+	// UpdateIntegrity adds the referenced IDs of the given user objects to the
 	// reputation specific UserIntegrity index. This form of indexing enables us
 	// to search for the users with the most integrity on the Uvio platform.
 	//
 	//     @inp[0] the user objects to add to the UserIntegrity index
 	//
-	CreateIntegrity(inp []*Object) error
+	UpdateIntegrity(inp []*Object) error
 
 	// CreateUser persists a new user object given the provided subject claim, if
 	// none does exist already. Create is therefore idempotent and yields the same
