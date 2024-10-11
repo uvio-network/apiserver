@@ -5,13 +5,7 @@ import (
 )
 
 // TODO add the given user IDs to the competence index
-func (r *Redigo) UpdateCompetence(inp []*Object) error {
-	// var err error
-	return nil
-}
-
-// TODO add the given user IDs to the integrity index
-func (r *Redigo) UpdateIntegrity(inp []*Object) error {
+func (r *Redigo) UpdateReputation(inp []*Object) error {
 	// var err error
 	return nil
 }
