@@ -11,10 +11,36 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-// TODO find the page of users sorted by highest reputation
-func (r *Redigo) SearchReputation(int, int) ([]*Object, error) {
-	// var err error
-	return nil, nil
+func (r *Redigo) SearchReputation(beg int, end int) ([]*Object, error) {
+	var err error
+
+	// val will result in a list of all user IDs within the given pagination
+	// range, if any.
+	var val []string
+	{
+		val, err = r.red.Sorted().Search().Order(storageformat.UserReputation, -(end + 1), -(beg + 1))
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	// There might not be any user IDs, so we do not proceed, but instead return
+	// nothing.
+	if len(val) == 0 {
+		return nil, nil
+	}
+
+	var out []*Object
+	{
+		lis, err := r.SearchUser(objectid.IDs(val))
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+
+		out = append(out, lis...)
+	}
+
+	return out, nil
 }
 
 func (r *Redigo) SearchSubject(sub string) (*Object, error) {
