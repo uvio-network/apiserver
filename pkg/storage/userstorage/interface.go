@@ -12,13 +12,9 @@ type Interface interface {
 	//
 	CreateUser(*Object) (*Object, error)
 
-	// DeleteCompetence removes the lowest integrity users from the limited
-	// integrity index.
-	DeleteCompetence() error
-
-	// DeleteIntegrity removes the lowest integrity users from the limited
-	// integrity index.
-	DeleteIntegrity() error
+	// DeleteReputation removes the lowest reputation users from the limited
+	// reputation index.
+	DeleteReputation() error
 
 	// SearchReputation returns the user objects within the given pagination range in
 	// reversed order of user reputation scores. Given the indexed users [A B C D E],
@@ -47,21 +43,14 @@ type Interface interface {
 	//
 	SearchUser([]objectid.ID) ([]*Object, error)
 
-	// UpdateCompetence adds the referenced IDs of the given user objects to the
-	// reputation specific UserCompetence index. This form of indexing enables us
-	// to search for the users with the most competence on the Uvio platform.
+	// UpdateReputation ensures the referenced IDs of the given user objects are
+	// properly reflected in the reputation specific UserReputation index. This
+	// form of indexing enables us to search for the users with the highest
+	// reputation on the Uvio platform.
 	//
-	//     @inp[0] the user objects to add to the UserCompetence index
+	//     @inp[0] the user objects to add to the UserReputation index
 	//
-	UpdateCompetence(inp []*Object) error
-
-	// UpdateIntegrity adds the referenced IDs of the given user objects to the
-	// reputation specific UserIntegrity index. This form of indexing enables us
-	// to search for the users with the most integrity on the Uvio platform.
-	//
-	//     @inp[0] the user objects to add to the UserIntegrity index
-	//
-	UpdateIntegrity(inp []*Object) error
+	UpdateReputation(inp []*Object) error
 
 	// UpdateUser modifies the given user objects in the underlying storage.
 	//

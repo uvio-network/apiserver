@@ -161,20 +161,21 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 	}
 
-	// Once all user objects got updated for this batch, we update the competence
-	// index and ensure that the now least competent users get removed from the
-	// index. Note that in theory we can miss to update competence metrics for a
-	// few users of any given batch, if the updating of user objects above breaks
-	// unexpectedly in the middle of the loop. We rely on eventual consistency to
-	// get those "lost" users updated once another claim is being resolved in
-	// which those "lost" users participated in as well. The aspect of eventual
-	// consistency is good enough for us now in the offchain setting because only
-	// high reputation users are processed here to begin with. And those high
-	// reputation users do either have a high reputation already, or will gain it
-	// eventually anyway. In this particular case we prefer the benefit of
-	// updating Redis only once per batch instead of per user in the loop above.
+	// Once all user objects got updated for this batch, we update the reputation
+	// index and ensure that the now lowest reputation users get removed from the
+	// index at the end of processing all relevant batches for this cycle. Note
+	// that in theory we can miss to update reputation metrics for a few users of
+	// any given batch, if the updating of user objects above breaks unexpectedly
+	// in the middle of the loop. We rely on eventual consistency to get those
+	// "lost" users updated once another claim is being resolved in which those
+	// "lost" users participated in as well. The aspect of eventual consistency is
+	// good enough for us now in the offchain setting because only high reputation
+	// users are processed here to begin with. And those high reputation users do
+	// either have a high reputation already, or will gain it eventually anyway.
+	// In this particular case we prefer the benefit of updating Redis only once
+	// per batch instead of per user in the loop above.
 	{
-		err = h.sto.User().UpdateCompetence(useLis(use))
+		err = h.sto.User().UpdateReputation(useLis(use))
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -182,7 +183,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 
 	if end {
 		{
-			err = h.sto.User().DeleteCompetence()
+			err = h.sto.User().DeleteReputation()
 			if err != nil {
 				return tracer.Mask(err)
 			}
