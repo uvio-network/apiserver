@@ -88,6 +88,15 @@ const (
 	//
 	PostOwnerComment = "post/kind/comment/owner/%s/parent/%s"
 
+	// UserReputation is used to store the user IDs with the highest reputation
+	// ranks on the platform. The amount of users tracked here may be limited.
+	//
+	//     symbol key               user IDs
+	//                        ->
+	//     user/reputation          3456,5678
+	//
+	UserReputation = "user/reputation"
+
 	// UserSubject is used to store the user specific mappings between external
 	// and internal identity representations. An external representation might be
 	// an OAuth subject claim provided with an access token when authenticating

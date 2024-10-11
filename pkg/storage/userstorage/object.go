@@ -37,7 +37,35 @@ type Object struct {
 	//     [3] the number of times this user has been dishonest
 	//     [4] the number of times this user has denied to vote
 	//
-	Summary []int64 `json:"summary,omitempty"`
+	Summary []float64 `json:"summary,omitempty"`
+}
+
+func (o *Object) Competence() float64 {
+	var rig float64
+	var wro float64
+	{
+		rig = o.Summary[Right]
+		wro = o.Summary[Wrong]
+	}
+
+	return rig / (rig + wro)
+}
+
+func (o *Object) Integrity() float64 {
+	var hon float64
+	var dis float64
+	var abs float64
+	{
+		hon = o.Summary[Honest]
+		dis = o.Summary[Dishonest]
+		abs = o.Summary[Abstained] * 0.5
+	}
+
+	return hon / (hon + dis + abs)
+}
+
+func (o *Object) Reputation() float64 {
+	return o.Competence() * o.Integrity()
 }
 
 func (o *Object) Verify() error {

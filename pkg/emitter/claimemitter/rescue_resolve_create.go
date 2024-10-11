@@ -1,6 +1,7 @@
 package claimemitter
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/uvio-network/apiserver/pkg/object/objectid"
@@ -9,7 +10,7 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Rescue) ResolveCreate(blc uint64, pod objectid.ID) error {
+func (r *Rescue) ResolveCreate(blc uint64, pod objectid.ID, ind ...string) error {
 	var tas *task.Task
 	{
 		tas = &task.Task{
@@ -22,6 +23,12 @@ func (r *Rescue) ResolveCreate(blc uint64, pod objectid.ID) error {
 				objectlabel.TaskOrigin:  objectlabel.OriginIntern,
 				objectlabel.TaskWorker:  "resolvecreatehandler",
 			},
+		}
+	}
+
+	for i, x := range ind {
+		if x != "" {
+			tas.Meta.Set(fmt.Sprintf("%s-%d", objectlabel.VoteIndex, i), x)
 		}
 	}
 
