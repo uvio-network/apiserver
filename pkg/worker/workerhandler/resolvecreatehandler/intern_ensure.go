@@ -1,6 +1,7 @@
 package resolvecreatehandler
 
 import (
+	"fmt"
 	"math/big"
 	"strconv"
 	"time"
@@ -103,8 +104,18 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 
 	var hsh common.Hash
 	if !exi {
+		// Use the privileged voter indices given to us, if any exist in our task.
 		var sam []*big.Int
 		{
+			sam, err = prvVot(tas)
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
+
+		// Generate a random set of voter indices if no privileged voters have been
+		// defined.
+		if len(sam) == 0 {
 			sam = sample.BigInt(h.sam.Random(ind[0].Uint64(), ind[7].Uint64()))
 		}
 
@@ -291,6 +302,15 @@ func resTre(pod objectid.ID, tre poststorage.Slicer) (*poststorage.Object, error
 	return nil, tracer.Maskf(runtime.ExecutionFailedError, "too many resolves for parent %s", pod)
 }
 
+func ensBig(str string) (*big.Int, error) {
+	val, ok := new(big.Int).SetString(zerStr(str), 10)
+	if !ok {
+		return nil, tracer.Maskf(runtime.ExecutionFailedError, "cannot convert %s to *big.Int", str)
+	}
+
+	return val, nil
+}
+
 func ensInt(str string) (uint64, error) {
 	num, err := strconv.Atoi(zerStr(str))
 	if err != nil {
@@ -298,6 +318,29 @@ func ensInt(str string) (uint64, error) {
 	}
 
 	return uint64(num), nil
+}
+
+func prvVot(tas *task.Task) ([]*big.Int, error) {
+	var err error
+
+	var ind string
+	{
+		ind = tas.Meta.Get(fmt.Sprintf("%s-%d", objectlabel.VoteIndex, 0))
+	}
+
+	if ind == "" {
+		return nil, nil
+	}
+
+	var prv *big.Int
+	{
+		prv, err = ensBig(ind)
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	return []*big.Int{prv}, nil
 }
 
 func zerStr(str string) string {
