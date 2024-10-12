@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/uvio-network/apiserver/pkg/object/objectfield"
-	"github.com/uvio-network/apiserver/pkg/object/objectid"
+	"github.com/xh3b4sd/objectid"
 	"github.com/xh3b4sd/tracer"
 )
 

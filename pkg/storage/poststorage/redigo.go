@@ -5,9 +5,9 @@ import (
 	"fmt"
 
 	"github.com/uvio-network/apiserver/pkg/format/storageformat"
-	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/xh3b4sd/logger"
+	"github.com/xh3b4sd/objectid"
 	"github.com/xh3b4sd/redigo"
 	"github.com/xh3b4sd/tracer"
 )

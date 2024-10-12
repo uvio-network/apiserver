@@ -1,6 +1,6 @@
 package useremitter
 
-import "github.com/uvio-network/apiserver/pkg/object/objectid"
+import "github.com/xh3b4sd/objectid"
 
 type Interface interface {
 	// CompetenceUpdate emits an event that intends to trigger the update of the

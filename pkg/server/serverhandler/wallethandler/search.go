@@ -5,11 +5,11 @@ import (
 	"strconv"
 
 	"github.com/uvio-network/apigocode/pkg/wallet"
-	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/server/context/userid"
 	"github.com/uvio-network/apiserver/pkg/server/converter"
 	"github.com/uvio-network/apiserver/pkg/server/limiter"
 	"github.com/uvio-network/apiserver/pkg/storage/walletstorage"
+	"github.com/xh3b4sd/objectid"
 	"github.com/xh3b4sd/tracer"
 )
 

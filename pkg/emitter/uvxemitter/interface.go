@@ -1,6 +1,6 @@
 package uvxemitter
 
-import "github.com/uvio-network/apiserver/pkg/object/objectid"
+import "github.com/xh3b4sd/objectid"
 
 type Interface interface {
 	// UvxMint emits an event that intends to trigger the minting of UVX tokens

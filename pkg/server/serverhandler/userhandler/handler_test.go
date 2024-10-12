@@ -6,10 +6,10 @@ import (
 	fuzz "github.com/google/gofuzz"
 	"github.com/uvio-network/apigocode/pkg/user"
 	"github.com/uvio-network/apiserver/pkg/emitter"
-	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/server/context/userid"
 	"github.com/uvio-network/apiserver/pkg/storage"
 	"github.com/xh3b4sd/logger"
+	"github.com/xh3b4sd/objectid"
 )
 
 func tesCtx() context.Context {
