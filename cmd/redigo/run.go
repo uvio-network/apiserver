@@ -4,12 +4,12 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/uvio-network/apiserver/pkg/server/converter"
 	"github.com/uvio-network/apiserver/pkg/storage"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
 	"github.com/xh3b4sd/logger"
+	"github.com/xh3b4sd/objectid"
 	"github.com/xh3b4sd/redigo"
 	"github.com/xh3b4sd/tracer"
 )

@@ -3,7 +3,7 @@ package userid
 import (
 	"context"
 
-	"github.com/uvio-network/apiserver/pkg/object/objectid"
+	"github.com/xh3b4sd/objectid"
 )
 
 type t string

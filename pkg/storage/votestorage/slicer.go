@@ -1,6 +1,6 @@
 package votestorage
 
-import "github.com/uvio-network/apiserver/pkg/object/objectid"
+import "github.com/xh3b4sd/objectid"
 
 type Slicer []*Object
 

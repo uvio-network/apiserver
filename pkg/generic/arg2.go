@@ -3,7 +3,7 @@ package generic
 import (
 	"fmt"
 
-	"github.com/uvio-network/apiserver/pkg/object/objectid"
+	"github.com/xh3b4sd/objectid"
 )
 
 func Arg2[T string | objectid.ID](str string, one []T, two []T) []string {

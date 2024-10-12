@@ -1,6 +1,6 @@
 package generic
 
-import "github.com/uvio-network/apiserver/pkg/object/objectid"
+import "github.com/xh3b4sd/objectid"
 
 func For[T string | objectid.ID](max int, fnc func(int) T) []T {
 	var key []T

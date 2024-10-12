@@ -1,8 +1,8 @@
 package poststorage
 
 import (
-	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
+	"github.com/xh3b4sd/objectid"
 )
 
 type Interface interface {

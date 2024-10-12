@@ -6,9 +6,9 @@ import (
 	"testing"
 
 	"github.com/uvio-network/apiserver/pkg/object/objectfield"
-	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
+	"github.com/xh3b4sd/objectid"
 )
 
 func Test_Worker_WorkerHandler_BalanceUpdateHandler_InternEnsure_balTre(t *testing.T) {

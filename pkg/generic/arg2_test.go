@@ -5,7 +5,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/uvio-network/apiserver/pkg/object/objectid"
+	"github.com/xh3b4sd/objectid"
 )
 
 func Test_ObjectID_Arg2_string(t *testing.T) {

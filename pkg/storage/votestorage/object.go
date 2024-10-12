@@ -5,8 +5,8 @@ import (
 
 	"github.com/uvio-network/apiserver/pkg/format/hexencoding"
 	"github.com/uvio-network/apiserver/pkg/object/objectfield"
-	"github.com/uvio-network/apiserver/pkg/object/objectid"
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
+	"github.com/xh3b4sd/objectid"
 	"github.com/xh3b4sd/tracer"
 )
 
