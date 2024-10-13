@@ -239,7 +239,7 @@ func (w *Worker) search() {
 			err = x.Ensure(tas, bud)
 			if err != nil {
 				w.lerror(tracer.Mask(err))
-			} else if !bud.Break() || tas.Pag() {
+			} else if !bud.Break() || tas.Pag() || (tas.Cron != nil && tas.Cron.Exi().Adefer()) {
 				cur++
 			}
 		}
@@ -259,7 +259,22 @@ func (w *Worker) search() {
 			)
 		}
 
-		// We have to account for the worker budget when processing a task.  Calling
+		// We want to requeue a task that carries a deferral statement, whether the
+		// task execution failed or not. So if the given task carries a deferral
+		// statement that indicates to continue processing at a later point in time,
+		// then the rescue engine will expire the task immediately and update the
+		// task's next tick so that another worker can pick up the task again after
+		// the desired hold off period.
+		if tas.Cron != nil && tas.Cron.Exi().Adefer() {
+			w.log.Log(
+				logCtx(tas),
+				"level", "info",
+				"message", "task being requeued",
+				"@defer", tas.Cron.Get().Adefer(),
+			)
+		}
+
+		// We have to account for the worker budget when processing a task. Calling
 		// Handler.Ensure may use up the entire budget and it may break through the
 		// budget or it may not. Breaking through the budget means that there is
 		// still work left to do. And so not breaking the worker budget tells us

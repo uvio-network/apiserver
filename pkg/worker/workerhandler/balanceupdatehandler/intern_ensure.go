@@ -1,6 +1,7 @@
 package balanceupdatehandler
 
 import (
+	"context"
 	"strconv"
 	"time"
 
@@ -85,7 +86,26 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		{
 			txn, err = cla.UpdateBalance(pod.ID, maxUser)
 			if err != nil {
-				return tracer.Mask(err)
+				if tas.Cron == nil {
+					tas.Cron = &task.Cron{}
+				}
+
+				// Ensure the failed task is being retried after some backoff period. If
+				// we have retried this task already, then we also need to make sure to
+				// remove the tick+1 label in order to get another try.
+				{
+					tas.Cron.Set().Adefer("1 minute")
+					tas.Cron.Prg().TickP1()
+				}
+
+				h.log.Log(
+					context.Background(),
+					"level", "warning",
+					"message", err.Error(),
+					"stack", tracer.Stack(err),
+				)
+
+				return nil
 			}
 		}
 
