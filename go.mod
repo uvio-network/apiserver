@@ -20,9 +20,9 @@ require (
 	github.com/xh3b4sd/breakr v0.1.0
 	github.com/xh3b4sd/locker v0.1.0
 	github.com/xh3b4sd/logger v0.8.1
-	github.com/xh3b4sd/objectid v0.1.0
+	github.com/xh3b4sd/objectid v0.2.0
 	github.com/xh3b4sd/redigo v0.38.0
-	github.com/xh3b4sd/rescue v0.18.0
+	github.com/xh3b4sd/rescue v0.19.0
 	github.com/xh3b4sd/tracer v0.11.1
 	golang.org/x/mod v0.21.0
 	golang.org/x/text v0.19.0
@@ -67,7 +67,7 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/prometheus/client_golang v1.20.4 // indirect
 	github.com/prometheus/client_model v0.6.1 // indirect
-	github.com/prometheus/common v0.59.1 // indirect
+	github.com/prometheus/common v0.60.0 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
@@ -78,8 +78,8 @@ require (
 	golang.org/x/crypto v0.27.0 // indirect
 	golang.org/x/exp v0.0.0-20240909161429-701f63a606c0 // indirect
 	golang.org/x/sync v0.8.0 // indirect
-	golang.org/x/sys v0.25.0 // indirect
-	google.golang.org/protobuf v1.34.2 // indirect
+	golang.org/x/sys v0.26.0 // indirect
+	google.golang.org/protobuf v1.35.1 // indirect
 	gopkg.in/go-jose/go-jose.v2 v2.6.3 // indirect
 	rsc.io/tmplfunc v0.0.3 // indirect
 )
