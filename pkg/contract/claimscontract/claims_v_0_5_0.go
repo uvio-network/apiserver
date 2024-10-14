@@ -326,6 +326,7 @@ func (c *ClaimsV050) writerOption() *bind.TransactOpts {
 		// effective gas usage.
 		//
 		//     https://sepolia.basescan.org/tx/0x89688b4baf0efa24ff3fa56b4b01aab04ce303934f0747e38c06adc9c1bea099
+		//     https://sepolia.basescan.org/tx/0x70c8f21c45917b7887a8b3dfab1ecaf8d6b6aba22725d8af3787c2d8669642d1
 		//
 		// Below is a dune dashboard to show current and historical gas metrics on
 		// the Base L2.

@@ -38,7 +38,7 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 	// have been facilitated by Claims contracts of at least version "v0.5.0".
 	// Contracts equal to that version or greater than that version yield 0 or +1
 	// respectively when calling semver.Compare.
-	if semver.Compare("v0.5.0", cla.Version()) == -1 {
+	if semver.Compare(cla.Version(), "v0.5.0") == -1 {
 		return nil
 	}
 
