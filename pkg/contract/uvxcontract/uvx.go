@@ -90,37 +90,9 @@ func (u *UVX) Mint(dst string, bal int64) (*types.Transaction, error) {
 		return nil, tracer.Mask(BalanceConversionError)
 	}
 
-	var opt *bind.TransactOpts
-	{
-		opt = &bind.TransactOpts{
-			From: u.opt.From,
-
-			// Here we are trying to set some reasonable gas limits, specifically for
-			// the EIP-1559 enabled minting transaction.
-			//
-			//     GasFeeCap is the max gas fee we are willing to pay
-			//     GasTipCap is the max priority fee we are willing to pay
-			//
-			// Below is a testnet transaction providing some real world insight into
-			// effective gas usage.
-			//
-			//     https://sepolia.basescan.org/tx/0x036cf41f0e0187848c0365d91eb368c8ffd589f2794a34caba5cd2609ca8f00a
-			//
-			// Below is a dune dashboard to show current and historical gas metrics on
-			// the Base L2.
-			//
-			//     https://dune.com/payton/base-l2-gas-price-tracker
-			//
-			GasFeeCap: big.NewInt(600_000_000), // 0.60 gwei
-			GasTipCap: big.NewInt(30_000_000),  // 0.03 gwei
-
-			Signer: u.opt.Signer,
-		}
-	}
-
 	var txn *types.Transaction
 	{
-		txn, err = u.bin.Mint(opt, common.HexToAddress(dst), addDec(bal))
+		txn, err = u.bin.Mint(u.writerOption(), common.HexToAddress(dst), addDec(bal))
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -137,6 +109,33 @@ func (u *UVX) Mint(dst string, bal int64) (*types.Transaction, error) {
 	)
 
 	return txn, nil
+}
+
+func (u *UVX) writerOption() *bind.TransactOpts {
+	return &bind.TransactOpts{
+		From: u.opt.From,
+
+		// Here we are trying to set some reasonable gas limits, specifically for
+		// the EIP-1559 enabled minting transaction.
+		//
+		//     GasFeeCap is the max gas fee we are willing to pay
+		//     GasTipCap is the max priority fee we are willing to pay
+		//
+		// Below is a testnet transaction providing some real world insight into
+		// effective gas usage.
+		//
+		//     https://sepolia.basescan.org/tx/0x036cf41f0e0187848c0365d91eb368c8ffd589f2794a34caba5cd2609ca8f00a
+		//
+		// Below is a dune dashboard to show current and historical gas metrics on
+		// the Base L2.
+		//
+		//     https://dune.com/payton/base-l2-gas-price-tracker
+		//
+		GasFeeCap: big.NewInt(600_000_000), // 0.60 gwei
+		GasTipCap: big.NewInt(30_000_000),  // 0.03 gwei
+
+		Signer: u.opt.Signer,
+	}
 }
 
 // addDec returns the given balance with 18 additional decimals. 18 decimals are
