@@ -104,37 +104,9 @@ func (c *ClaimsV040) BalanceUpdated(blc uint64, pod objectid.ID) ([]common.Hash,
 func (c *ClaimsV040) CreateResolve(pod objectid.ID, ind []*big.Int, exp time.Time) (*types.Transaction, error) {
 	var err error
 
-	var opt *bind.TransactOpts
-	{
-		opt = &bind.TransactOpts{
-			From: c.opt.From,
-
-			// Here we are trying to set some reasonable gas limits, specifically for
-			// the EIP-1559 enabled minting transaction.
-			//
-			//     GasFeeCap is the max gas fee we are willing to pay
-			//     GasTipCap is the max priority fee we are willing to pay
-			//
-			// Below is a testnet transaction providing some real world insight into
-			// effective gas usage.
-			//
-			//     https://sepolia.basescan.org/tx/0x89688b4baf0efa24ff3fa56b4b01aab04ce303934f0747e38c06adc9c1bea099
-			//
-			// Below is a dune dashboard to show current and historical gas metrics on
-			// the Base L2.
-			//
-			//     https://dune.com/payton/base-l2-gas-price-tracker
-			//
-			GasFeeCap: big.NewInt(600_000_000), // 0.60 gwei
-			GasTipCap: big.NewInt(30_000_000),  // 0.03 gwei
-
-			Signer: c.opt.Signer,
-		}
-	}
-
 	var txn *types.Transaction
 	{
-		txn, err = c.bin.CreateResolve(opt, big.NewInt(pod.Int()), ind, uint64(exp.Unix()))
+		txn, err = c.bin.CreateResolve(c.writerOption(), big.NewInt(pod.Int()), ind, uint64(exp.Unix()))
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -312,7 +284,7 @@ func (c *ClaimsV040) UpdateBalance(pod objectid.ID, max uint64) (*types.Transact
 
 	var txn *types.Transaction
 	{
-		txn, err = c.bin.UpdateBalance(nil, big.NewInt(pod.Int()), big.NewInt(int64(max)))
+		txn, err = c.bin.UpdateBalance(c.writerOption(), big.NewInt(pod.Int()), big.NewInt(int64(max)))
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -330,4 +302,31 @@ func (c *ClaimsV040) UpdateBalance(pod objectid.ID, max uint64) (*types.Transact
 	)
 
 	return txn, nil
+}
+
+func (c *ClaimsV040) writerOption() *bind.TransactOpts {
+	return &bind.TransactOpts{
+		From: c.opt.From,
+
+		// Here we are trying to set some reasonable gas limits, specifically for
+		// the EIP-1559 enabled minting transaction.
+		//
+		//     GasFeeCap is the max gas fee we are willing to pay
+		//     GasTipCap is the max priority fee we are willing to pay
+		//
+		// Below is a testnet transaction providing some real world insight into
+		// effective gas usage.
+		//
+		//     https://sepolia.basescan.org/tx/0x89688b4baf0efa24ff3fa56b4b01aab04ce303934f0747e38c06adc9c1bea099
+		//
+		// Below is a dune dashboard to show current and historical gas metrics on
+		// the Base L2.
+		//
+		//     https://dune.com/payton/base-l2-gas-price-tracker
+		//
+		GasFeeCap: big.NewInt(600_000_000), // 0.60 gwei
+		GasTipCap: big.NewInt(30_000_000),  // 0.03 gwei
+
+		Signer: c.opt.Signer,
+	}
 }
