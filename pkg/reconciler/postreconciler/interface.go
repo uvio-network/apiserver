@@ -48,8 +48,13 @@ type Interface interface {
 	//
 	//     inp[0] the post object of lifecycle phase "balance"
 	//     inp[1] the confirmed onchain transaction hashes to set
+	//     inp[2] the numerical post object summary
+	//     inp[2][0] 1 if the market resolution was valid, otherwise 0
+	//     inp[2][1] 1 if the side for settling the market was true, otherwise 0
+	//     inp[2][2] 1 if the entire claim tree is considered final, otherwise 0
+	//     inp[2][3] the amount of disputes in the given tree, 0, 1 or 2
 	//
-	UpdateBalance(*poststorage.Object, []common.Hash) error
+	UpdateBalance(*poststorage.Object, []common.Hash, []float64) error
 
 	// UpdateHash modifies the transaction hash of the claims as provided by the
 	// given post objects. Note that transaction hashes can only be updated once,
