@@ -324,8 +324,8 @@ func (c *ClaimsV040) writerOption() *bind.TransactOpts {
 		//
 		//     https://dune.com/payton/base-l2-gas-price-tracker
 		//
-		GasFeeCap: big.NewInt(600_000_000), // 0.60 gwei
-		GasTipCap: big.NewInt(30_000_000),  // 0.03 gwei
+		GasFeeCap: big.NewInt(2_000_000_000), // 2.00 gwei
+		GasTipCap: big.NewInt(50_000_000),    // 0.05 gwei
 
 		Signer: c.opt.Signer,
 	}
