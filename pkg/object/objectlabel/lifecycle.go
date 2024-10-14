@@ -4,6 +4,7 @@ type DesiredLifecycle string
 type InterimLifecycle string
 
 const (
+	LifecycleExpired InterimLifecycle = "expired"
 	LifecycleOnchain DesiredLifecycle = "onchain"
 	LifecyclePending InterimLifecycle = "pending"
 )
