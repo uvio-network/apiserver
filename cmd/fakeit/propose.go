@@ -74,7 +74,7 @@ func (r *run) createPropose(key jwk.Key, use *user.SearchO) (*post.SearchO, erro
 
 func (r *run) randomPropose() *post.CreateI {
 	var hsh string
-	if r.fak.Float64() > 0.2 {
+	if r.fak.Float64() > 0.3 {
 		hsh = r.fak.HexUint(256)
 	}
 
@@ -140,7 +140,7 @@ func (r *run) randomPropose() *post.CreateI {
 						Labels:    strings.Join(lab[:r.fak.Number(1, 4)], ","),
 						Lifecycle: string(objectlabel.LifecyclePropose),
 						Text:      fmt.Sprintf("# %s\n\n%s\n\n%s", tit, par, strings.Join(lis[:r.fak.Number(2, 5)], "\n")),
-						Token:     r.fak.RandomString([]string{"USDC", "UVX", "WETH"}),
+						Token:     r.fak.RandomString([]string{"UVX", "WETH"}),
 					},
 				},
 			},
