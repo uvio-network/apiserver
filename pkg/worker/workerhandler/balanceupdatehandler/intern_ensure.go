@@ -153,8 +153,26 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 			}
 		}
 
+		var num uint8
 		{
-			err = h.rec.Post().UpdateBalance(bal, hsh)
+			_, num, err = cla.SearchLatest(pod.ID)
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
+
+		var val bool
+		var sid bool
+		var fin bool
+		{
+			val, sid, fin, err = cla.SearchResults(pod.ID)
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
+
+		{
+			err = h.rec.Post().UpdateBalance(bal, hsh, balSum(val, sid, fin, num))
 			if err != nil {
 				return tracer.Mask(err)
 			}
@@ -239,6 +257,23 @@ func (h *InternHandler) searchClaims(tas *task.Task) (*poststorage.Object, *post
 	}
 
 	return pod, res, bal, nil
+}
+
+func balSum(val bool, sid bool, fin bool, num uint8) []float64 {
+	return []float64{
+		bolFlo(val),
+		bolFlo(sid),
+		bolFlo(fin),
+		float64(num),
+	}
+}
+
+func bolFlo(b bool) float64 {
+	if b {
+		return 1
+	}
+
+	return 0
 }
 
 func balTre(res objectid.ID, tre poststorage.Slicer) (*poststorage.Object, error) {

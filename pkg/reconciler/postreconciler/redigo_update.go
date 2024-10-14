@@ -38,11 +38,31 @@ func (r *Redigo) UpdateMeta(pos []*poststorage.Object, met []string) ([]*poststo
 	return pos, nil
 }
 
-func (r *Redigo) UpdateBalance(bal *poststorage.Object, hsh []common.Hash) error {
+func (r *Redigo) UpdateBalance(bal *poststorage.Object, hsh []common.Hash, sum []float64) error {
 	var err error
 
 	for _, x := range hsh {
 		bal.Lifecycle.Hash = append(bal.Lifecycle.Hash, x.Hex())
+	}
+
+	{
+		bal.Summary = sum
+	}
+
+	if sum[2] == 1 {
+		var dis string
+		if sum[3] == 0 {
+			dis = "without any disputes."
+		} else {
+			dis = fmt.Sprintf("after %d disputes.", int(sum[3]))
+		}
+
+		var res string
+		if sum[0] == 1 {
+			res = fmt.Sprintf(" The associated claim was found to be **%s** %s", txtTru(sum[1]), dis)
+		}
+
+		bal.Text = fmt.Sprintf("# Market Settlement\n\nThis market was finalized with %s resolution.%s", txtVal(sum[0]), res)
 	}
 
 	{
@@ -195,4 +215,20 @@ func resTxt(num int) string {
 	}
 
 	return fmt.Sprintf("# Market Resolution\n\n%d %s been randomly selected to verify events in the real world for the proposed claim below.", num, use)
+}
+
+func txtTru(f float64) string {
+	if f == 1 {
+		return "true"
+	}
+
+	return "false"
+}
+
+func txtVal(f float64) string {
+	if f == 1 {
+		return "a valid"
+	}
+
+	return "an invalid"
 }

@@ -116,8 +116,9 @@ type V_0_5_0 interface {
 	//
 	//     inp[0] the propose or dispute of any given claim tree
 	//     out[0] the latest claim ID in the given tree
+	//     out[1] the amount of disputes in the given tree
 	//
-	SearchLatest(pod objectid.ID) (objectid.ID, error)
+	SearchLatest(pod objectid.ID) (objectid.ID, uint8, error)
 
 	// SearchResolve returns several boolean flags of claim states. With this
 	// method it is possible to figure out whether the given claim has already

@@ -65,6 +65,7 @@ func New(c Config) *Server {
 	// Add a simple version response for the runtime.
 	{
 		rtr.NewRoute().Methods("GET").Path("/version").HandlerFunc(func(wri http.ResponseWriter, req *http.Request) {
+			wri.Header().Set("Content-Type", "application/json")
 			wri.WriteHeader(http.StatusOK)
 			_, _ = wri.Write(linBrk(runtime.JSON()))
 		})
