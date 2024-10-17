@@ -24,6 +24,11 @@ var StakeLifecyclePendingError = &tracer.Error{
 	Desc: "The request expects all stakes to be confirmed onchain. A stake was found to exist already in pending state. Therefore the request failed.",
 }
 
+var StakeValueMinimumError = &tracer.Error{
+	Kind: "StakeValueMinimumError",
+	Desc: "The request expects the stake value to be above the claim's minimum balance required. The stakes value was found to be below the claim's minimum balance required. Therefore the request failed.",
+}
+
 var TruthLifecycleInvalidError = &tracer.Error{
 	Kind: "TruthLifecycleInvalidError",
 	Desc: "The request expects the lifecycle of the referenced claim to be one of [resolve]. The lifecycle of the referenced claim was not found to be one of those values. Therefore the request failed.",

@@ -55,6 +55,10 @@ func (r *run) createVotePoD(key jwk.Key, use *user.SearchO, cla *post.SearchO) (
 			}
 		}
 
+		{
+			updBal(cla.Object[0], inp)
+		}
+
 		for _, x := range out.Object {
 			ids = append(ids, x.Intern.Id)
 		}
@@ -196,7 +200,7 @@ func (r *run) randomVote(cla *post.SearchO_Object) *vote.CreateI {
 
 	var val string
 	if pod {
-		val = limStr(converter.FloatToString(r.fak.Float64Range(0.0001, 2.5)), 6)
+		val = limStr(converter.FloatToString(minBal(cla)+r.fak.Float64Range(0.0001, 2.5)), 6)
 	} else if res {
 		val = "1"
 	}
@@ -228,4 +232,40 @@ func limStr(str string, lim int) string {
 	}
 
 	return str
+}
+
+func minBal(cla *post.SearchO_Object) float64 {
+	var spl []string
+	{
+		spl = strings.Split(cla.Public.Summary, ",")
+	}
+
+	if len(spl) != 4 {
+		return 0
+	}
+
+	return converter.StringToFloat(spl[2])
+}
+
+func updBal(cla *post.SearchO_Object, vot *vote.CreateI) {
+	if vot.Object[0].Public.Kind == "truth" {
+		return
+	}
+
+	var spl []string
+	{
+		spl = strings.Split(cla.Public.Summary, ",")
+	}
+
+	if len(spl) != 4 {
+		return
+	}
+
+	{
+		spl[2] = vot.Object[0].Public.Value
+	}
+
+	{
+		cla.Public.Summary = strings.Join(spl, ",")
+	}
 }

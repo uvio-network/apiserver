@@ -7,6 +7,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
 	"github.com/uvio-network/apiserver/pkg/storage/votestorage"
+	"github.com/uvio-network/apiserver/pkg/summary"
 	"github.com/xh3b4sd/objectid"
 	"github.com/xh3b4sd/tracer"
 )
@@ -56,6 +57,13 @@ func (r *Redigo) CreateVote(inp []*votestorage.Object) ([]*votestorage.Object, e
 			// referenced claim object, e.g. you cannot stake on a resolve.
 			if inp[i].Kind == "stake" && !cla.Lifecycle.Is(objectlabel.LifecycleDispute, objectlabel.LifecyclePropose) {
 				return nil, tracer.Maskf(ClaimLifecycleInvalidError, "%s = %s", cla.ID, cla.Lifecycle.Data)
+			}
+
+			// Ensure votes can only be created if they comply with the claim's
+			// confirmed minimum balance required. The exception here are votes that
+			// define the minimum, which are the very first votes of every claim.
+			if inp[i].Kind == "stake" && cla.Summary[summary.Minimum] > 0 && inp[i].Value < cla.Summary[summary.Minimum] {
+				return nil, tracer.Maskf(StakeValueMinimumError, "%s (%f) < %s (%f)", inp[i].ID, inp[i].Value, cla.ID, cla.Summary[summary.Minimum])
 			}
 
 			// Votes of kind "truth" must comply with the lifecycle of their
