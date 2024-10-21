@@ -185,9 +185,14 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 		}
 	}
 
-	// As a final step return the entire trees of anything that we found above.
+	var all []objectid.ID
 	{
-		out, err = h.sto.Post().SearchTree(out.Tree())
+		all = out.Tree()
+	}
+
+	// As a final step return the entire trees of anything that we found above.
+	if len(all) != 0 {
+		out, err = h.sto.Post().SearchTree(all)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}

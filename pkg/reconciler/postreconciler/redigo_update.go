@@ -62,7 +62,7 @@ func (r *Redigo) UpdateBalance(bal *poststorage.Object, hsh []common.Hash, sum [
 			res = fmt.Sprintf(" The associated claim was found to be **%s** %s", txtTru(sum[1]), dis)
 		}
 
-		bal.Text = fmt.Sprintf("# Market Settlement\n\nThis market was finalized with %s resolution.%s", txtVal(sum[0]), res)
+		bal.Text = fmt.Sprintf("This market was finalized with %s resolution.%s", txtVal(sum[0]), res)
 	}
 
 	{
@@ -214,7 +214,7 @@ func resTxt(num int) string {
 		use = "users have"
 	}
 
-	return fmt.Sprintf("# Market Resolution\n\n%d %s been randomly selected to verify events in the real world for the proposed claim below.", num, use)
+	return fmt.Sprintf("%d %s been randomly selected to verify events in the real world for the proposed claim below.", num, use)
 }
 
 func txtTru(f float64) string {

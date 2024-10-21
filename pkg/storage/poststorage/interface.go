@@ -67,8 +67,9 @@ type Interface interface {
 	//
 	SearchLabel([][]string) ([]*Object, error)
 
-	// SearchLifecycle returns all the claims that have the specified lifecycle
-	// phases defined.
+	// SearchLifecycle returns all the claims that have the specified active
+	// lifecycle phases defined. In other words, claims that are of lifecycle
+	// phase propose, while being expired, will not be returned.
 	//
 	//     @inp[0] the lifecycle phases to search for
 	//     @out[0] the list of post objects having the specified lifecycle phases defined

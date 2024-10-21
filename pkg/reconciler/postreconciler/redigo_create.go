@@ -35,7 +35,7 @@ func (r *Redigo) CreateBalance(res *poststorage.Object) (*poststorage.Object, er
 			},
 			Owner:  objectid.System(),
 			Parent: res.ID,
-			Text:   "# Market Settlement\n\nThe process of updating user balances has begun and is waiting for onchain confirmation.",
+			Text:   "The process of updating user balances has begun and is waiting for onchain confirmation.",
 		}
 	}
 
@@ -280,7 +280,7 @@ func (r *Redigo) CreateResolve(pod *poststorage.Object, exp time.Time) (*poststo
 			},
 			Owner:  objectid.System(),
 			Parent: pod.ID,
-			Text:   "# Market Resolution\n\nThe random truth sampling process has begun and is waiting for onchain confirmation.",
+			Text:   "The random truth sampling process has begun and is waiting for onchain confirmation.",
 		}
 	}
 
