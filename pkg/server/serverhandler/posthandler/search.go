@@ -6,7 +6,6 @@ import (
 
 	"github.com/uvio-network/apigocode/pkg/post"
 	"github.com/uvio-network/apiserver/pkg/generic"
-	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/uvio-network/apiserver/pkg/server/context/userid"
 	"github.com/uvio-network/apiserver/pkg/server/converter"
@@ -85,29 +84,12 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 	//
 
 	if len(ids) != 0 {
-		var pos poststorage.Slicer
-		{
-			pos, err = h.sto.Post().SearchPost(ids)
-			if err != nil {
-				return nil, tracer.Mask(err)
-			}
-
-			out = append(out, pos...)
+		lis, err := h.sto.Post().SearchPost(ids)
+		if err != nil {
+			return nil, tracer.Mask(err)
 		}
 
-		var cla []objectid.ID
-		{
-			cla = poststorage.Slicer(pos).ObjectKind("claim").ID()
-		}
-
-		if len(cla) != 0 {
-			com, err := h.sto.Post().SearchComment(cla)
-			if err != nil {
-				return nil, tracer.Mask(err)
-			}
-
-			out = append(out, com...)
-		}
+		out = append(out, lis...)
 	}
 
 	//
@@ -203,43 +185,16 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 		}
 	}
 
-	// Search for all the parent claims referenced by comments that we have not
-	// yet fetched. This last step is done to ensure any comment does also return
-	// its referenced parent claim, even if a comment is commenting on a resolve,
-	// which in turn requires its parent propose to be present as well.
-
-	var par []objectid.ID
+	var all []objectid.ID
 	{
-		par = generic.Select(out.ID(), out.Parent())
+		all = out.Tree()
 	}
 
-	if len(par) != 0 {
-		lis, err := h.sto.Post().SearchPost(par)
+	// As a final step return the entire trees of anything that we found above.
+	if len(all) != 0 {
+		out, err = h.sto.Post().SearchTree(all)
 		if err != nil {
 			return nil, tracer.Mask(err)
-		}
-
-		{
-			out = append(out, lis...)
-		}
-
-		// Fetching all the missing parents of the resolves in second instance
-		// ensures that we are always able to render 3 contextual post objects
-		// together, e.g. comment -> resolve -> propose.
-		var res []objectid.ID
-		{
-			res = generic.Select(out.ID(), out.ObjectLifecycle(objectlabel.LifecycleResolve).Parent())
-		}
-
-		if len(res) != 0 {
-			sec, err := h.sto.Post().SearchPost(res)
-			if err != nil {
-				return nil, tracer.Mask(err)
-			}
-
-			{
-				out = append(out, sec...)
-			}
 		}
 	}
 

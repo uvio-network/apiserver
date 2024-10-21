@@ -22,9 +22,53 @@ func (s Slicer) ID() []objectid.ID {
 func (s Slicer) Parent() []objectid.ID {
 	var lis []objectid.ID
 
+	see := map[objectid.ID]struct{}{}
 	for _, x := range s {
-		if x.Parent != "" {
+		if x.Parent == "" {
+			continue
+		}
+
+		var exi bool
+		{
+			_, exi = see[x.Parent]
+		}
+
+		if exi {
+			continue
+		}
+
+		{
 			lis = append(lis, x.Parent)
+		}
+
+		{
+			see[x.Parent] = struct{}{}
+		}
+	}
+
+	return lis
+}
+
+func (s Slicer) Tree() []objectid.ID {
+	var lis []objectid.ID
+
+	see := map[objectid.ID]struct{}{}
+	for _, x := range s {
+		var exi bool
+		{
+			_, exi = see[x.Tree]
+		}
+
+		if exi {
+			continue
+		}
+
+		{
+			lis = append(lis, x.Tree)
+		}
+
+		{
+			see[x.Tree] = struct{}{}
 		}
 	}
 

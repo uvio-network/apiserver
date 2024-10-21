@@ -157,7 +157,7 @@ func (r *Redigo) SearchLifecycle(lif []string) ([]*Object, error) {
 	// lifecycle, if any.
 	var cla []string
 	{
-		cla, err = r.red.Sorted().Search().Union(generic.Arg1(storageformat.PostLifecycle, lif)...)
+		cla, err = r.red.Sorted().Search().Union(generic.Arg1(storageformat.PostExpiry, lif)...)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
