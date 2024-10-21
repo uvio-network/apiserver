@@ -59,7 +59,7 @@ func (r *Redigo) UpdateBalance(bal *poststorage.Object, hsh []common.Hash, sum [
 
 		var res string
 		if sum[0] == 1 {
-			res = fmt.Sprintf(" The associated claim was found to be **%s** %s", txtTru(sum[1]), dis)
+			res = fmt.Sprintf(" The associated claim was found to be %s %s", txtTru(sum[1]), dis)
 		}
 
 		bal.Text = fmt.Sprintf("This market was finalized with %s resolution.%s", txtVal(sum[0]), res)
@@ -219,16 +219,16 @@ func resTxt(num int) string {
 
 func txtTru(f float64) string {
 	if f == 1 {
-		return "true"
+		return "**true**"
 	}
 
-	return "false"
+	return "**false**"
 }
 
 func txtVal(f float64) string {
 	if f == 1 {
-		return "a valid"
+		return "a **valid**"
 	}
 
-	return "an invalid"
+	return "an **invalid**"
 }
