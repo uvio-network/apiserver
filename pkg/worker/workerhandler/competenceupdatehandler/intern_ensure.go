@@ -137,8 +137,8 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 	}
 
-	if len(sta)*5 != len(use) {
-		return tracer.Maskf(runtime.ExecutionFailedError, "%d != %d", len(sta)*5, len(use))
+	if len(his)*5 != len(use) {
+		return tracer.Maskf(runtime.ExecutionFailedError, "%d != %d", len(his)*5, len(use))
 	}
 
 	for i := range sta {
