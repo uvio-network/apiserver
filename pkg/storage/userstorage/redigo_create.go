@@ -12,6 +12,10 @@ func (r *Redigo) CreateUser(inp *Object) (*Object, error) {
 	var err error
 
 	{
+		inp.Summary = []float64{0, 0, 0, 0, 0}
+	}
+
+	{
 		err = inp.Verify()
 		if err != nil {
 			return nil, tracer.Mask(err)

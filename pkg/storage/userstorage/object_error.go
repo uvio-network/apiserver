@@ -13,3 +13,8 @@ var UserSubjectEmptyError = &tracer.Error{
 	Kind: "UserSubjectEmptyError",
 	Desc: "The request expects the user's subject claim not to be empty. The user's subject claim was found to be empty. Therefore the request failed.",
 }
+
+var UserSummaryError = &tracer.Error{
+	Kind: "UserSummaryError",
+	Desc: "The request expects the user's summary to have exactly 5 elements. The user's summary was not found to have 5 elements. Therefore the request failed.",
+}
