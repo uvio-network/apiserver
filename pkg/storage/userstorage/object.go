@@ -84,5 +84,11 @@ func (o *Object) Verify() error {
 		}
 	}
 
+	{
+		if len(o.Summary) != 5 {
+			return tracer.Mask(UserSummaryError)
+		}
+	}
+
 	return nil
 }
