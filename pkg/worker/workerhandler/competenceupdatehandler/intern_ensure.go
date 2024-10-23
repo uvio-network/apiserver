@@ -323,6 +323,11 @@ func ensBig(str string) (*big.Int, error) {
 }
 
 func updUse(i int, val bool, sid bool, sta []common.Address, his []*big.Int, use map[string]*userstorage.Object) *userstorage.Object {
+	var zer *big.Int
+	{
+		zer = big.NewInt(0)
+	}
+
 	//
 	//     [        before        |         after        |   ]
 	//
@@ -347,8 +352,10 @@ func updUse(i int, val bool, sid bool, sta []common.Address, his []*big.Int, use
 		if sid {
 			// If the market settled with a valid resolution, and if the community
 			// consensus was true, and if the user staked true while not staking
-			// false, then increment the right value.
-			if bigNot(b[0], big.NewInt(0)) && bigEql(b[1], big.NewInt(0)) && bigGrt(b[2], b[0]) {
+			// false, and if the staked true balance after resolution is higher or at
+			// least equal to the staked true balance before resolution, then
+			// increment the right value.
+			if bigNot(b[0], zer) && bigEql(b[1], zer) && (bigEql(b[2], b[0]) || bigGrt(b[2], b[0])) {
 				u.Summary[userstorage.Right]++
 			} else {
 				u.Summary[userstorage.Wrong]++
@@ -356,8 +363,10 @@ func updUse(i int, val bool, sid bool, sta []common.Address, his []*big.Int, use
 		} else {
 			// If the market settled with a valid resolution, and if the community
 			// consensus was false, and if the user staked false while not staking
-			// true, then increment the honest value.
-			if bigNot(b[1], big.NewInt(0)) && bigEql(b[0], big.NewInt(0)) && bigGrt(b[3], b[1]) {
+			// true, and if the staked false balance after resolution is higher or at
+			// least equal to the staked false balance before resolution, then
+			// increment the honest value.
+			if bigNot(b[1], zer) && bigEql(b[0], zer) && (bigEql(b[3], b[1]) || bigGrt(b[3], b[1])) {
 				u.Summary[userstorage.Right]++
 			} else {
 				u.Summary[userstorage.Wrong]++
