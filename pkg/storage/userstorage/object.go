@@ -42,9 +42,16 @@ type Object struct {
 
 func (o *Object) Competence() float64 {
 	var rig float64
-	var wro float64
 	{
 		rig = o.Summary[Right]
+	}
+
+	if rig == 0 {
+		return 0
+	}
+
+	var wro float64
+	{
 		wro = o.Summary[Wrong]
 	}
 
@@ -53,10 +60,17 @@ func (o *Object) Competence() float64 {
 
 func (o *Object) Integrity() float64 {
 	var hon float64
+	{
+		hon = o.Summary[Honest]
+	}
+
+	if hon == 0 {
+		return 0
+	}
+
 	var dis float64
 	var abs float64
 	{
-		hon = o.Summary[Honest]
 		dis = o.Summary[Dishonest]
 		abs = o.Summary[Abstained] * 0.5
 	}
