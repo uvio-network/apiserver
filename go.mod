@@ -21,8 +21,8 @@ require (
 	github.com/xh3b4sd/locker v0.1.0
 	github.com/xh3b4sd/logger v0.8.1
 	github.com/xh3b4sd/objectid v0.2.0
-	github.com/xh3b4sd/redigo v0.39.0
-	github.com/xh3b4sd/rescue v0.19.1
+	github.com/xh3b4sd/redigo v0.40.0
+	github.com/xh3b4sd/rescue v0.19.2
 	github.com/xh3b4sd/tracer v0.11.1
 	golang.org/x/mod v0.21.0
 	golang.org/x/text v0.19.0
