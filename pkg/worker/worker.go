@@ -239,9 +239,26 @@ func (w *Worker) search() {
 			err = x.Ensure(tas, bud)
 			if err != nil {
 				w.lerror(tracer.Mask(err))
-			} else if !bud.Break() || tas.Pag() || (tas.Cron != nil && tas.Cron.Exi().Adefer()) {
-				cur++
 			}
+		}
+
+		// If there is no error, then delete the task, because it is complete.
+		// Conversely, if there is an error, don't delete the task, but instead
+		// expire it naturally, causing the task to be rescheduled.
+		//
+		// If the worker budget did not break, then delete the task, because it got
+		// fully processed. Conversely, if the worker budget broke, don't delete the
+		// task, but instead expire it naturally, causing the task to be
+		// rescheduled.
+		//
+		// If the task has a paging pointer, then call Engine.Delete for this task,
+		// because the task needs to get updated with the paging pointer.
+		//
+		// If the task signals a deferred execution, then call Engine.Delete for
+		// this task, because the task needs to get updated with the desired next
+		// tick.
+		if err == nil || !bud.Break() || tas.Pag() || (tas.Cron != nil && tas.Cron.Exi().Adefer()) {
+			cur++
 		}
 
 		// We want to requeue a task that carries a paging pointer, whether the task

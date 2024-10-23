@@ -11,7 +11,7 @@ func (r *Redigo) UpdateReputation(inp []*Object) error {
 
 	for i := range inp {
 		{
-			_, err = r.red.Sorted().Update().Score(storageformat.UserReputation, inp[i].ID.String(), inp[i].Reputation())
+			err = r.red.Sorted().Update().Score(storageformat.UserReputation, inp[i].ID.String(), inp[i].Reputation())
 			if sorted.IsNotFound(err) {
 				{
 					err = r.red.Sorted().Create().Score(storageformat.UserReputation, inp[i].ID.String(), inp[i].Reputation())

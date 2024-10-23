@@ -1,6 +1,7 @@
 package competenceupdatehandler
 
 import (
+	"fmt"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -110,6 +111,20 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		}
 	}
 
+	// After everything has been reconciled, there still may have been some error
+	// preventing the task to be cleaned up properly. In this case we may receive
+	// a paging pointer that results in the end of the entire iteration cycle
+	// without providing any further iteration boundaries. So if this is the end,
+	// and if lef and rig are empty, then stop processing the task, because we
+	// have already done all the work.
+	if lef == nil && rig == nil && end {
+		{
+			tas.Sync = nil
+		}
+
+		return nil
+	}
+
 	var sta []common.Address
 	{
 		sta, err = cla.SearchStakers(pod.ID, lef, rig)
@@ -157,7 +172,9 @@ func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
 		// After each iteration, increment the current paging pointer to track our
 		// progress.
 		{
+			fmt.Printf("pag bef %#v\n", tas.Sync.Get(task.Paging))
 			tas.Sync.Set(task.Paging, lef.Add(lef, big.NewInt(1)).String())
+			fmt.Printf("pag aft %#v\n", tas.Sync.Get(task.Paging))
 		}
 	}
 

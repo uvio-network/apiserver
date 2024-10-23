@@ -46,17 +46,19 @@ func Paging(ind [8]*big.Int, cur *big.Int) (*big.Int, *big.Int, bool, error) {
 		if bigLss(cur, big.NewInt(0)) {
 			return nil, nil, false, tracer.Mask(IndexOutOfRangeError)
 		}
-		if bigGrt(cur, runtime.MaxUint256()) {
-			return nil, nil, false, tracer.Mask(IndexOutOfRangeError)
-		}
 	}
 
-	if bigNot(ind[0], big.NewInt(0)) && (bigEql(cur, big.NewInt(0)) || bigLss(cur, ind[2])) {
+	var zer *big.Int
+	{
+		zer = big.NewInt(0)
+	}
+
+	if bigNot(ind[0], zer) && (bigEql(cur, zer) || bigLss(cur, ind[2])) {
 		var lef *big.Int
 		var rig *big.Int
 		var end bool
 
-		if bigEql(cur, big.NewInt(0)) {
+		if bigEql(cur, zer) {
 			lef = ind[1]
 		} else {
 			lef = cur
@@ -66,19 +68,19 @@ func Paging(ind [8]*big.Int, cur *big.Int) (*big.Int, *big.Int, bool, error) {
 			rig = bigMin(big.NewInt(0).Add(lef, big.NewInt(pag-1)), ind[2])
 		}
 
-		if bigEql(rig, ind[2]) && bigEql(ind[7], big.NewInt(0)) {
+		if bigEql(rig, ind[2]) && bigEql(ind[7], zer) {
 			end = true
 		}
 
 		return lef, rig, end, nil
 	}
 
-	if bigNot(ind[7], big.NewInt(0)) && (bigEql(cur, big.NewInt(0)) || bigEql(cur, ind[2]) || bigGrt(cur, ind[2])) {
+	if bigNot(ind[7], zer) && (bigEql(cur, zer) || bigEql(cur, ind[2]) || bigGrt(cur, ind[2])) && (bigLss(cur, ind[6]) || bigEql(cur, ind[6])) {
 		var lef *big.Int
 		var rig *big.Int
 		var end bool
 
-		if bigEql(cur, big.NewInt(0)) || bigLss(cur, ind[5]) {
+		if bigEql(cur, zer) || bigLss(cur, ind[5]) {
 			lef = ind[5]
 		} else {
 			lef = cur
@@ -95,7 +97,7 @@ func Paging(ind [8]*big.Int, cur *big.Int) (*big.Int, *big.Int, bool, error) {
 		return lef, rig, end, nil
 	}
 
-	return nil, nil, false, nil
+	return nil, nil, true, nil
 }
 
 func bigEql(a *big.Int, b *big.Int) bool {
