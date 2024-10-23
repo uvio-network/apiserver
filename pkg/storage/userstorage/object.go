@@ -1,9 +1,11 @@
 package userstorage
 
 import (
+	"math"
 	"time"
 
 	"github.com/uvio-network/apiserver/pkg/object/objectfield"
+	"github.com/uvio-network/apiserver/pkg/round"
 	"github.com/xh3b4sd/objectid"
 	"github.com/xh3b4sd/tracer"
 )
@@ -75,11 +77,11 @@ func (o *Object) Integrity() float64 {
 		abs = o.Summary[Abstained] * 0.5
 	}
 
-	return hon / (hon + dis + abs)
+	return math.Max(0, hon-dis-abs) + (hon / (hon + dis + abs))
 }
 
 func (o *Object) Reputation() float64 {
-	return o.Competence() * o.Integrity()
+	return round.RoundP(o.Competence()*o.Integrity(), 5)
 }
 
 func (o *Object) Verify() error {
