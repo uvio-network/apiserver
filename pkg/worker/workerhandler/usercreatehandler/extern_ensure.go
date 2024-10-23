@@ -2,13 +2,12 @@ package usercreatehandler
 
 import (
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
-	"github.com/uvio-network/apiserver/pkg/worker/budget"
 	"github.com/xh3b4sd/objectid"
 	"github.com/xh3b4sd/rescue/task"
 	"github.com/xh3b4sd/tracer"
 )
 
-func (h *ExternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
+func (h *ExternHandler) Ensure(tas *task.Task) error {
 	var err error
 
 	var use objectid.ID

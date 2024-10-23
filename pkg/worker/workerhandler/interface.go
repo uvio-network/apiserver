@@ -1,7 +1,6 @@
 package workerhandler
 
 import (
-	"github.com/uvio-network/apiserver/pkg/worker/budget"
 	"github.com/xh3b4sd/rescue/task"
 )
 
@@ -13,7 +12,7 @@ type Interface interface {
 	Create() *task.Task
 	// Ensure executes the handler specific business logic in order to complete
 	// the given task, if possible.
-	Ensure(*task.Task, *budget.Budget) error
+	Ensure(*task.Task) error
 	// Filter expresses whether the handler wants to process the given task.
 	Filter(*task.Task) bool
 }

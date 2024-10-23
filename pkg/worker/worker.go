@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/uvio-network/apiserver/pkg/worker/budget"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler"
 	"github.com/xh3b4sd/logger"
 	"github.com/xh3b4sd/logger/meta"
@@ -205,11 +204,6 @@ func (w *Worker) search() {
 		return
 	}
 
-	var bud *budget.Budget
-	{
-		bud = budget.New()
-	}
-
 	// We track the current and desired amount of handlers for the current task in
 	// order to decide whether to delete the task after all handlers got invoked.
 	// The desired amount of handlers that can process the current task are those
@@ -236,7 +230,7 @@ func (w *Worker) search() {
 		}
 
 		{
-			err = x.Ensure(tas, bud)
+			err = x.Ensure(tas)
 			if err != nil {
 				w.lerror(tracer.Mask(err))
 			}
@@ -246,18 +240,13 @@ func (w *Worker) search() {
 		// Conversely, if there is an error, don't delete the task, but instead
 		// expire it naturally, causing the task to be rescheduled.
 		//
-		// If the worker budget did not break, then delete the task, because it got
-		// fully processed. Conversely, if the worker budget broke, don't delete the
-		// task, but instead expire it naturally, causing the task to be
-		// rescheduled.
-		//
 		// If the task has a paging pointer, then call Engine.Delete for this task,
 		// because the task needs to get updated with the paging pointer.
 		//
 		// If the task signals a deferred execution, then call Engine.Delete for
 		// this task, because the task needs to get updated with the desired next
 		// tick.
-		if err == nil || !bud.Break() || tas.Pag() || (tas.Cron != nil && tas.Cron.Exi().Adefer()) {
+		if err == nil || tas.Pag() || (tas.Cron != nil && tas.Cron.Exi().Adefer()) {
 			cur++
 		}
 
@@ -288,21 +277,6 @@ func (w *Worker) search() {
 				"level", "info",
 				"message", "task being requeued",
 				"@defer", tas.Cron.Get().Adefer(),
-			)
-		}
-
-		// We have to account for the worker budget when processing a task. Calling
-		// Handler.Ensure may use up the entire budget and it may break through the
-		// budget or it may not. Breaking through the budget means that there is
-		// still work left to do. And so not breaking the worker budget tells us
-		// here that Handler.Ensure successfully resolved the task from its own
-		// point of view, allowing us to count with it towards the desired amount of
-		// handlers we that we track.
-		if bud.Break() {
-			w.log.Log(
-				logCtx(tas),
-				"level", "warning",
-				"message", "task budget exhausted",
 			)
 		}
 	}
