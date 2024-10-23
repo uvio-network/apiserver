@@ -2,7 +2,6 @@ package userstorage
 
 import (
 	"github.com/uvio-network/apiserver/pkg/format/storageformat"
-	"github.com/xh3b4sd/redigo/pkg/sorted"
 	"github.com/xh3b4sd/tracer"
 )
 
@@ -12,14 +11,7 @@ func (r *Redigo) UpdateReputation(inp []*Object) error {
 	for i := range inp {
 		{
 			err = r.red.Sorted().Update().Score(storageformat.UserReputation, inp[i].ID.String(), inp[i].Reputation())
-			if sorted.IsNotFound(err) {
-				{
-					err = r.red.Sorted().Create().Score(storageformat.UserReputation, inp[i].ID.String(), inp[i].Reputation())
-					if err != nil {
-						return tracer.Mask(err)
-					}
-				}
-			} else if err != nil {
+			if err != nil {
 				return tracer.Mask(err)
 			}
 		}

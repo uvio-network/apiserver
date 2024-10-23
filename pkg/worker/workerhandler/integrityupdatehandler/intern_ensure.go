@@ -11,14 +11,13 @@ import (
 	"github.com/uvio-network/apiserver/pkg/sample"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
 	"github.com/uvio-network/apiserver/pkg/storage/userstorage"
-	"github.com/uvio-network/apiserver/pkg/worker/budget"
 	"github.com/xh3b4sd/objectid"
 	"github.com/xh3b4sd/rescue/task"
 	"github.com/xh3b4sd/tracer"
 	"golang.org/x/mod/semver"
 )
 
-func (h *InternHandler) Ensure(tas *task.Task, bud *budget.Budget) error {
+func (h *InternHandler) Ensure(tas *task.Task) error {
 	var err error
 
 	var pod *poststorage.Object
