@@ -93,7 +93,7 @@ func Test_Sample_Paging_Error(t *testing.T) {
 		{
 			ind: [8]*big.Int{
 				big.NewInt(0),
-				big.NewInt(0),
+				big.NewInt(0).Add(runtime.MaxUint256(), big.NewInt(1)),
 				big.NewInt(0),
 				runtime.MidUint256(),
 				runtime.MidUint256(),
@@ -101,37 +101,23 @@ func Test_Sample_Paging_Error(t *testing.T) {
 				runtime.MaxUint256(),
 				big.NewInt(1),
 			},
-			cur: big.NewInt(0).Add(runtime.MaxUint256(), big.NewInt(1)),
+			cur: big.NewInt(0),
 		},
 		// Case 007
 		{
 			ind: [8]*big.Int{
 				big.NewInt(0),
-				big.NewInt(0).Add(runtime.MaxUint256(), big.NewInt(1)),
+				big.NewInt(0),
 				big.NewInt(0),
 				runtime.MidUint256(),
 				runtime.MidUint256(),
-				runtime.MaxUint256(),
+				big.NewInt(0).Add(runtime.MaxUint256(), big.NewInt(1)),
 				runtime.MaxUint256(),
 				big.NewInt(1),
 			},
 			cur: big.NewInt(0),
 		},
 		// Case 008
-		{
-			ind: [8]*big.Int{
-				big.NewInt(0),
-				big.NewInt(0),
-				big.NewInt(0),
-				runtime.MidUint256(),
-				runtime.MidUint256(),
-				big.NewInt(0).Add(runtime.MaxUint256(), big.NewInt(1)),
-				runtime.MaxUint256(),
-				big.NewInt(1),
-			},
-			cur: big.NewInt(0),
-		},
-		// Case 9
 		{
 			ind: [8]*big.Int{
 				big.NewInt(0).Sub(runtime.MaxUint256(), big.NewInt(1)),
@@ -352,6 +338,23 @@ func Test_Sample_Paging_Side_False(t *testing.T) {
 			rig: runtime.MaxUint256(),
 			end: true,
 		},
+		// Case 009
+		{
+			ind: [8]*big.Int{
+				big.NewInt(0), // 0 stakers in agreement
+				big.NewInt(0),
+				big.NewInt(0),
+				runtime.MidUint256(),
+				runtime.MidUint256(),
+				runtime.MaxUint256(),
+				runtime.MaxUint256(), // false max
+				big.NewInt(1),        // 1 staker in disagreement
+			},
+			cur: big.NewInt(0).Add(runtime.MaxUint256(), big.NewInt(1)), // bigger than false max
+			lef: nil,
+			rig: nil,
+			end: true,
+		},
 	}
 
 	for i, tc := range testCases {
@@ -359,6 +362,16 @@ func Test_Sample_Paging_Side_False(t *testing.T) {
 			lef, rig, end, err := Paging(tc.ind, tc.cur)
 			if err != nil {
 				t.Fatal(err)
+			}
+
+			if lef == nil && tc.lef != nil {
+				t.Fatalf("expected %#v got nil", tc.lef.String())
+			}
+			if rig == nil && tc.rig != nil {
+				t.Fatalf("expected %#v got nil", tc.rig.String())
+			}
+			if (lef == nil && rig != nil) || (rig == nil && lef != nil) {
+				t.Fatalf("expected lef and rig to be nil, got inconsistent pointers")
 			}
 
 			if lef.Cmp(tc.lef) != 0 {
@@ -535,6 +548,27 @@ func Test_Sample_Paging_Side_True(t *testing.T) {
 			rig: big.NewInt(66),
 			end: true,
 		},
+		// Case 009
+		{
+			ind: [8]*big.Int{
+				big.NewInt(1), // 1 staker in agreement
+				big.NewInt(0),
+				big.NewInt(0), // true max 0
+				runtime.MidUint256(),
+				runtime.MidUint256(),
+				runtime.MaxUint256(),
+				runtime.MaxUint256(),
+				big.NewInt(0), // 0 stakers in disagreement
+			},
+			//
+			//     1. iteration processed 0 and incremented to 1,
+			//     2. iteration receives 1 and stops at end
+			//
+			cur: big.NewInt(1), // bigger than true max 0
+			lef: nil,
+			rig: nil,
+			end: true,
+		},
 	}
 
 	for i, tc := range testCases {
@@ -542,6 +576,16 @@ func Test_Sample_Paging_Side_True(t *testing.T) {
 			lef, rig, end, err := Paging(tc.ind, tc.cur)
 			if err != nil {
 				t.Fatal(err)
+			}
+
+			if lef == nil && tc.lef != nil {
+				t.Fatalf("expected %#v got nil", tc.lef.String())
+			}
+			if rig == nil && tc.rig != nil {
+				t.Fatalf("expected %#v got nil", tc.rig.String())
+			}
+			if (lef == nil && rig != nil) || (rig == nil && lef != nil) {
+				t.Fatalf("expected lef and rig to be nil, got inconsistent pointers")
 			}
 
 			if lef.Cmp(tc.lef) != 0 {
@@ -667,6 +711,23 @@ func Test_Sample_Paging_Side_Both(t *testing.T) {
 			rig: runtime.MaxUint256(),
 			end: true,
 		},
+		// Case 006
+		{
+			ind: [8]*big.Int{
+				big.NewInt(1), // 1 staker in agreement
+				big.NewInt(0),
+				big.NewInt(0),
+				runtime.MidUint256(),
+				runtime.MidUint256(),
+				runtime.MaxUint256(),
+				runtime.MaxUint256(),
+				big.NewInt(1), // 1 staker in disagreement
+			},
+			cur: big.NewInt(0).Add(runtime.MaxUint256(), big.NewInt(1)),
+			lef: nil,
+			rig: nil,
+			end: true,
+		},
 	}
 
 	for i, tc := range testCases {
@@ -674,6 +735,16 @@ func Test_Sample_Paging_Side_Both(t *testing.T) {
 			lef, rig, end, err := Paging(tc.ind, tc.cur)
 			if err != nil {
 				t.Fatal(err)
+			}
+
+			if lef == nil && tc.lef != nil {
+				t.Fatalf("expected %#v got nil", tc.lef.String())
+			}
+			if rig == nil && tc.rig != nil {
+				t.Fatalf("expected %#v got nil", tc.rig.String())
+			}
+			if (lef == nil && rig != nil) || (rig == nil && lef != nil) {
+				t.Fatalf("expected lef and rig to be nil, got inconsistent pointers")
 			}
 
 			if lef.Cmp(tc.lef) != 0 {
