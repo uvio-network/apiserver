@@ -74,7 +74,7 @@ type Interface interface {
 	//     @inp[0] the lifecycle phases to search for
 	//     @out[0] the list of post objects having the specified lifecycle phases defined
 	//
-	SearchLifecycle([]string) ([]*Object, error)
+	SearchLifecycle([]objectlabel.DesiredLifecycle) ([]*Object, error)
 
 	// SearchOwner returns the post objects created by the given user.
 	//

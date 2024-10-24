@@ -150,14 +150,32 @@ func (r *Redigo) SearchLabel(inp [][]string) ([]*Object, error) {
 	return out, nil
 }
 
-func (r *Redigo) SearchLifecycle(lif []string) ([]*Object, error) {
+func (r *Redigo) SearchLifecycle(lif []objectlabel.DesiredLifecycle) ([]*Object, error) {
 	var err error
+
+	var key []string
+	{
+		key = generic.Func(lif, func(x objectlabel.DesiredLifecycle) string {
+			// When we show settled claims, then we show the latest lifecycle phase
+			// there is. This final lifecycle phase has no expiry. That is why we use
+			// the storage key of the static sorted set that contains all claim IDs
+			// per lifecycle, regardless of the claim's expiry.
+			if x == objectlabel.LifecycleBalance {
+				return posLif(x)
+			}
+
+			// When we show ongoing claims, then we only want to show those claims
+			// that are current in the requested lifecycle phase. For that reason we
+			// use the storage key of expiring claims per lifecycle phase.
+			return posExp(x)
+		})
+	}
 
 	// cla will result in a list of all claim IDs defining the given claim
 	// lifecycle, if any.
 	var cla []string
 	{
-		cla, err = r.red.Sorted().Search().Union(generic.Arg1(storageformat.PostExpiry, lif)...)
+		cla, err = r.red.Sorted().Search().Union(key...)
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
