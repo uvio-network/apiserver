@@ -6,6 +6,7 @@ import (
 
 	"github.com/uvio-network/apigocode/pkg/post"
 	"github.com/uvio-network/apiserver/pkg/generic"
+	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/uvio-network/apiserver/pkg/server/context/userid"
 	"github.com/uvio-network/apiserver/pkg/server/converter"
@@ -22,7 +23,7 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 
 	var ids []objectid.ID
 	var lab [][]string
-	var lif []string
+	var lif []objectlabel.DesiredLifecycle
 	var own []objectid.ID
 	var pag []int
 	var tim bool
@@ -45,7 +46,7 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 		}
 
 		if x.Public != nil && x.Public.Lifecycle != "" {
-			lif = append(lif, x.Public.Lifecycle)
+			lif = append(lif, objectlabel.DesiredLifecycle(x.Public.Lifecycle))
 		}
 
 		if x.Intern != nil && x.Intern.Owner != "" {
