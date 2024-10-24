@@ -17,7 +17,7 @@ func (r *Redigo) CreateExpiry(inp []*Object) error {
 
 	for i := range inp {
 		if inp[i].Kind == "claim" {
-			err = r.red.Sorted().Create().Score(posExp(inp[i].Lifecycle.Data), inp[i].ID.String(), float64(inp[i].Expiry.UnixNano()))
+			err = r.red.Sorted().Create().Score(posExp(inp[i].Lifecycle.Data), inp[i].ID.String(), float64(inp[i].Expiry.Unix()))
 			if err != nil {
 				return tracer.Mask(err)
 			}
@@ -44,7 +44,7 @@ func (r *Redigo) CreatePost(inp []*Object) error {
 		// creation. This step ensures we can search for claims using pagination in
 		// reverse chronolical order.
 		{
-			err = r.red.Sorted().Create().Score(storageformat.PostCreated, inp[i].ID.String(), float64(inp[i].Created.UnixNano()))
+			err = r.red.Sorted().Create().Score(storageformat.PostCreated, inp[i].ID.String(), float64(inp[i].Created.Unix()))
 			if err != nil {
 				return tracer.Mask(err)
 			}
@@ -78,7 +78,9 @@ func (r *Redigo) CreatePost(inp []*Object) error {
 			}
 		}
 
-		if inp[i].Kind == "claim" {
+		// Keep track of all claim expiries, except for claims with lifecycle phase
+		// "balance", because balances are final and do not have an expiry.
+		if inp[i].Kind == "claim" && !inp[i].Lifecycle.Is(objectlabel.LifecycleBalance) {
 			var exp time.Time
 			{
 				exp = inp[i].Expiry
@@ -103,13 +105,15 @@ func (r *Redigo) CreatePost(inp []*Object) error {
 			// specified claim expiry. This helps us to automate the progress on claim
 			// trees. For instance we can run background jobs that look for expiring
 			// claims and ensure the creation of claims in their next lifecycle phase.
-			err = r.red.Sorted().Create().Score(posExp(inp[i].Lifecycle.Data), inp[i].ID.String(), float64(exp.UnixNano()))
+			err = r.red.Sorted().Create().Score(posExp(inp[i].Lifecycle.Data), inp[i].ID.String(), float64(exp.Unix()))
 			if err != nil {
 				return tracer.Mask(err)
 			}
+		}
 
-			// We index all claim IDs per specified lifecycle phase, so that we can
-			// search e.g. for all disputes.
+		// We index all claim IDs per specified lifecycle phase, so that we can
+		// search e.g. for all disputes.
+		if inp[i].Kind == "claim" {
 			err = r.red.Sorted().Create().Score(posLif(inp[i].Lifecycle.Data), inp[i].ID.String(), inp[i].ID.Float())
 			if err != nil {
 				return tracer.Mask(err)
