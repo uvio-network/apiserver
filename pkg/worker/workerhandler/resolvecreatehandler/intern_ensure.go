@@ -60,9 +60,13 @@ func (h *InternHandler) Ensure(tas *task.Task) error {
 		tas.Sync.Set(task.Paging, tas.Meta.Get(objectlabel.ClaimBlock))
 	}
 
+	// Ensure that the resolve's expiry is 1 standard week from the point in time
+	// when this task was processed first. This is important if the task for
+	// whatever reason had to start processing after the related propose or
+	// dispute expired in the first place.
 	var exp time.Time
 	{
-		exp = pod.Expiry.Add(oneWeek)
+		exp = time.Now().UTC().Add(oneWeek)
 	}
 
 	// If the next claim within this tree relative to the provided claim is nil,
