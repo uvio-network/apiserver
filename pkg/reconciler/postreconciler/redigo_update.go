@@ -58,8 +58,12 @@ func (r *Redigo) UpdateBalance(bal *poststorage.Object, hsh []common.Hash, sum [
 		}
 
 		var res string
+		{
+			res = "This result is secured by Ethereum and cannot be reversed."
+		}
+
 		if sum[0] == 1 {
-			res = fmt.Sprintf(" The associated claim was found to be %s %s", txtTru(sum[1]), dis)
+			res = fmt.Sprintf(" The associated claim was found to be %s %s %s", txtTru(sum[1]), dis, res)
 		}
 
 		bal.Text = fmt.Sprintf("This market was finalized with %s resolution.%s", txtVal(sum[0]), res)

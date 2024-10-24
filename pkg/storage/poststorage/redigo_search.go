@@ -91,7 +91,7 @@ func (r *Redigo) SearchExpiry(lif objectlabel.DesiredLifecycle) ([]*Object, erro
 	// range, if any.
 	var val []string
 	{
-		val, err = r.red.Sorted().Search().Score(posExp(lif), 0, float64(now.UnixNano()))
+		val, err = r.red.Sorted().Search().Score(posExp(lif), 0, float64(now.Unix()))
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
