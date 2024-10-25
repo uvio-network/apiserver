@@ -87,6 +87,7 @@ func New(c Config) *Handler {
 
 		han = append(han, integrityupdatehandler.NewInternHandler(integrityupdatehandler.InternHandlerConfig{
 			Con: c.Con,
+			Emi: c.Emi,
 			Log: c.Log,
 			Sto: c.Sto,
 		}))
