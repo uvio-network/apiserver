@@ -2,7 +2,6 @@ package uvxminthandler
 
 import (
 	"context"
-	"math/big"
 	"time"
 
 	"github.com/ethereum/go-ethereum/core/types"
@@ -57,21 +56,6 @@ func (h *InternHandler) Ensure(tas *task.Task) error {
 		add = wal[0].Address
 	}
 
-	var bal *big.Int
-	{
-		bal, err = uvx.Balance(add)
-		if err != nil {
-			return tracer.Mask(err)
-		}
-	}
-
-	// Prevent users from getting tokens multiple times. If we are processing a
-	// task for a user who has already a token balance, then we have nothing else
-	// to do here.
-	if bal.Uint64() > 0 {
-		return nil
-	}
-
 	var txn *types.Transaction
 	{
 		txn, err = uvx.Mint(add, 100)
@@ -99,11 +83,17 @@ func (h *InternHandler) Ensure(tas *task.Task) error {
 		}
 	}
 
-	// In case the minting transaction fails, we are going to retry this task.
 	{
 		err = h.con.Wait(txn, maxWait)
 		if err != nil {
-			return tracer.Mask(err)
+			h.log.Log(
+				context.Background(),
+				"level", "warning",
+				"message", err.Error(),
+				"stack", tracer.Stack(err),
+			)
+
+			return nil
 		}
 	}
 

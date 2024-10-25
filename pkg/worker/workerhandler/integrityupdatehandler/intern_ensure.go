@@ -167,12 +167,24 @@ func (h *InternHandler) Ensure(tas *task.Task) error {
 
 	for i := range vot {
 		var u *userstorage.Object
+		var m bool
 		{
-			u = updUse(i, val, sid, vot, sam, use)
+			u, m = h.updateSummary(i, val, sid, vot, sam, use)
 		}
 
 		{
 			err = h.sto.User().UpdateUser([]*userstorage.Object{u})
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
+
+		// Emit a task to mint tokens for this user, if the user was found to be
+		// honest.
+		if m {
+			// TODO we need to notify the user about their tokens being minted. This
+			// applies generally to minting tokens, also for the signup bonus.
+			err = h.emi.UVX().UvxMint(u.ID)
 			if err != nil {
 				return tracer.Mask(err)
 			}
@@ -329,16 +341,7 @@ func (h *InternHandler) searchUsers(res *poststorage.Object, vot []common.Addres
 	return dic, nil
 }
 
-func ensBig(str string) (*big.Int, error) {
-	val, ok := new(big.Int).SetString(zerStr(str), 10)
-	if !ok {
-		return nil, tracer.Maskf(runtime.ExecutionFailedError, "cannot convert %s to *big.Int", str)
-	}
-
-	return val, nil
-}
-
-func updUse(i int, val bool, sid bool, vot []common.Address, sam []uint8, use map[string]*userstorage.Object) *userstorage.Object {
+func (h *InternHandler) updateSummary(i int, val bool, sid bool, vot []common.Address, sam []uint8, use map[string]*userstorage.Object) (*userstorage.Object, bool) {
 	var v uint8
 	{
 		v = sam[i]
@@ -354,6 +357,8 @@ func updUse(i int, val bool, sid bool, vot []common.Address, sam []uint8, use ma
 		u = use[a]
 	}
 
+	var m bool
+
 	// If the user denied to vote for whatever reason, then increment the
 	// abstained value. If the user did their duty by voting, check the outcome
 	// and calculate integrity metrics accordingly.
@@ -367,6 +372,7 @@ func updUse(i int, val bool, sid bool, vot []common.Address, sam []uint8, use ma
 				// honest value.
 				if v == 1 {
 					u.Summary[userstorage.Honest]++
+					m = true
 				} else {
 					u.Summary[userstorage.Dishonest]++
 				}
@@ -376,6 +382,7 @@ func updUse(i int, val bool, sid bool, vot []common.Address, sam []uint8, use ma
 				// honest value.
 				if v == 0 {
 					u.Summary[userstorage.Honest]++
+					m = true
 				} else {
 					u.Summary[userstorage.Dishonest]++
 				}
@@ -387,7 +394,16 @@ func updUse(i int, val bool, sid bool, vot []common.Address, sam []uint8, use ma
 		}
 	}
 
-	return u
+	return u, m
+}
+
+func ensBig(str string) (*big.Int, error) {
+	val, ok := new(big.Int).SetString(zerStr(str), 10)
+	if !ok {
+		return nil, tracer.Maskf(runtime.ExecutionFailedError, "cannot convert %s to *big.Int", str)
+	}
+
+	return val, nil
 }
 
 func useLis(use map[string]*userstorage.Object) []*userstorage.Object {
