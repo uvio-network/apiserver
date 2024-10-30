@@ -9,6 +9,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/storage/votestorage"
 	"github.com/uvio-network/apiserver/pkg/storage/walletstorage"
 	"github.com/uvio-network/apiserver/pkg/summary"
+	"github.com/xh3b4sd/objectid"
 	"github.com/xh3b4sd/tracer"
 )
 
@@ -187,7 +188,7 @@ func (r *Redigo) searchAddress(add []common.Address) (map[string]string, error) 
 		str = append(str, x.Hex())
 	}
 
-	var wal []*walletstorage.Object
+	var wal walletstorage.Slicer
 	{
 		wal, err = r.sto.Wallet().SearchAddress(str)
 		if err != nil {
@@ -195,14 +196,19 @@ func (r *Redigo) searchAddress(add []common.Address) (map[string]string, error) 
 		}
 	}
 
-	if len(wal) != len(add) {
-		return nil, tracer.Maskf(runtime.ExecutionFailedError, "%d != %d", len(wal), len(add))
+	var own []objectid.ID
+	{
+		own = wal.Owner()
+	}
+
+	if len(own) != len(add) {
+		return nil, tracer.Maskf(runtime.ExecutionFailedError, "%d != %d", len(own), len(add))
 	}
 
 	dic := map[string]string{}
 
 	for i := range add {
-		dic[str[i]] = string(wal[i].Owner)
+		dic[str[i]] = string(own[i])
 	}
 
 	return dic, nil

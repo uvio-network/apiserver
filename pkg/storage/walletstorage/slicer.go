@@ -9,8 +9,28 @@ type Slicer []*Object
 func (s Slicer) Owner() []objectid.ID {
 	var lis []objectid.ID
 
+	see := map[objectid.ID]struct{}{}
 	for _, x := range s {
-		lis = append(lis, x.Owner)
+		if x.Owner == "" {
+			continue
+		}
+
+		var exi bool
+		{
+			_, exi = see[x.Owner]
+		}
+
+		if exi {
+			continue
+		}
+
+		{
+			lis = append(lis, x.Owner)
+		}
+
+		{
+			see[x.Owner] = struct{}{}
+		}
 	}
 
 	return lis
