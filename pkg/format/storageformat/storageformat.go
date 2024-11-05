@@ -1,6 +1,25 @@
 package storageformat
 
 const (
+	// NoteObject is used to store our internal representation of a note object.
+	// This key allows us to search for all note objects by their own object ID.
+	//
+	//     note ID                   note object
+	//                         ->
+	//     note/object/1234          {"key": "val"}
+	//
+	NoteObject = "note/object/%s"
+
+	// NoteOwnerKind is used to store all note IDs that have been created for a
+	// specific user for a specific topic. This key allows us to search for all
+	// notes that belong to any given user on any given topic.
+	//
+	//     user ID / note kind                note IDs
+	//                                  ->
+	//     note/owner/1234/kind/1234          3456,5678
+	//
+	NoteOwnerKind = "note/owner/%s/kind/%s"
+
 	// PostComment is used to store all comment IDs posted on a specific parent
 	// claim. This key allows us to search for all comments on any given market.
 	//
