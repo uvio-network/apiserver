@@ -41,7 +41,7 @@ type Interface interface {
 	//
 	SearchComment([]objectid.ID) ([]*Object, error)
 
-	// SearchCreated returns the post objects within the given pagination range in
+	// SearchPage returns the post objects within the given pagination range in
 	// reversed order of claim creation time. Given the indexed posts [A B C D E],
 	// the first page [0 3] returns the most recent posts [C D E].
 	//
@@ -49,7 +49,7 @@ type Interface interface {
 	//     @inp[1] the stop paging pointer defining the end of the page
 	//     @out[0] the list of post objects within the given pagination range
 	//
-	SearchCreated(int, int) ([]*Object, error)
+	SearchPage(int, int) ([]*Object, error)
 
 	// SearchExpiry returns the lifecycle specific post objects recorded to have
 	// expired already at the time of execution.
