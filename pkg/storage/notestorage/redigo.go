@@ -36,7 +36,7 @@ func NewRedigo(c RedigoConfig) *Redigo {
 }
 
 func notObj(oid objectid.ID) string {
-	return fmt.Sprintf(storageformat.VoteObject, oid)
+	return fmt.Sprintf(storageformat.NoteObject, oid)
 }
 
 func notOwnKin(uid objectid.ID, kin string) string {
