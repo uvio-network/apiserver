@@ -9,6 +9,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/uvio-network/apiserver/pkg/sample"
+	"github.com/uvio-network/apiserver/pkg/storage/notestorage"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
 	"github.com/uvio-network/apiserver/pkg/storage/userstorage"
 	"github.com/xh3b4sd/objectid"
@@ -165,11 +166,12 @@ func (h *InternHandler) Ensure(tas *task.Task) error {
 		}
 	}
 
+	var not []*notestorage.Object
 	for i := range vot {
+		var k int
 		var u *userstorage.Object
-		var m bool
 		{
-			u, m = h.updateSummary(i, val, sid, vot, sam, use)
+			k, u = updUse(i, val, sid, vot, sam, use)
 		}
 
 		{
@@ -179,11 +181,17 @@ func (h *InternHandler) Ensure(tas *task.Task) error {
 			}
 		}
 
+		{
+			not = append(not, &notestorage.Object{
+				Kind:     notKin(k),
+				Resource: u.ID,
+				Owner:    u.ID,
+			})
+		}
+
 		// Emit a task to mint tokens for this user, if the user was found to be
 		// honest.
-		if m {
-			// TODO we need to notify the user about their tokens being minted. This
-			// applies generally to minting tokens, also for the signup bonus.
+		if k == userstorage.Honest {
 			err = h.emi.UVX().UvxMint(u.ID)
 			if err != nil {
 				return tracer.Mask(err)
@@ -214,6 +222,13 @@ func (h *InternHandler) Ensure(tas *task.Task) error {
 	// per batch instead of per user in the loop above.
 	{
 		err = h.sto.User().UpdateReputation(useLis(use))
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
+	{
+		err = h.sto.Note().CreateNote(not)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -341,62 +356,6 @@ func (h *InternHandler) searchUsers(res *poststorage.Object, vot []common.Addres
 	return dic, nil
 }
 
-func (h *InternHandler) updateSummary(i int, val bool, sid bool, vot []common.Address, sam []uint8, use map[string]*userstorage.Object) (*userstorage.Object, bool) {
-	var v uint8
-	{
-		v = sam[i]
-	}
-
-	var a string
-	{
-		a = vot[i].Hex()
-	}
-
-	var u *userstorage.Object
-	{
-		u = use[a]
-	}
-
-	var m bool
-
-	// If the user denied to vote for whatever reason, then increment the
-	// abstained value. If the user did their duty by voting, check the outcome
-	// and calculate integrity metrics accordingly.
-	if v == 2 {
-		u.Summary[userstorage.Abstained]++
-	} else {
-		if val {
-			if sid {
-				// If the market settled with a valid resolution, and if the community
-				// consensus was true, and if the user voted true, then increment the
-				// honest value.
-				if v == 1 {
-					u.Summary[userstorage.Honest]++
-					m = true
-				} else {
-					u.Summary[userstorage.Dishonest]++
-				}
-			} else {
-				// If the market settled with a valid resolution, and if the community
-				// consensus was false, and if the user voted false, then increment the
-				// honest value.
-				if v == 0 {
-					u.Summary[userstorage.Honest]++
-					m = true
-				} else {
-					u.Summary[userstorage.Dishonest]++
-				}
-			}
-		} else {
-			// If the market settled with an invalid resolution, then increment the
-			// dishonest value for everyone.
-			u.Summary[userstorage.Dishonest]++
-		}
-	}
-
-	return u, m
-}
-
 func ensBig(str string) (*big.Int, error) {
 	val, ok := new(big.Int).SetString(zerStr(str), 10)
 	if !ok {
@@ -404,6 +363,22 @@ func ensBig(str string) (*big.Int, error) {
 	}
 
 	return val, nil
+}
+
+func notKin(k int) string {
+	if k == userstorage.Honest {
+		return "userHonest"
+	}
+
+	if k == userstorage.Dishonest {
+		return "userDishonest"
+	}
+
+	if k == userstorage.Abstained {
+		return "userAbstained"
+	}
+
+	return ""
 }
 
 func useLis(use map[string]*userstorage.Object) []*userstorage.Object {
@@ -414,6 +389,66 @@ func useLis(use map[string]*userstorage.Object) []*userstorage.Object {
 	}
 
 	return lis
+}
+
+func updUse(i int, val bool, sid bool, vot []common.Address, sam []uint8, use map[string]*userstorage.Object) (int, *userstorage.Object) {
+	var v uint8
+	{
+		v = sam[i]
+	}
+
+	var a string
+	{
+		a = vot[i].Hex()
+	}
+
+	var k int
+
+	var u *userstorage.Object
+	{
+		u = use[a]
+	}
+
+	// If the user denied to vote for whatever reason, then increment the
+	// abstained value. If the user did their duty by voting, check the outcome
+	// and calculate integrity metrics accordingly.
+	if v == 2 {
+		k = userstorage.Abstained
+		u.Summary[userstorage.Abstained]++
+	} else {
+		if val {
+			if sid {
+				// If the market settled with a valid resolution, and if the community
+				// consensus was true, and if the user voted true, then increment the
+				// honest value.
+				if v == 1 {
+					k = userstorage.Honest
+					u.Summary[userstorage.Honest]++
+				} else {
+					k = userstorage.Dishonest
+					u.Summary[userstorage.Dishonest]++
+				}
+			} else {
+				// If the market settled with a valid resolution, and if the community
+				// consensus was false, and if the user voted false, then increment the
+				// honest value.
+				if v == 0 {
+					k = userstorage.Honest
+					u.Summary[userstorage.Honest]++
+				} else {
+					k = userstorage.Dishonest
+					u.Summary[userstorage.Dishonest]++
+				}
+			}
+		} else {
+			// If the market settled with an invalid resolution, then increment the
+			// dishonest value for everyone.
+			k = userstorage.Dishonest
+			u.Summary[userstorage.Dishonest]++
+		}
+	}
+
+	return k, u
 }
 
 func zerStr(str string) string {

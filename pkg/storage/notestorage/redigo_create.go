@@ -1,6 +1,9 @@
 package notestorage
 
 import (
+	"time"
+
+	"github.com/xh3b4sd/objectid"
 	"github.com/xh3b4sd/tracer"
 )
 
@@ -8,6 +11,23 @@ func (r *Redigo) CreateNote(inp []*Object) error {
 	var err error
 
 	for i := range inp {
+		{
+			err := inp[i].Verify()
+			if err != nil {
+				return tracer.Mask(err)
+			}
+		}
+
+		var now time.Time
+		{
+			now = time.Now().UTC()
+		}
+
+		{
+			inp[i].Created = now
+			inp[i].ID = objectid.Random(objectid.Time(now))
+		}
+
 		// Create the normalized key-value pair for the note object. With that we
 		// can search for note objects using their IDs.
 		{

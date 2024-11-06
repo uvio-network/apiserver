@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/uvio-network/apiserver/pkg/contract"
+	"github.com/uvio-network/apiserver/pkg/emitter"
 	"github.com/uvio-network/apiserver/pkg/reconciler"
 	"github.com/uvio-network/apiserver/pkg/sample"
 	"github.com/uvio-network/apiserver/pkg/storage"
@@ -13,6 +14,7 @@ import (
 
 type InternHandlerConfig struct {
 	Con contract.Interface
+	Emi emitter.Interface
 	Log logger.Interface
 	Rec reconciler.Interface
 	Sam *sample.Sample
@@ -21,6 +23,7 @@ type InternHandlerConfig struct {
 
 type InternHandler struct {
 	con contract.Interface
+	emi emitter.Interface
 	log logger.Interface
 	rec reconciler.Interface
 	sam *sample.Sample
@@ -30,6 +33,9 @@ type InternHandler struct {
 func NewInternHandler(c InternHandlerConfig) *InternHandler {
 	if c.Con == nil {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Con must not be empty", c)))
+	}
+	if c.Emi == nil {
+		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Emi must not be empty", c)))
 	}
 	if c.Log == nil {
 		tracer.Panic(tracer.Mask(fmt.Errorf("%T.Log must not be empty", c)))
@@ -46,6 +52,7 @@ func NewInternHandler(c InternHandlerConfig) *InternHandler {
 
 	return &InternHandler{
 		con: c.Con,
+		emi: c.Emi,
 		log: c.Log,
 		rec: c.Rec,
 		sam: c.Sam,

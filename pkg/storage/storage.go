@@ -3,6 +3,7 @@ package storage
 import (
 	"fmt"
 
+	"github.com/uvio-network/apiserver/pkg/storage/notestorage"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
 	"github.com/uvio-network/apiserver/pkg/storage/userstorage"
 	"github.com/uvio-network/apiserver/pkg/storage/votestorage"
@@ -18,6 +19,7 @@ type Config struct {
 }
 
 type Storage struct {
+	not notestorage.Interface
 	pos poststorage.Interface
 	use userstorage.Interface
 	vot votestorage.Interface
@@ -33,6 +35,10 @@ func New(c Config) *Storage {
 	}
 
 	return &Storage{
+		not: notestorage.NewRedigo(notestorage.RedigoConfig{
+			Log: c.Log,
+			Red: c.Red,
+		}),
 		pos: poststorage.NewRedigo(poststorage.RedigoConfig{
 			Log: c.Log,
 			Red: c.Red,
@@ -50,6 +56,10 @@ func New(c Config) *Storage {
 			Red: c.Red,
 		}),
 	}
+}
+
+func (s *Storage) Note() notestorage.Interface {
+	return s.not
 }
 
 func (s *Storage) Post() poststorage.Interface {

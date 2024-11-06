@@ -2,11 +2,13 @@ package uvxminthandler
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/uvio-network/apiserver/pkg/contract/uvxcontract"
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
+	"github.com/uvio-network/apiserver/pkg/storage/notestorage"
 	"github.com/uvio-network/apiserver/pkg/storage/walletstorage"
 	"github.com/xh3b4sd/objectid"
 	"github.com/xh3b4sd/rescue/task"
@@ -85,6 +87,29 @@ func (h *InternHandler) Ensure(tas *task.Task) error {
 
 	{
 		err = h.con.Wait(txn, maxWait)
+		if err != nil {
+			h.log.Log(
+				context.Background(),
+				"level", "warning",
+				"message", err.Error(),
+				"stack", tracer.Stack(err),
+			)
+
+			return nil
+		}
+	}
+
+	var not *notestorage.Object
+	{
+		not = &notestorage.Object{
+			Kind:    "uvxMint",
+			Message: fmt.Sprintf("%d UVX tokens have been minted to your address %s. Thanks for playing!", 100, add),
+			Owner:   use,
+		}
+	}
+
+	{
+		err = h.sto.Note().CreateNote([]*notestorage.Object{not})
 		if err != nil {
 			h.log.Log(
 				context.Background(),
