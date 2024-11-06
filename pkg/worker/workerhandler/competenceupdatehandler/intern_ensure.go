@@ -9,6 +9,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/runtime"
 	"github.com/uvio-network/apiserver/pkg/sample"
+	"github.com/uvio-network/apiserver/pkg/storage/notestorage"
 	"github.com/uvio-network/apiserver/pkg/storage/poststorage"
 	"github.com/uvio-network/apiserver/pkg/storage/userstorage"
 	"github.com/uvio-network/apiserver/pkg/storage/walletstorage"
@@ -154,10 +155,12 @@ func (h *InternHandler) Ensure(tas *task.Task) error {
 		return tracer.Maskf(runtime.ExecutionFailedError, "%d != %d", len(his), len(use)*5)
 	}
 
+	var not []*notestorage.Object
 	for i := range sta {
+		var k int
 		var u *userstorage.Object
 		{
-			u = updUse(i, val, sid, sta, his, use)
+			k, u = updUse(i, val, sid, sta, his, use)
 		}
 
 		{
@@ -165,6 +168,14 @@ func (h *InternHandler) Ensure(tas *task.Task) error {
 			if err != nil {
 				return tracer.Mask(err)
 			}
+		}
+
+		{
+			not = append(not, &notestorage.Object{
+				Kind:     notKin(k),
+				Resource: u.ID,
+				Owner:    u.ID,
+			})
 		}
 
 		// After each iteration, increment the current paging pointer to track our
@@ -191,6 +202,13 @@ func (h *InternHandler) Ensure(tas *task.Task) error {
 	// per batch instead of per user in the loop above.
 	{
 		err = h.sto.User().UpdateReputation(useLis(use))
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
+	{
+		err = h.sto.Note().CreateNote(not)
 		if err != nil {
 			return tracer.Mask(err)
 		}
@@ -330,7 +348,19 @@ func ensBig(str string) (*big.Int, error) {
 	return val, nil
 }
 
-func updUse(i int, val bool, sid bool, sta []common.Address, his []*big.Int, use map[string]*userstorage.Object) *userstorage.Object {
+func notKin(k int) string {
+	if k == userstorage.Right {
+		return "userRight"
+	}
+
+	if k == userstorage.Wrong {
+		return "userWrong"
+	}
+
+	return ""
+}
+
+func updUse(i int, val bool, sid bool, sta []common.Address, his []*big.Int, use map[string]*userstorage.Object) (int, *userstorage.Object) {
 	var zer *big.Int
 	{
 		zer = big.NewInt(0)
@@ -351,6 +381,8 @@ func updUse(i int, val bool, sid bool, sta []common.Address, his []*big.Int, use
 		a = sta[i].Hex()
 	}
 
+	var k int
+
 	var u *userstorage.Object
 	{
 		u = use[a]
@@ -364,8 +396,10 @@ func updUse(i int, val bool, sid bool, sta []common.Address, his []*big.Int, use
 			// least equal to the staked true balance before resolution, then
 			// increment the right value.
 			if bigNot(b[0], zer) && bigEql(b[1], zer) && (bigEql(b[2], b[0]) || bigGrt(b[2], b[0])) {
+				k = userstorage.Right
 				u.Summary[userstorage.Right]++
 			} else {
+				k = userstorage.Wrong
 				u.Summary[userstorage.Wrong]++
 			}
 		} else {
@@ -375,14 +409,16 @@ func updUse(i int, val bool, sid bool, sta []common.Address, his []*big.Int, use
 			// least equal to the staked false balance before resolution, then
 			// increment the honest value.
 			if bigNot(b[1], zer) && bigEql(b[0], zer) && (bigEql(b[3], b[1]) || bigGrt(b[3], b[1])) {
+				k = userstorage.Right
 				u.Summary[userstorage.Right]++
 			} else {
+				k = userstorage.Wrong
 				u.Summary[userstorage.Wrong]++
 			}
 		}
 	}
 
-	return u
+	return k, u
 }
 
 func useLis(use map[string]*userstorage.Object) []*userstorage.Object {

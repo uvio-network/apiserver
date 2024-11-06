@@ -189,15 +189,19 @@ func (h *InternHandler) Ensure(tas *task.Task) error {
 		}
 	}
 
+	{
+		err = h.emi.Note().NoteCreate("resolveCreate", "", res.ID)
+		if err != nil {
+			return tracer.Mask(err)
+		}
+	}
+
 	// Once the new post object got updated with the transaction hash and the
 	// sampled addresses we can remove the paging pointer and all sync state from
 	// the task so that it can be deleted eventually by the rescue engine.
 	{
 		tas.Sync = nil
 	}
-
-	// TODO we need to notify the voters somehow so that they know they have to
-	// verify events in the real world
 
 	return nil
 }

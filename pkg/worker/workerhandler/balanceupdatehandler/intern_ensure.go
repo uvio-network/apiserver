@@ -190,12 +190,6 @@ func (h *InternHandler) Ensure(tas *task.Task) error {
 		if err != nil {
 			return tracer.Mask(err)
 		}
-
-		// TODO emit event to notifiy users
-		// err = h.emi.Claim().NotificationCreate(bal.ID)
-		// if err != nil {
-		// 	return tracer.Mask(err)
-		// }
 	}
 
 	// Once the new post object got updated with all the associated transaction

@@ -8,11 +8,12 @@ import (
 )
 
 type Object struct {
-	Created time.Time   `json:"created,omitempty"`
-	ID      objectid.ID `json:"id,omitempty"`
-	Kind    string      `json:"kind,omitempty"`
-	Message string      `json:"message,omitempty"`
-	Owner   objectid.ID `json:"owner,omitempty"`
+	Created  time.Time   `json:"created,omitempty"`
+	ID       objectid.ID `json:"id,omitempty"`
+	Kind     string      `json:"kind,omitempty"`
+	Message  string      `json:"message,omitempty"`
+	Owner    objectid.ID `json:"owner,omitempty"`
+	Resource objectid.ID `json:"resource,omitempty"`
 }
 
 func (o *Object) Verify() error {
