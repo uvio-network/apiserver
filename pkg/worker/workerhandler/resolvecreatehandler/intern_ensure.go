@@ -190,7 +190,7 @@ func (h *InternHandler) Ensure(tas *task.Task) error {
 	}
 
 	{
-		err = h.emi.Note().NoteCreate("resolveCreate", "", res.ID)
+		err = h.emi.Note().NoteCreate("resolveCreate", res.ID)
 		if err != nil {
 			return tracer.Mask(err)
 		}

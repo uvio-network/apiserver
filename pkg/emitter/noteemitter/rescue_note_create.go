@@ -7,13 +7,12 @@ import (
 	"github.com/xh3b4sd/tracer"
 )
 
-func (r *Rescue) NoteCreate(kin string, mes string, res objectid.ID) error {
+func (r *Rescue) NoteCreate(kin string, res objectid.ID) error {
 	var tas *task.Task
 	{
 		tas = &task.Task{
 			Meta: &task.Meta{
 				objectlabel.NoteKind:     kin,
-				objectlabel.NoteMessage:  mes,
 				objectlabel.TaskOrigin:   objectlabel.OriginIntern,
 				objectlabel.NoteResource: res.String(),
 				objectlabel.TaskWorker:   "notecreatehandler",

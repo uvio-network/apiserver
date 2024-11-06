@@ -8,7 +8,6 @@ import (
 func (h *InternHandler) Filter(tas *task.Task) bool {
 	return tas.Meta.Has(map[string]string{
 		objectlabel.NoteKind:     "*",
-		objectlabel.NoteMessage:  "*",
 		objectlabel.TaskOrigin:   objectlabel.OriginIntern,
 		objectlabel.NoteResource: "*",
 		objectlabel.TaskWorker:   "notecreatehandler",
