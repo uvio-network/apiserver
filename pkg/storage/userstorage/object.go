@@ -27,6 +27,10 @@ type Object struct {
 	Image objectfield.String `json:"image,omitempty"`
 	// Name is the user name.
 	Name objectfield.String `json:"name,omitempty"`
+	// Pointer is the user's mapping between note kinds and note pointers. The
+	// pointers tracked here per notification topic keep track of the point up to
+	// which users caught up with their notifications.
+	Pointer map[string]string `json:"pointer,omitempty"`
 	// Subject is the list of external subject claims mapped to the user being
 	// created.
 	Subject []string `json:"subject,omitempty"`

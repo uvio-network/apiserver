@@ -7,7 +7,7 @@ import (
 	"github.com/uvio-network/apigocode/pkg/vote"
 )
 
-func Test_Server_Handler_post_Search_Fuzz(t *testing.T) {
+func Test_Server_Handler_Vote_Search_Fuzz(t *testing.T) {
 	var han vote.API
 	{
 		han = tesHan()

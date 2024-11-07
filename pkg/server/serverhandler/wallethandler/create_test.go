@@ -7,7 +7,7 @@ import (
 	"github.com/uvio-network/apigocode/pkg/wallet"
 )
 
-func Test_Server_Handler_post_Create_Fuzz(t *testing.T) {
+func Test_Server_Handler_Wallet_Create_Fuzz(t *testing.T) {
 	var han wallet.API
 	{
 		han = tesHan()
