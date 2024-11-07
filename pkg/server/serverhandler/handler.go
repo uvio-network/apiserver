@@ -5,6 +5,7 @@ import (
 
 	"github.com/uvio-network/apiserver/pkg/emitter"
 	"github.com/uvio-network/apiserver/pkg/reconciler"
+	"github.com/uvio-network/apiserver/pkg/server/serverhandler/notehandler"
 	"github.com/uvio-network/apiserver/pkg/server/serverhandler/posthandler"
 	"github.com/uvio-network/apiserver/pkg/server/serverhandler/userhandler"
 	"github.com/uvio-network/apiserver/pkg/server/serverhandler/votehandler"
@@ -41,6 +42,12 @@ func New(c Config) *Handler {
 	var han []Interface
 
 	{
+		han = append(han, notehandler.NewHandler(notehandler.HandlerConfig{
+			Log: c.Log,
+			Rec: c.Rec,
+			Sto: c.Sto,
+		}))
+
 		han = append(han, posthandler.NewHandler(posthandler.HandlerConfig{
 			Log: c.Log,
 			Rec: c.Rec,

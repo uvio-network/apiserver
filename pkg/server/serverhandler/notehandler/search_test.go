@@ -1,14 +1,14 @@
-package wallethandler
+package notehandler
 
 import (
 	"testing"
 
 	fuzz "github.com/google/gofuzz"
-	"github.com/uvio-network/apigocode/pkg/wallet"
+	"github.com/uvio-network/apigocode/pkg/note"
 )
 
-func Test_Server_Handler_Wallet_Search_Fuzz(t *testing.T) {
-	var han wallet.API
+func Test_Server_Handler_Note_Search_Fuzz(t *testing.T) {
+	var han note.API
 	{
 		han = tesHan()
 	}
@@ -19,9 +19,9 @@ func Test_Server_Handler_Wallet_Search_Fuzz(t *testing.T) {
 	}
 
 	for i := 0; i < 1000; i++ {
-		var inp *wallet.SearchI
+		var inp *note.SearchI
 		{
-			inp = &wallet.SearchI{}
+			inp = &note.SearchI{}
 		}
 
 		{

@@ -25,7 +25,6 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 	var lab [][]string
 	var lif []objectlabel.DesiredLifecycle
 	var own []objectid.ID
-	var pag []int
 	var tim bool
 	var tre []objectid.ID
 	var vot []objectid.ID
@@ -54,16 +53,7 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 		}
 
 		if x.Symbol != nil && x.Symbol.Time == "latest" {
-			{
-				tim = true
-			}
-
-			if req.Filter != nil && req.Filter.Paging != nil && req.Filter.Paging.Kind == "page" {
-				pag, err = createPage(req.Filter.Paging)
-				if err != nil {
-					return nil, tracer.Mask(err)
-				}
-			}
+			tim = true
 		}
 
 		if x.Symbol != nil && x.Symbol.Vote != "" {
@@ -76,6 +66,14 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 
 		if x.Intern != nil && x.Intern.Tree != "" {
 			tre = append(tre, objectid.ID(x.Intern.Tree))
+		}
+	}
+
+	var pag []int
+	if req.Filter != nil && req.Filter.Paging != nil && req.Filter.Paging.Kind == "page" {
+		pag, err = createPage(req.Filter.Paging)
+		if err != nil {
+			return nil, tracer.Mask(err)
 		}
 	}
 
@@ -251,36 +249,20 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 }
 
 func createPage(pag *post.SearchI_Filter_Paging) ([]int, error) {
-	if pag.Start == "" {
-		return nil, tracer.Maskf(runtime.QueryPagingMissingError, "Paging.Start")
-	}
-
-	if pag.Stop == "" {
-		return nil, tracer.Maskf(runtime.QueryPagingMissingError, "Paging.Stop")
-	}
-
-	beg, err := strconv.Atoi(pag.Start)
+	beg, err := converter.PageToInt(pag.Start)
 	if err != nil {
 		return nil, tracer.Maskf(runtime.QueryPagingInvalidError, "Paging.Start")
 	}
 
-	end, err := strconv.Atoi(pag.Stop)
+	end, err := converter.PageToInt(pag.Stop)
 	if err != nil {
 		return nil, tracer.Maskf(runtime.QueryPagingInvalidError, "Paging.Stop")
 	}
 
-	if beg < 0 {
-		return nil, tracer.Maskf(runtime.QueryPagingNegativeError, "Paging.Start")
-	}
-
-	if end < 0 {
-		return nil, tracer.Maskf(runtime.QueryPagingNegativeError, "Paging.Stop")
-	}
-
 	ran := end - beg
 	if ran < 1 || ran > 1000 {
-		return nil, tracer.Mask(runtime.QueryPagingRangeError)
+		return nil, tracer.Mask(runtime.QueryPagingPageError)
 	}
 
-	return []int{beg, end}, nil
+	return []int{int(beg), int(end)}, nil
 }

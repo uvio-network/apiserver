@@ -44,9 +44,14 @@ var QueryPagingNegativeError = &tracer.Error{
 	Desc: "The request expects the query paging to consist of two positive integers. One of the paging pointers was found to be negative. Therefore the request failed.",
 }
 
-var QueryPagingRangeError = &tracer.Error{
-	Kind: "QueryPagingRangeError",
-	Desc: "The request expects the query paging range to ask for at least one, but for not more than 1000 objects. The query paging range was found to be outside of those boundaries. Therefore the request failed.",
+var QueryPagingPageError = &tracer.Error{
+	Kind: "QueryPagingPageError",
+	Desc: "The request expects the query paging range to ask for at least one, but not more than 1000 objects. The query paging range was found to be outside of those boundary conditions. Therefore the request failed.",
+}
+
+var QueryPagingTimeError = &tracer.Error{
+	Kind: "QueryPagingTimeError",
+	Desc: "The request expects the query paging range to define a difference of at least one second. The query paging range was found to be outside of this boundary condition. Therefore the request failed.",
 }
 
 var UserAuthError = &tracer.Error{

@@ -31,6 +31,7 @@ func (h *Handler) Create(ctx context.Context, req *user.CreateI) (*user.CreateO,
 			Name: objectfield.String{
 				Data: nam,
 			},
+			Pointer: map[string]string{},
 			Subject: []string{subjectclaim.FromContext(ctx)},
 		}
 	}

@@ -1,14 +1,14 @@
-package posthandler
+package notehandler
 
 import (
 	"testing"
 
 	fuzz "github.com/google/gofuzz"
-	"github.com/uvio-network/apigocode/pkg/post"
+	"github.com/uvio-network/apigocode/pkg/note"
 )
 
-func Test_Server_Handler_Post_Create_Fuzz(t *testing.T) {
-	var han post.API
+func Test_Server_Handler_Note_Create_Fuzz(t *testing.T) {
+	var han note.API
 	{
 		han = tesHan()
 	}
@@ -19,9 +19,9 @@ func Test_Server_Handler_Post_Create_Fuzz(t *testing.T) {
 	}
 
 	for i := 0; i < 1000; i++ {
-		var inp *post.CreateI
+		var inp *note.CreateI
 		{
-			inp = &post.CreateI{}
+			inp = &note.CreateI{}
 		}
 
 		{

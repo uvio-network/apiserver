@@ -7,7 +7,7 @@ import (
 	"github.com/uvio-network/apigocode/pkg/post"
 )
 
-func Test_Server_Handler_post_Update_Fuzz(t *testing.T) {
+func Test_Server_Handler_Post_Update_Fuzz(t *testing.T) {
 	var han post.API
 	{
 		han = tesHan()
