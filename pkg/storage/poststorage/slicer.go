@@ -135,6 +135,18 @@ func (s Slicer) ObjectParent(par objectid.ID) Slicer {
 	return lis
 }
 
+func (s Slicer) ObjectPending() Slicer {
+	var lis Slicer
+
+	for _, x := range s {
+		if x.Lifecycle.Pending() {
+			lis = append(lis, x)
+		}
+	}
+
+	return lis
+}
+
 // --------------------------------------------------------------------- //
 
 func (s Slicer) IDObject(cla objectid.ID) *Object {

@@ -10,6 +10,7 @@ import (
 	"github.com/uvio-network/apiserver/pkg/sample"
 	"github.com/uvio-network/apiserver/pkg/storage"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/balanceupdatehandler"
+	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/claimcleanuphandler"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/claimexpiryhandler"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/competenceupdatehandler"
 	"github.com/uvio-network/apiserver/pkg/worker/workerhandler/integrityupdatehandler"
@@ -69,6 +70,11 @@ func New(c Config) *Handler {
 			Emi: c.Emi,
 			Log: c.Log,
 			Rec: c.Rec,
+			Sto: c.Sto,
+		}))
+
+		han = append(han, claimcleanuphandler.NewInternHandler(claimcleanuphandler.InternHandlerConfig{
+			Log: c.Log,
 			Sto: c.Sto,
 		}))
 
