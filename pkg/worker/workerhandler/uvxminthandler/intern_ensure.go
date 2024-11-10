@@ -7,6 +7,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/uvio-network/apiserver/pkg/contract/uvxcontract"
+	"github.com/uvio-network/apiserver/pkg/format/walletaddress"
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/uvio-network/apiserver/pkg/storage/notestorage"
 	"github.com/uvio-network/apiserver/pkg/storage/walletstorage"
@@ -102,9 +103,13 @@ func (h *InternHandler) Ensure(tas *task.Task) error {
 	var not *notestorage.Object
 	{
 		not = &notestorage.Object{
-			Kind:    "uvxMint",
-			Message: fmt.Sprintf("%d UVX tokens have been minted to your address %s. Thanks for playing!", 100, add),
-			Owner:   use,
+			Kind: objectlabel.NoteKindUvxMint,
+			Message: fmt.Sprintf(
+				"%d UVX tokens have been minted to your address %s as reward. Thanks for playing!",
+				100,
+				walletaddress.Format(add),
+			),
+			Owner: use,
 		}
 	}
 

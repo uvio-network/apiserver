@@ -39,8 +39,8 @@ func notObj(oid objectid.ID) string {
 	return fmt.Sprintf(storageformat.NoteObject, oid)
 }
 
-func notOwnKin(uid objectid.ID, kin string) string {
-	return fmt.Sprintf(storageformat.NoteOwnerKind, uid, kin)
+func notOwn(uid objectid.ID) string {
+	return fmt.Sprintf(storageformat.NoteOwner, uid)
 }
 
 func musStr(obj *Object) string {

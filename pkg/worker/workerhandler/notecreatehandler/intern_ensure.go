@@ -42,7 +42,7 @@ func (h *InternHandler) resolveCreate(tas *task.Task) error {
 	var not []*notestorage.Object
 	for _, v := range res.Samples {
 		not = append(not, &notestorage.Object{
-			Kind:     "voterSelected",
+			Kind:     objectlabel.NoteKindVoterSelected,
 			Owner:    objectid.ID(v),
 			Resource: res.ID,
 		})

@@ -98,5 +98,5 @@ func searchPublicEmpty(x *note.SearchI_Object_Public) bool {
 }
 
 func updatePublicEmpty(x *note.UpdateI_Object_Public) bool {
-	return x == nil || (x.Kind == "" || x.Pointer == "")
+	return x == nil || (x.Pointer == "")
 }

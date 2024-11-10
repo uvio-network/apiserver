@@ -12,7 +12,7 @@ func (r *Redigo) deleteNote(inp *Object) error {
 	for {
 		var cou int64
 		{
-			cou, err = r.red.Sorted().Metric().Count(notOwnKin(inp.Owner, inp.Kind))
+			cou, err = r.red.Sorted().Metric().Count(notOwn(inp.Owner))
 			if err != nil {
 				return tracer.Mask(err)
 			}
@@ -24,7 +24,7 @@ func (r *Redigo) deleteNote(inp *Object) error {
 			// queue.
 			var val []string
 			{
-				val, err = r.red.Sorted().Search().Order(notOwnKin(inp.Owner, inp.Kind), 0, 1)
+				val, err = r.red.Sorted().Search().Order(notOwn(inp.Owner), 0, 1)
 				if err != nil {
 					return tracer.Mask(err)
 				}
@@ -50,7 +50,7 @@ func (r *Redigo) deleteNote(inp *Object) error {
 			// Remove the oldest note object ID from the very notification index that
 			// we got it from in the first place.
 			{
-				err = r.red.Sorted().Delete().Score(notOwnKin(inp.Owner, inp.Kind), oid.Float())
+				err = r.red.Sorted().Delete().Score(notOwn(inp.Owner), oid.Float())
 				if err != nil {
 					return tracer.Mask(err)
 				}

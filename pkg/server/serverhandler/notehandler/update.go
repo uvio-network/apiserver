@@ -14,11 +14,9 @@ import (
 func (h *Handler) Update(ctx context.Context, req *note.UpdateI) (*note.UpdateO, error) {
 	var err error
 
-	var kin []string
 	var poi []string
 	for _, x := range req.Object {
-		if x.Public != nil && x.Public.Kind != "" && x.Public.Pointer != "" {
-			kin = append(kin, x.Public.Kind)
+		if x.Public != nil && x.Public.Pointer != "" {
 			poi = append(poi, x.Public.Pointer)
 		}
 	}
@@ -39,10 +37,8 @@ func (h *Handler) Update(ctx context.Context, req *note.UpdateI) (*note.UpdateO,
 	// Update the note pointers.
 	//
 
-	for i := range use {
-		for j := range kin {
-			use[i].Pointer[kin[j]] = poi[j]
-		}
+	if len(poi) == 1 && len(use) == 1 {
+		use[0].Pointer = poi[0]
 	}
 
 	//
