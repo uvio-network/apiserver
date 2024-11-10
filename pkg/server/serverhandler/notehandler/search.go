@@ -10,12 +10,14 @@ import (
 	"github.com/uvio-network/apiserver/pkg/server/converter"
 	"github.com/uvio-network/apiserver/pkg/server/limiter"
 	"github.com/uvio-network/apiserver/pkg/storage/notestorage"
+	"github.com/uvio-network/apiserver/pkg/storage/userstorage"
+	"github.com/xh3b4sd/objectid"
 	"github.com/xh3b4sd/tracer"
 )
 
 func (h *Handler) Search(ctx context.Context, req *note.SearchI) (*note.SearchO, error) {
 	var err error
-	var out []*notestorage.Object
+	var out notestorage.Slicer
 
 	var kin []string
 	for _, x := range req.Object {
@@ -42,11 +44,23 @@ func (h *Handler) Search(ctx context.Context, req *note.SearchI) (*note.SearchO,
 	}
 
 	//
+	// Search for the calling user object.
+	//
+
+	var use []*userstorage.Object
+	{
+		use, err = h.sto.User().SearchUser([]objectid.ID{userid.FromContext(ctx)})
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	//
 	// Search notes by page.
 	//
 
-	if len(kin) != 0 && len(pag) != 0 {
-		lis, err := h.sto.Note().SearchPage(userid.FromContext(ctx), kin, int(pag[0]), int(pag[1]))
+	if len(pag) != 0 {
+		lis, err := h.sto.Note().SearchPage(use[0].ID, int(pag[0]), int(pag[1]))
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
@@ -58,13 +72,21 @@ func (h *Handler) Search(ctx context.Context, req *note.SearchI) (*note.SearchO,
 	// Search notes by time.
 	//
 
-	if len(kin) != 0 && len(tim) != 0 {
-		lis, err := h.sto.Note().SearchTime(userid.FromContext(ctx), kin, tim[0], tim[1])
+	if len(tim) != 0 {
+		lis, err := h.sto.Note().SearchTime(use[0].ID, tim[0], tim[1])
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
 
 		out = append(out, lis...)
+	}
+
+	//
+	// Filter the found note objects.
+	//
+
+	{
+		out = out.ObjectKind(kin)
 	}
 
 	//
@@ -85,6 +107,12 @@ func (h *Handler) Search(ctx context.Context, req *note.SearchI) (*note.SearchO,
 			"resource", "note",
 			"total", strconv.Itoa(len(out)),
 		)
+	}
+
+	if len(use) == 1 {
+		res.Filter = &note.SearchO_Filter{
+			Pointer: use[0].Pointer,
+		}
 	}
 
 	for _, x := range out[:limiter.Len(len(out))] {

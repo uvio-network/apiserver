@@ -52,7 +52,7 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 			own = append(own, objectid.ID(x.Intern.Owner))
 		}
 
-		if x.Symbol != nil && x.Symbol.Time == "latest" {
+		if x.Symbol != nil && x.Symbol.Time == "page" {
 			tim = true
 		}
 

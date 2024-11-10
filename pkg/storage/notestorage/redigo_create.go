@@ -37,11 +37,10 @@ func (r *Redigo) CreateNote(inp []*Object) error {
 			}
 		}
 
-		// Persist note object IDs for every user and every topic respectively.
-		// This mapping enables us to search for all notes that belong to any given
-		// user on any given topic.
+		// Persist note object IDs for every user. This mapping enables us to search
+		// for all notes that belong to any given user.
 		{
-			err = r.red.Sorted().Create().Score(notOwnKin(inp[i].Owner, inp[i].Kind), inp[i].ID.String(), float64(inp[i].Created.Unix()))
+			err = r.red.Sorted().Create().Score(notOwn(inp[i].Owner), inp[i].ID.String(), float64(inp[i].Created.Unix()))
 			if err != nil {
 				return tracer.Mask(err)
 			}

@@ -14,22 +14,20 @@ type Interface interface {
 	// the first page [0 3] returns the most recent notes [C D E].
 	//
 	//     @inp[0] the user ID to search notes for
-	//     @inp[1] the list of note kinds to search notes for
-	//     @inp[2] the start paging pointer defining the beginning of the page
-	//     @inp[3] the stop paging pointer defining the end of the page
+	//     @inp[1] the start paging pointer defining the beginning of the page
+	//     @inp[2] the stop paging pointer defining the end of the page
 	//     @out[0] the list of note objects within the given pagination range
 	//
-	SearchPage(objectid.ID, []string, int, int) ([]*Object, error)
+	SearchPage(objectid.ID, int, int) ([]*Object, error)
 
 	// SearchTime returns the note objects within the given pagination range of
 	// creation time. Given the indexed notes [A B C D E], the time range
 	// [1730761200 1730847600] returns the respective notes [B C D].
 	//
 	//     @inp[0] the user ID to search notes for
-	//     @inp[1] the list of note kinds to search notes for
-	//     @inp[2] the start unix timestamp defining the beginning of the page
-	//     @inp[3] the stop unix timestamp defining the end of the page
+	//     @inp[1] the start unix timestamp defining the beginning of the page
+	//     @inp[2] the stop unix timestamp defining the end of the page
 	//     @out[0] the list of note objects within the given pagination range
 	//
-	SearchTime(objectid.ID, []string, int64, int64) ([]*Object, error)
+	SearchTime(objectid.ID, int64, int64) ([]*Object, error)
 }

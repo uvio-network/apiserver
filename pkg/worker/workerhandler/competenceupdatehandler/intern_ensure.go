@@ -350,11 +350,11 @@ func ensBig(str string) (*big.Int, error) {
 
 func notKin(k int) string {
 	if k == userstorage.Right {
-		return "userRight"
+		return objectlabel.NoteKindUserRight
 	}
 
 	if k == userstorage.Wrong {
-		return "userWrong"
+		return objectlabel.NoteKindUserWrong
 	}
 
 	return ""

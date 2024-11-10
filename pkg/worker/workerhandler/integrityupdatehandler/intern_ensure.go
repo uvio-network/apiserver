@@ -367,15 +367,15 @@ func ensBig(str string) (*big.Int, error) {
 
 func notKin(k int) string {
 	if k == userstorage.Honest {
-		return "userHonest"
+		return objectlabel.NoteKindUserHonest
 	}
 
 	if k == userstorage.Dishonest {
-		return "userDishonest"
+		return objectlabel.NoteKindUserDishonest
 	}
 
 	if k == userstorage.Abstained {
-		return "userAbstained"
+		return objectlabel.NoteKindUserAbstained
 	}
 
 	return ""

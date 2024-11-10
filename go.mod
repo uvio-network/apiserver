@@ -16,7 +16,7 @@ require (
 	github.com/spf13/cobra v1.8.1
 	github.com/twitchtv/twirp v8.1.3+incompatible
 	github.com/tyler-smith/go-bip39 v1.1.0
-	github.com/uvio-network/apigocode v0.1.20
+	github.com/uvio-network/apigocode v0.1.24
 	github.com/xh3b4sd/breakr v0.1.0
 	github.com/xh3b4sd/locker v0.1.0
 	github.com/xh3b4sd/logger v0.8.1
