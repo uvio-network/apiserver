@@ -12,26 +12,37 @@ import (
 )
 
 const (
-	oneDay = 24 * time.Hour * 7 // TODO revert to one day once the worker ran on testnet
+	oneDay  = 24 * time.Hour
+	oneWeek = 24 * time.Hour * 7
 )
 
 func (h *InternHandler) Ensure(tas *task.Task) error {
 	var err error
 
 	var now time.Time
-	var day time.Time
 	{
 		now = time.Now().UTC()
+	}
+
+	var day time.Time
+	var wee time.Time
+	{
 		day = now.Add(-oneDay)
+		wee = now.Add(-oneWeek)
 	}
 
 	// Look for all claims of lifecycle phase propose using microsecond scores. We
 	// have to use microseconds because the underlying claims are indexed using
 	// their IDs as scores, where those IDs are in randomized microsecond format
 	// based on claim creation time.
+	//
+	//             |       cleanup      | ignore |
+	//     --------x--------------------x--------x----
+	//          -1 week              -1 day     now
+	//
 	var pos poststorage.Slicer
 	{
-		pos, err = h.sto.Post().SearchTime(objectlabel.LifecyclePropose, day.UnixMicro(), now.UnixMicro())
+		pos, err = h.sto.Post().SearchTime(objectlabel.LifecyclePropose, wee.UnixMicro(), day.UnixMicro())
 		if err != nil {
 			return tracer.Mask(err)
 		}
