@@ -10,6 +10,7 @@ const (
 )
 
 const (
+	LifecycleCreated DesiredLifecycle = "created"
 	LifecycleBalance DesiredLifecycle = "balance"
 	LifecycleDispute DesiredLifecycle = "dispute"
 	LifecyclePropose DesiredLifecycle = "propose"

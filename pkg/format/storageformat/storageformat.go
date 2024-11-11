@@ -29,15 +29,6 @@ const (
 	//
 	PostComment = "post/kind/comment/parent/%s"
 
-	// PostCreated is used to store all claim IDs as they have been created in
-	// chronological order.
-	//
-	//     symbol key            claim IDs
-	//                     ->
-	//     post/created          3456,5678
-	//
-	PostCreated = "post/created"
-
 	// PostExpiry is used to store all claim IDs by claim expiry as defined in the
 	// created claim objects. This key helps us to automatically progress in claim
 	// trees, for creating claims of kind "resolve" once a claim of kind "propose"

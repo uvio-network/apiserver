@@ -135,7 +135,7 @@ func (h *Handler) Search(ctx context.Context, req *post.SearchI) (*post.SearchO,
 	//
 
 	if tim && len(pag) == 2 {
-		lis, err := h.sto.Post().SearchPage(pag[0], pag[1])
+		lis, err := h.sto.Post().SearchPage(objectlabel.LifecycleCreated, pag[0], pag[1])
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}
