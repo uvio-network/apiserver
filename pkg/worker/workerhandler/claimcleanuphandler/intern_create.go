@@ -8,7 +8,7 @@ import (
 func (h *InternHandler) Create() *task.Task {
 	return &task.Task{
 		Cron: &task.Cron{
-			task.Aevery: "minute",
+			task.Aevery: "hour",
 		},
 		Meta: &task.Meta{
 			objectlabel.ClaimObject: "*",
