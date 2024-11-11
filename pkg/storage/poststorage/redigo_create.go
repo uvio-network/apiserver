@@ -3,7 +3,6 @@ package poststorage
 import (
 	"time"
 
-	"github.com/uvio-network/apiserver/pkg/format/storageformat"
 	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/xh3b4sd/tracer"
 )
@@ -105,14 +104,14 @@ func (r *Redigo) CreatePost(inp []*Object) error {
 			// Store every claim ID in a global sorted set, based on their time of
 			// creation. This step ensures we can search for claims using pagination
 			// in reverse chronolical order.
-			err = r.red.Sorted().Create().Score(storageformat.PostCreated, inp[i].ID.String(), float64(inp[i].Created.Unix()))
+			err = r.red.Sorted().Create().Score(posLif(objectlabel.LifecycleCreated), inp[i].ID.String(), float64(inp[i].Created.Unix()))
 			if err != nil {
 				return tracer.Mask(err)
 			}
 
 			// We index all claim IDs per specified lifecycle phase, so that we can
 			// search e.g. for all disputes.
-			err = r.red.Sorted().Create().Score(posLif(inp[i].Lifecycle.Data), inp[i].ID.String(), inp[i].ID.Float())
+			err = r.red.Sorted().Create().Score(posLif(inp[i].Lifecycle.Data), inp[i].ID.String(), float64(inp[i].Created.Unix()))
 			if err != nil {
 				return tracer.Mask(err)
 			}

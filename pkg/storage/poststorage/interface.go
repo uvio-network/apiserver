@@ -45,15 +45,17 @@ type Interface interface {
 	// reversed order of claim creation time. Given the indexed posts [A B C D E],
 	// the first page [0 3] returns the most recent posts [C D E].
 	//
-	//     @inp[0] the start paging pointer defining the beginning of the page
-	//     @inp[1] the stop paging pointer defining the end of the page
+	//     @inp[0] the lifecycle phase to search for
+	//     @inp[1] the start paging pointer defining the beginning of the page
+	//     @inp[2] the stop paging pointer defining the end of the page
 	//     @out[0] the list of post objects within the given pagination range
 	//
-	SearchPage(int, int) ([]*Object, error)
+	SearchPage(objectlabel.DesiredLifecycle, int, int) ([]*Object, error)
 
 	// SearchExpiry returns the lifecycle specific post objects recorded to have
 	// expired already at the time of execution.
 	//
+	//     @inp[0] the lifecycle phase to search for
 	//     @out[0] the list of post objects already expired
 	//
 	SearchExpiry(objectlabel.DesiredLifecycle) ([]*Object, error)

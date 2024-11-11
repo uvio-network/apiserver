@@ -31,10 +31,10 @@ func (h *InternHandler) Ensure(tas *task.Task) error {
 		wee = now.Add(-oneWeek)
 	}
 
-	// Look for all claims of lifecycle phase propose using microsecond scores. We
-	// have to use microseconds because the underlying claims are indexed using
-	// their IDs as scores, where those IDs are in randomized microsecond format
-	// based on claim creation time.
+	// Look for all claims of lifecycle phase created using unix seconds. We want
+	// to ignore all claims that are pending within their first 24 hours of
+	// existance. After that we assumme that those claims should be cleaned up for
+	// good.
 	//
 	//             |       cleanup      | ignore |
 	//     --------x--------------------x--------x----
@@ -42,7 +42,7 @@ func (h *InternHandler) Ensure(tas *task.Task) error {
 	//
 	var pos poststorage.Slicer
 	{
-		pos, err = h.sto.Post().SearchTime(objectlabel.LifecyclePropose, wee.UnixMicro(), day.UnixMicro())
+		pos, err = h.sto.Post().SearchTime(objectlabel.LifecycleCreated, wee.Unix(), day.Unix())
 		if err != nil {
 			return tracer.Mask(err)
 		}

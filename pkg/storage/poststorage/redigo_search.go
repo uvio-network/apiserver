@@ -242,14 +242,14 @@ func (r *Redigo) SearchOwnerComment(own []objectid.ID, cla []objectid.ID) ([]*Ob
 	return out, nil
 }
 
-func (r *Redigo) SearchPage(beg int, end int) ([]*Object, error) {
+func (r *Redigo) SearchPage(lif objectlabel.DesiredLifecycle, beg int, end int) ([]*Object, error) {
 	var err error
 
 	// val will result in a list of all post IDs within the given pagination
 	// range, if any.
 	var val []string
 	{
-		val, err = r.red.Sorted().Search().Order(storageformat.PostCreated, -(end + 1), -(beg + 1))
+		val, err = r.red.Sorted().Search().Order(posLif(lif), -(end + 1), -(beg + 1))
 		if err != nil {
 			return nil, tracer.Mask(err)
 		}

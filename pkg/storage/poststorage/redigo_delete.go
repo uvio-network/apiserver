@@ -1,7 +1,7 @@
 package poststorage
 
 import (
-	"github.com/uvio-network/apiserver/pkg/format/storageformat"
+	"github.com/uvio-network/apiserver/pkg/object/objectlabel"
 	"github.com/xh3b4sd/tracer"
 )
 
@@ -37,12 +37,12 @@ func (r *Redigo) DeletePost(inp []*Object) error {
 		}
 
 		if inp[i].Kind == "claim" {
-			err = r.red.Sorted().Delete().Value(storageformat.PostCreated, inp[i].ID.String())
+			err = r.red.Sorted().Delete().Value(posLif(objectlabel.LifecycleCreated), inp[i].ID.String())
 			if err != nil {
 				return tracer.Mask(err)
 			}
 
-			err = r.red.Sorted().Delete().Score(posLif(inp[i].Lifecycle.Data), inp[i].ID.Float())
+			err = r.red.Sorted().Delete().Value(posLif(inp[i].Lifecycle.Data), inp[i].ID.String())
 			if err != nil {
 				return tracer.Mask(err)
 			}
