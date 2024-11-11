@@ -102,6 +102,17 @@ type Interface interface {
 	//
 	SearchPost([]objectid.ID) ([]*Object, error)
 
+	// SearchTime returns the post objects within the given pagination range of
+	// creation time. Given the indexed posts [A B C D E], the time range
+	// [1730761200 1730847600] returns the respective posts [B C D].
+	//
+	//     @inp[0] the lifecycle phase to search for
+	//     @inp[1] the start unix timestamp defining the beginning of the page
+	//     @inp[2] the stop unix timestamp defining the end of the page
+	//     @out[0] the list of post objects within the given pagination range
+	//
+	SearchTime(objectlabel.DesiredLifecycle, int64, int64) ([]*Object, error)
+
 	// SearchTree returns the post objects belonging to the given tree IDs.
 	//
 	//     @inp[0] the tree IDs to search for

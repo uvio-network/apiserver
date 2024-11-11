@@ -309,6 +309,38 @@ func (r *Redigo) SearchPost(inp []objectid.ID) ([]*Object, error) {
 	return out, nil
 }
 
+func (r *Redigo) SearchTime(lif objectlabel.DesiredLifecycle, beg int64, end int64) ([]*Object, error) {
+	var err error
+
+	// val will result in a list of all post IDs within the given creation
+	// timestamps, if any.
+	var val []string
+	{
+		val, err = r.red.Sorted().Search().Score(posLif(lif), float64(beg), float64(end))
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+	}
+
+	// There might not be any post IDs, so we do not proceed, but instead return
+	// nothing.
+	if len(val) == 0 {
+		return nil, nil
+	}
+
+	var out []*Object
+	{
+		lis, err := r.SearchPost(objectid.IDs(val))
+		if err != nil {
+			return nil, tracer.Mask(err)
+		}
+
+		out = append(out, lis...)
+	}
+
+	return out, nil
+}
+
 func (r *Redigo) SearchTree(tre []objectid.ID) ([]*Object, error) {
 	var err error
 

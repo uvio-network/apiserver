@@ -37,6 +37,11 @@ func (r *Redigo) DeletePost(inp []*Object) error {
 		}
 
 		if inp[i].Kind == "claim" {
+			err = r.red.Sorted().Delete().Value(storageformat.PostCreated, inp[i].ID.String())
+			if err != nil {
+				return tracer.Mask(err)
+			}
+
 			err = r.red.Sorted().Delete().Score(posLif(inp[i].Lifecycle.Data), inp[i].ID.Float())
 			if err != nil {
 				return tracer.Mask(err)
@@ -64,13 +69,6 @@ func (r *Redigo) DeletePost(inp []*Object) error {
 
 		for _, x := range inp[i].Labels {
 			err = r.red.Sorted().Delete().Score(posLab(x), inp[i].ID.Float())
-			if err != nil {
-				return tracer.Mask(err)
-			}
-		}
-
-		{
-			err = r.red.Sorted().Delete().Value(storageformat.PostCreated, inp[i].ID.String())
 			if err != nil {
 				return tracer.Mask(err)
 			}
