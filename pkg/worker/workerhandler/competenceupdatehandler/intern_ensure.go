@@ -173,8 +173,8 @@ func (h *InternHandler) Ensure(tas *task.Task) error {
 		{
 			not = append(not, &notestorage.Object{
 				Kind:     notKin(k),
-				Resource: u.ID,
 				Owner:    u.ID,
+				Resource: pod.ID,
 			})
 		}
 
