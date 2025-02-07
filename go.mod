@@ -19,7 +19,7 @@ require (
 	github.com/uvio-network/apigocode v0.1.24
 	github.com/xh3b4sd/breakr v0.1.0
 	github.com/xh3b4sd/locker v0.1.0
-	github.com/xh3b4sd/logger v0.8.1
+	github.com/xh3b4sd/logger v0.9.0
 	github.com/xh3b4sd/objectid v0.2.0
 	github.com/xh3b4sd/redigo v0.41.0
 	github.com/xh3b4sd/rescue v0.19.3
