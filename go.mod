@@ -13,7 +13,7 @@ require (
 	github.com/lestrrat-go/jwx v1.2.30
 	github.com/miguelmota/go-ethereum-hdwallet v0.1.2
 	github.com/rs/cors v1.11.1
-	github.com/spf13/cobra v1.8.1
+	github.com/spf13/cobra v1.9.1
 	github.com/twitchtv/twirp v8.1.3+incompatible
 	github.com/tyler-smith/go-bip39 v1.1.0
 	github.com/uvio-network/apigocode v0.1.24
@@ -69,7 +69,7 @@ require (
 	github.com/prometheus/common v0.60.1 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
-	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/spf13/pflag v1.0.6 // indirect
 	github.com/supranational/blst v0.3.13 // indirect
 	github.com/tklauser/go-sysconf v0.3.14 // indirect
 	github.com/tklauser/numcpus v0.8.0 // indirect
