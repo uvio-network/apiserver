@@ -1,6 +1,7 @@
 module github.com/uvio-network/apiserver
 
 go 1.22.5
+toolchain go1.23.7
 
 require (
 	github.com/auth0/go-jwt-middleware/v2 v2.2.2
@@ -24,7 +25,7 @@ require (
 	github.com/xh3b4sd/redigo v0.41.0
 	github.com/xh3b4sd/rescue v0.19.3
 	github.com/xh3b4sd/tracer v0.11.1
-	golang.org/x/mod v0.23.0
+	golang.org/x/mod v0.24.0
 	golang.org/x/text v0.22.0
 )
 
