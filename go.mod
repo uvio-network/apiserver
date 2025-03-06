@@ -1,9 +1,10 @@
 module github.com/uvio-network/apiserver
 
 go 1.22.5
+toolchain go1.23.7
 
 require (
-	github.com/auth0/go-jwt-middleware/v2 v2.2.2
+	github.com/auth0/go-jwt-middleware/v2 v2.3.0
 	github.com/brianvoe/gofakeit/v7 v7.2.1
 	github.com/ethereum/go-ethereum v1.15.0
 	github.com/google/gofuzz v1.2.0
@@ -74,10 +75,10 @@ require (
 	github.com/tklauser/go-sysconf v0.3.14 // indirect
 	github.com/tklauser/numcpus v0.8.0 // indirect
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
-	golang.org/x/crypto v0.32.0 // indirect
+	golang.org/x/crypto v0.35.0 // indirect
 	golang.org/x/exp v0.0.0-20240909161429-701f63a606c0 // indirect
 	golang.org/x/sync v0.11.0 // indirect
-	golang.org/x/sys v0.29.0 // indirect
+	golang.org/x/sys v0.30.0 // indirect
 	google.golang.org/protobuf v1.35.1 // indirect
 	gopkg.in/go-jose/go-jose.v2 v2.6.3 // indirect
 	rsc.io/tmplfunc v0.0.3 // indirect
