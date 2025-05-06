@@ -1,6 +1,7 @@
 module github.com/uvio-network/apiserver
 
 go 1.22.5
+toolchain go1.24.1
 
 require (
 	github.com/auth0/go-jwt-middleware/v2 v2.2.2
@@ -25,7 +26,7 @@ require (
 	github.com/xh3b4sd/rescue v0.19.3
 	github.com/xh3b4sd/tracer v0.11.1
 	golang.org/x/mod v0.23.0
-	golang.org/x/text v0.22.0
+	golang.org/x/text v0.25.0
 )
 
 require (
@@ -76,7 +77,7 @@ require (
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
 	golang.org/x/crypto v0.32.0 // indirect
 	golang.org/x/exp v0.0.0-20240909161429-701f63a606c0 // indirect
-	golang.org/x/sync v0.11.0 // indirect
+	golang.org/x/sync v0.14.0 // indirect
 	golang.org/x/sys v0.29.0 // indirect
 	google.golang.org/protobuf v1.35.1 // indirect
 	gopkg.in/go-jose/go-jose.v2 v2.6.3 // indirect
